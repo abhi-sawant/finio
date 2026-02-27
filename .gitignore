@@ -39,3 +39,8 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# Backend – Composer generated files (installed on server, not committed)
+backend/vendor/
+backend/composer.phar
+backend/composer.lock
