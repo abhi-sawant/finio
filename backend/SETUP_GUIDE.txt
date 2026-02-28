@@ -359,34 +359,34 @@ SOLUTION: You may need to specify the PHP version:
   FILE STRUCTURE SUMMARY (on the server)
 ================================================================================
 
-/home/johndoe/
+/home/dtajsuww/                        ← your cPanel home directory
   finio-config/
-    config.php                     ← Your secrets — NEVER in public_html
+    config.php                     ← Your secrets — NEVER web-accessible
   finio-backups/
     1/
       2026-02-28.json              ← User ID 1's backup for Feb 28
       2026-02-27.json
     2/
       2026-02-28.json              ← User ID 2's backup
-  public_html/
-    api/                           ← OR this is the subdomain root
-      public/                      ← OR this is the subdomain root (see Step 9)
-        .htaccess
-        index.php
-      src/
-        Config.php
-        Database.php
-        Router.php
-        helpers.php
-        controllers/
-          AuthController.php
-          BackupController.php
-          UserController.php
-        middleware/
-          AuthMiddleware.php
-      vendor/                      ← Created by composer install
-      composer.json
-      composer.phar
+  api.finio.slowatcoding.com/      ← MilesWeb creates subdomain folders HERE
+    .htaccess                      ← forwards requests into public/
+    public/
+      .htaccess
+      index.php
+    src/
+      Config.php
+      Database.php
+      Router.php
+      helpers.php
+      controllers/
+        AuthController.php
+        BackupController.php
+        UserController.php
+      middleware/
+        AuthMiddleware.php
+    vendor/                        ← Created by composer install
+    composer.json
+    composer.phar
 
 ================================================================================
   API REFERENCE (for when you wire up the app)

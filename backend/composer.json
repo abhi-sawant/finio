@@ -10,5 +10,11 @@
         "psr-4": {
             "Finio\\": "src/"
         }
+    },
+    "config": {
+        "audit": {
+            "abandoned": "report",
+            "block-insecure": false
+        }
     }
 }

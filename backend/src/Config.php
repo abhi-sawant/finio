@@ -25,12 +25,19 @@ class Config
 
     private static function load(): void
     {
-        // Walk up from the backend root to the home directory
-        // backend root is two levels up from public/index.php → __DIR__ here is src/
-        $backendRoot = dirname(__DIR__);             // .../backend/
-        $homeDir     = dirname(dirname($backendRoot)); // usually /home/cpanel_user
+        // Use the HOME environment variable — always set correctly on Linux shared hosting.
+        // Falls back to walking up the directory tree if HOME is unavailable.
+        $homeDir = $_SERVER['HOME'] ?? getenv('HOME');
 
-        $configPath = $homeDir . '/finio-config/config.php';
+        if (empty($homeDir)) {
+            // Fallback: walk up from src/ → project root → home dir
+            // __DIR__  = ~/api.finio.slowatcoding.com/src
+            // dirname once  = ~/api.finio.slowatcoding.com
+            // dirname twice = ~/ (home dir)
+            $homeDir = dirname(dirname(__DIR__));
+        }
+
+        $configPath = rtrim($homeDir, '/') . '/finio-config/config.php';
 
         if (!file_exists($configPath)) {
             http_response_code(500);
