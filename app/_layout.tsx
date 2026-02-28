@@ -1,6 +1,6 @@
 import '../global.css'
 import { useEffect } from 'react'
-import { useColorScheme } from 'react-native'
+import { useColorScheme, Platform } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
 import { Stack } from 'expo-router'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
@@ -17,6 +17,7 @@ import { useFinanceStore } from '@/store/useFinanceStore'
 import { useAuthStore } from '@/store/useAuthStore'
 import { autoBackupIfNeeded } from '@/services/backup'
 import { useColors } from '@/hooks/useColors'
+import * as NavigationBar from 'expo-navigation-bar'
 import { Toast } from '@/components/common/Toast'
 
 SplashScreen.preventAutoHideAsync()
@@ -40,6 +41,14 @@ export default function RootLayout() {
     Sora_700Bold,
     Sora_800ExtraBold,
   })
+
+  // Sync Android navigation bar style with theme
+  useEffect(() => {
+    if (Platform.OS !== 'android') return
+    const buttonStyle = effectiveTheme === 'light' ? 'dark' : 'light'
+    NavigationBar.setButtonStyleAsync(buttonStyle)
+    NavigationBar.setBackgroundColorAsync(colors.background)
+  }, [effectiveTheme, colors.background])
 
   // Load stored JWT + user on startup
   useEffect(() => {
