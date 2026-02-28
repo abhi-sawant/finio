@@ -7,7 +7,8 @@ import {
   StyleSheet,
 } from 'react-native'
 import { Check } from 'lucide-react-native'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
+import type { ColorPalette } from '@/constants/Colors'
 import { BottomSheet } from './BottomSheet'
 import { useFinanceStore } from '@/store/useFinanceStore'
 import { lightHaptic } from '@/utils/haptics'
@@ -20,6 +21,8 @@ interface LabelPickerProps {
 }
 
 export function LabelPicker({ selectedIds, onChange, visible, onClose }: LabelPickerProps) {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   const labels = useFinanceStore((s) => s.labels)
 
   const toggle = async (id: string) => {
@@ -46,7 +49,7 @@ export function LabelPicker({ selectedIds, onChange, visible, onClose }: LabelPi
               <View style={[styles.dot, { backgroundColor: label.color }]} />
               <Text style={styles.labelName}>{label.name}</Text>
               {isSelected && (
-                <Check size={18} color={Colors.primary} strokeWidth={2.5} />
+                <Check size={18} color={colors.primary} strokeWidth={2.5} />
               )}
             </TouchableOpacity>
           )
@@ -59,7 +62,8 @@ export function LabelPicker({ selectedIds, onChange, visible, onClose }: LabelPi
   )
 }
 
-const styles = StyleSheet.create({
+function makeStyles(colors: ColorPalette) {
+  return StyleSheet.create({
   list: {
     paddingHorizontal: 20,
     paddingVertical: 8,
@@ -71,7 +75,7 @@ const styles = StyleSheet.create({
     gap: 12,
     paddingVertical: 14,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
+    borderBottomColor: colors.border,
   },
   dot: {
     width: 12,
@@ -82,13 +86,14 @@ const styles = StyleSheet.create({
     flex: 1,
     fontFamily: 'DMSans_500Medium',
     fontSize: 15,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   empty: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 14,
-    color: Colors.textMuted,
+    color: colors.textMuted,
     textAlign: 'center',
     marginTop: 24,
   },
 })
+}

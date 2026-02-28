@@ -3,7 +3,8 @@ import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-nati
 import { Check } from 'lucide-react-native'
 import { BottomSheet } from '@/components/common/BottomSheet'
 import { LucideIcon } from '@/components/common/IconPicker'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
+import type { ColorPalette } from '@/constants/Colors'
 import { hexToRgba } from '@/utils/formatters'
 import { lightHaptic } from '@/utils/haptics'
 import { useFinanceStore } from '@/store/useFinanceStore'
@@ -24,6 +25,8 @@ export function CategoryPicker({
   onChange,
   transactionType,
 }: CategoryPickerProps) {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   const categories = useFinanceStore((s) => s.categories)
 
   const filtered = categories.filter((c) => {
@@ -60,10 +63,10 @@ export function CategoryPicker({
               >
                 <LucideIcon name={cat.icon} size={20} color={cat.color} />
               </View>
-              <Text style={[styles.name, isSelected && { color: Colors.primary }]}>
+              <Text style={[styles.name, isSelected && { color: colors.primary }]}>
                 {cat.name}
               </Text>
-              {isSelected && <Check size={18} color={Colors.primary} strokeWidth={2.5} />}
+              {isSelected && <Check size={18} color={colors.primary} strokeWidth={2.5} />}
             </TouchableOpacity>
           )
         })}
@@ -72,7 +75,8 @@ export function CategoryPicker({
   )
 }
 
-const styles = StyleSheet.create({
+function makeStyles(colors: ColorPalette) {
+  return StyleSheet.create({
   list: {
     paddingHorizontal: 16,
     paddingBottom: 16,
@@ -87,7 +91,7 @@ const styles = StyleSheet.create({
     marginVertical: 2,
   },
   itemSelected: {
-    backgroundColor: Colors.primary + '14',
+    backgroundColor: colors.primary + '14',
   },
   iconCircle: {
     width: 40,
@@ -100,6 +104,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontFamily: 'DMSans_500Medium',
     fontSize: 15,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
 })
+}

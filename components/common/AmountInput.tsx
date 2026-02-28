@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import { Delete } from 'lucide-react-native'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
+import type { ColorPalette } from '@/constants/Colors'
 import type { Currency } from '@/types'
 
 const CURRENCY_SYMBOLS: Record<Currency, string> = {
@@ -34,6 +35,8 @@ export function AmountInput({
   onChange,
   currency = 'INR',
 }: AmountInputProps) {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   const [displayText, setDisplayText] = useState(value > 0 ? value.toString() : '')
 
   const symbol = CURRENCY_SYMBOLS[currency]
@@ -89,7 +92,7 @@ export function AmountInput({
                 activeOpacity={0.6}
               >
                 {key === '⌫' ? (
-                  <Delete size={22} color={Colors.textPrimary} />
+                  <Delete size={22} color={colors.textPrimary} />
                 ) : (
                   <Text style={styles.keyLabel}>{key}</Text>
                 )}
@@ -102,7 +105,8 @@ export function AmountInput({
   )
 }
 
-const styles = StyleSheet.create({
+function makeStyles(colors: ColorPalette) {
+  return StyleSheet.create({
   wrapper: {
     gap: 8,
   },
@@ -116,15 +120,15 @@ const styles = StyleSheet.create({
   symbol: {
     fontFamily: 'DMSans_700Bold',
     fontSize: 32,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   amount: {
     fontFamily: 'DMSans_700Bold',
     fontSize: 48,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   placeholder: {
-    color: Colors.textMuted,
+    color: colors.textMuted,
   },
   numpad: {
     gap: 4,
@@ -137,15 +141,16 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: Colors.surface,
+    backgroundColor: colors.surface,
     borderRadius: 12,
     paddingVertical: 16,
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: Colors.border,
+    borderColor: colors.border,
   },
   keyLabel: {
     fontFamily: 'DMSans_500Medium',
     fontSize: 22,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
 })
+}

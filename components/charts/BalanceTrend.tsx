@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, Text, StyleSheet, Dimensions } from 'react-native'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
+import type { ColorPalette } from '@/constants/Colors'
 import { formatCurrency, hexToRgba } from '@/utils/formatters'
 import { useFinanceStore } from '@/store/useFinanceStore'
 import { getTotalAccountBalance } from '@/utils/calculations'
@@ -12,6 +13,8 @@ const CHART_WIDTH = SCREEN_WIDTH - 64
 const CHART_HEIGHT = 100
 
 export function BalanceTrend() {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   const { transactions, accounts, settings } = useFinanceStore()
   const currency = settings.currency as Currency
   const currentBalance = getTotalAccountBalance(accounts)
@@ -61,7 +64,7 @@ export function BalanceTrend() {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Balance Trend</Text>
-        <Text style={[styles.diff, { color: isPositive ? Colors.income : Colors.expense }]}>
+        <Text style={[styles.diff, { color: isPositive ? colors.income : colors.expense }]}>
           {isPositive ? '+' : ''}
           {formatCurrency(diff, currency, true)}
         </Text>
@@ -88,7 +91,7 @@ export function BalanceTrend() {
                   top: prevPoint.y,
                   width: length,
                   height: 2,
-                  backgroundColor: Colors.primary,
+                  backgroundColor: colors.primary,
                   transformOrigin: 'left center',
                   transform: [{ rotate: `${angle}deg` }],
                   opacity: 0.8,
@@ -107,7 +110,7 @@ export function BalanceTrend() {
                 width: 6,
                 height: 6,
                 borderRadius: 3,
-                backgroundColor: Colors.primary,
+                backgroundColor: colors.primary,
               }}
             />
           ))}
@@ -126,13 +129,14 @@ export function BalanceTrend() {
   )
 }
 
-const styles = StyleSheet.create({
+function makeStyles(colors: ColorPalette) {
+  return StyleSheet.create({
   container: {
-    backgroundColor: Colors.surface,
+    backgroundColor: colors.surface,
     borderRadius: 20,
     padding: 20,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: colors.border,
     gap: 12,
   },
   header: {
@@ -143,7 +147,7 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'Sora_700Bold',
     fontSize: 15,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   diff: {
     fontFamily: 'DMSans_700Bold',
@@ -155,19 +159,19 @@ const styles = StyleSheet.create({
   maxLabel: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 10,
-    color: Colors.textMuted,
+    color: colors.textMuted,
     textAlign: 'right',
   },
   lineCanvas: {
     position: 'relative',
-    backgroundColor: hexToRgba(Colors.primary, 0.05),
+    backgroundColor: hexToRgba(colors.primary, 0.05),
     borderRadius: 8,
     overflow: 'hidden',
   },
   minLabel: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 10,
-    color: Colors.textMuted,
+    color: colors.textMuted,
   },
   dateLabels: {
     flexDirection: 'row',
@@ -177,16 +181,17 @@ const styles = StyleSheet.create({
   dateLabel: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 10,
-    color: Colors.textMuted,
+    color: colors.textMuted,
   },
   currentLabel: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 13,
-    color: Colors.textMuted,
+    color: colors.textMuted,
     textAlign: 'center',
   },
   currentValue: {
     fontFamily: 'DMSans_700Bold',
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
 })
+}

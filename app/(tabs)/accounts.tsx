@@ -10,7 +10,8 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router'
 import { Plus } from 'lucide-react-native'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
+import type { ColorPalette } from '@/constants/Colors'
 import { AccountCard } from '@/components/accounts/AccountCard'
 import { useFinanceStore } from '@/store/useFinanceStore'
 import { getTotalBalance } from '@/store/selectors'
@@ -20,6 +21,8 @@ import { showToast } from '@/components/common/Toast'
 import type { Account } from '@/types'
 
 export default function AccountsScreen() {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   const insets = useSafeAreaInsets()
   const router = useRouter()
   const { accounts, settings, deleteAccount } = useFinanceStore()
@@ -82,7 +85,7 @@ export default function AccountsScreen() {
           onPress={() => router.push('/modals/add-account')}
           hitSlop={8}
         >
-          <Plus size={20} color={Colors.background} />
+          <Plus size={20} color={colors.background} />
         </TouchableOpacity>
       </View>
 
@@ -119,10 +122,11 @@ export default function AccountsScreen() {
   )
 }
 
-const styles = StyleSheet.create({
+function makeStyles(colors: ColorPalette) {
+  return StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: colors.background,
   },
   header: {
     flexDirection: 'row',
@@ -134,19 +138,19 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'Sora_700Bold',
     fontSize: 24,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   totalBalance: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 13,
-    color: Colors.textMuted,
+    color: colors.textMuted,
     marginTop: 2,
   },
   addBtn: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: Colors.primary,
+    backgroundColor: colors.primary,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -169,12 +173,13 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontFamily: 'Sora_700Bold',
     fontSize: 18,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   emptyDesc: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 14,
-    color: Colors.textMuted,
+    color: colors.textMuted,
     textAlign: 'center',
   },
 })
+}

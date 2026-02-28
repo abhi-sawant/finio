@@ -11,7 +11,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router'
 import { getHours } from 'date-fns'
 import { BellRing, Settings2 } from 'lucide-react-native'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
+import type { ColorPalette } from '@/constants/Colors'
 import { SummaryCards } from '@/components/dashboard/SummaryCards'
 import { RecentTransactions } from '@/components/dashboard/RecentTransactions'
 import { AccountCard } from '@/components/accounts/AccountCard'
@@ -31,6 +32,8 @@ function getGreeting(): string {
 export default function DashboardScreen() {
   const insets = useSafeAreaInsets()
   const router = useRouter()
+  const colors = useColors()
+  const styles = makeStyles(colors)
   const { accounts, settings } = useFinanceStore()
   const [refreshing, setRefreshing] = useState(false)
 
@@ -58,7 +61,7 @@ export default function DashboardScreen() {
           hitSlop={8}
           style={styles.settingsBtn}
         >
-          <Settings2 size={22} color={Colors.textMuted} />
+          <Settings2 size={22} color={colors.textMuted} />
         </TouchableOpacity>
       </View>
 
@@ -68,8 +71,8 @@ export default function DashboardScreen() {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={onRefresh}
-            tintColor={Colors.primary}
-            colors={[Colors.primary]}
+            tintColor={colors.primary}
+            colors={[colors.primary]}
           />
         }
         contentContainerStyle={styles.scrollContent}
@@ -121,10 +124,11 @@ export default function DashboardScreen() {
   )
 }
 
-const styles = StyleSheet.create({
+function makeStyles(colors: ColorPalette) {
+  return StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: colors.background,
   },
   header: {
     flexDirection: 'row',
@@ -136,22 +140,22 @@ const styles = StyleSheet.create({
   greeting: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 14,
-    color: Colors.textMuted,
+    color: colors.textMuted,
   },
   username: {
     fontFamily: 'Sora_700Bold',
     fontSize: 22,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   settingsBtn: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: Colors.surface,
+    backgroundColor: colors.surface,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: colors.border,
   },
   scrollContent: {
     gap: 16,
@@ -168,12 +172,12 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontFamily: 'Sora_700Bold',
     fontSize: 16,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   seeAll: {
     fontFamily: 'DMSans_500Medium',
     fontSize: 13,
-    color: Colors.primary,
+    color: colors.primary,
   },
   accountsRow: {
     paddingHorizontal: 16,
@@ -184,3 +188,4 @@ const styles = StyleSheet.create({
     width: 160,
   },
 })
+}

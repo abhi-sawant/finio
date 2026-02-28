@@ -1,4 +1,4 @@
-export const Colors = {
+export const DarkColors = {
   background: '#0f1117',
   surface: '#1a1d27',
   surfaceElevated: '#242736',
@@ -26,7 +26,39 @@ export const Colors = {
   shadowColor: '#000000',
 } as const
 
-export type ColorKey = keyof typeof Colors
+export const LightColors = {
+  background: '#f4f6fb',
+  surface: '#ffffff',
+  surfaceElevated: '#eef0f7',
+  primary: '#6C63FF',
+  primaryLight: '#8B84FF',
+  primaryDark: '#4D44CC',
+  income: '#16a34a',
+  expense: '#dc2626',
+  transfer: '#2563eb',
+  textPrimary: '#0f172a',
+  textMuted: '#64748b',
+  textDisabled: '#94a3b8',
+  border: 'rgba(0,0,0,0.08)',
+  borderStrong: 'rgba(0,0,0,0.16)',
+  white: '#ffffff',
+  black: '#000000',
+
+  // semantic
+  success: '#16a34a',
+  warning: '#d97706',
+  error: '#dc2626',
+  info: '#2563eb',
+
+  // card shadows
+  shadowColor: '#000000',
+} as const
+
+// Kept for static/non-component usage (e.g. chart configs, accent palette arrays)
+export const Colors = DarkColors
+
+export type ColorPalette = typeof DarkColors
+export type ColorKey = keyof ColorPalette
 
 export const AccountColors = [
   '#6C63FF',

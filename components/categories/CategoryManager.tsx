@@ -9,7 +9,8 @@ import {
 } from 'react-native'
 import { Plus, Pencil, Trash2 } from 'lucide-react-native'
 import { useRouter } from 'expo-router'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
+import type { ColorPalette } from '@/constants/Colors'
 import { LucideIcon } from '@/components/common/IconPicker'
 import { hexToRgba } from '@/utils/formatters'
 import { useFinanceStore } from '@/store/useFinanceStore'
@@ -22,6 +23,8 @@ interface CategoryManagerProps {
 }
 
 export function CategoryManager({ filterType = 'all' }: CategoryManagerProps) {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   const router = useRouter()
   const { categories, deleteCategory } = useFinanceStore()
 
@@ -57,7 +60,7 @@ export function CategoryManager({ filterType = 'all' }: CategoryManagerProps) {
         onPress={() => router.push('/modals/add-category')}
         activeOpacity={0.8}
       >
-        <Plus size={18} color={Colors.primary} />
+        <Plus size={18} color={colors.primary} />
         <Text style={styles.addBtnText}>Add Category</Text>
       </TouchableOpacity>
 
@@ -84,14 +87,14 @@ export function CategoryManager({ filterType = 'all' }: CategoryManagerProps) {
                 hitSlop={8}
                 style={styles.actionBtn}
               >
-                <Pencil size={16} color={Colors.textMuted} />
+                <Pencil size={16} color={colors.textMuted} />
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => handleDelete(cat)}
                 hitSlop={8}
                 style={styles.actionBtn}
               >
-                <Trash2 size={16} color={Colors.expense} />
+                <Trash2 size={16} color={colors.expense} />
               </TouchableOpacity>
             </View>
           </View>
@@ -105,7 +108,8 @@ export function CategoryManager({ filterType = 'all' }: CategoryManagerProps) {
   )
 }
 
-const styles = StyleSheet.create({
+function makeStyles(colors: ColorPalette) {
+  return StyleSheet.create({
   container: {
     flex: 1,
   },
@@ -117,13 +121,13 @@ const styles = StyleSheet.create({
     padding: 14,
     borderRadius: 14,
     borderWidth: 1.5,
-    borderColor: Colors.primary,
+    borderColor: colors.primary,
     justifyContent: 'center',
   },
   addBtnText: {
     fontFamily: 'DMSans_700Bold',
     fontSize: 15,
-    color: Colors.primary,
+    color: colors.primary,
   },
   list: {
     paddingHorizontal: 16,
@@ -134,11 +138,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    backgroundColor: Colors.surface,
+    backgroundColor: colors.surface,
     borderRadius: 14,
     padding: 14,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: colors.border,
   },
   iconCircle: {
     width: 40,
@@ -153,12 +157,12 @@ const styles = StyleSheet.create({
   name: {
     fontFamily: 'DMSans_500Medium',
     fontSize: 15,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   type: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 12,
-    color: Colors.textMuted,
+    color: colors.textMuted,
     marginTop: 2,
   },
   actions: {
@@ -171,8 +175,9 @@ const styles = StyleSheet.create({
   empty: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 14,
-    color: Colors.textMuted,
+    color: colors.textMuted,
     textAlign: 'center',
     marginTop: 24,
   },
 })
+}

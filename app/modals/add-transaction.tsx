@@ -12,7 +12,8 @@ import {
 import { useRouter, useLocalSearchParams } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { X, ArrowDownLeft, ArrowUpRight, ArrowLeftRight, Check, Tag } from 'lucide-react-native'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
+import type { ColorPalette } from '@/constants/Colors'
 import { AmountInput } from '@/components/common/AmountInput'
 import { DatePicker } from '@/components/common/DatePicker'
 import { CategoryPicker } from '@/components/categories/CategoryPicker'
@@ -23,6 +24,8 @@ import { successHaptic, errorHaptic, lightHaptic } from '@/utils/haptics'
 import type { Category, TransactionType } from '@/types'
 
 export default function AddTransactionModal() {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   const router = useRouter()
   const insets = useSafeAreaInsets()
   const { id } = useLocalSearchParams<{ id?: string }>()
@@ -104,20 +107,20 @@ export default function AddTransactionModal() {
     {
       key: 'expense',
       label: 'Expense',
-      icon: <ArrowDownLeft size={16} color={type === 'expense' ? '#fff' : Colors.expense} />,
-      color: Colors.expense,
+      icon: <ArrowDownLeft size={16} color={type === 'expense' ? '#fff' : colors.expense} />,
+      color: colors.expense,
     },
     {
       key: 'income',
       label: 'Income',
-      icon: <ArrowUpRight size={16} color={type === 'income' ? '#fff' : Colors.income} />,
-      color: Colors.income,
+      icon: <ArrowUpRight size={16} color={type === 'income' ? '#fff' : colors.income} />,
+      color: colors.income,
     },
     {
       key: 'transfer',
       label: 'Transfer',
-      icon: <ArrowLeftRight size={16} color={type === 'transfer' ? '#fff' : Colors.transfer} />,
-      color: Colors.transfer,
+      icon: <ArrowLeftRight size={16} color={type === 'transfer' ? '#fff' : colors.transfer} />,
+      color: colors.transfer,
     },
   ]
 
@@ -126,11 +129,11 @@ export default function AddTransactionModal() {
       {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top + 16 }]}>
         <TouchableOpacity onPress={() => router.back()} hitSlop={8}>
-          <X size={22} color={Colors.textMuted} />
+          <X size={22} color={colors.textMuted} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>{isEdit ? 'Edit Transaction' : 'New Transaction'}</Text>
         <TouchableOpacity onPress={handleSave} hitSlop={8}>
-          <Check size={22} color={Colors.primary} />
+          <Check size={22} color={colors.primary} />
         </TouchableOpacity>
       </View>
 
@@ -280,7 +283,7 @@ export default function AddTransactionModal() {
                 setLabelPickerVisible(true)
               }}
             >
-              <Tag size={14} color={Colors.textMuted} />
+              <Tag size={14} color={colors.textMuted} />
               <Text style={styles.pickerBtnLabel}>
                 {labelIds.length > 0
                   ? `${labelIds.length} label${labelIds.length !== 1 ? 's' : ''} selected`
@@ -303,7 +306,7 @@ export default function AddTransactionModal() {
               value={note}
               onChangeText={setNote}
               placeholder="Add a note…"
-              placeholderTextColor={Colors.textMuted}
+              placeholderTextColor={colors.textMuted}
               multiline
               maxLength={200}
             />
@@ -326,11 +329,12 @@ export default function AddTransactionModal() {
   )
 }
 
-const styles = StyleSheet.create({
+function makeStyles(colors: ColorPalette) {
+  return StyleSheet.create({
   flex: { flex: 1 },
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: colors.background,
   },
   header: {
     flexDirection: 'row',
@@ -340,12 +344,12 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     paddingBottom: 12,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: Colors.border,
+    borderBottomColor: colors.border,
   },
   headerTitle: {
     fontFamily: 'Sora_700Bold',
     fontSize: 17,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   typeTabs: {
     flexDirection: 'row',
@@ -361,13 +365,13 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 12,
     borderWidth: 1.5,
-    borderColor: Colors.border,
-    backgroundColor: Colors.surface,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
   },
   typeTabLabel: {
     fontFamily: 'DMSans_500Medium',
     fontSize: 13,
-    color: Colors.textMuted,
+    color: colors.textMuted,
   },
   typeTabLabelActive: {
     color: '#fff',
@@ -387,7 +391,7 @@ const styles = StyleSheet.create({
   fieldLabel: {
     fontFamily: 'DMSans_500Medium',
     fontSize: 13,
-    color: Colors.textMuted,
+    color: colors.textMuted,
   },
   accountRow: {
     flexDirection: 'row',
@@ -399,28 +403,28 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: Colors.border,
-    backgroundColor: Colors.surface,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
   },
   accountChipActive: {
-    borderColor: Colors.primary,
-    backgroundColor: `${Colors.primary}22`,
+    borderColor: colors.primary,
+    backgroundColor: `${colors.primary}22`,
   },
   accountChipLabel: {
     fontFamily: 'DMSans_500Medium',
     fontSize: 13,
-    color: Colors.textMuted,
+    color: colors.textMuted,
   },
   accountChipLabelActive: {
-    color: Colors.primary,
+    color: colors.primary,
   },
   pickerBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    backgroundColor: Colors.surface,
+    backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: colors.border,
     borderRadius: 12,
     paddingHorizontal: 14,
     paddingVertical: 12,
@@ -428,25 +432,25 @@ const styles = StyleSheet.create({
   pickerBtnLabel: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 15,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
     flex: 1,
   },
   noteInput: {
-    backgroundColor: Colors.surface,
+    backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: colors.border,
     borderRadius: 12,
     paddingHorizontal: 14,
     paddingVertical: 12,
     fontFamily: 'DMSans_400Regular',
     fontSize: 15,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
     minHeight: 80,
     textAlignVertical: 'top',
   },
   saveBtn: {
     marginHorizontal: 16,
-    backgroundColor: Colors.primary,
+    backgroundColor: colors.primary,
     borderRadius: 16,
     paddingVertical: 16,
     alignItems: 'center',
@@ -458,3 +462,4 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
 })
+}

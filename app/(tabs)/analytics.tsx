@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
+import type { ColorPalette } from '@/constants/Colors'
 import { SpendingDonut } from '@/components/charts/SpendingDonut'
 import { IncomeExpenseBar } from '@/components/charts/IncomeExpenseBar'
 import { BalanceTrend } from '@/components/charts/BalanceTrend'
@@ -32,6 +33,8 @@ const PERIODS: { key: PeriodKey; label: string }[] = [
 ]
 
 export default function AnalyticsScreen() {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   const insets = useSafeAreaInsets()
   const { transactions, accounts, categories, settings } = useFinanceStore()
   const [period, setPeriod] = useState<PeriodKey>('month')
@@ -92,13 +95,13 @@ export default function AnalyticsScreen() {
         <View style={styles.summaryRow}>
           <View style={[styles.summaryCard, styles.incomeCard]}>
             <Text style={styles.summaryLabel}>Income</Text>
-            <Text style={[styles.summaryValue, { color: Colors.income }]}>
+            <Text style={[styles.summaryValue, { color: colors.income }]}>
               {formatCurrency(totalIncome, settings.currency)}
             </Text>
           </View>
           <View style={[styles.summaryCard, styles.expenseCard]}>
             <Text style={styles.summaryLabel}>Expenses</Text>
-            <Text style={[styles.summaryValue, { color: Colors.expense }]}>
+            <Text style={[styles.summaryValue, { color: colors.expense }]}>
               {formatCurrency(totalExpense, settings.currency)}
             </Text>
           </View>
@@ -168,17 +171,17 @@ export default function AnalyticsScreen() {
                   <Text style={styles.monthlyCell}>
                     {format(monthDate, 'MMM yy')}
                   </Text>
-                  <Text style={[styles.monthlyCell, styles.right, { color: Colors.income }]}>
+                  <Text style={[styles.monthlyCell, styles.right, { color: colors.income }]}>
                     {formatCurrency(summary.income, settings.currency)}
                   </Text>
-                  <Text style={[styles.monthlyCell, styles.right, { color: Colors.expense }]}>
+                  <Text style={[styles.monthlyCell, styles.right, { color: colors.expense }]}>
                     {formatCurrency(summary.expenses, settings.currency)}
                   </Text>
                   <Text
                     style={[
                       styles.monthlyCell,
                       styles.right,
-                      { color: net >= 0 ? Colors.income : Colors.expense },
+                      { color: net >= 0 ? colors.income : colors.expense },
                     ]}
                   >
                     {net >= 0 ? '+' : ''}
@@ -196,10 +199,11 @@ export default function AnalyticsScreen() {
   )
 }
 
-const styles = StyleSheet.create({
+function makeStyles(colors: ColorPalette) {
+  return StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: colors.background,
   },
   header: {
     paddingHorizontal: 20,
@@ -209,7 +213,7 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'Sora_700Bold',
     fontSize: 24,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   periodRow: {
     flexDirection: 'row',
@@ -221,19 +225,19 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 7,
     borderRadius: 8,
-    backgroundColor: Colors.surface,
+    backgroundColor: colors.surface,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: colors.border,
   },
   periodChipActive: {
-    backgroundColor: Colors.primary,
-    borderColor: Colors.primary,
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
   },
   periodLabel: {
     fontFamily: 'DMSans_500Medium',
     fontSize: 13,
-    color: Colors.textMuted,
+    color: colors.textMuted,
   },
   periodLabelActive: {
     color: '#fff',
@@ -250,22 +254,22 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     borderRadius: 16,
-    backgroundColor: Colors.surface,
+    backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: colors.border,
   },
   incomeCard: {
     borderLeftWidth: 3,
-    borderLeftColor: Colors.income,
+    borderLeftColor: colors.income,
   },
   expenseCard: {
     borderLeftWidth: 3,
-    borderLeftColor: Colors.expense,
+    borderLeftColor: colors.expense,
   },
   summaryLabel: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 12,
-    color: Colors.textMuted,
+    color: colors.textMuted,
     marginBottom: 4,
   },
   summaryValue: {
@@ -273,17 +277,17 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   card: {
-    backgroundColor: Colors.surface,
+    backgroundColor: colors.surface,
     borderRadius: 16,
     padding: 16,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: colors.border,
     gap: 12,
   },
   cardTitle: {
     fontFamily: 'Sora_700Bold',
     fontSize: 15,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   categoryTable: {
     gap: 10,
@@ -302,7 +306,7 @@ const styles = StyleSheet.create({
   categoryRank: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 12,
-    color: Colors.textMuted,
+    color: colors.textMuted,
     width: 16,
     textAlign: 'center',
   },
@@ -314,7 +318,7 @@ const styles = StyleSheet.create({
   categoryName: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 14,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
     flex: 1,
   },
   categoryRight: {
@@ -324,12 +328,12 @@ const styles = StyleSheet.create({
   categoryAmount: {
     fontFamily: 'DMSans_500Medium',
     fontSize: 13,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   categoryPct: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 11,
-    color: Colors.textMuted,
+    color: colors.textMuted,
   },
   monthlyTable: {
     gap: 8,
@@ -338,10 +342,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingBottom: 6,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
+    borderBottomColor: colors.border,
   },
   monthlyHeaderText: {
-    color: Colors.textMuted,
+    color: colors.textMuted,
     fontSize: 11,
     fontFamily: 'DMSans_500Medium',
   },
@@ -353,9 +357,10 @@ const styles = StyleSheet.create({
     flex: 1,
     fontFamily: 'DMSans_400Regular',
     fontSize: 12,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   right: {
     textAlign: 'right',
   },
 })
+}

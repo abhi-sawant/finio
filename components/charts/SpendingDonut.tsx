@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
+import type { ColorPalette } from '@/constants/Colors'
 import { formatCurrency, hexToRgba } from '@/utils/formatters'
 import { useFinanceStore } from '@/store/useFinanceStore'
 import { getCategorySpending } from '@/store/selectors'
@@ -13,6 +14,8 @@ interface SpendingDonutProps {
 }
 
 export function SpendingDonut({ startDate, endDate, compact = false }: SpendingDonutProps) {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   const { transactions, categories, settings } = useFinanceStore()
 
   const now = new Date()
@@ -33,7 +36,7 @@ export function SpendingDonut({ startDate, endDate, compact = false }: SpendingD
   const total = spending.reduce((s, item) => s + item.amount, 0)
 
   const COLORS = [
-    Colors.primary,
+    colors.primary,
     '#22c55e',
     '#ef4444',
     '#f59e0b',
@@ -93,13 +96,14 @@ export function SpendingDonut({ startDate, endDate, compact = false }: SpendingD
   )
 }
 
-const styles = StyleSheet.create({
+function makeStyles(colors: ColorPalette) {
+  return StyleSheet.create({
   container: {
     padding: 16,
-    backgroundColor: Colors.surface,
+    backgroundColor: colors.surface,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: colors.border,
     gap: 12,
   },
   compact: {
@@ -109,12 +113,12 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'Sora_700Bold',
     fontSize: 15,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   emptyText: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 14,
-    color: Colors.textMuted,
+    color: colors.textMuted,
     textAlign: 'center',
     paddingVertical: 24,
   },
@@ -134,13 +138,13 @@ const styles = StyleSheet.create({
   categoryName: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 12,
-    color: Colors.textMuted,
+    color: colors.textMuted,
     width: 70,
   },
   barTrack: {
     flex: 1,
     height: 6,
-    backgroundColor: Colors.surfaceElevated,
+    backgroundColor: colors.surfaceElevated,
     borderRadius: 3,
     overflow: 'hidden',
   },
@@ -151,7 +155,7 @@ const styles = StyleSheet.create({
   barAmount: {
     fontFamily: 'DMSans_500Medium',
     fontSize: 12,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
     minWidth: 60,
     textAlign: 'right',
   },
@@ -173,6 +177,7 @@ const styles = StyleSheet.create({
   legendPct: {
     fontFamily: 'DMSans_500Medium',
     fontSize: 11,
-    color: Colors.textMuted,
+    color: colors.textMuted,
   },
 })
+}

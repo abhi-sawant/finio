@@ -12,7 +12,8 @@ import Animated, {
 import { Plus } from 'lucide-react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
+import type { ColorPalette } from '@/constants/Colors'
 import { lightHaptic } from '@/utils/haptics'
 
 interface FABProps {
@@ -21,6 +22,8 @@ interface FABProps {
 }
 
 export function FAB({ onPress, bottom }: FABProps) {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   const insets = useSafeAreaInsets()
   const scale = useSharedValue(0)
   const pulseScale = useSharedValue(1)
@@ -92,7 +95,8 @@ export function FAB({ onPress, bottom }: FABProps) {
   )
 }
 
-const styles = StyleSheet.create({
+function makeStyles(colors: ColorPalette) {
+  return StyleSheet.create({
   wrapper: {
     position: 'absolute',
     right: 20,
@@ -107,14 +111,14 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: Colors.primary,
+    backgroundColor: colors.primary,
   },
   touchable: {
     width: 56,
     height: 56,
     borderRadius: 28,
     overflow: 'hidden',
-    shadowColor: Colors.primary,
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.5,
     shadowRadius: 16,
@@ -126,3 +130,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 })
+}

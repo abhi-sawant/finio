@@ -13,7 +13,8 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import { Search, X, ChevronDown } from 'lucide-react-native'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
+import type { ColorPalette } from '@/constants/Colors'
 import { BottomSheet } from '@/components/common/BottomSheet'
 import { CategoryPicker } from '@/components/categories/CategoryPicker'
 import { useFinanceStore } from '@/store/useFinanceStore'
@@ -40,6 +41,8 @@ const TYPE_FILTERS: Array<{ value: FilterState['type']; label: string }> = [
 ]
 
 export function TransactionFilters({ filters, onChange }: TransactionFiltersProps) {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   const { accounts } = useFinanceStore()
   const [searchExpanded, setSearchExpanded] = useState(false)
   const [showAccountSheet, setShowAccountSheet] = useState(false)
@@ -112,13 +115,13 @@ export function TransactionFilters({ filters, onChange }: TransactionFiltersProp
           >
             {selectedAccount ? selectedAccount.name : 'Account'}
           </Text>
-          <ChevronDown size={12} color={filters.accountId ? Colors.primary : Colors.textMuted} />
+          <ChevronDown size={12} color={filters.accountId ? colors.primary : colors.textMuted} />
           {filters.accountId && (
             <TouchableOpacity
               onPress={() => onChange({ ...filters, accountId: null })}
               hitSlop={4}
             >
-              <X size={12} color={Colors.primary} />
+              <X size={12} color={colors.primary} />
             </TouchableOpacity>
           )}
         </TouchableOpacity>
@@ -139,16 +142,16 @@ export function TransactionFilters({ filters, onChange }: TransactionFiltersProp
               ? `${filters.categoryIds.length} Categories`
               : 'Category'}
           </Text>
-          <ChevronDown size={12} color={filters.categoryIds.length > 0 ? Colors.primary : Colors.textMuted} />
+          <ChevronDown size={12} color={filters.categoryIds.length > 0 ? colors.primary : colors.textMuted} />
         </TouchableOpacity>
 
         {/* Search */}
         <View style={styles.searchWrapper}>
           <TouchableOpacity onPress={toggleSearch} style={styles.searchBtn} hitSlop={4}>
             {searchExpanded ? (
-              <X size={16} color={Colors.primary} />
+              <X size={16} color={colors.primary} />
             ) : (
-              <Search size={16} color={Colors.textMuted} />
+              <Search size={16} color={colors.textMuted} />
             )}
           </TouchableOpacity>
           <Animated.View style={[styles.searchInput, searchStyle]}>
@@ -156,10 +159,10 @@ export function TransactionFilters({ filters, onChange }: TransactionFiltersProp
               value={filters.searchQuery}
               onChangeText={(q) => onChange({ ...filters, searchQuery: q })}
               placeholder="Search..."
-              placeholderTextColor={Colors.textMuted}
+              placeholderTextColor={colors.textMuted}
               style={styles.searchText}
               autoFocus={searchExpanded}
-              selectionColor={Colors.primary}
+              selectionColor={colors.primary}
             />
           </Animated.View>
         </View>
@@ -180,7 +183,7 @@ export function TransactionFilters({ filters, onChange }: TransactionFiltersProp
               setShowAccountSheet(false)
             }}
           >
-            <Text style={[styles.accountItemText, !filters.accountId && { color: Colors.primary }]}>
+            <Text style={[styles.accountItemText, !filters.accountId && { color: colors.primary }]}>
               All Accounts
             </Text>
           </TouchableOpacity>
@@ -193,7 +196,7 @@ export function TransactionFilters({ filters, onChange }: TransactionFiltersProp
                 setShowAccountSheet(false)
               }}
             >
-              <Text style={[styles.accountItemText, filters.accountId === a.id && { color: Colors.primary }]}>
+              <Text style={[styles.accountItemText, filters.accountId === a.id && { color: colors.primary }]}>
                 {a.name}
               </Text>
             </TouchableOpacity>
@@ -220,11 +223,12 @@ export function TransactionFilters({ filters, onChange }: TransactionFiltersProp
   )
 }
 
-const styles = StyleSheet.create({
+function makeStyles(colors: ColorPalette) {
+  return StyleSheet.create({
   container: {
     borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
-    backgroundColor: Colors.background,
+    borderBottomColor: colors.border,
+    backgroundColor: colors.background,
   },
   scrollContent: {
     paddingHorizontal: 16,
@@ -240,29 +244,29 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 20,
-    backgroundColor: Colors.surface,
+    backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: colors.border,
   },
   chipActive: {
-    backgroundColor: Colors.primary + '20',
-    borderColor: Colors.primary,
+    backgroundColor: colors.primary + '20',
+    borderColor: colors.primary,
   },
   chipText: {
     fontFamily: 'DMSans_500Medium',
     fontSize: 13,
-    color: Colors.textMuted,
+    color: colors.textMuted,
   },
   chipTextActive: {
-    color: Colors.primary,
+    color: colors.primary,
   },
   searchWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.surface,
+    backgroundColor: colors.surface,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: colors.border,
     overflow: 'hidden',
   },
   searchBtn: {
@@ -275,7 +279,7 @@ const styles = StyleSheet.create({
   searchText: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 13,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
     height: 36,
     paddingRight: 12,
   },
@@ -286,7 +290,7 @@ const styles = StyleSheet.create({
   accountItem: {
     paddingVertical: 14,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
+    borderBottomColor: colors.border,
   },
   accountItemActive: {
     backgroundColor: 'transparent',
@@ -294,6 +298,7 @@ const styles = StyleSheet.create({
   accountItemText: {
     fontFamily: 'DMSans_500Medium',
     fontSize: 15,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
 })
+}

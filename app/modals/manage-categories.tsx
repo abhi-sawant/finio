@@ -3,10 +3,13 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { X } from 'lucide-react-native'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
+import type { ColorPalette } from '@/constants/Colors'
 import { CategoryManager } from '@/components/categories/CategoryManager'
 
 export default function ManageCategoriesModal() {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   const router = useRouter()
   const insets = useSafeAreaInsets()
 
@@ -15,7 +18,7 @@ export default function ManageCategoriesModal() {
       <View style={styles.header}>
         <Text style={styles.title}>Categories</Text>
         <TouchableOpacity onPress={() => router.back()} hitSlop={8}>
-          <X size={22} color={Colors.textMuted} />
+          <X size={22} color={colors.textMuted} />
         </TouchableOpacity>
       </View>
       <CategoryManager />
@@ -23,10 +26,11 @@ export default function ManageCategoriesModal() {
   )
 }
 
-const styles = StyleSheet.create({
+function makeStyles(colors: ColorPalette) {
+  return StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: colors.background,
   },
   header: {
     flexDirection: 'row',
@@ -35,11 +39,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
+    borderBottomColor: colors.border,
   },
   title: {
     fontFamily: 'Sora_700Bold',
     fontSize: 20,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
 })
+}

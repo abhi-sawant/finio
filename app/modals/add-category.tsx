@@ -13,7 +13,8 @@ import {
 import { useRouter, useLocalSearchParams } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { X, Check } from 'lucide-react-native'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
+import type { ColorPalette } from '@/constants/Colors'
 import { ColorPicker } from '@/components/common/ColorPicker'
 import { IconPicker } from '@/components/common/IconPicker'
 import { CategoryBadge } from '@/components/categories/CategoryBadge'
@@ -29,6 +30,8 @@ const CATEGORY_TYPES: { key: CategoryType; label: string }[] = [
 ]
 
 export default function AddCategoryModal() {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   const router = useRouter()
   const insets = useSafeAreaInsets()
   const { id } = useLocalSearchParams<{ id?: string }>()
@@ -39,7 +42,7 @@ export default function AddCategoryModal() {
 
   const [name, setName] = useState(existing?.name ?? '')
   const [icon, setIcon] = useState(existing?.icon ?? 'tag')
-  const [color, setColor] = useState(existing?.color ?? Colors.primary)
+  const [color, setColor] = useState(existing?.color ?? colors.primary)
   const [type, setType] = useState<CategoryType>(existing?.type ?? 'expense')
   const [iconPickerVisible, setIconPickerVisible] = useState(false)
 
@@ -91,11 +94,11 @@ export default function AddCategoryModal() {
       {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top + 16 }]}>
         <TouchableOpacity onPress={() => router.back()} hitSlop={8}>
-          <X size={22} color={Colors.textMuted} />
+          <X size={22} color={colors.textMuted} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>{isEdit ? 'Edit Category' : 'New Category'}</Text>
         <TouchableOpacity onPress={handleSave} hitSlop={8}>
-          <Check size={22} color={Colors.primary} />
+          <Check size={22} color={colors.primary} />
         </TouchableOpacity>
       </View>
 
@@ -122,7 +125,7 @@ export default function AddCategoryModal() {
               value={name}
               onChangeText={setName}
               placeholder="e.g. Groceries"
-              placeholderTextColor={Colors.textMuted}
+              placeholderTextColor={colors.textMuted}
               maxLength={40}
               autoFocus={!isEdit}
             />
@@ -204,11 +207,12 @@ export default function AddCategoryModal() {
   )
 }
 
-const styles = StyleSheet.create({
+function makeStyles(colors: ColorPalette) {
+  return StyleSheet.create({
   flex: { flex: 1 },
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: colors.background,
   },
   header: {
     flexDirection: 'row',
@@ -218,12 +222,12 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     paddingBottom: 12,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: Colors.border,
+    borderBottomColor: colors.border,
   },
   headerTitle: {
     fontFamily: 'Sora_700Bold',
     fontSize: 17,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   scroll: {
     padding: 16,
@@ -237,7 +241,7 @@ const styles = StyleSheet.create({
   previewName: {
     fontFamily: 'Sora_700Bold',
     fontSize: 20,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   field: {
     gap: 8,
@@ -245,18 +249,18 @@ const styles = StyleSheet.create({
   fieldLabel: {
     fontFamily: 'DMSans_500Medium',
     fontSize: 13,
-    color: Colors.textMuted,
+    color: colors.textMuted,
   },
   textInput: {
-    backgroundColor: Colors.surface,
+    backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: colors.border,
     borderRadius: 12,
     paddingHorizontal: 14,
     paddingVertical: 14,
     fontFamily: 'DMSans_400Regular',
     fontSize: 16,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   typeRow: {
     flexDirection: 'row',
@@ -267,18 +271,18 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: Colors.border,
-    backgroundColor: Colors.surface,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     alignItems: 'center',
   },
   typeChipActive: {
-    backgroundColor: Colors.primary,
-    borderColor: Colors.primary,
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
   },
   typeChipLabel: {
     fontFamily: 'DMSans_500Medium',
     fontSize: 14,
-    color: Colors.textMuted,
+    color: colors.textMuted,
   },
   typeChipLabelActive: {
     color: '#fff',
@@ -288,19 +292,19 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: `${Colors.expense}44`,
-    backgroundColor: `${Colors.expense}11`,
+    borderColor: `${colors.expense}44`,
+    backgroundColor: `${colors.expense}11`,
     alignItems: 'center',
   },
   deleteBtnLabel: {
     fontFamily: 'DMSans_500Medium',
     fontSize: 15,
-    color: Colors.expense,
+    color: colors.expense,
   },
   iconSelectBtn: {
-    backgroundColor: Colors.surface,
+    backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: colors.border,
     borderRadius: 12,
     paddingHorizontal: 14,
     paddingVertical: 12,
@@ -308,11 +312,11 @@ const styles = StyleSheet.create({
   iconSelectLabel: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 14,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   saveBtn: {
     marginHorizontal: 16,
-    backgroundColor: Colors.primary,
+    backgroundColor: colors.primary,
     borderRadius: 16,
     paddingVertical: 16,
     alignItems: 'center',
@@ -324,3 +328,4 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
 })
+}

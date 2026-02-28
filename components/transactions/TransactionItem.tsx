@@ -9,7 +9,8 @@ import Animated, {
   runOnJS,
 } from 'react-native-reanimated'
 import { Pencil, Trash2 } from 'lucide-react-native'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
+import type { ColorPalette } from '@/constants/Colors'
 import { LucideIcon } from '@/components/common/IconPicker'
 import { formatCurrency, formatTime, hexToRgba } from '@/utils/formatters'
 import { getCategoryById } from '@/store/selectors'
@@ -34,6 +35,8 @@ export function TransactionItem({
   onDelete,
   currency = 'INR',
 }: TransactionItemProps) {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   const { categories, labels: allLabels, settings } = useFinanceStore()
   const category = getCategoryById(categories, transaction.categoryId)
   const txLabels = allLabels.filter((l) => transaction.labels.includes(l.id))
@@ -66,10 +69,10 @@ export function TransactionItem({
 
   const amountColor =
     transaction.type === 'income'
-      ? Colors.income
+      ? colors.income
       : transaction.type === 'expense'
-      ? Colors.expense
-      : Colors.transfer
+      ? colors.expense
+      : colors.transfer
 
   const amountPrefix =
     transaction.type === 'income' ? '+' : transaction.type === 'expense' ? '-' : '↔'
@@ -116,8 +119,8 @@ export function TransactionItem({
                 <LucideIcon name={category.icon} size={18} color={category.color} />
               </View>
             ) : (
-              <View style={[styles.iconCircle, { backgroundColor: Colors.surfaceElevated }]}>
-                <LucideIcon name="circle-ellipsis" size={18} color={Colors.textMuted} />
+              <View style={[styles.iconCircle, { backgroundColor: colors.surfaceElevated }]}>
+                <LucideIcon name="circle-ellipsis" size={18} color={colors.textMuted} />
               </View>
             )}
 
@@ -150,7 +153,8 @@ export function TransactionItem({
   )
 }
 
-const styles = StyleSheet.create({
+function makeStyles(colors: ColorPalette) {
+  return StyleSheet.create({
   container: {
     position: 'relative',
     marginVertical: 1,
@@ -161,7 +165,7 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
     width: ACTION_WIDTH,
-    backgroundColor: Colors.transfer,
+    backgroundColor: colors.transfer,
     alignItems: 'center',
     justifyContent: 'center',
     gap: 4,
@@ -173,7 +177,7 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
     width: ACTION_WIDTH,
-    backgroundColor: Colors.expense,
+    backgroundColor: colors.expense,
     alignItems: 'center',
     justifyContent: 'center',
     gap: 4,
@@ -184,7 +188,7 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   row: {
-    backgroundColor: Colors.background,
+    backgroundColor: colors.background,
   },
   rowInner: {
     flexDirection: 'row',
@@ -192,7 +196,7 @@ const styles = StyleSheet.create({
     gap: 12,
     paddingVertical: 12,
     paddingHorizontal: 16,
-    backgroundColor: Colors.background,
+    backgroundColor: colors.background,
   },
   iconCircle: {
     width: 40,
@@ -208,7 +212,7 @@ const styles = StyleSheet.create({
   note: {
     fontFamily: 'DMSans_500Medium',
     fontSize: 14,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   metaRow: {
     flexDirection: 'row',
@@ -218,7 +222,7 @@ const styles = StyleSheet.create({
   time: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 12,
-    color: Colors.textMuted,
+    color: colors.textMuted,
   },
   labelsRow: {
     flexDirection: 'row',
@@ -235,3 +239,4 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 })
+}

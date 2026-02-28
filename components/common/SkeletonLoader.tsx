@@ -7,7 +7,8 @@ import Animated, {
   withSequence,
   withTiming,
 } from 'react-native-reanimated'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
+import type { ColorPalette } from '@/constants/Colors'
 
 interface SkeletonBoxProps {
   style?: ViewStyle
@@ -15,6 +16,8 @@ interface SkeletonBoxProps {
 }
 
 function SkeletonBox({ style, borderRadius = 8 }: SkeletonBoxProps) {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   const opacity = useSharedValue(1)
 
   useEffect(() => {
@@ -33,7 +36,7 @@ function SkeletonBox({ style, borderRadius = 8 }: SkeletonBoxProps) {
   return (
     <Animated.View
       style={[
-        { backgroundColor: Colors.surfaceElevated, borderRadius },
+        { backgroundColor: colors.surfaceElevated, borderRadius },
         style,
         animStyle,
       ]}
@@ -42,6 +45,8 @@ function SkeletonBox({ style, borderRadius = 8 }: SkeletonBoxProps) {
 }
 
 export function TransactionSkeleton() {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   return (
     <View style={styles.txnRow}>
       <SkeletonBox style={{ width: 44, height: 44 }} borderRadius={22} />
@@ -55,6 +60,8 @@ export function TransactionSkeleton() {
 }
 
 export function CardSkeleton() {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   return (
     <View style={styles.card}>
       <SkeletonBox style={{ width: 36, height: 36 }} borderRadius={18} />
@@ -67,6 +74,8 @@ export function CardSkeleton() {
 }
 
 export function DashboardSkeleton() {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   return (
     <View style={styles.dashContainer}>
       <SkeletonBox style={styles.balanceCard} borderRadius={20} />
@@ -81,7 +90,8 @@ export function DashboardSkeleton() {
   )
 }
 
-const styles = StyleSheet.create({
+function makeStyles(colors: ColorPalette) {
+  return StyleSheet.create({
   txnRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -97,7 +107,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 12,
     padding: 16,
-    backgroundColor: Colors.surface,
+    backgroundColor: colors.surface,
     borderRadius: 16,
     marginHorizontal: 16,
     marginVertical: 4,
@@ -120,3 +130,4 @@ const styles = StyleSheet.create({
     height: 80,
   },
 })
+}

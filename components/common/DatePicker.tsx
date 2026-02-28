@@ -3,7 +3,8 @@ import { View, Text, TouchableOpacity, Platform, StyleSheet } from 'react-native
 import DateTimePicker, { type DateTimePickerEvent } from '@react-native-community/datetimepicker'
 import { format } from 'date-fns'
 import { CalendarDays } from 'lucide-react-native'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
+import type { ColorPalette } from '@/constants/Colors'
 import { BottomSheet } from './BottomSheet'
 import { lightHaptic } from '@/utils/haptics'
 
@@ -14,6 +15,8 @@ interface DatePickerProps {
 }
 
 export function DatePicker({ value, onChange, label = 'Date' }: DatePickerProps) {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   const [showSheet, setShowSheet] = useState(false)
 
   const handleChange = (_: DateTimePickerEvent, selectedDate?: Date) => {
@@ -31,7 +34,7 @@ export function DatePicker({ value, onChange, label = 'Date' }: DatePickerProps)
   return (
     <>
       <TouchableOpacity style={styles.trigger} onPress={handlePress} activeOpacity={0.7}>
-        <CalendarDays size={18} color={Colors.textMuted} />
+        <CalendarDays size={18} color={colors.textMuted} />
         <View style={styles.textContainer}>
           <Text style={styles.label}>{label}</Text>
           <Text style={styles.value}>{format(value, 'dd MMM yyyy')}</Text>
@@ -46,7 +49,7 @@ export function DatePicker({ value, onChange, label = 'Date' }: DatePickerProps)
               mode="date"
               display="spinner"
               onChange={handleChange}
-              textColor={Colors.textPrimary}
+              textColor={colors.textPrimary}
               style={{ flex: 1 }}
             />
             <TouchableOpacity
@@ -71,16 +74,17 @@ export function DatePicker({ value, onChange, label = 'Date' }: DatePickerProps)
   )
 }
 
-const styles = StyleSheet.create({
+function makeStyles(colors: ColorPalette) {
+  return StyleSheet.create({
   trigger: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    backgroundColor: Colors.surfaceElevated,
+    backgroundColor: colors.surfaceElevated,
     borderRadius: 14,
     padding: 14,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: colors.border,
   },
   textContainer: {
     flex: 1,
@@ -88,12 +92,12 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 12,
-    color: Colors.textMuted,
+    color: colors.textMuted,
   },
   value: {
     fontFamily: 'DMSans_500Medium',
     fontSize: 15,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
     marginTop: 2,
   },
   pickerWrapper: {
@@ -101,7 +105,7 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   doneBtn: {
-    backgroundColor: Colors.primary,
+    backgroundColor: colors.primary,
     borderRadius: 14,
     padding: 14,
     alignItems: 'center',
@@ -113,3 +117,4 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
 })
+}

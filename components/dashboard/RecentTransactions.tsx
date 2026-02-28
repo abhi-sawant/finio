@@ -2,7 +2,8 @@ import React from 'react'
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native'
 import { useRouter } from 'expo-router'
 import { ArrowRight } from 'lucide-react-native'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
+import type { ColorPalette } from '@/constants/Colors'
 import { TransactionItem } from '@/components/transactions/TransactionItem'
 import { EmptyState } from '@/components/common/EmptyState'
 import { useFinanceStore } from '@/store/useFinanceStore'
@@ -12,6 +13,8 @@ import { showToast } from '@/components/common/Toast'
 import type { Transaction } from '@/types'
 
 export function RecentTransactions() {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   const router = useRouter()
   const { transactions, deleteTransaction } = useFinanceStore()
 
@@ -54,7 +57,7 @@ export function RecentTransactions() {
           activeOpacity={0.7}
         >
           <Text style={styles.seeAllText}>See all</Text>
-          <ArrowRight size={14} color={Colors.primary} />
+          <ArrowRight size={14} color={colors.primary} />
         </TouchableOpacity>
       </View>
 
@@ -81,7 +84,8 @@ export function RecentTransactions() {
   )
 }
 
-const styles = StyleSheet.create({
+function makeStyles(colors: ColorPalette) {
+  return StyleSheet.create({
   container: {
     marginTop: 8,
   },
@@ -95,7 +99,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontFamily: 'Sora_700Bold',
     fontSize: 16,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   seeAll: {
     flexDirection: 'row',
@@ -105,10 +109,11 @@ const styles = StyleSheet.create({
   seeAllText: {
     fontFamily: 'DMSans_500Medium',
     fontSize: 13,
-    color: Colors.primary,
+    color: colors.primary,
   },
   list: {
     borderTopWidth: 1,
-    borderTopColor: Colors.border,
+    borderTopColor: colors.border,
   },
 })
+}

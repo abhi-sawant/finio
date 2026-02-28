@@ -1,7 +1,8 @@
 import React from 'react'
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native'
 import * as LucideIcons from 'lucide-react-native'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
+import type { ColorPalette } from '@/constants/Colors'
 import { BottomSheet } from './BottomSheet'
 import { lightHaptic } from '@/utils/haptics'
 
@@ -27,7 +28,7 @@ function toPascalCase(str: string): string {
 export function LucideIcon({
   name,
   size = 20,
-  color = Colors.textPrimary,
+  color = colors.textPrimary,
   strokeWidth = 2,
 }: {
   name: string
@@ -65,10 +66,12 @@ interface IconPickerProps {
 export function IconPicker({
   selectedIcon,
   onChange,
-  accentColor = Colors.primary,
+  accentColor = colors.primary,
   visible,
   onClose,
 }: IconPickerProps) {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   const handleSelect = async (icon: string) => {
     await lightHaptic()
     onChange(icon)
@@ -93,7 +96,7 @@ export function IconPicker({
               <LucideIcon
                 name={icon}
                 size={22}
-                color={isSelected ? accentColor : Colors.textPrimary}
+                color={isSelected ? accentColor : colors.textPrimary}
               />
             </TouchableOpacity>
           )
@@ -103,7 +106,8 @@ export function IconPicker({
   )
 }
 
-const styles = StyleSheet.create({
+function makeStyles(colors: ColorPalette) {
+  return StyleSheet.create({
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -115,10 +119,11 @@ const styles = StyleSheet.create({
     width: 52,
     height: 52,
     borderRadius: 14,
-    backgroundColor: Colors.surfaceElevated,
+    backgroundColor: colors.surfaceElevated,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: colors.border,
     alignItems: 'center',
     justifyContent: 'center',
   },
 })
+}

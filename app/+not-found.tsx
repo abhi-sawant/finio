@@ -1,14 +1,17 @@
 import { Link, Stack } from 'expo-router'
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
+import type { ColorPalette } from '@/constants/Colors'
 import { CircleAlert } from 'lucide-react-native'
 
 export default function NotFoundScreen() {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   return (
     <>
       <Stack.Screen options={{ title: 'Not Found' }} />
       <View style={styles.container}>
-        <CircleAlert size={64} color={Colors.textMuted} />
+        <CircleAlert size={64} color={colors.textMuted} />
         <Text style={styles.title}>Page not found</Text>
         <Text style={styles.description}>
           The screen you're looking for doesn't exist.
@@ -23,10 +26,11 @@ export default function NotFoundScreen() {
   )
 }
 
-const styles = StyleSheet.create({
+function makeStyles(colors: ColorPalette) {
+  return StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: colors.background,
     alignItems: 'center',
     justifyContent: 'center',
     padding: 24,
@@ -35,17 +39,17 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'Sora_700Bold',
     fontSize: 24,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   description: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 15,
-    color: Colors.textMuted,
+    color: colors.textMuted,
     textAlign: 'center',
   },
   btn: {
     marginTop: 8,
-    backgroundColor: Colors.primary,
+    backgroundColor: colors.primary,
     paddingHorizontal: 28,
     paddingVertical: 14,
     borderRadius: 14,
@@ -56,3 +60,4 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
 })
+}

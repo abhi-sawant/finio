@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
+import type { ColorPalette } from '@/constants/Colors'
 import { LucideIcon } from '@/components/common/IconPicker'
 import { formatCurrency, hexToRgba } from '@/utils/formatters'
 import type { Account } from '@/types'
@@ -22,6 +23,8 @@ interface AccountCardProps {
 }
 
 export function AccountCard({ account, onPress, onLongPress, variant = 'grid' }: AccountCardProps) {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   if (variant === 'horizontal') {
     return (
       <TouchableOpacity
@@ -85,10 +88,11 @@ export function AccountCard({ account, onPress, onLongPress, variant = 'grid' }:
   )
 }
 
-const styles = StyleSheet.create({
+function makeStyles(colors: ColorPalette) {
+  return StyleSheet.create({
   // Grid variant
   card: {
-    backgroundColor: Colors.surface,
+    backgroundColor: colors.surface,
     borderRadius: 20,
     padding: 16,
     borderWidth: 1,
@@ -109,7 +113,7 @@ const styles = StyleSheet.create({
   cardName: {
     fontFamily: 'DMSans_500Medium',
     fontSize: 14,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   cardBalance: {
     fontFamily: 'Sora_700Bold',
@@ -130,11 +134,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    backgroundColor: Colors.surface,
+    backgroundColor: colors.surface,
     borderRadius: 14,
     padding: 14,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: colors.border,
   },
   horizontalInfo: {
     flex: 1,
@@ -142,18 +146,18 @@ const styles = StyleSheet.create({
   accountName: {
     fontFamily: 'DMSans_500Medium',
     fontSize: 14,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   accountType: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 12,
-    color: Colors.textMuted,
+    color: colors.textMuted,
     marginTop: 2,
   },
   horizontalBalance: {
     fontFamily: 'Sora_700Bold',
     fontSize: 15,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
 
   // Shared
@@ -165,3 +169,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 })
+}

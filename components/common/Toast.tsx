@@ -9,7 +9,7 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { Colors } from '@/constants/Colors'
+import { DarkColors } from '@/constants/Colors'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
@@ -26,9 +26,9 @@ interface ToastHandle {
 }
 
 const TOAST_COLORS: Record<ToastType, string> = {
-  success: Colors.income,
-  error: Colors.expense,
-  info: Colors.primary,
+  success: DarkColors.income,
+  error: DarkColors.expense,
+  info: DarkColors.primary,
   warning: '#f59e0b',
 }
 

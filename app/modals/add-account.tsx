@@ -11,7 +11,8 @@ import {
 import { useRouter, useLocalSearchParams } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { X } from 'lucide-react-native'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
+import type { ColorPalette } from '@/constants/Colors'
 import { AccountForm } from '@/components/accounts/AccountForm'
 import { useFinanceStore } from '@/store/useFinanceStore'
 import { showToast } from '@/components/common/Toast'
@@ -19,6 +20,8 @@ import { successHaptic } from '@/utils/haptics'
 import type { Account } from '@/types'
 
 export default function AddAccountModal() {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   const router = useRouter()
   const insets = useSafeAreaInsets()
   const { id } = useLocalSearchParams<{ id?: string }>()
@@ -44,7 +47,7 @@ export default function AddAccountModal() {
       {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top + 16 }]}>
         <TouchableOpacity onPress={() => router.back()} hitSlop={8}>
-          <X size={22} color={Colors.textMuted} />
+          <X size={22} color={colors.textMuted} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>{isEdit ? 'Edit Account' : 'New Account'}</Text>
         <View style={{ width: 22 }} />
@@ -67,11 +70,12 @@ export default function AddAccountModal() {
   )
 }
 
-const styles = StyleSheet.create({
+function makeStyles(colors: ColorPalette) {
+  return StyleSheet.create({
   flex: { flex: 1 },
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: colors.background,
   },
   header: {
     flexDirection: 'row',
@@ -81,14 +85,15 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     paddingBottom: 12,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: Colors.border,
+    borderBottomColor: colors.border,
   },
   headerTitle: {
     fontFamily: 'Sora_700Bold',
     fontSize: 17,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   scroll: {
     padding: 16,
   },
 })
+}

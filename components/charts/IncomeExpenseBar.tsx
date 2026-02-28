@@ -1,7 +1,8 @@
 import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import { format } from 'date-fns'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
+import type { ColorPalette } from '@/constants/Colors'
 import { formatCurrency, hexToRgba } from '@/utils/formatters'
 import { getLast6MonthsSummaries } from '@/store/selectors'
 import { useFinanceStore } from '@/store/useFinanceStore'
@@ -11,6 +12,8 @@ const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
   'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
 export function IncomeExpenseBar() {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   const { transactions, settings } = useFinanceStore()
   const summaries = getLast6MonthsSummaries(transactions)
   const currency = settings.currency as Currency
@@ -39,7 +42,7 @@ export function IncomeExpenseBar() {
                       styles.bar,
                       {
                         height: Math.max(incomeHeight, 2),
-                        backgroundColor: Colors.income,
+                        backgroundColor: colors.income,
                       },
                     ]}
                   />
@@ -51,7 +54,7 @@ export function IncomeExpenseBar() {
                       styles.bar,
                       {
                         height: Math.max(expenseHeight, 2),
-                        backgroundColor: Colors.expense,
+                        backgroundColor: colors.expense,
                       },
                     ]}
                   />
@@ -66,11 +69,11 @@ export function IncomeExpenseBar() {
       {/* Legend */}
       <View style={styles.legend}>
         <View style={styles.legendItem}>
-          <View style={[styles.legendDot, { backgroundColor: Colors.income }]} />
+          <View style={[styles.legendDot, { backgroundColor: colors.income }]} />
           <Text style={styles.legendText}>Income</Text>
         </View>
         <View style={styles.legendItem}>
-          <View style={[styles.legendDot, { backgroundColor: Colors.expense }]} />
+          <View style={[styles.legendDot, { backgroundColor: colors.expense }]} />
           <Text style={styles.legendText}>Expenses</Text>
         </View>
       </View>
@@ -78,19 +81,20 @@ export function IncomeExpenseBar() {
   )
 }
 
-const styles = StyleSheet.create({
+function makeStyles(colors: ColorPalette) {
+  return StyleSheet.create({
   container: {
-    backgroundColor: Colors.surface,
+    backgroundColor: colors.surface,
     borderRadius: 20,
     padding: 20,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: colors.border,
     gap: 16,
   },
   title: {
     fontFamily: 'Sora_700Bold',
     fontSize: 15,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   chart: {
     flexDirection: 'row',
@@ -121,7 +125,7 @@ const styles = StyleSheet.create({
   monthLabel: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 10,
-    color: Colors.textMuted,
+    color: colors.textMuted,
     position: 'absolute',
     bottom: 0,
   },
@@ -142,6 +146,7 @@ const styles = StyleSheet.create({
   legendText: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 12,
-    color: Colors.textMuted,
+    color: colors.textMuted,
   },
 })
+}

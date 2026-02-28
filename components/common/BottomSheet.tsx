@@ -21,7 +21,8 @@ import Animated, {
 import { GestureDetector, Gesture, GestureHandlerRootView } from 'react-native-gesture-handler'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { X } from 'lucide-react-native'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
+import type { ColorPalette } from '@/constants/Colors'
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window')
 
@@ -40,6 +41,8 @@ export function BottomSheet({
   snapPoint = 0.6,
   children,
 }: BottomSheetProps) {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   const insets = useSafeAreaInsets()
   const sheetHeight = SCREEN_HEIGHT * snapPoint
   const translateY = useSharedValue(sheetHeight)
@@ -119,7 +122,7 @@ export function BottomSheet({
                 <View style={styles.sheetHeader}>
                   <Text style={styles.sheetTitle}>{title}</Text>
                   <TouchableOpacity onPress={closeSheet} hitSlop={8}>
-                    <X size={20} color={Colors.textMuted} />
+                    <X size={20} color={colors.textMuted} />
                   </TouchableOpacity>
                 </View>
               ) : null}
@@ -136,7 +139,8 @@ export function BottomSheet({
   )
 }
 
-const styles = StyleSheet.create({
+function makeStyles(colors: ColorPalette) {
+  return StyleSheet.create({
   backdrop: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0,0,0,0.6)',
@@ -146,7 +150,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: Colors.surface,
+    backgroundColor: colors.surface,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     paddingTop: 12,
@@ -156,7 +160,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 4,
     borderRadius: 2,
-    backgroundColor: Colors.textMuted,
+    backgroundColor: colors.textMuted,
     opacity: 0.4,
     alignSelf: 'center',
     marginBottom: 12,
@@ -168,11 +172,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 16,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
+    borderBottomColor: colors.border,
   },
   sheetTitle: {
     fontFamily: 'Sora_700Bold',
     fontSize: 16,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
 })
+}

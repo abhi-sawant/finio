@@ -13,11 +13,14 @@ import {
 import { useRouter, useLocalSearchParams } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { ArrowLeft, Eye, EyeOff, Lock } from 'lucide-react-native'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
+import type { ColorPalette } from '@/constants/Colors'
 import { api } from '@/services/api'
 import { showToast } from '@/components/common/Toast'
 
 export default function ResetPasswordScreen() {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   const router = useRouter()
   const insets = useSafeAreaInsets()
   const { email } = useLocalSearchParams<{ email: string }>()
@@ -80,7 +83,7 @@ export default function ResetPasswordScreen() {
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => router.back()} hitSlop={8}>
-            <ArrowLeft size={22} color={Colors.textMuted} />
+            <ArrowLeft size={22} color={colors.textMuted} />
           </TouchableOpacity>
         </View>
 
@@ -122,11 +125,11 @@ export default function ResetPasswordScreen() {
           <Text style={styles.label}>New Password</Text>
           <View style={styles.field}>
             <View style={styles.inputRow}>
-              <Lock size={16} color={Colors.textMuted} style={styles.inputIcon} />
+              <Lock size={16} color={colors.textMuted} style={styles.inputIcon} />
               <TextInput
                 style={[styles.input, styles.inputFlex]}
                 placeholder="Min 8 characters"
-                placeholderTextColor={Colors.textMuted}
+                placeholderTextColor={colors.textMuted}
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry={!showPassword}
@@ -135,9 +138,9 @@ export default function ResetPasswordScreen() {
               />
               <TouchableOpacity onPress={() => setShowPassword((v) => !v)} hitSlop={8}>
                 {showPassword ? (
-                  <EyeOff size={16} color={Colors.textMuted} />
+                  <EyeOff size={16} color={colors.textMuted} />
                 ) : (
-                  <Eye size={16} color={Colors.textMuted} />
+                  <Eye size={16} color={colors.textMuted} />
                 )}
               </TouchableOpacity>
             </View>
@@ -162,9 +165,10 @@ export default function ResetPasswordScreen() {
   )
 }
 
-const styles = StyleSheet.create({
-  flex: { flex: 1, backgroundColor: Colors.background },
-  container: { flex: 1, backgroundColor: Colors.background },
+function makeStyles(colors: ColorPalette) {
+  return StyleSheet.create({
+  flex: { flex: 1, backgroundColor: colors.background },
+  container: { flex: 1, backgroundColor: colors.background },
   header: {
     paddingHorizontal: 20,
     paddingVertical: 12,
@@ -179,23 +183,23 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'Sora_700Bold',
     fontSize: 28,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
     marginBottom: 10,
   },
   subtitle: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 15,
-    color: Colors.textMuted,
+    color: colors.textMuted,
     lineHeight: 24,
   },
   emailText: {
     fontFamily: 'DMSans_500Medium',
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   label: {
     fontFamily: 'DMSans_500Medium',
     fontSize: 12,
-    color: Colors.textMuted,
+    color: colors.textMuted,
     textTransform: 'uppercase',
     letterSpacing: 0.6,
     marginBottom: 10,
@@ -209,24 +213,24 @@ const styles = StyleSheet.create({
   otpBox: {
     flex: 1,
     aspectRatio: 0.85,
-    backgroundColor: Colors.surface,
+    backgroundColor: colors.surface,
     borderRadius: 14,
     borderWidth: 1.5,
-    borderColor: Colors.border,
+    borderColor: colors.border,
     textAlign: 'center',
     fontFamily: 'Sora_700Bold',
     fontSize: 22,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   otpBoxFilled: {
-    borderColor: Colors.primary,
-    backgroundColor: `${Colors.primary}14`,
+    borderColor: colors.primary,
+    backgroundColor: `${colors.primary}14`,
   },
   field: {
-    backgroundColor: Colors.surface,
+    backgroundColor: colors.surface,
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: colors.border,
     marginBottom: 20,
   },
   inputRow: {
@@ -241,14 +245,14 @@ const styles = StyleSheet.create({
   input: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 15,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
     paddingVertical: 14,
   },
   inputFlex: {
     flex: 1,
   },
   btn: {
-    backgroundColor: Colors.primary,
+    backgroundColor: colors.primary,
     borderRadius: 14,
     paddingVertical: 16,
     alignItems: 'center',
@@ -262,3 +266,4 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
 })
+}

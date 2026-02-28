@@ -13,7 +13,8 @@ import {
 import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { ArrowLeft, Eye, EyeOff, Mail, Lock } from 'lucide-react-native'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
+import type { ColorPalette } from '@/constants/Colors'
 import { api } from '@/services/api'
 import { useAuthStore } from '@/store/useAuthStore'
 import { showToast } from '@/components/common/Toast'
@@ -21,6 +22,8 @@ import { showToast } from '@/components/common/Toast'
 export default function LoginScreen() {
   const router = useRouter()
   const insets = useSafeAreaInsets()
+  const colors = useColors()
+  const styles = makeStyles(colors)
   const { setAuth } = useAuthStore()
 
   const [email, setEmail] = useState('')
@@ -62,7 +65,7 @@ export default function LoginScreen() {
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => router.back()} hitSlop={8}>
-            <ArrowLeft size={22} color={Colors.textMuted} />
+            <ArrowLeft size={22} color={colors.textMuted} />
           </TouchableOpacity>
         </View>
 
@@ -81,11 +84,11 @@ export default function LoginScreen() {
           <View style={styles.form}>
             <View style={styles.field}>
               <View style={styles.inputRow}>
-                <Mail size={16} color={Colors.textMuted} style={styles.inputIcon} />
+                <Mail size={16} color={colors.textMuted} style={styles.inputIcon} />
                 <TextInput
                   style={styles.input}
                   placeholder="Email address"
-                  placeholderTextColor={Colors.textMuted}
+                  placeholderTextColor={colors.textMuted}
                   value={email}
                   onChangeText={setEmail}
                   keyboardType="email-address"
@@ -98,11 +101,11 @@ export default function LoginScreen() {
 
             <View style={styles.field}>
               <View style={styles.inputRow}>
-                <Lock size={16} color={Colors.textMuted} style={styles.inputIcon} />
+                <Lock size={16} color={colors.textMuted} style={styles.inputIcon} />
                 <TextInput
                   style={[styles.input, styles.inputFlex]}
                   placeholder="Password"
-                  placeholderTextColor={Colors.textMuted}
+                  placeholderTextColor={colors.textMuted}
                   value={password}
                   onChangeText={setPassword}
                   secureTextEntry={!showPassword}
@@ -111,9 +114,9 @@ export default function LoginScreen() {
                 />
                 <TouchableOpacity onPress={() => setShowPassword((v) => !v)} hitSlop={8}>
                   {showPassword ? (
-                    <EyeOff size={16} color={Colors.textMuted} />
+                    <EyeOff size={16} color={colors.textMuted} />
                   ) : (
-                    <Eye size={16} color={Colors.textMuted} />
+                    <Eye size={16} color={colors.textMuted} />
                   )}
                 </TouchableOpacity>
               </View>
@@ -154,9 +157,10 @@ export default function LoginScreen() {
   )
 }
 
-const styles = StyleSheet.create({
-  flex: { flex: 1, backgroundColor: Colors.background },
-  container: { flex: 1, backgroundColor: Colors.background },
+function makeStyles(colors: ColorPalette) {
+  return StyleSheet.create({
+  flex: { flex: 1, backgroundColor: colors.background },
+  container: { flex: 1, backgroundColor: colors.background },
   header: {
     paddingHorizontal: 20,
     paddingVertical: 12,
@@ -171,23 +175,23 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'Sora_700Bold',
     fontSize: 28,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
     marginBottom: 6,
   },
   subtitle: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 15,
-    color: Colors.textMuted,
+    color: colors.textMuted,
     lineHeight: 22,
   },
   form: {
     gap: 12,
   },
   field: {
-    backgroundColor: Colors.surface,
+    backgroundColor: colors.surface,
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: colors.border,
   },
   inputRow: {
     flexDirection: 'row',
@@ -202,7 +206,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontFamily: 'DMSans_400Regular',
     fontSize: 15,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
     paddingVertical: 14,
   },
   inputFlex: {
@@ -213,7 +217,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   btn: {
-    backgroundColor: Colors.primary,
+    backgroundColor: colors.primary,
     borderRadius: 14,
     paddingVertical: 16,
     alignItems: 'center',
@@ -236,11 +240,12 @@ const styles = StyleSheet.create({
   footerText: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 14,
-    color: Colors.textMuted,
+    color: colors.textMuted,
   },
   link: {
     fontFamily: 'DMSans_500Medium',
     fontSize: 14,
-    color: Colors.primary,
+    color: colors.primary,
   },
 })
+}

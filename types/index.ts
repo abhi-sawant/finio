@@ -2,7 +2,7 @@ export type AccountType = 'checking' | 'savings' | 'cash' | 'credit' | 'investme
 export type TransactionType = 'expense' | 'income' | 'transfer'
 export type CategoryType = 'expense' | 'income' | 'both'
 export type Currency = 'USD' | 'EUR' | 'GBP' | 'INR' | 'JPY' | 'CAD' | 'AUD'
-export type Theme = 'dark' | 'light'
+export type Theme = 'dark' | 'light' | 'system'
 
 export interface Account {
   id: string

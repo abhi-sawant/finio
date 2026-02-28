@@ -11,7 +11,8 @@ import {
 import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { X, Plus, Pencil, Trash2, Check } from 'lucide-react-native'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
+import type { ColorPalette } from '@/constants/Colors'
 import { BottomSheet } from '@/components/common/BottomSheet'
 import { ColorPicker } from '@/components/common/ColorPicker'
 import { useFinanceStore } from '@/store/useFinanceStore'
@@ -20,6 +21,8 @@ import { warningHaptic, lightHaptic, successHaptic } from '@/utils/haptics'
 import type { Label } from '@/types'
 
 export default function ManageLabelsModal() {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   const router = useRouter()
   const insets = useSafeAreaInsets()
   const { labels, addLabel, updateLabel, deleteLabel } = useFinanceStore()
@@ -79,12 +82,12 @@ export default function ManageLabelsModal() {
       <View style={styles.header}>
         <Text style={styles.title}>Labels</Text>
         <TouchableOpacity onPress={() => router.back()} hitSlop={8}>
-          <X size={22} color={Colors.textMuted} />
+          <X size={22} color={colors.textMuted} />
         </TouchableOpacity>
       </View>
 
       <TouchableOpacity style={styles.addBtn} onPress={openAdd} activeOpacity={0.8}>
-        <Plus size={18} color={Colors.primary} />
+        <Plus size={18} color={colors.primary} />
         <Text style={styles.addBtnText}>Add Label</Text>
       </TouchableOpacity>
 
@@ -95,10 +98,10 @@ export default function ManageLabelsModal() {
             <Text style={styles.name}>{label.name}</Text>
             <View style={styles.actions}>
               <TouchableOpacity onPress={() => openEdit(label)} hitSlop={8} style={styles.actionBtn}>
-                <Pencil size={16} color={Colors.textMuted} />
+                <Pencil size={16} color={colors.textMuted} />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => handleDelete(label)} hitSlop={8} style={styles.actionBtn}>
-                <Trash2 size={16} color={Colors.expense} />
+                <Trash2 size={16} color={colors.expense} />
               </TouchableOpacity>
             </View>
           </View>
@@ -122,7 +125,7 @@ export default function ManageLabelsModal() {
             value={name}
             onChangeText={setName}
             placeholder="e.g. Recurring, Work..."
-            placeholderTextColor={Colors.textMuted}
+            placeholderTextColor={colors.textMuted}
             autoFocus
           />
           <ColorPicker selectedColor={color} onChange={setColor} label="Color" />
@@ -136,10 +139,11 @@ export default function ManageLabelsModal() {
   )
 }
 
-const styles = StyleSheet.create({
+function makeStyles(colors: ColorPalette) {
+  return StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: colors.background,
   },
   header: {
     flexDirection: 'row',
@@ -148,12 +152,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
+    borderBottomColor: colors.border,
   },
   title: {
     fontFamily: 'Sora_700Bold',
     fontSize: 20,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   addBtn: {
     flexDirection: 'row',
@@ -163,13 +167,13 @@ const styles = StyleSheet.create({
     padding: 14,
     borderRadius: 14,
     borderWidth: 1.5,
-    borderColor: Colors.primary,
+    borderColor: colors.primary,
     justifyContent: 'center',
   },
   addBtnText: {
     fontFamily: 'DMSans_700Bold',
     fontSize: 15,
-    color: Colors.primary,
+    color: colors.primary,
   },
   list: {
     paddingHorizontal: 16,
@@ -180,11 +184,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    backgroundColor: Colors.surface,
+    backgroundColor: colors.surface,
     borderRadius: 14,
     padding: 14,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: colors.border,
   },
   dot: {
     width: 14,
@@ -195,7 +199,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontFamily: 'DMSans_500Medium',
     fontSize: 15,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   actions: {
     flexDirection: 'row',
@@ -207,7 +211,7 @@ const styles = StyleSheet.create({
   empty: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 14,
-    color: Colors.textMuted,
+    color: colors.textMuted,
     textAlign: 'center',
     marginTop: 32,
   },
@@ -218,26 +222,26 @@ const styles = StyleSheet.create({
   fieldLabel: {
     fontFamily: 'DMSans_500Medium',
     fontSize: 13,
-    color: Colors.textMuted,
+    color: colors.textMuted,
     marginBottom: 4,
   },
   input: {
-    backgroundColor: Colors.surfaceElevated ?? Colors.surface,
+    backgroundColor: colors.surfaceElevated ?? colors.surface,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: colors.border,
     borderRadius: 12,
     paddingHorizontal: 14,
     paddingVertical: 12,
     fontFamily: 'DMSans_400Regular',
     fontSize: 15,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   saveBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    backgroundColor: Colors.primary,
+    backgroundColor: colors.primary,
     borderRadius: 14,
     paddingVertical: 14,
     marginTop: 8,
@@ -248,3 +252,4 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
 })
+}

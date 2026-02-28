@@ -20,7 +20,8 @@ import {
   Settings2,
   Plus,
 } from 'lucide-react-native'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
+import type { ColorPalette } from '@/constants/Colors'
 import { lightHaptic } from '@/utils/haptics'
 import { LinearGradient } from 'expo-linear-gradient'
 
@@ -48,6 +49,8 @@ function TabButton({
   isFocused: boolean
   onPress: () => void
 }) {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   const scale = useSharedValue(1)
   const opacity = useSharedValue(isFocused ? 1 : 0.6)
 
@@ -76,13 +79,13 @@ function TabButton({
       <Animated.View style={[styles.tabInner, animStyle]}>
         <tab.Icon
           size={22}
-          color={isFocused ? Colors.primary : Colors.textMuted}
+          color={isFocused ? colors.primary : colors.textMuted}
           strokeWidth={isFocused ? 2.5 : 1.8}
         />
         <Text
           style={[
             styles.tabLabel,
-            { color: isFocused ? Colors.primary : Colors.textMuted },
+            { color: isFocused ? colors.primary : colors.textMuted },
           ]}
         >
           {tab.label}
@@ -94,6 +97,8 @@ function TabButton({
 }
 
 function FabButton({ onPress }: { onPress: () => void }) {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   const pulse = useSharedValue(1)
 
   useEffect(() => {
@@ -146,6 +151,8 @@ function FabButton({ onPress }: { onPress: () => void }) {
 }
 
 export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   const insets = useSafeAreaInsets()
   const router = useRouter()
 
@@ -214,11 +221,12 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   )
 }
 
-const styles = StyleSheet.create({
+function makeStyles(colors: ColorPalette) {
+  return StyleSheet.create({
   container: {
-    backgroundColor: Colors.surface,
+    backgroundColor: colors.surface,
     borderTopWidth: 1,
-    borderTopColor: Colors.border,
+    borderTopColor: colors.border,
   },
   innerRow: {
     flex: 1,
@@ -253,7 +261,7 @@ const styles = StyleSheet.create({
     width: 4,
     height: 4,
     borderRadius: 2,
-    backgroundColor: Colors.primary,
+    backgroundColor: colors.primary,
   },
   fabWrapper: {
     width: 60,
@@ -266,14 +274,14 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: Colors.primary,
+    backgroundColor: colors.primary,
   },
   fabTouchable: {
     width: 52,
     height: 52,
     borderRadius: 26,
     overflow: 'hidden',
-    shadowColor: Colors.primary,
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.5,
     shadowRadius: 12,
@@ -285,3 +293,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 })
+}

@@ -1,7 +1,8 @@
 import React, { useCallback } from 'react'
 import { View, Text, SectionList, StyleSheet, Alert, RefreshControl } from 'react-native'
 import { useRouter } from 'expo-router'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
+import type { ColorPalette } from '@/constants/Colors'
 import { TransactionItem } from './TransactionItem'
 import { EmptyState } from '@/components/common/EmptyState'
 import { groupTransactionsByDate } from '@/utils/calculations'
@@ -30,6 +31,8 @@ export function TransactionList({
   emptyTitle = 'No transactions',
   emptyDescription = 'Add a transaction to get started',
 }: TransactionListProps) {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   const router = useRouter()
   const { deleteTransaction, settings } = useFinanceStore()
 
@@ -104,7 +107,7 @@ export function TransactionList({
         showDateHeaders
           ? ({ section }) => {
               const sectionTotal = getDateTotal(section.data)
-              const totalColor = sectionTotal >= 0 ? Colors.income : Colors.expense
+              const totalColor = sectionTotal >= 0 ? colors.income : colors.expense
               return (
                 <View style={styles.sectionHeader}>
                   <Text style={styles.sectionDate}>{formatDate(section.title + 'T00:00:00')}</Text>
@@ -122,8 +125,8 @@ export function TransactionList({
           <RefreshControl
             refreshing={refreshing}
             onRefresh={onRefresh}
-            tintColor={Colors.primary}
-            colors={[Colors.primary]}
+            tintColor={colors.primary}
+            colors={[colors.primary]}
           />
         ) : undefined
       }
@@ -134,24 +137,26 @@ export function TransactionList({
   )
 }
 
-const styles = StyleSheet.create({
+function makeStyles(colors: ColorPalette) {
+  return StyleSheet.create({
   sectionHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingVertical: 10,
-    backgroundColor: Colors.background,
+    backgroundColor: colors.background,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
+    borderBottomColor: colors.border,
   },
   sectionDate: {
     fontFamily: 'DMSans_700Bold',
     fontSize: 13,
-    color: Colors.textMuted,
+    color: colors.textMuted,
   },
   sectionTotal: {
     fontFamily: 'DMSans_700Bold',
     fontSize: 13,
   },
 })
+}

@@ -36,14 +36,15 @@ import {
 import * as FileSystem from 'expo-file-system/legacy'
 import * as Sharing from 'expo-sharing'
 import * as DocumentPicker from 'expo-document-picker'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
+import type { ColorPalette } from '@/constants/Colors'
 import { BottomSheet } from '@/components/common/BottomSheet'
 import { useFinanceStore } from '@/store/useFinanceStore'
 import { useAuthStore } from '@/store/useAuthStore'
 import { uploadBackup, restoreLatestBackup } from '@/services/backup'
 import { showToast } from '@/components/common/Toast'
 import { warningHaptic, lightHaptic } from '@/utils/haptics'
-import type { Currency } from '@/types'
+import type { Currency, Theme } from '@/types'
 
 const CURRENCIES: { code: Currency; symbol: string; name: string }[] = [
   { code: 'INR', symbol: '₹', name: 'Indian Rupee' },
@@ -65,6 +66,8 @@ type SectionItem = {
 }
 
 function SettingsRow({ icon, label, onPress, right, danger }: SectionItem) {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   return (
     <TouchableOpacity
       style={styles.row}
@@ -76,12 +79,14 @@ function SettingsRow({ icon, label, onPress, right, danger }: SectionItem) {
         <View style={[styles.iconBox, danger && styles.iconBoxDanger]}>{icon}</View>
         <Text style={[styles.rowLabel, danger && styles.rowLabelDanger]}>{label}</Text>
       </View>
-      {right ?? (onPress ? <ChevronRight size={16} color={Colors.textMuted} /> : null)}
+      {right ?? (onPress ? <ChevronRight size={16} color={colors.textMuted} /> : null)}
     </TouchableOpacity>
   )
 }
 
 function SectionHeader({ title }: { title: string }) {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   return <Text style={styles.sectionHeader}>{title}</Text>
 }
 
@@ -97,9 +102,17 @@ function formatLastBackup(iso: string | null): string {
   return isToday ? `Today at ${time}` : d.toLocaleDateString()
 }
 
+const THEME_OPTIONS: Array<{ value: Theme; label: string; icon: string }> = [
+  { value: 'light', label: 'Light', icon: '☀️' },
+  { value: 'dark', label: 'Dark', icon: '🌙' },
+  { value: 'system', label: 'System', icon: '⚙️' },
+]
+
 export default function SettingsScreen() {
   const insets = useSafeAreaInsets()
   const router = useRouter()
+  const colors = useColors()
+  const styles = makeStyles(colors)
   const { settings, updateSettings, transactions, accounts, categories, labels, resetToDefaults, importData } =
     useFinanceStore()
   const { user, token, lastBackupAt, clearAuth } = useAuthStore()
@@ -329,7 +342,7 @@ export default function SettingsScreen() {
         <SectionHeader title="Profile" />
         <View style={styles.section}>
           <SettingsRow
-            icon={<User size={16} color={Colors.primary} />}
+            icon={<User size={16} color={colors.primary} />}
             label={settings.userName}
             onPress={() => {
               setNameInput(settings.userName)
@@ -342,42 +355,62 @@ export default function SettingsScreen() {
         <SectionHeader title="Preferences" />
         <View style={styles.section}>
           <SettingsRow
-            icon={<DollarSign size={16} color={Colors.primary} />}
+            icon={<DollarSign size={16} color={colors.primary} />}
             label={`${selectedCurrency?.symbol ?? ''} ${settings.currency}`}
             onPress={() => setCurrencySheetVisible(true)}
           />
+          {/* Theme selection: Light / Dark / System */}
+          <View style={styles.row}>
+            <View style={styles.rowLeft}>
+              <View style={styles.iconBox}>
+                <Moon size={16} color={colors.primary} />
+              </View>
+              <Text style={styles.rowLabel}>Theme</Text>
+            </View>
+            <View style={styles.themeToggleGroup}>
+              {THEME_OPTIONS.map((opt) => {
+                const isActive = settings.theme === opt.value
+                return (
+                  <TouchableOpacity
+                    key={opt.value}
+                    onPress={() => {
+                      lightHaptic()
+                      updateSettings({ theme: opt.value })
+                    }}
+                    style={[
+                      styles.themeBtn,
+                      isActive && { backgroundColor: colors.primary, borderColor: colors.primary },
+                    ]}
+                    activeOpacity={0.75}
+                  >
+                    <Text style={[styles.themeBtnText, isActive && styles.themeBtnTextActive]}>
+                      {opt.label}
+                    </Text>
+                  </TouchableOpacity>
+                )
+              })}
+            </View>
+          </View>
           <SettingsRow
-            icon={<Moon size={16} color={Colors.primary} />}
-            label="Dark Mode"
-            right={
-              <Switch
-                value={settings.theme === 'dark'}
-                onValueChange={(v) => updateSettings({ theme: v ? 'dark' : 'light' })}
-                trackColor={{ false: Colors.border, true: Colors.primary }}
-                thumbColor="#fff"
-              />
-            }
-          />
-          <SettingsRow
-            icon={<Vibrate size={16} color={Colors.primary} />}
+            icon={<Vibrate size={16} color={colors.primary} />}
             label="Haptic Feedback"
             right={
               <Switch
                 value={settings.hapticFeedback}
                 onValueChange={(v) => updateSettings({ hapticFeedback: v })}
-                trackColor={{ false: Colors.border, true: Colors.primary }}
+                trackColor={{ false: colors.border, true: colors.primary }}
                 thumbColor="#fff"
               />
             }
           />
           <SettingsRow
-            icon={<Bell size={16} color={Colors.primary} />}
+            icon={<Bell size={16} color={colors.primary} />}
             label="Daily Reminders"
             right={
               <Switch
                 value={settings.notifications ?? false}
                 onValueChange={handleNotificationsToggle}
-                trackColor={{ false: Colors.border, true: Colors.primary }}
+                trackColor={{ false: colors.border, true: colors.primary }}
                 thumbColor="#fff"
               />
             }
@@ -388,12 +421,12 @@ export default function SettingsScreen() {
         <SectionHeader title="Categories & Labels" />
         <View style={styles.section}>
           <SettingsRow
-            icon={<List size={16} color={Colors.primary} />}
+            icon={<List size={16} color={colors.primary} />}
             label="Manage Categories"
             onPress={() => { lightHaptic(); router.push('/modals/manage-categories') }}
           />
           <SettingsRow
-            icon={<Tag size={16} color={Colors.primary} />}
+            icon={<Tag size={16} color={colors.primary} />}
             label="Manage Labels"
             onPress={() => { lightHaptic(); router.push('/modals/manage-labels') }}
           />
@@ -404,36 +437,36 @@ export default function SettingsScreen() {
         {user ? (
           <View style={styles.section}>
             {/* Signed-in user info */}
-            <View style={[styles.row, { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: Colors.border }]}>
+            <View style={[styles.row, { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.border }]}>
               <View style={styles.rowLeft}>
                 <View style={styles.iconBox}>
-                  <Cloud size={16} color={Colors.primary} />
+                  <Cloud size={16} color={colors.primary} />
                 </View>
                 <View style={{ flex: 1 }}>
                   <Text style={styles.rowLabel}>{user.name}</Text>
-                  <Text style={[styles.rowLabel, { fontSize: 12, color: Colors.textMuted, fontFamily: 'DMSans_400Regular' }]}>
+                  <Text style={[styles.rowLabel, { fontSize: 12, color: colors.textMuted, fontFamily: 'DMSans_400Regular' }]}>
                     {user.email}
                   </Text>
                 </View>
               </View>
-              <Text style={[styles.rowLabel, { fontSize: 12, color: Colors.textMuted, fontFamily: 'DMSans_400Regular' }]}>
+              <Text style={[styles.rowLabel, { fontSize: 12, color: colors.textMuted, fontFamily: 'DMSans_400Regular' }]}>
                 {formatLastBackup(lastBackupAt)}
               </Text>
             </View>
             <SettingsRow
-              icon={<CloudUpload size={16} color={Colors.primary} />}
+              icon={<CloudUpload size={16} color={colors.primary} />}
               label="Back Up Now"
               onPress={handleBackupNow}
-              right={backupLoading ? <ActivityIndicator size="small" color={Colors.primary} /> : undefined}
+              right={backupLoading ? <ActivityIndicator size="small" color={colors.primary} /> : undefined}
             />
             <SettingsRow
-              icon={<CloudDownload size={16} color={Colors.primary} />}
+              icon={<CloudDownload size={16} color={colors.primary} />}
               label="Restore from Backup"
               onPress={handleRestore}
-              right={restoreLoading ? <ActivityIndicator size="small" color={Colors.primary} /> : undefined}
+              right={restoreLoading ? <ActivityIndicator size="small" color={colors.primary} /> : undefined}
             />
             <SettingsRow
-              icon={<LogOut size={16} color={Colors.expense} />}
+              icon={<LogOut size={16} color={colors.expense} />}
               label="Sign Out"
               onPress={handleSignOut}
               danger
@@ -442,18 +475,18 @@ export default function SettingsScreen() {
         ) : (
           <View style={styles.section}>
             <View style={styles.backupBanner}>
-              <CloudOff size={18} color={Colors.textMuted} />
+              <CloudOff size={18} color={colors.textMuted} />
               <Text style={styles.backupBannerText}>
                 Sign in to automatically back up your data once a day
               </Text>
             </View>
             <SettingsRow
-              icon={<User size={16} color={Colors.primary} />}
+              icon={<User size={16} color={colors.primary} />}
               label="Sign In"
               onPress={() => { lightHaptic(); router.push('/auth/login' as never) }}
             />
             <SettingsRow
-              icon={<Cloud size={16} color={Colors.primary} />}
+              icon={<Cloud size={16} color={colors.primary} />}
               label="Create Account"
               onPress={() => { lightHaptic(); router.push('/auth/register' as never) }}
             />
@@ -464,17 +497,17 @@ export default function SettingsScreen() {
         <SectionHeader title="Data" />
         <View style={styles.section}>
           <SettingsRow
-            icon={<Download size={16} color={Colors.primary} />}
+            icon={<Download size={16} color={colors.primary} />}
             label="Export Data (JSON)"
             onPress={handleExport}
           />
           <SettingsRow
-            icon={<Upload size={16} color={Colors.primary} />}
+            icon={<Upload size={16} color={colors.primary} />}
             label="Import Data (JSON)"
             onPress={handleImport}
           />
           <SettingsRow
-            icon={<Trash2 size={16} color={Colors.expense} />}
+            icon={<Trash2 size={16} color={colors.expense} />}
             label="Clear All Data"
             onPress={handleClearData}
             danger
@@ -485,11 +518,11 @@ export default function SettingsScreen() {
         <SectionHeader title="About" />
         <View style={styles.section}>
           <SettingsRow
-            icon={<Info size={16} color={Colors.primary} />}
+            icon={<Info size={16} color={colors.primary} />}
             label="Version 1.0.0"
           />
           <SettingsRow
-            icon={<Shield size={16} color={Colors.primary} />}
+            icon={<Shield size={16} color={colors.primary} />}
             label="Privacy Policy"
             onPress={() => showToast({ message: 'Privacy policy coming soon', type: 'info' })}
           />
@@ -527,7 +560,7 @@ export default function SettingsScreen() {
             value={nameInput}
             onChangeText={setNameInput}
             placeholder="Enter your name"
-            placeholderTextColor={Colors.textMuted}
+            placeholderTextColor={colors.textMuted}
             autoFocus
             returnKeyType="done"
             onSubmitEditing={handleSaveName}
@@ -560,10 +593,10 @@ export default function SettingsScreen() {
                   <Text style={styles.currencySymbol}>{c.symbol}</Text>
                 </View>
                 <View style={styles.currencyInfo}>
-                  <Text style={[styles.currencyCode, isSelected && { color: Colors.primary }]}>{c.code}</Text>
+                  <Text style={[styles.currencyCode, isSelected && { color: colors.primary }]}>{c.code}</Text>
                   <Text style={styles.currencyName}>{c.name}</Text>
                 </View>
-                {isSelected && <Check size={18} color={Colors.primary} strokeWidth={2.5} />}
+                {isSelected && <Check size={18} color={colors.primary} strokeWidth={2.5} />}
               </TouchableOpacity>
             )
           })}
@@ -573,10 +606,11 @@ export default function SettingsScreen() {
   )
 }
 
-const styles = StyleSheet.create({
+function makeStyles(colors: ColorPalette) {
+  return StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: colors.background,
   },
   header: {
     paddingHorizontal: 20,
@@ -585,7 +619,7 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'Sora_700Bold',
     fontSize: 24,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   scroll: {
     paddingHorizontal: 16,
@@ -594,7 +628,7 @@ const styles = StyleSheet.create({
   sectionHeader: {
     fontFamily: 'DMSans_500Medium',
     fontSize: 12,
-    color: Colors.textMuted,
+    color: colors.textMuted,
     textTransform: 'uppercase',
     letterSpacing: 0.8,
     paddingHorizontal: 4,
@@ -602,10 +636,10 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   section: {
-    backgroundColor: Colors.surface,
+    backgroundColor: colors.surface,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: colors.border,
     overflow: 'hidden',
   },
   row: {
@@ -615,7 +649,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 14,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: Colors.border,
+    borderBottomColor: colors.border,
   },
   rowLeft: {
     flexDirection: 'row',
@@ -627,20 +661,20 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 8,
-    backgroundColor: Colors.surfaceElevated ?? Colors.surface,
+    backgroundColor: colors.surfaceElevated ?? colors.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
   iconBoxDanger: {
-    backgroundColor: `${Colors.expense}22`,
+    backgroundColor: `${colors.expense}22`,
   },
   rowLabel: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 15,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   rowLabelDanger: {
-    color: Colors.expense,
+    color: colors.expense,
   },
   backupBanner: {
     flexDirection: 'row',
@@ -649,22 +683,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 14,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: Colors.border,
+    borderBottomColor: colors.border,
   },
   backupBannerText: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 13,
-    color: Colors.textMuted,
+    color: colors.textMuted,
     flex: 1,
     lineHeight: 18,
   },
   statsRow: {
     flexDirection: 'row',
     marginTop: 24,
-    backgroundColor: Colors.surface,
+    backgroundColor: colors.surface,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: colors.border,
     overflow: 'hidden',
   },
   stat: {
@@ -672,17 +706,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 16,
     borderRightWidth: StyleSheet.hairlineWidth,
-    borderRightColor: Colors.border,
+    borderRightColor: colors.border,
   },
   statValue: {
     fontFamily: 'Sora_700Bold',
     fontSize: 22,
-    color: Colors.primary,
+    color: colors.primary,
   },
   statLabel: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 12,
-    color: Colors.textMuted,
+    color: colors.textMuted,
     marginTop: 2,
   },
   // Name form
@@ -691,22 +725,22 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   nameInput: {
-    backgroundColor: Colors.surfaceElevated ?? Colors.surface,
+    backgroundColor: colors.surfaceElevated ?? colors.surface,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: colors.border,
     borderRadius: 12,
     paddingHorizontal: 14,
     paddingVertical: 13,
     fontFamily: 'DMSans_400Regular',
     fontSize: 16,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   saveBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    backgroundColor: Colors.primary,
+    backgroundColor: colors.primary,
     borderRadius: 14,
     paddingVertical: 14,
   },
@@ -728,25 +762,25 @@ const styles = StyleSheet.create({
     padding: 14,
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: Colors.border,
-    backgroundColor: Colors.surface,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
   },
   currencyRowSelected: {
-    borderColor: Colors.primary,
-    backgroundColor: `${Colors.primary}14`,
+    borderColor: colors.primary,
+    backgroundColor: `${colors.primary}14`,
   },
   currencySymbolBox: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: Colors.surfaceElevated ?? Colors.surface,
+    backgroundColor: colors.surfaceElevated ?? colors.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
   currencySymbol: {
     fontFamily: 'Sora_700Bold',
     fontSize: 16,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   currencyInfo: {
     flex: 1,
@@ -754,12 +788,37 @@ const styles = StyleSheet.create({
   currencyCode: {
     fontFamily: 'DMSans_700Bold',
     fontSize: 15,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   currencyName: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 12,
-    color: Colors.textMuted,
+    color: colors.textMuted,
     marginTop: 1,
   },
-})
+  // Theme picker
+  themeToggleGroup: {
+    flexDirection: 'row',
+    backgroundColor: colors.surfaceElevated ?? colors.surface,
+    borderRadius: 10,
+    padding: 3,
+    gap: 2,
+  },
+  themeBtn: {
+    paddingHorizontal: 11,
+    paddingVertical: 6,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: 'transparent',
+  },
+  themeBtnText: {
+    fontFamily: 'DMSans_500Medium',
+    fontSize: 12,
+    color: colors.textMuted,
+  },
+  themeBtnTextActive: {
+    color: '#fff',
+    fontFamily: 'DMSans_700Bold',
+  },
+  })
+}

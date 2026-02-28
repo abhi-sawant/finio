@@ -216,7 +216,7 @@ export const defaultTransactions: Transaction[] = [
 
 export const defaultSettings: Settings = {
   currency: 'INR',
-  theme: 'dark',
+  theme: 'system',
   userName: 'Alex',
   useBiometrics: false,
   hapticFeedback: true,

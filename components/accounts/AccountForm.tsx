@@ -9,7 +9,8 @@ import {
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
+import type { ColorPalette } from '@/constants/Colors'
 import { ColorPicker } from '@/components/common/ColorPicker'
 import { IconPicker, LucideIcon } from '@/components/common/IconPicker'
 import { AmountInput } from '@/components/common/AmountInput'
@@ -43,6 +44,8 @@ interface AccountFormProps {
 }
 
 export function AccountForm({ initialData, onSubmit }: AccountFormProps) {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   const [showIconPicker, setShowIconPicker] = useState(false)
   const currency = useFinanceStore((s) => s.settings.currency)
 
@@ -97,8 +100,8 @@ export function AccountForm({ initialData, onSubmit }: AccountFormProps) {
                 onChangeText={field.onChange}
                 style={[styles.input, errors.name && styles.inputError]}
                 placeholder="e.g. HDFC Savings"
-                placeholderTextColor={Colors.textMuted}
-                selectionColor={Colors.primary}
+                placeholderTextColor={colors.textMuted}
+                selectionColor={colors.primary}
               />
             )}
           />
@@ -183,7 +186,8 @@ export function AccountForm({ initialData, onSubmit }: AccountFormProps) {
   )
 }
 
-const styles = StyleSheet.create({
+function makeStyles(colors: ColorPalette) {
+  return StyleSheet.create({
   container: {
     gap: 20,
   },
@@ -206,27 +210,27 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: 'DMSans_500Medium',
     fontSize: 13,
-    color: Colors.textMuted,
+    color: colors.textMuted,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
   input: {
-    backgroundColor: Colors.surfaceElevated,
+    backgroundColor: colors.surfaceElevated,
     borderRadius: 14,
     padding: 14,
     fontFamily: 'DMSans_500Medium',
     fontSize: 15,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: colors.border,
   },
   inputError: {
-    borderColor: Colors.expense,
+    borderColor: colors.expense,
   },
   errorText: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 12,
-    color: Colors.expense,
+    color: colors.expense,
   },
   chipRow: {
     flexDirection: 'row',
@@ -237,20 +241,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 20,
-    backgroundColor: Colors.surfaceElevated,
+    backgroundColor: colors.surfaceElevated,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: colors.border,
   },
   chipText: {
     fontFamily: 'DMSans_500Medium',
     fontSize: 13,
-    color: Colors.textMuted,
+    color: colors.textMuted,
   },
   amountWrapper: {
-    backgroundColor: Colors.surfaceElevated,
+    backgroundColor: colors.surfaceElevated,
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: colors.border,
     overflow: 'hidden',
   },
   submitBtn: {
@@ -265,3 +269,4 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
 })
+}

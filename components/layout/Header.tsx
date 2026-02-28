@@ -3,7 +3,8 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router'
 import { ChevronLeft, X } from 'lucide-react-native'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
+import type { ColorPalette } from '@/constants/Colors'
 import { lightHaptic } from '@/utils/haptics'
 
 interface HeaderProps {
@@ -23,6 +24,8 @@ export function Header({
   rightElement,
   onBack,
 }: HeaderProps) {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   const insets = useSafeAreaInsets()
   const router = useRouter()
 
@@ -38,9 +41,9 @@ export function Header({
         {(showBack || showClose) ? (
           <TouchableOpacity onPress={handleBack} style={styles.backBtn} hitSlop={8}>
             {showClose ? (
-              <X size={22} color={Colors.textPrimary} />
+              <X size={22} color={colors.textPrimary} />
             ) : (
-              <ChevronLeft size={24} color={Colors.textPrimary} />
+              <ChevronLeft size={24} color={colors.textPrimary} />
             )}
           </TouchableOpacity>
         ) : (
@@ -67,12 +70,13 @@ export function Header({
   )
 }
 
-const styles = StyleSheet.create({
+function makeStyles(colors: ColorPalette) {
+  return StyleSheet.create({
   container: {
-    backgroundColor: Colors.surface,
+    backgroundColor: colors.surface,
     paddingBottom: 12,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
+    borderBottomColor: colors.border,
   },
   dragHandleWrapper: {
     alignItems: 'center',
@@ -82,7 +86,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 4,
     borderRadius: 2,
-    backgroundColor: Colors.textMuted,
+    backgroundColor: colors.textMuted,
     opacity: 0.4,
   },
   innerRow: {
@@ -104,12 +108,12 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'Sora_700Bold',
     fontSize: 18,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   subtitle: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 12,
-    color: Colors.textMuted,
+    color: colors.textMuted,
     marginTop: 2,
   },
   rightContainer: {
@@ -117,3 +121,4 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
 })
+}

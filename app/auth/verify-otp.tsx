@@ -12,7 +12,8 @@ import {
 import { useRouter, useLocalSearchParams } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { ArrowLeft } from 'lucide-react-native'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
+import type { ColorPalette } from '@/constants/Colors'
 import { api } from '@/services/api'
 import { useAuthStore } from '@/store/useAuthStore'
 import { showToast } from '@/components/common/Toast'
@@ -20,6 +21,8 @@ import { showToast } from '@/components/common/Toast'
 export default function VerifyOtpScreen() {
   const router = useRouter()
   const insets = useSafeAreaInsets()
+  const colors = useColors()
+  const styles = makeStyles(colors)
   const { email } = useLocalSearchParams<{ email: string }>()
   const { setAuth } = useAuthStore()
 
@@ -93,7 +96,7 @@ export default function VerifyOtpScreen() {
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => router.back()} hitSlop={8}>
-            <ArrowLeft size={22} color={Colors.textMuted} />
+            <ArrowLeft size={22} color={colors.textMuted} />
           </TouchableOpacity>
         </View>
 
@@ -144,7 +147,7 @@ export default function VerifyOtpScreen() {
             <Text style={styles.resendText}>Didn't receive it? </Text>
             <TouchableOpacity onPress={handleResend} disabled={resending} hitSlop={8}>
               {resending ? (
-                <ActivityIndicator size="small" color={Colors.primary} />
+                <ActivityIndicator size="small" color={colors.primary} />
               ) : (
                 <Text style={styles.link}>Resend OTP</Text>
               )}
@@ -156,9 +159,10 @@ export default function VerifyOtpScreen() {
   )
 }
 
-const styles = StyleSheet.create({
-  flex: { flex: 1, backgroundColor: Colors.background },
-  container: { flex: 1, backgroundColor: Colors.background },
+function makeStyles(colors: ColorPalette) {
+  return StyleSheet.create({
+  flex: { flex: 1, backgroundColor: colors.background },
+  container: { flex: 1, backgroundColor: colors.background },
   header: {
     paddingHorizontal: 20,
     paddingVertical: 12,
@@ -174,18 +178,18 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'Sora_700Bold',
     fontSize: 28,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
     marginBottom: 10,
   },
   subtitle: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 15,
-    color: Colors.textMuted,
+    color: colors.textMuted,
     lineHeight: 24,
   },
   emailText: {
     fontFamily: 'DMSans_500Medium',
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   otpRow: {
     flexDirection: 'row',
@@ -195,21 +199,21 @@ const styles = StyleSheet.create({
   otpBox: {
     flex: 1,
     aspectRatio: 0.85,
-    backgroundColor: Colors.surface,
+    backgroundColor: colors.surface,
     borderRadius: 14,
     borderWidth: 1.5,
-    borderColor: Colors.border,
+    borderColor: colors.border,
     textAlign: 'center',
     fontFamily: 'Sora_700Bold',
     fontSize: 22,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   otpBoxFilled: {
-    borderColor: Colors.primary,
-    backgroundColor: `${Colors.primary}14`,
+    borderColor: colors.primary,
+    backgroundColor: `${colors.primary}14`,
   },
   btn: {
-    backgroundColor: Colors.primary,
+    backgroundColor: colors.primary,
     borderRadius: 14,
     paddingVertical: 16,
     alignItems: 'center',
@@ -231,11 +235,12 @@ const styles = StyleSheet.create({
   resendText: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 14,
-    color: Colors.textMuted,
+    color: colors.textMuted,
   },
   link: {
     fontFamily: 'DMSans_500Medium',
     fontSize: 14,
-    color: Colors.primary,
+    color: colors.primary,
   },
 })
+}

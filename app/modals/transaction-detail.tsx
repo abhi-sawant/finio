@@ -21,7 +21,8 @@ import {
   ArrowUpRight,
   ArrowLeftRight,
 } from 'lucide-react-native'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
+import type { ColorPalette } from '@/constants/Colors'
 import { CategoryBadge } from '@/components/categories/CategoryBadge'
 import { useFinanceStore } from '@/store/useFinanceStore'
 import { formatCurrency, formatFullDate, formatTime } from '@/utils/formatters'
@@ -29,6 +30,8 @@ import { showToast } from '@/components/common/Toast'
 import { warningHaptic } from '@/utils/haptics'
 
 export default function TransactionDetailModal() {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   const router = useRouter()
   const insets = useSafeAreaInsets()
   const { id } = useLocalSearchParams<{ id: string }>()
@@ -42,7 +45,7 @@ export default function TransactionDetailModal() {
       <View style={[styles.container, { paddingTop: insets.top }]}>
         <View style={[styles.header, { paddingTop: insets.top + 16 }]}>
           <TouchableOpacity onPress={() => router.back()}>
-            <X size={22} color={Colors.textMuted} />
+            <X size={22} color={colors.textMuted} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Transaction</Text>
           <View style={{ width: 22 }} />
@@ -63,10 +66,10 @@ export default function TransactionDetailModal() {
 
   const typeColor =
     transaction.type === 'income'
-      ? Colors.income
+      ? colors.income
       : transaction.type === 'expense'
-      ? Colors.expense
-      : Colors.transfer
+      ? colors.expense
+      : colors.transfer
 
   const TypeIcon =
     transaction.type === 'income'
@@ -105,13 +108,13 @@ export default function TransactionDetailModal() {
   return (
     <View style={[styles.container, { paddingBottom: insets.bottom }]}>
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { paddingTop: insets.top + 16 }]}>
         <TouchableOpacity onPress={() => router.back()} hitSlop={8}>
-          <X size={22} color={Colors.textMuted} />
+          <X size={22} color={colors.textMuted} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Transaction Detail</Text>
         <TouchableOpacity onPress={handleEdit} hitSlop={8}>
-          <Pencil size={18} color={Colors.primary} />
+          <Pencil size={18} color={colors.primary} />
         </TouchableOpacity>
       </View>
 
@@ -137,7 +140,7 @@ export default function TransactionDetailModal() {
           {/* Date */}
           <View style={styles.detailRow}>
             <View style={styles.detailLeft}>
-              <Calendar size={16} color={Colors.textMuted} />
+              <Calendar size={16} color={colors.textMuted} />
               <Text style={styles.detailLabel}>Date & Time</Text>
             </View>
             <View style={styles.detailRight}>
@@ -151,7 +154,7 @@ export default function TransactionDetailModal() {
           {/* Account */}
           <View style={styles.detailRow}>
             <View style={styles.detailLeft}>
-              <CreditCard size={16} color={Colors.textMuted} />
+              <CreditCard size={16} color={colors.textMuted} />
               <Text style={styles.detailLabel}>
                 {transaction.type === 'transfer' ? 'From Account' : 'Account'}
               </Text>
@@ -164,7 +167,7 @@ export default function TransactionDetailModal() {
               <View style={styles.divider} />
               <View style={styles.detailRow}>
                 <View style={styles.detailLeft}>
-                  <CreditCard size={16} color={Colors.textMuted} />
+                  <CreditCard size={16} color={colors.textMuted} />
                   <Text style={styles.detailLabel}>To Account</Text>
                 </View>
                 <Text style={styles.detailValue}>{toAccount.name}</Text>
@@ -177,7 +180,7 @@ export default function TransactionDetailModal() {
               <View style={styles.divider} />
               <View style={styles.detailRow}>
                 <View style={styles.detailLeft}>
-                  <Tag size={16} color={Colors.textMuted} />
+                  <Tag size={16} color={colors.textMuted} />
                   <Text style={styles.detailLabel}>Category</Text>
                 </View>
                 <CategoryBadge category={category} size="sm" />
@@ -190,7 +193,7 @@ export default function TransactionDetailModal() {
               <View style={styles.divider} />
               <View style={styles.detailRow}>
                 <View style={styles.detailLeft}>
-                  <Tag size={16} color={Colors.textMuted} />
+                  <Tag size={16} color={colors.textMuted} />
                   <Text style={styles.detailLabel}>Labels</Text>
                 </View>
                 <View style={styles.labelsRow}>
@@ -212,7 +215,7 @@ export default function TransactionDetailModal() {
               <View style={styles.divider} />
               <View style={styles.detailRow}>
                 <View style={styles.detailLeft}>
-                  <FileText size={16} color={Colors.textMuted} />
+                  <FileText size={16} color={colors.textMuted} />
                   <Text style={styles.detailLabel}>Note</Text>
                 </View>
                 <Text style={[styles.detailValue, styles.noteValue]}>{transaction.note}</Text>
@@ -223,7 +226,7 @@ export default function TransactionDetailModal() {
 
         {/* Delete button */}
         <TouchableOpacity style={styles.deleteBtn} onPress={handleDelete}>
-          <Trash2 size={16} color={Colors.expense} />
+          <Trash2 size={16} color={colors.expense} />
           <Text style={styles.deleteBtnLabel}>Delete Transaction</Text>
         </TouchableOpacity>
 
@@ -233,10 +236,11 @@ export default function TransactionDetailModal() {
   )
 }
 
-const styles = StyleSheet.create({
+function makeStyles(colors: ColorPalette) {
+  return StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: colors.background,
   },
   header: {
     flexDirection: 'row',
@@ -246,12 +250,12 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     paddingBottom: 12,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: Colors.border,
+    borderBottomColor: colors.border,
   },
   headerTitle: {
     fontFamily: 'Sora_700Bold',
     fontSize: 17,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   notFound: {
     flex: 1,
@@ -261,17 +265,17 @@ const styles = StyleSheet.create({
   notFoundText: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 16,
-    color: Colors.textMuted,
+    color: colors.textMuted,
   },
   scroll: {
     padding: 16,
     gap: 16,
   },
   heroCard: {
-    backgroundColor: Colors.surface,
+    backgroundColor: colors.surface,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: colors.border,
     padding: 24,
     alignItems: 'center',
     gap: 8,
@@ -287,7 +291,7 @@ const styles = StyleSheet.create({
   txType: {
     fontFamily: 'DMSans_500Medium',
     fontSize: 13,
-    color: Colors.textMuted,
+    color: colors.textMuted,
     textTransform: 'uppercase',
     letterSpacing: 0.8,
   },
@@ -298,14 +302,14 @@ const styles = StyleSheet.create({
   note: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 14,
-    color: Colors.textMuted,
+    color: colors.textMuted,
     textAlign: 'center',
   },
   detailCard: {
-    backgroundColor: Colors.surface,
+    backgroundColor: colors.surface,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: colors.border,
     overflow: 'hidden',
   },
   detailRow: {
@@ -323,7 +327,7 @@ const styles = StyleSheet.create({
   detailLabel: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 14,
-    color: Colors.textMuted,
+    color: colors.textMuted,
   },
   detailRight: {
     alignItems: 'flex-end',
@@ -331,21 +335,21 @@ const styles = StyleSheet.create({
   detailValue: {
     fontFamily: 'DMSans_500Medium',
     fontSize: 14,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
     textAlign: 'right',
     flex: 1,
   },
   detailSub: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 12,
-    color: Colors.textMuted,
+    color: colors.textMuted,
   },
   noteValue: {
     fontFamily: 'DMSans_400Regular',
   },
   divider: {
     height: StyleSheet.hairlineWidth,
-    backgroundColor: Colors.border,
+    backgroundColor: colors.border,
     marginHorizontal: 16,
   },
   labelsRow: {
@@ -372,12 +376,13 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: `${Colors.expense}44`,
-    backgroundColor: `${Colors.expense}11`,
+    borderColor: `${colors.expense}44`,
+    backgroundColor: `${colors.expense}11`,
   },
   deleteBtnLabel: {
     fontFamily: 'DMSans_500Medium',
     fontSize: 15,
-    color: Colors.expense,
+    color: colors.expense,
   },
 })
+}

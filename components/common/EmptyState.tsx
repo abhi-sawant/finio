@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
+import type { ColorPalette } from '@/constants/Colors'
 import { LucideIcon } from './IconPicker'
 
 interface EmptyStateProps {
@@ -18,10 +19,12 @@ export function EmptyState({
   actionLabel,
   onAction,
 }: EmptyStateProps) {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   return (
     <View style={styles.container}>
       <View style={styles.iconWrapper}>
-        <LucideIcon name={icon} size={40} color={Colors.textMuted} />
+        <LucideIcon name={icon} size={40} color={colors.textMuted} />
       </View>
       <Text style={styles.title}>{title}</Text>
       {description ? <Text style={styles.description}>{description}</Text> : null}
@@ -34,7 +37,8 @@ export function EmptyState({
   )
 }
 
-const styles = StyleSheet.create({
+function makeStyles(colors: ColorPalette) {
+  return StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
@@ -47,7 +51,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: Colors.surfaceElevated,
+    backgroundColor: colors.surfaceElevated,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 8,
@@ -55,19 +59,19 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'Sora_700Bold',
     fontSize: 18,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
     textAlign: 'center',
   },
   description: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 14,
-    color: Colors.textMuted,
+    color: colors.textMuted,
     textAlign: 'center',
     lineHeight: 20,
   },
   actionBtn: {
     marginTop: 8,
-    backgroundColor: Colors.primary,
+    backgroundColor: colors.primary,
     borderRadius: 14,
     paddingHorizontal: 24,
     paddingVertical: 12,
@@ -78,3 +82,4 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
 })
+}

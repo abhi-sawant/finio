@@ -5,7 +5,8 @@ import {
   StyleSheet,
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
+import type { ColorPalette } from '@/constants/Colors'
 import { TransactionFilters, FilterState } from '@/components/transactions/TransactionFilters'
 import { TransactionList } from '@/components/transactions/TransactionList'
 import { useFinanceStore } from '@/store/useFinanceStore'
@@ -20,6 +21,8 @@ const DEFAULT_FILTERS: FilterState = {
 }
 
 export default function TransactionsScreen() {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   const insets = useSafeAreaInsets()
   const { transactions } = useFinanceStore()
   const [refreshing, setRefreshing] = useState(false)
@@ -75,10 +78,11 @@ export default function TransactionsScreen() {
   )
 }
 
-const styles = StyleSheet.create({
+function makeStyles(colors: ColorPalette) {
+  return StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: colors.background,
   },
   header: {
     flexDirection: 'row',
@@ -90,11 +94,12 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'Sora_700Bold',
     fontSize: 24,
-    color: Colors.textPrimary,
+    color: colors.textPrimary,
   },
   filterCount: {
     fontFamily: 'DMSans_400Regular',
     fontSize: 13,
-    color: Colors.textMuted,
+    color: colors.textMuted,
   },
 })
+}

@@ -1,5 +1,6 @@
 import '../global.css'
 import { useEffect } from 'react'
+import { useColorScheme } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
 import { Stack } from 'expo-router'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
@@ -15,7 +16,7 @@ import { Sora_700Bold, Sora_800ExtraBold } from '@expo-google-fonts/sora'
 import { useFinanceStore } from '@/store/useFinanceStore'
 import { useAuthStore } from '@/store/useAuthStore'
 import { autoBackupIfNeeded } from '@/services/backup'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
 import { Toast } from '@/components/common/Toast'
 
 SplashScreen.preventAutoHideAsync()
@@ -23,6 +24,14 @@ SplashScreen.preventAutoHideAsync()
 export default function RootLayout() {
   const isHydrated = useFinanceStore((s) => s.isHydrated)
   const { isLoaded, loadAuth } = useAuthStore()
+  const colors = useColors()
+  const theme = useFinanceStore((s) => s.settings.theme)
+  const systemScheme = useColorScheme()
+
+  // Resolve effective theme for StatusBar
+  const effectiveTheme =
+    theme === 'system' ? (systemScheme ?? 'dark') : theme
+  const statusBarStyle = effectiveTheme === 'light' ? 'dark' : 'light'
 
   const [fontsLoaded, fontError] = useFonts({
     DMSans_400Regular,
@@ -57,11 +66,11 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <StatusBar style="light" backgroundColor={Colors.background} />
+        <StatusBar style={statusBarStyle} backgroundColor={colors.background} />
         <Stack
           screenOptions={{
             headerShown: false,
-            contentStyle: { backgroundColor: Colors.background },
+            contentStyle: { backgroundColor: colors.background },
             animation: 'fade',
           }}
         >

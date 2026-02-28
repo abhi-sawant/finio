@@ -1,7 +1,8 @@
 import React from 'react'
 import { View, TouchableOpacity, StyleSheet, Text } from 'react-native'
 import { Check } from 'lucide-react-native'
-import { Colors } from '@/constants/Colors'
+import { useColors } from '@/hooks/useColors'
+import type { ColorPalette } from '@/constants/Colors'
 import { lightHaptic } from '@/utils/haptics'
 
 const DEFAULT_COLORS = [
@@ -13,16 +14,18 @@ const DEFAULT_COLORS = [
 interface ColorPickerProps {
   selectedColor: string
   onChange: (color: string) => void
-  colors?: string[]
+  colorOptions?: string[]
   label?: string
 }
 
 export function ColorPicker({
   selectedColor,
   onChange,
-  colors = DEFAULT_COLORS,
+  colorOptions = DEFAULT_COLORS,
   label = 'Color',
 }: ColorPickerProps) {
+  const colors = useColors()
+  const styles = makeStyles(colors)
   const handleSelect = async (color: string) => {
     await lightHaptic()
     onChange(color)
@@ -32,7 +35,7 @@ export function ColorPicker({
     <View style={styles.container}>
       {label ? <Text style={styles.label}>{label}</Text> : null}
       <View style={styles.grid}>
-        {colors.map((color) => {
+        {colorOptions.map((color) => {
           const isSelected = color === selectedColor
           return (
             <TouchableOpacity
@@ -56,7 +59,8 @@ export function ColorPicker({
   )
 }
 
-const styles = StyleSheet.create({
+function makeStyles(colors: ColorPalette) {
+  return StyleSheet.create({
   container: {
     flex: 1,
     gap: 12,
@@ -64,7 +68,7 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: 'DMSans_500Medium',
     fontSize: 14,
-    color: Colors.textMuted,
+    color: colors.textMuted,
   },
   grid: {
     flexDirection: 'row',
@@ -88,3 +92,4 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
 })
+}
