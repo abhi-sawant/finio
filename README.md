@@ -16,14 +16,17 @@
 
 ## Features
 
-- **Dashboard** — greeting, balance summary cards, account carousel, spending donut chart
-- **Transactions** — full list with search, date/type/category filters
-- **Accounts** — multiple accounts (checking, savings, cash, credit, investment, wallet) with per-currency balances
-- **Analytics** — income vs expense bar chart, balance trend line, spending breakdown
-- **Categories & Labels** — fully customisable with icon and colour pickers
-- **Transfers** — move money between accounts with automatic balance adjustment
-- **Cloud Backup (optional)** — register / log in to sync your data to a self-hosted PHP backend; auto-backup runs every 24 hours
-- **Dark theme** — dark-only UI with a purple primary palette
+- **Dashboard** — time-aware greeting, total balance summary cards, horizontal account carousel, spending donut chart, and recent transactions list
+- **Transactions** — full list with text search, type filter, account filter, and multi-category filter; grouped by date
+- **Accounts** — multiple accounts (checking, savings, cash, credit, investment, wallet) with per-account currency and colour/icon customisation; balances auto-update on every transaction
+- **Analytics** — income vs expense bar chart across the last 6 months, spending donut per period (week / month / 3M / 6M / year), and balance trend line
+- **Categories & Labels** — fully customisable with icon and colour pickers; labels support multi-select tagging on transactions
+- **Transfers** — move money between any two accounts with automatic bidirectional balance adjustment
+- **Local Data Export/Import** — export all data to a JSON file (shareable) and import it back on any device
+- **Daily Reminders** — optional daily push notification at 09:00 to log expenses
+- **Light / Dark / System theme** — three theme modes; system mode follows the device preference automatically; Android navigation bar colour follows the active theme
+- **Cloud Backup (optional)** — register / log in to sync data to a self-hosted PHP backend; auto-backup runs silently every 24 hours on startup
+- **In-app Update Checker** — checks GitHub Releases on startup and prompts to download when a newer version is available
 - **Haptic feedback** — subtle tactile responses throughout
 
 ---
@@ -35,14 +38,17 @@
 | Framework | [Expo](https://expo.dev) SDK 54 + [Expo Router](https://expo.github.io/router/) 6 |
 | Language | TypeScript 5.9 (strict) |
 | State | [Zustand](https://zustand.docs.pmnd.rs/) 5 + AsyncStorage persistence |
-| Styling | [NativeWind](https://www.nativewind.dev/) 4 (Tailwind CSS for RN) |
+| Styling | [NativeWind](https://www.nativewind.dev/) 4 (Tailwind CSS for RN) + `StyleSheet` |
 | Charts | [Victory Native](https://commerce.nearform.com/open-source/victory-native/) 41 |
 | Forms | [React Hook Form](https://react-hook-form.com/) 7 + [Zod](https://zod.dev/) 4 |
 | Animation | [Reanimated](https://docs.swmansion.com/react-native-reanimated/) 4 |
 | Lists | [@shopify/flash-list](https://shopify.github.io/flash-list/) |
 | Icons | [lucide-react-native](https://lucide.dev/) |
-| Dates | [date-fns](https://date-fns.org/) |
+| Dates | [date-fns](https://date-fns.org/) 4 |
+| Fonts | DM Sans (400/500/700) + Sora (700/800) via `@expo-google-fonts` |
 | Secure storage | [expo-secure-store](https://docs.expo.dev/versions/latest/sdk/securestore/) |
+| Notifications | [expo-notifications](https://docs.expo.dev/versions/latest/sdk/notifications/) |
+| File I/O | expo-file-system · expo-sharing · expo-document-picker |
 | Backend | PHP 8.2+ (self-hosted, optional) |
 
 ---
@@ -52,13 +58,13 @@
 ```
 app/            Expo Router screens (tabs, auth, modals)
 components/     Reusable UI components
-constants/      Color palette
-data/           Default seed data
-hooks/          Custom hooks (useCountUp, useDebounce, useThemeColor)
-services/       API wrapper (api.ts) and backup logic (backup.ts)
-store/          Zustand stores + selectors
-types/          Shared TypeScript interfaces
-utils/          Pure helpers (calculations, formatters, haptics)
+constants/      Color palette (DarkColors, LightColors, AccountColors, CategoryColors)
+data/           Default seed data (accounts, categories, labels, transactions, settings)
+hooks/          useColors · useCountUp · useDebounce · useThemeColor
+services/       api.ts · backup.ts · updater.ts
+store/          useFinanceStore · useAuthStore · selectors.ts
+types/          Shared TypeScript interfaces & union types
+utils/          calculations · formatters · haptics
 backend/        Self-hosted PHP REST API (optional cloud backup)
 ```
 
@@ -130,23 +136,34 @@ The backend is a lightweight PHP 8.2+ REST API designed for cPanel shared hostin
 | POST | `/auth/resend-otp` | — | Resend OTP |
 | POST | `/auth/login` | — | Login, get JWT |
 | POST | `/auth/forgot-password` | — | Send reset email |
-| POST | `/auth/reset-password` | — | Reset with token |
-| GET | `/user/profile` | ✓ | Get profile |
-| DELETE | `/user/account` | ✓ | Delete account |
+| POST | `/auth/reset-password` | — | Reset with OTP token |
+| GET | `/user/me` | ✓ | Get profile |
+| PUT | `/user/me` | ✓ | Update profile |
+| DELETE | `/user/me` | ✓ | Delete account |
 | POST | `/backup/upload` | ✓ | Upload JSON backup |
 | GET | `/backup/latest` | ✓ | Fetch latest backup |
+| GET | `/backup/list` | ✓ | List all backups |
+| GET | `/backup/{date}` | ✓ | Download a specific backup |
+| DELETE | `/backup/{date}` | ✓ | Delete a specific backup |
 
 ---
 
 ## Data Model
 
 ```ts
-Account     { id, name, type, currency, color, icon, balance, createdAt }
-Transaction { id, type, amount, accountId, toAccountId?, categoryId,
-              date, note, labels, createdAt }
-Category    { id, name, icon, color, type }   // 'expense' | 'income' | 'both'
-Label       { id, name, color }
-Settings    { currency, theme, userName, useBiometrics, hapticFeedback, notifications }
+Account       { id, name, type, currency, color, icon, balance, createdAt }
+Transaction   { id, type, amount, accountId, toAccountId?, categoryId,
+                date, note, labels, createdAt }
+Category      { id, name, icon, color, type }   // 'expense' | 'income' | 'both'
+Label         { id, name, color }
+Settings      { currency, theme, userName, useBiometrics, hapticFeedback, notifications }
+MonthlySummary { month, year, income, expenses, net }
+
+// Union types
+TransactionType = 'expense' | 'income' | 'transfer'
+AccountType     = 'checking' | 'savings' | 'cash' | 'credit' | 'investment' | 'wallet'
+Currency        = 'USD' | 'EUR' | 'GBP' | 'INR' | 'JPY' | 'CAD' | 'AUD'
+Theme           = 'dark' | 'light' | 'system'
 ```
 
 ---
