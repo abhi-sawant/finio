@@ -13,6 +13,8 @@ import {
 } from '@expo-google-fonts/dm-sans'
 import { Sora_700Bold, Sora_800ExtraBold } from '@expo-google-fonts/sora'
 import { useFinanceStore } from '@/store/useFinanceStore'
+import { useAuthStore } from '@/store/useAuthStore'
+import { autoBackupIfNeeded } from '@/services/backup'
 import { Colors } from '@/constants/Colors'
 import { Toast } from '@/components/common/Toast'
 
@@ -20,6 +22,7 @@ SplashScreen.preventAutoHideAsync()
 
 export default function RootLayout() {
   const isHydrated = useFinanceStore((s) => s.isHydrated)
+  const { isLoaded, loadAuth } = useAuthStore()
 
   const [fontsLoaded, fontError] = useFonts({
     DMSans_400Regular,
@@ -29,11 +32,24 @@ export default function RootLayout() {
     Sora_800ExtraBold,
   })
 
+  // Load stored JWT + user on startup
   useEffect(() => {
-    if ((fontsLoaded || fontError) && isHydrated) {
+    loadAuth()
+  }, [])
+
+  // Hide splash once fonts, store data, and auth are ready
+  useEffect(() => {
+    if ((fontsLoaded || fontError) && isHydrated && isLoaded) {
       SplashScreen.hideAsync()
     }
-  }, [fontsLoaded, fontError, isHydrated])
+  }, [fontsLoaded, fontError, isHydrated, isLoaded])
+
+  // Silently auto-backup once per day in the background
+  useEffect(() => {
+    if (isHydrated && isLoaded) {
+      autoBackupIfNeeded().catch(() => {})
+    }
+  }, [isHydrated, isLoaded])
 
   if (!fontsLoaded && !fontError) return null
   if (!isHydrated) return null
@@ -50,6 +66,13 @@ export default function RootLayout() {
           }}
         >
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="auth"
+            options={{
+              headerShown: false,
+              animation: 'slide_from_bottom',
+            }}
+          />
           <Stack.Screen
             name="modals/add-transaction"
             options={{

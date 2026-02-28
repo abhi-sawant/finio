@@ -8,6 +8,7 @@ import {
   Switch,
   Alert,
   TextInput,
+  ActivityIndicator,
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router'
@@ -26,6 +27,11 @@ import {
   DollarSign,
   Shield,
   Check,
+  Cloud,
+  CloudOff,
+  CloudUpload,
+  CloudDownload,
+  LogOut,
 } from 'lucide-react-native'
 import * as FileSystem from 'expo-file-system/legacy'
 import * as Sharing from 'expo-sharing'
@@ -33,6 +39,8 @@ import * as DocumentPicker from 'expo-document-picker'
 import { Colors } from '@/constants/Colors'
 import { BottomSheet } from '@/components/common/BottomSheet'
 import { useFinanceStore } from '@/store/useFinanceStore'
+import { useAuthStore } from '@/store/useAuthStore'
+import { uploadBackup, restoreLatestBackup } from '@/services/backup'
 import { showToast } from '@/components/common/Toast'
 import { warningHaptic, lightHaptic } from '@/utils/haptics'
 import type { Currency } from '@/types'
@@ -77,15 +85,30 @@ function SectionHeader({ title }: { title: string }) {
   return <Text style={styles.sectionHeader}>{title}</Text>
 }
 
+function formatLastBackup(iso: string | null): string {
+  if (!iso) return 'Never'
+  const d = new Date(iso)
+  const now = new Date()
+  const isToday =
+    d.getDate() === now.getDate() &&
+    d.getMonth() === now.getMonth() &&
+    d.getFullYear() === now.getFullYear()
+  const time = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  return isToday ? `Today at ${time}` : d.toLocaleDateString()
+}
+
 export default function SettingsScreen() {
   const insets = useSafeAreaInsets()
   const router = useRouter()
   const { settings, updateSettings, transactions, accounts, categories, labels, resetToDefaults, importData } =
     useFinanceStore()
+  const { user, token, lastBackupAt, clearAuth } = useAuthStore()
 
   const [nameSheetVisible, setNameSheetVisible] = useState(false)
   const [currencySheetVisible, setCurrencySheetVisible] = useState(false)
   const [nameInput, setNameInput] = useState(settings.userName)
+  const [backupLoading, setBackupLoading] = useState(false)
+  const [restoreLoading, setRestoreLoading] = useState(false)
 
   // ─── Name ───────────────────────────────────────────────
   const handleSaveName = () => {
@@ -212,6 +235,66 @@ export default function SettingsScreen() {
     }
   }
 
+  // ─── Cloud Backup ─────────────────────────────────────────
+  const handleBackupNow = async () => {
+    if (!token || backupLoading) return
+    setBackupLoading(true)
+    try {
+      await uploadBackup()
+      showToast({ message: 'Backup uploaded successfully', type: 'success' })
+    } catch (err: unknown) {
+      showToast({
+        message: err instanceof Error ? err.message : 'Backup failed',
+        type: 'error',
+      })
+    } finally {
+      setBackupLoading(false)
+    }
+  }
+
+  const handleRestore = () => {
+    if (restoreLoading) return
+    Alert.alert(
+      'Restore from Backup',
+      'This will replace your current data with your latest cloud backup. This cannot be undone.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Restore',
+          style: 'destructive',
+          onPress: async () => {
+            setRestoreLoading(true)
+            try {
+              await restoreLatestBackup()
+              showToast({ message: 'Data restored from backup', type: 'success' })
+            } catch (err: unknown) {
+              showToast({
+                message: err instanceof Error ? err.message : 'Restore failed',
+                type: 'error',
+              })
+            } finally {
+              setRestoreLoading(false)
+            }
+          },
+        },
+      ]
+    )
+  }
+
+  const handleSignOut = () => {
+    Alert.alert('Sign Out', 'You will no longer receive automatic backups.', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Sign Out',
+        style: 'destructive',
+        onPress: async () => {
+          await clearAuth()
+          showToast({ message: 'Signed out', type: 'info' })
+        },
+      },
+    ])
+  }
+
   // ─── Clear ───────────────────────────────────────────────
   const handleClearData = () => {
     warningHaptic()
@@ -315,6 +398,67 @@ export default function SettingsScreen() {
             onPress={() => { lightHaptic(); router.push('/modals/manage-labels') }}
           />
         </View>
+
+        {/* Cloud Backup */}
+        <SectionHeader title="Cloud Backup" />
+        {user ? (
+          <View style={styles.section}>
+            {/* Signed-in user info */}
+            <View style={[styles.row, { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: Colors.border }]}>
+              <View style={styles.rowLeft}>
+                <View style={styles.iconBox}>
+                  <Cloud size={16} color={Colors.primary} />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.rowLabel}>{user.name}</Text>
+                  <Text style={[styles.rowLabel, { fontSize: 12, color: Colors.textMuted, fontFamily: 'DMSans_400Regular' }]}>
+                    {user.email}
+                  </Text>
+                </View>
+              </View>
+              <Text style={[styles.rowLabel, { fontSize: 12, color: Colors.textMuted, fontFamily: 'DMSans_400Regular' }]}>
+                {formatLastBackup(lastBackupAt)}
+              </Text>
+            </View>
+            <SettingsRow
+              icon={<CloudUpload size={16} color={Colors.primary} />}
+              label="Back Up Now"
+              onPress={handleBackupNow}
+              right={backupLoading ? <ActivityIndicator size="small" color={Colors.primary} /> : undefined}
+            />
+            <SettingsRow
+              icon={<CloudDownload size={16} color={Colors.primary} />}
+              label="Restore from Backup"
+              onPress={handleRestore}
+              right={restoreLoading ? <ActivityIndicator size="small" color={Colors.primary} /> : undefined}
+            />
+            <SettingsRow
+              icon={<LogOut size={16} color={Colors.expense} />}
+              label="Sign Out"
+              onPress={handleSignOut}
+              danger
+            />
+          </View>
+        ) : (
+          <View style={styles.section}>
+            <View style={styles.backupBanner}>
+              <CloudOff size={18} color={Colors.textMuted} />
+              <Text style={styles.backupBannerText}>
+                Sign in to automatically back up your data once a day
+              </Text>
+            </View>
+            <SettingsRow
+              icon={<User size={16} color={Colors.primary} />}
+              label="Sign In"
+              onPress={() => { lightHaptic(); router.push('/auth/login' as never) }}
+            />
+            <SettingsRow
+              icon={<Cloud size={16} color={Colors.primary} />}
+              label="Create Account"
+              onPress={() => { lightHaptic(); router.push('/auth/register' as never) }}
+            />
+          </View>
+        )}
 
         {/* Data */}
         <SectionHeader title="Data" />
@@ -497,6 +641,22 @@ const styles = StyleSheet.create({
   },
   rowLabelDanger: {
     color: Colors.expense,
+  },
+  backupBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: Colors.border,
+  },
+  backupBannerText: {
+    fontFamily: 'DMSans_400Regular',
+    fontSize: 13,
+    color: Colors.textMuted,
+    flex: 1,
+    lineHeight: 18,
   },
   statsRow: {
     flexDirection: 'row',

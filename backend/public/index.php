@@ -28,7 +28,8 @@ $router = new Router();
 
 // Public auth routes (no JWT required)
 $router->post('/auth/register',        [AuthController::class, 'register']);
-$router->get ('/auth/verify',          [AuthController::class, 'verify']);
+$router->post('/auth/verify-otp',      [AuthController::class, 'verifyOtp']);
+$router->post('/auth/resend-otp',      [AuthController::class, 'resendOtp']);
 $router->post('/auth/login',           [AuthController::class, 'login']);
 $router->post('/auth/forgot-password', [AuthController::class, 'forgotPassword']);
 $router->post('/auth/reset-password',  [AuthController::class, 'resetPassword']);

@@ -395,10 +395,11 @@ SOLUTION: You may need to specify the PHP version:
 BASE URL: https://api.yourdomain.com
 
 POST   /auth/register          body: { name, email, password }
-GET    /auth/verify?token=xxx  (clicked from email)
+POST   /auth/verify-otp        body: { email, otp }
+POST   /auth/resend-otp        body: { email }
 POST   /auth/login             body: { email, password } → { token, user }
 POST   /auth/forgot-password   body: { email }
-POST   /auth/reset-password    body: { token, password }
+POST   /auth/reset-password    body: { email, otp, password }
 
 All routes below require:  Authorization: Bearer <token>
 

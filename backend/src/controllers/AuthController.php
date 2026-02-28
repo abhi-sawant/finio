@@ -17,12 +17,11 @@ class AuthController
     // ── POST /auth/register ───────────────────────────────────────────────────
     public function register(array $params): void
     {
-        $body = request_body();
+        $body  = request_body();
         $name  = trim($body['name']  ?? '');
         $email = strtolower(trim($body['email'] ?? ''));
         $pass  = $body['password'] ?? '';
 
-        // Validation
         if (empty($name)) {
             json_error('Name is required.');
         }
@@ -35,69 +34,121 @@ class AuthController
 
         $pdo = Database::connect();
 
-        // Check uniqueness
-        $stmt = $pdo->prepare('SELECT id FROM users WHERE email = ?');
+        $stmt = $pdo->prepare('SELECT id, is_verified FROM users WHERE email = ?');
         $stmt->execute([$email]);
-        if ($stmt->fetch()) {
+        $existing = $stmt->fetch();
+
+        if ($existing && $existing['is_verified']) {
             json_error('An account with this email already exists.', 409);
         }
 
-        // Create user
-        $hash  = password_hash($pass, PASSWORD_BCRYPT, ['cost' => 12]);
-        $token = generate_token(32);   // 64-char hex
+        $otp     = $this->generateOtp();
+        $otpHash = hash('sha256', $otp);
+        $expires = date('Y-m-d H:i:s', time() + 900); // 15 minutes
 
-        $stmt = $pdo->prepare(
-            'INSERT INTO users (name, email, password_hash, is_verified, verification_token)
-             VALUES (?, ?, ?, 0, ?)'
-        );
-        $stmt->execute([$name, $email, $hash, $token]);
+        if ($existing && !$existing['is_verified']) {
+            // Re-register: update OTP for existing unverified account
+            $hash = password_hash($pass, PASSWORD_BCRYPT, ['cost' => 12]);
+            $pdo->prepare(
+                'UPDATE users SET name = ?, password_hash = ?, otp_hash = ?, otp_expires = ? WHERE id = ?'
+            )->execute([$name, $hash, $otpHash, $expires, $existing['id']]);
+        } else {
+            $hash = password_hash($pass, PASSWORD_BCRYPT, ['cost' => 12]);
+            $pdo->prepare(
+                'INSERT INTO users (name, email, password_hash, is_verified, otp_hash, otp_expires)
+                 VALUES (?, ?, ?, 0, ?, ?)'
+            )->execute([$name, $email, $hash, $otpHash, $expires]);
+        }
 
-        // Send verification email
-        $this->sendVerificationEmail($email, $name, $token);
+        $this->sendOtpEmail($email, $name, $otp, 'verify');
 
-        json_ok(['message' => 'Account created. Please check your email to verify your account.'], 201);
+        json_ok([
+            'message' => 'Account created. Enter the 6-digit OTP sent to your email.',
+            'email'   => $email,
+        ], 201);
     }
 
-    // ── GET /auth/verify?token=xxx ────────────────────────────────────────────
-    public function verify(array $params): void
+    // ── POST /auth/verify-otp ─────────────────────────────────────────────────
+    public function verifyOtp(array $params): void
     {
-        $token = trim($_GET['token'] ?? '');
+        $body  = request_body();
+        $email = strtolower(trim($body['email'] ?? ''));
+        $otp   = trim($body['otp'] ?? '');
 
-        if (empty($token)) {
-            json_error('Verification token is missing.');
+        if (empty($email) || empty($otp)) {
+            json_error('Email and OTP are required.');
         }
 
         $pdo  = Database::connect();
         $stmt = $pdo->prepare(
-            'SELECT id FROM users WHERE verification_token = ? AND is_verified = 0'
+            'SELECT id, name, email, otp_hash, otp_expires, is_verified FROM users WHERE email = ?'
         );
-        $stmt->execute([$token]);
+        $stmt->execute([$email]);
         $user = $stmt->fetch();
 
         if (!$user) {
-            json_error('Invalid or already-used verification token.', 404);
+            json_error('No account found with this email.', 404);
+        }
+        if ($user['is_verified']) {
+            json_error('This account is already verified. Please log in.');
+        }
+        if (empty($user['otp_hash']) || strtotime($user['otp_expires']) < time()) {
+            json_error('OTP has expired. Please request a new one.', 410);
+        }
+        if (!hash_equals($user['otp_hash'], hash('sha256', $otp))) {
+            json_error('Invalid OTP.', 401);
         }
 
         $pdo->prepare(
-            'UPDATE users SET is_verified = 1, verification_token = NULL WHERE id = ?'
+            'UPDATE users SET is_verified = 1, otp_hash = NULL, otp_expires = NULL WHERE id = ?'
         )->execute([$user['id']]);
 
-        // Return a simple HTML page so the browser shows a success message
-        // (the user clicks the link in their email, which opens in a browser)
-        header('Content-Type: text/html; charset=utf-8');
-        echo <<<HTML
-        <!DOCTYPE html>
-        <html lang="en">
-        <head><meta charset="UTF-8"><title>Email Verified – Finio</title>
-        <style>body{font-family:sans-serif;text-align:center;padding:60px;color:#333}
-        h1{color:#22c55e}</style></head>
-        <body>
-          <h1>✓ Email verified!</h1>
-          <p>Your Finio account is now active. You can close this tab and log in from the app.</p>
-        </body>
-        </html>
-        HTML;
-        exit;
+        $token = jwt_create((int)$user['id'], $user['email'], $user['name']);
+
+        json_ok([
+            'message' => 'Email verified successfully.',
+            'token'   => $token,
+            'user'    => [
+                'id'    => (int)$user['id'],
+                'name'  => $user['name'],
+                'email' => $user['email'],
+            ],
+        ]);
+    }
+
+    // ── POST /auth/resend-otp ─────────────────────────────────────────────────
+    public function resendOtp(array $params): void
+    {
+        $body  = request_body();
+        $email = strtolower(trim($body['email'] ?? ''));
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            json_error('A valid email address is required.');
+        }
+
+        $pdo  = Database::connect();
+        $stmt = $pdo->prepare('SELECT id, name, is_verified FROM users WHERE email = ?');
+        $stmt->execute([$email]);
+        $user = $stmt->fetch();
+
+        if (!$user) {
+            json_error('No account found with this email.', 404);
+        }
+        if ($user['is_verified']) {
+            json_error('This account is already verified. Please log in.');
+        }
+
+        $otp     = $this->generateOtp();
+        $otpHash = hash('sha256', $otp);
+        $expires = date('Y-m-d H:i:s', time() + 900);
+
+        $pdo->prepare(
+            'UPDATE users SET otp_hash = ?, otp_expires = ? WHERE id = ?'
+        )->execute([$otpHash, $expires, $user['id']]);
+
+        $this->sendOtpEmail($email, $user['name'], $otp, 'verify');
+
+        json_ok(['message' => 'A new OTP has been sent to your email.']);
     }
 
     // ── POST /auth/login ──────────────────────────────────────────────────────
@@ -116,16 +167,14 @@ class AuthController
         $stmt->execute([$email]);
         $user = $stmt->fetch();
 
-        // Use a constant-time comparison; also fail gracefully if no user found
         $dummyHash = '$2y$12$invalidsaltXXXXXXXXXXXuInvalidHashPaddingXXXXXXXXXXXX';
         $hash      = $user ? $user['password_hash'] : $dummyHash;
 
         if (!password_verify($pass, $hash) || !$user) {
             json_error('Invalid email or password.', 401);
         }
-
         if (!$user['is_verified']) {
-            json_error('Please verify your email before logging in.', 403);
+            json_error('Please verify your email before logging in. Check your inbox for the OTP.', 403);
         }
 
         $token = jwt_create((int)$user['id'], $user['email'], $user['name']);
@@ -151,53 +200,55 @@ class AuthController
         }
 
         $pdo  = Database::connect();
-        $stmt = $pdo->prepare('SELECT id, name FROM users WHERE email = ?');
+        $stmt = $pdo->prepare('SELECT id, name FROM users WHERE email = ? AND is_verified = 1');
         $stmt->execute([$email]);
         $user = $stmt->fetch();
 
-        // Always return success to prevent email enumeration
         if ($user) {
-            $token   = generate_token(32);      // 64-char hex
-            $hash    = hash('sha256', $token);  // store only the hash in DB
-            $expires = date('Y-m-d H:i:s', time() + 3600); // 1 hour
+            $otp     = $this->generateOtp();
+            $otpHash = hash('sha256', $otp);
+            $expires = date('Y-m-d H:i:s', time() + 900); // 15 minutes
 
             $pdo->prepare(
                 'UPDATE users SET reset_token_hash = ?, reset_token_expires = ? WHERE id = ?'
-            )->execute([$hash, $expires, $user['id']]);
+            )->execute([$otpHash, $expires, $user['id']]);
 
-            $this->sendPasswordResetEmail($email, $user['name'], $token);
+            $this->sendOtpEmail($email, $user['name'], $otp, 'reset');
         }
 
-        json_ok(['message' => 'If an account with that email exists, a reset link has been sent.']);
+        // Always return success to prevent email enumeration
+        json_ok(['message' => 'If an account with that email exists, a 6-digit OTP has been sent.']);
     }
 
     // ── POST /auth/reset-password ─────────────────────────────────────────────
     public function resetPassword(array $params): void
     {
-        $body     = request_body();
-        $token    = trim($body['token']    ?? '');
-        $newPass  = $body['password'] ?? '';
+        $body    = request_body();
+        $email   = strtolower(trim($body['email']    ?? ''));
+        $otp     = trim($body['otp']      ?? '');
+        $newPass = $body['password'] ?? '';
 
-        if (empty($token)) {
-            json_error('Reset token is required.');
+        if (empty($email) || empty($otp)) {
+            json_error('Email and OTP are required.');
         }
         if (strlen($newPass) < 8) {
             json_error('Password must be at least 8 characters.');
         }
 
-        $hash = hash('sha256', $token);
-        $pdo  = Database::connect();
+        $otpHash = hash('sha256', $otp);
+        $pdo     = Database::connect();
 
         $stmt = $pdo->prepare(
             'SELECT id FROM users
-             WHERE reset_token_hash = ?
+             WHERE email = ?
+               AND reset_token_hash = ?
                AND reset_token_expires > NOW()'
         );
-        $stmt->execute([$hash]);
+        $stmt->execute([$email, $otpHash]);
         $user = $stmt->fetch();
 
         if (!$user) {
-            json_error('Reset link is invalid or has expired.', 404);
+            json_error('Invalid or expired OTP.', 404);
         }
 
         $newHash = password_hash($newPass, PASSWORD_BCRYPT, ['cost' => 12]);
@@ -211,50 +262,42 @@ class AuthController
         json_ok(['message' => 'Password has been reset. You can now log in.']);
     }
 
-    // ── Email helpers ─────────────────────────────────────────────────────────
+    // ── Helpers ───────────────────────────────────────────────────────────────
 
-    private function sendVerificationEmail(string $email, string $name, string $token): void
+    private function generateOtp(): string
     {
-        $url = Config::get('app_url') . '/auth/verify?token=' . urlencode($token);
-
-        $html = <<<HTML
-        <p>Hi {$name},</p>
-        <p>Welcome to Finio! Please click the button below to verify your email address.</p>
-        <p style="text-align:center;margin:32px 0">
-          <a href="{$url}"
-             style="background:#6366f1;color:#fff;padding:14px 28px;border-radius:8px;
-                    text-decoration:none;font-weight:600">
-            Verify Email
-          </a>
-        </p>
-        <p>Or copy this link into your browser:<br><a href="{$url}">{$url}</a></p>
-        <p>This link does not expire.</p>
-        <p>– Finio</p>
-        HTML;
-
-        send_mail($email, $name, 'Verify your Finio email', $html);
+        return str_pad((string)random_int(0, 999999), 6, '0', STR_PAD_LEFT);
     }
 
-    private function sendPasswordResetEmail(string $email, string $name, string $token): void
+    private function sendOtpEmail(string $email, string $name, string $otp, string $type): void
     {
-        $url = Config::get('app_url') . '/auth/reset-password?token=' . urlencode($token);
+        if ($type === 'reset') {
+            $subject = 'Reset your Finio password';
+            $heading = 'Password Reset OTP';
+            $body    = 'Enter this OTP in the app to reset your Finio password.';
+            $note    = 'This OTP expires in <strong>15 minutes</strong>. If you didn\'t request a reset, ignore this email.';
+        } else {
+            $subject = 'Verify your Finio account';
+            $heading = 'Email Verification OTP';
+            $body    = 'Enter this OTP in the app to verify your Finio account.';
+            $note    = 'This OTP expires in <strong>15 minutes</strong>.';
+        }
 
         $html = <<<HTML
-        <p>Hi {$name},</p>
-        <p>We received a request to reset your Finio password. Click below to set a new one.</p>
-        <p style="text-align:center;margin:32px 0">
-          <a href="{$url}"
-             style="background:#6366f1;color:#fff;padding:14px 28px;border-radius:8px;
-                    text-decoration:none;font-weight:600">
-            Reset Password
-          </a>
-        </p>
-        <p>Or copy this link into your browser:<br><a href="{$url}">{$url}</a></p>
-        <p>This link expires in <strong>1 hour</strong>.</p>
-        <p>If you didn't request a reset, you can ignore this email.</p>
-        <p>– Finio</p>
+        <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px 24px">
+          <h2 style="margin:0 0 8px;color:#111">{$heading}</h2>
+          <p style="color:#555;margin:0 0 32px">{$body}</p>
+          <div style="background:#f4f4f5;border-radius:12px;padding:24px;text-align:center;margin-bottom:32px">
+            <span style="font-size:42px;font-weight:700;letter-spacing:12px;color:#6366f1;font-family:monospace">
+              {$otp}
+            </span>
+          </div>
+          <p style="color:#888;font-size:13px;margin:0">{$note}</p>
+          <hr style="border:none;border-top:1px solid #eee;margin:24px 0">
+          <p style="color:#aaa;font-size:12px;margin:0">Finio Personal Finance</p>
+        </div>
         HTML;
 
-        send_mail($email, $name, 'Reset your Finio password', $html);
+        send_mail($email, $name, $subject, $html);
     }
 }
