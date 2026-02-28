@@ -1,6 +1,6 @@
 import '../global.css'
 import { useEffect } from 'react'
-import { useColorScheme, Platform } from 'react-native'
+import { useColorScheme, Platform, Alert } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
 import { Stack } from 'expo-router'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
@@ -16,6 +16,7 @@ import { Sora_700Bold, Sora_800ExtraBold } from '@expo-google-fonts/sora'
 import { useFinanceStore } from '@/store/useFinanceStore'
 import { useAuthStore } from '@/store/useAuthStore'
 import { autoBackupIfNeeded } from '@/services/backup'
+import { checkForUpdate, openReleasePage } from '@/services/updater'
 import { useColors } from '@/hooks/useColors'
 import * as NavigationBar from 'expo-navigation-bar'
 import { Toast } from '@/components/common/Toast'
@@ -67,6 +68,25 @@ export default function RootLayout() {
     if (isHydrated && isLoaded) {
       autoBackupIfNeeded().catch(() => {})
     }
+  }, [isHydrated, isLoaded])
+
+  // Check for app updates via GitHub Releases once on startup
+  useEffect(() => {
+    if (!isHydrated || !isLoaded) return
+    checkForUpdate().then((release) => {
+      if (!release) return
+      Alert.alert(
+        '🎉 Update Available',
+        `Version ${release.version} is available.${release.releaseNotes ? `\n\n${release.releaseNotes.slice(0, 200)}${release.releaseNotes.length > 200 ? '…' : ''}` : ''}`,
+        [
+          { text: 'Later', style: 'cancel' },
+          {
+            text: 'Download',
+            onPress: () => openReleasePage(release.releaseUrl),
+          },
+        ]
+      )
+    }).catch(() => {})
   }, [isHydrated, isLoaded])
 
   if (!fontsLoaded && !fontError) return null

@@ -10,6 +10,7 @@ import {
   TextInput,
   ActivityIndicator,
 } from 'react-native'
+import Constants from 'expo-constants'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router'
 import {
@@ -32,6 +33,7 @@ import {
   CloudUpload,
   CloudDownload,
   LogOut,
+  RefreshCw,
 } from 'lucide-react-native'
 import * as FileSystem from 'expo-file-system/legacy'
 import * as Sharing from 'expo-sharing'
@@ -44,6 +46,7 @@ import { useAuthStore } from '@/store/useAuthStore'
 import { uploadBackup, restoreLatestBackup } from '@/services/backup'
 import { showToast } from '@/components/common/Toast'
 import { warningHaptic, lightHaptic } from '@/utils/haptics'
+import { checkForUpdate, openReleasePage } from '@/services/updater'
 import type { Currency, Theme } from '@/types'
 
 const CURRENCIES: { code: Currency; symbol: string; name: string }[] = [
@@ -122,6 +125,7 @@ export default function SettingsScreen() {
   const [nameInput, setNameInput] = useState(settings.userName)
   const [backupLoading, setBackupLoading] = useState(false)
   const [restoreLoading, setRestoreLoading] = useState(false)
+  const [updateChecking, setUpdateChecking] = useState(false)
 
   // ─── Name ───────────────────────────────────────────────
   const handleSaveName = () => {
@@ -306,6 +310,39 @@ export default function SettingsScreen() {
         },
       },
     ])
+  }
+
+  // ─── Check for Updates ──────────────────────────────────
+  const handleCheckForUpdates = async () => {
+    if (updateChecking) return
+    lightHaptic()
+    setUpdateChecking(true)
+    try {
+      const release = await checkForUpdate()
+      if (release) {
+        Alert.alert(
+          '🎉 Update Available',
+          `Version ${release.version} is available.${
+            release.releaseNotes
+              ? `\n\n${release.releaseNotes.slice(0, 300)}${release.releaseNotes.length > 300 ? '…' : ''}`
+              : ''
+          }`,
+          [
+            { text: 'Later', style: 'cancel' },
+            {
+              text: 'Download',
+              onPress: () => openReleasePage(release.releaseUrl),
+            },
+          ]
+        )
+      } else {
+        showToast({ message: "You're on the latest version!", type: 'success' })
+      }
+    } catch {
+      showToast({ message: 'Could not check for updates', type: 'error' })
+    } finally {
+      setUpdateChecking(false)
+    }
   }
 
   // ─── Clear ───────────────────────────────────────────────
@@ -519,7 +556,17 @@ export default function SettingsScreen() {
         <View style={styles.section}>
           <SettingsRow
             icon={<Info size={16} color={colors.primary} />}
-            label="Version 1.0.0"
+            label={`Version ${Constants.expoConfig?.version ?? '1.0.0'}`}
+          />
+          <SettingsRow
+            icon={<RefreshCw size={16} color={colors.primary} />}
+            label="Check for Updates"
+            onPress={handleCheckForUpdates}
+            right={
+              updateChecking
+                ? <ActivityIndicator size="small" color={colors.primary} />
+                : undefined
+            }
           />
           <SettingsRow
             icon={<Shield size={16} color={colors.primary} />}
