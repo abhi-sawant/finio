@@ -30,8 +30,17 @@ yarn-error.*
 .DS_Store
 *.pem
 
-# local env files
+# local env files — keep .env.example tracked, ignore the rest
+.env
+.env.local
 .env*.local
+.env.development
+.env.production
+.env.staging
+
+# Backend config (should live outside the project root on the server,
+# but guard here in case it is ever placed inside for local testing)
+backend/config.php
 
 # typescript
 *.tsbuildinfo

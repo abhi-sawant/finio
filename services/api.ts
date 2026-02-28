@@ -1,4 +1,5 @@
-const BASE_URL = 'https://api.finio.slowatcoding.com'
+const BASE_URL =
+  process.env.EXPO_PUBLIC_API_URL ?? 'https://api.finio.slowatcoding.com'
 
 interface ApiResponse<T = unknown> {
   [key: string]: T
