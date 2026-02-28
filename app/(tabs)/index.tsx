@@ -6,6 +6,7 @@ import {
   RefreshControl,
   StyleSheet,
   TouchableOpacity,
+  Alert,
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router'
@@ -88,21 +89,35 @@ export default function DashboardScreen() {
               <Text style={styles.seeAll}>See all</Text>
             </TouchableOpacity>
           </View>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.accountsRow}
-          >
-            {accounts.map((account) => (
-              <View key={account.id} style={styles.accountCardWrapper}>
-                <AccountCard
-                  account={account}
-                  onPress={handleAccountPress}
-                  variant="grid"
-                />
-              </View>
-            ))}
-          </ScrollView>
+          {accounts.length === 0 ? (
+            <TouchableOpacity
+              style={styles.addAccountPrompt}
+              onPress={() => router.push('/modals/add-account')}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.addAccountPromptIcon}>＋</Text>
+              <Text style={styles.addAccountPromptText}>Add your first account</Text>
+              <Text style={styles.addAccountPromptSub}>
+                You need at least one account to record transactions.
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.accountsRow}
+            >
+              {accounts.map((account) => (
+                <View key={account.id} style={styles.accountCardWrapper}>
+                  <AccountCard
+                    account={account}
+                    onPress={handleAccountPress}
+                    variant="grid"
+                  />
+                </View>
+              ))}
+            </ScrollView>
+          )}
         </View>
 
         {/* Recent Transactions */}
@@ -186,6 +201,34 @@ function makeStyles(colors: ColorPalette) {
   },
   accountCardWrapper: {
     width: 160,
+  },
+  addAccountPrompt: {
+    marginHorizontal: 16,
+    borderRadius: 16,
+    borderWidth: 1.5,
+    borderColor: colors.primary,
+    borderStyle: 'dashed',
+    backgroundColor: colors.surface,
+    paddingVertical: 24,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    gap: 6,
+  },
+  addAccountPromptIcon: {
+    fontSize: 28,
+    color: colors.primary,
+    fontFamily: 'DMSans_400Regular',
+  },
+  addAccountPromptText: {
+    fontFamily: 'Sora_700Bold',
+    fontSize: 15,
+    color: colors.primary,
+  },
+  addAccountPromptSub: {
+    fontFamily: 'DMSans_400Regular',
+    fontSize: 12,
+    color: colors.textMuted,
+    textAlign: 'center',
   },
 })
 }

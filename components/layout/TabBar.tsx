@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react'
-import { View, Text, TouchableOpacity, Platform, StyleSheet } from 'react-native'
+import { View, Text, TouchableOpacity, Platform, StyleSheet, Alert } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router'
+import { useFinanceStore } from '@/store/useFinanceStore'
 import type { BottomTabBarProps } from '@react-navigation/bottom-tabs'
 import Animated, {
   useSharedValue,
@@ -200,7 +201,26 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
         </View>
 
         {/* FAB center */}
-        <FabButton onPress={() => router.push('/modals/add-transaction')} />
+        <FabButton
+          onPress={() => {
+            const { accounts } = useFinanceStore.getState()
+            if (accounts.length === 0) {
+              Alert.alert(
+                'No Account Found',
+                'You need at least one account before adding a transaction. Would you like to add one now?',
+                [
+                  { text: 'Cancel', style: 'cancel' },
+                  {
+                    text: 'Add Account',
+                    onPress: () => router.push('/modals/add-account'),
+                  },
+                ]
+              )
+            } else {
+              router.push('/modals/add-transaction')
+            }
+          }}
+        />
 
         {/* Right tabs */}
         <View style={styles.tabsGroup}>

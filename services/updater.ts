@@ -53,14 +53,6 @@ function isNewer(latestTag: string, currentVersion: string): boolean {
  *          up-to-date / owner+repo not configured / network error.
  */
 export async function checkForUpdate(): Promise<ReleaseInfo | null> {
-  // Guard: constants not configured yet
-  if (
-    GITHUB_OWNER === 'abhi-sawant' ||
-    GITHUB_REPO  === 'finio'
-  ) {
-    return null
-  }
-
   try {
     const res = await fetch(RELEASES_API_URL, {
       headers: {

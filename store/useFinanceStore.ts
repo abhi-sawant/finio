@@ -2,10 +2,8 @@ import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {
-  defaultAccounts,
   defaultCategories,
   defaultLabels,
-  defaultTransactions,
   defaultSettings,
 } from '@/data/defaultData'
 import type { Account, Category, FinanceStore, Label, Transaction } from '@/types'
@@ -19,8 +17,8 @@ function generateUUID(): string {
 }
 
 const defaultState = {
-  accounts: defaultAccounts,
-  transactions: defaultTransactions,
+  accounts: [] as Account[],
+  transactions: [] as Transaction[],
   categories: defaultCategories,
   labels: defaultLabels,
   settings: defaultSettings,

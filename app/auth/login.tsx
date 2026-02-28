@@ -9,6 +9,7 @@ import {
   Platform,
   ScrollView,
   ActivityIndicator,
+  Alert,
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -16,8 +17,36 @@ import { ArrowLeft, Eye, EyeOff, Mail, Lock } from 'lucide-react-native'
 import { useColors } from '@/hooks/useColors'
 import type { ColorPalette } from '@/constants/Colors'
 import { api } from '@/services/api'
+import { restoreLatestBackup } from '@/services/backup'
 import { useAuthStore } from '@/store/useAuthStore'
 import { showToast } from '@/components/common/Toast'
+
+async function checkAndPromptRestore(token: string) {
+  try {
+    await api.getLatestBackup(token)
+    // Backup exists — prompt the user
+    Alert.alert(
+      'Backup Found',
+      'A cloud backup is available for your account. Would you like to restore it now?',
+      [
+        { text: 'Skip', style: 'cancel' },
+        {
+          text: 'Restore',
+          onPress: async () => {
+            try {
+              await restoreLatestBackup()
+              showToast({ message: 'Backup restored successfully', type: 'success' })
+            } catch {
+              showToast({ message: 'Failed to restore backup', type: 'error' })
+            }
+          },
+        },
+      ]
+    )
+  } catch {
+    // No backup available — do nothing
+  }
+}
 
 export default function LoginScreen() {
   const router = useRouter()
@@ -46,6 +75,7 @@ export default function LoginScreen() {
       await setAuth(res.token, res.user)
       showToast({ message: `Welcome back, ${res.user.name.split(' ')[0]}!`, type: 'success' })
       router.dismissAll()
+      checkAndPromptRestore(res.token)
     } catch (err: unknown) {
       showToast({
         message: err instanceof Error ? err.message : 'Login failed',
