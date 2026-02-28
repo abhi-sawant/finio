@@ -28,7 +28,7 @@ function toPascalCase(str: string): string {
 export function LucideIcon({
   name,
   size = 20,
-  color = colors.textPrimary,
+  color,
   strokeWidth = 2,
 }: {
   name: string
@@ -36,6 +36,8 @@ export function LucideIcon({
   color?: string
   strokeWidth?: number
 }) {
+  const fallbackColors = useColors()
+  const resolvedColor = color ?? fallbackColors.textPrimary
   const iconName = toPascalCase(name) as keyof typeof LucideIcons
   const IconComponent = LucideIcons[iconName] as React.ComponentType<{
     size: number
@@ -49,10 +51,10 @@ export function LucideIcon({
       color: string
       strokeWidth: number
     }>
-    return <Fallback size={size} color={color} strokeWidth={strokeWidth} />
+    return <Fallback size={size} color={resolvedColor} strokeWidth={strokeWidth} />
   }
 
-  return <IconComponent size={size} color={color} strokeWidth={strokeWidth} />
+  return <IconComponent size={size} color={resolvedColor} strokeWidth={strokeWidth} />
 }
 
 interface IconPickerProps {
@@ -66,11 +68,12 @@ interface IconPickerProps {
 export function IconPicker({
   selectedIcon,
   onChange,
-  accentColor = colors.primary,
+  accentColor,
   visible,
   onClose,
 }: IconPickerProps) {
   const colors = useColors()
+  const resolvedAccent = accentColor ?? colors.primary
   const styles = makeStyles(colors)
   const handleSelect = async (icon: string) => {
     await lightHaptic()
@@ -89,14 +92,14 @@ export function IconPicker({
               onPress={() => handleSelect(icon)}
               style={[
                 styles.iconBtn,
-                isSelected && { backgroundColor: accentColor + '33', borderColor: accentColor },
+                isSelected && { backgroundColor: resolvedAccent + '33', borderColor: resolvedAccent },
               ]}
               activeOpacity={0.7}
             >
               <LucideIcon
                 name={icon}
                 size={22}
-                color={isSelected ? accentColor : colors.textPrimary}
+                color={isSelected ? resolvedAccent : colors.textPrimary}
               />
             </TouchableOpacity>
           )
