@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import {
   View,
   Text,
@@ -7,7 +7,6 @@ import {
   TextInput,
   ScrollView,
   KeyboardAvoidingView,
-  Platform,
 } from 'react-native'
 import { useRouter, useLocalSearchParams } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -48,6 +47,7 @@ export default function AddTransactionModal() {
   const [date, setDate] = useState(existing ? new Date(existing.date) : new Date())
   const [categoryPickerVisible, setCategoryPickerVisible] = useState(false)
   const [labelPickerVisible, setLabelPickerVisible] = useState(false)
+  const scrollViewRef = useRef<ScrollView>(null)
 
   const selectedCategory = categories.find((c) => c.id === categoryId)
 
@@ -165,10 +165,11 @@ export default function AddTransactionModal() {
       </View>
 
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        behavior="padding"
         style={styles.flex}
       >
         <ScrollView
+          ref={scrollViewRef}
           keyboardShouldPersistTaps="handled"
           contentContainerStyle={styles.scroll}
           showsVerticalScrollIndicator={false}
@@ -309,22 +310,27 @@ export default function AddTransactionModal() {
               placeholderTextColor={colors.textMuted}
               multiline
               maxLength={200}
+              onFocus={() => {
+                setTimeout(() => {
+                  scrollViewRef.current?.scrollToEnd({ animated: true })
+                }, 300)
+              }}
             />
           </View>
 
-          <View style={{ height: 40 }} />
+          <View style={{ height: 16 }} />
         </ScrollView>
-      </KeyboardAvoidingView>
 
-      {/* Save button */}
-      <TouchableOpacity
-        style={[styles.saveBtn, { marginBottom: insets.bottom || 16 }]}
-        onPress={handleSave}
-      >
-        <Text style={styles.saveBtnLabel}>
-          {isEdit ? 'Update Transaction' : 'Add Transaction'}
-        </Text>
-      </TouchableOpacity>
+        {/* Save button */}
+        <TouchableOpacity
+          style={[styles.saveBtn, { marginBottom: insets.bottom || 16 }]}
+          onPress={handleSave}
+        >
+          <Text style={styles.saveBtnLabel}>
+            {isEdit ? 'Update Transaction' : 'Add Transaction'}
+          </Text>
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
     </View>
   )
 }
