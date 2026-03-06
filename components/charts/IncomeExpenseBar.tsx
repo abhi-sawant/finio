@@ -1,12 +1,17 @@
 import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
-import { format } from 'date-fns'
+import { View, Text, StyleSheet, Dimensions } from 'react-native'
+import Svg, { Rect, Line, Text as SvgText, G } from 'react-native-svg'
 import { useColors } from '@/hooks/useColors'
 import type { ColorPalette } from '@/constants/Colors'
-import { formatCurrency, hexToRgba } from '@/utils/formatters'
 import { getLast6MonthsSummaries } from '@/store/selectors'
 import { useFinanceStore } from '@/store/useFinanceStore'
-import type { Currency } from '@/types'
+
+const SCREEN_WIDTH = Dimensions.get('window').width
+// 16 scrollContent padding + 16 card padding on each side
+const CHART_WIDTH = SCREEN_WIDTH - 64
+const CHART_HEIGHT = 130
+const LABEL_H = 18
+const SVG_HEIGHT = CHART_HEIGHT + LABEL_H
 
 const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
   'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -14,57 +19,79 @@ const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
 export function IncomeExpenseBar() {
   const colors = useColors()
   const styles = makeStyles(colors)
-  const { transactions, settings } = useFinanceStore()
+  const { transactions } = useFinanceStore()
   const summaries = getLast6MonthsSummaries(transactions)
-  const currency = settings.currency as Currency
 
   const maxAmount = Math.max(
     ...summaries.map((s) => Math.max(s.income, s.expenses)),
     1
   )
 
+  const groupW = CHART_WIDTH / summaries.length
+  const barW = Math.max(groupW * 0.28, 6)
+  const barGap = 3
+
+  const toBarH = (val: number) =>
+    val > 0 ? Math.max((val / maxAmount) * (CHART_HEIGHT - 6), 3) : 0
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Income vs Expenses</Text>
 
-      <View style={styles.chart}>
-        {summaries.map((summary, idx) => {
-          const incomeHeight = (summary.income / maxAmount) * 120
-          const expenseHeight = (summary.expenses / maxAmount) * 120
-
+      <Svg width={CHART_WIDTH} height={SVG_HEIGHT}>
+        {/* Horizontal grid lines */}
+        {[0, 0.25, 0.5, 0.75, 1].map((frac, i) => {
+          const y = CHART_HEIGHT - frac * (CHART_HEIGHT - 6) - 3
           return (
-            <View key={idx} style={styles.monthGroup}>
-              <View style={styles.barsRow}>
-                {/* Income bar */}
-                <View style={styles.barWrapper}>
-                  <View
-                    style={[
-                      styles.bar,
-                      {
-                        height: Math.max(incomeHeight, 2),
-                        backgroundColor: colors.income,
-                      },
-                    ]}
-                  />
-                </View>
-                {/* Expense bar */}
-                <View style={styles.barWrapper}>
-                  <View
-                    style={[
-                      styles.bar,
-                      {
-                        height: Math.max(expenseHeight, 2),
-                        backgroundColor: colors.expense,
-                      },
-                    ]}
-                  />
-                </View>
-              </View>
-              <Text style={styles.monthLabel}>{MONTH_NAMES[summary.month]}</Text>
-            </View>
+            <Line
+              key={i}
+              x1={0} y1={y} x2={CHART_WIDTH} y2={y}
+              stroke={colors.border}
+              strokeWidth={0.5}
+              strokeDasharray={i > 0 && i < 4 ? '4 4' : undefined}
+            />
           )
         })}
-      </View>
+
+        {summaries.map((s, idx) => {
+          const cx = idx * groupW + groupW / 2
+          const incomeH = toBarH(s.income)
+          const expenseH = toBarH(s.expenses)
+
+          return (
+            <G key={idx}>
+              {/* Income bar */}
+              <Rect
+                x={cx - barW - barGap / 2}
+                y={CHART_HEIGHT - incomeH}
+                width={barW}
+                height={incomeH}
+                fill={colors.income}
+                rx={3}
+              />
+              {/* Expense bar */}
+              <Rect
+                x={cx + barGap / 2}
+                y={CHART_HEIGHT - expenseH}
+                width={barW}
+                height={expenseH}
+                fill={colors.expense}
+                rx={3}
+              />
+              {/* Month label */}
+              <SvgText
+                x={cx}
+                y={SVG_HEIGHT - 2}
+                textAnchor="middle"
+                fill={colors.textMuted}
+                fontSize={10}
+              >
+                {MONTH_NAMES[s.month]}
+              </SvgText>
+            </G>
+          )
+        })}
+      </Svg>
 
       {/* Legend */}
       <View style={styles.legend}>
@@ -83,70 +110,32 @@ export function IncomeExpenseBar() {
 
 function makeStyles(colors: ColorPalette) {
   return StyleSheet.create({
-  container: {
-    backgroundColor: colors.surface,
-    borderRadius: 20,
-    padding: 20,
-    borderWidth: 1,
-    borderColor: colors.border,
-    gap: 16,
-  },
-  title: {
-    fontFamily: 'Sora_700Bold',
-    fontSize: 15,
-    color: colors.textPrimary,
-  },
-  chart: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
-    height: 140,
-    paddingBottom: 20,
-  },
-  monthGroup: {
-    flex: 1,
-    alignItems: 'center',
-    gap: 4,
-  },
-  barsRow: {
-    flexDirection: 'row',
-    gap: 2,
-    alignItems: 'flex-end',
-    flex: 1,
-  },
-  barWrapper: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
-  bar: {
-    borderRadius: 4,
-    minHeight: 2,
-  },
-  monthLabel: {
-    fontFamily: 'DMSans_400Regular',
-    fontSize: 10,
-    color: colors.textMuted,
-    position: 'absolute',
-    bottom: 0,
-  },
-  legend: {
-    flexDirection: 'row',
-    gap: 16,
-  },
-  legendItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  legendDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-  },
-  legendText: {
-    fontFamily: 'DMSans_400Regular',
-    fontSize: 12,
-    color: colors.textMuted,
-  },
-})
+    container: {
+      gap: 12,
+    },
+    title: {
+      fontFamily: 'Sora_700Bold',
+      fontSize: 15,
+      color: colors.textPrimary,
+    },
+    legend: {
+      flexDirection: 'row',
+      gap: 16,
+    },
+    legendItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+    },
+    legendDot: {
+      width: 8,
+      height: 8,
+      borderRadius: 4,
+    },
+    legendText: {
+      fontFamily: 'DMSans_400Regular',
+      fontSize: 12,
+      color: colors.textMuted,
+    },
+  })
 }

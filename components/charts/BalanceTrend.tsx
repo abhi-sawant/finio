@@ -1,16 +1,27 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { View, Text, StyleSheet, Dimensions } from 'react-native'
+import Svg, {
+  Path, Defs, LinearGradient, Stop, Line,
+  Text as SvgText, Rect, G, Circle,
+} from 'react-native-svg'
 import { useColors } from '@/hooks/useColors'
 import type { ColorPalette } from '@/constants/Colors'
-import { formatCurrency, hexToRgba } from '@/utils/formatters'
+import { formatCurrency } from '@/utils/formatters'
 import { useFinanceStore } from '@/store/useFinanceStore'
 import { getTotalAccountBalance } from '@/utils/calculations'
 import { subDays, format } from 'date-fns'
 import type { Currency } from '@/types'
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window')
-const CHART_WIDTH = SCREEN_WIDTH - 64
-const CHART_HEIGHT = 100
+const SCREEN_WIDTH = Dimensions.get('window').width
+const Y_LABEL_W = 52
+const SVG_WIDTH = SCREEN_WIDTH - 64
+const PLOT_W = SVG_WIDTH - Y_LABEL_W
+const CHART_H = 120
+const X_LABEL_H = 16
+const SVG_HEIGHT = CHART_H + X_LABEL_H
+const DAYS = 30
+const TOOLTIP_W = 118
+const TOOLTIP_H = 40
 
 export function BalanceTrend() {
   const colors = useColors()
@@ -18,47 +29,51 @@ export function BalanceTrend() {
   const { transactions, accounts, settings } = useFinanceStore()
   const currency = settings.currency as Currency
   const currentBalance = getTotalAccountBalance(accounts)
+  const [activeIdx, setActiveIdx] = useState<number | null>(null)
 
-  // Build a 30-day balance trend manually
-  const days = 30
-  const points: number[] = []
+  // Build 30-day balance trend with dates
+  const pointData: { value: number; date: Date }[] = []
   let balance = currentBalance
 
-  for (let i = 0; i < days; i++) {
-    const dayStr = subDays(new Date(), i).toISOString().slice(0, 10)
-
-    // Reverse that day's transactions
+  for (let i = 0; i < DAYS; i++) {
+    const date = subDays(new Date(), i)
+    const dayStr = date.toISOString().slice(0, 10)
     for (const t of transactions) {
       if (!t.date.startsWith(dayStr)) continue
       if (t.type === 'expense') balance += t.amount
       else if (t.type === 'income') balance -= t.amount
-      else if (t.type === 'transfer') {
-        // Net transfer effect on total is zero
-      }
     }
-
-    points.unshift(balance)
+    pointData.unshift({ value: balance, date })
   }
 
-  const minVal = Math.min(...points)
-  const maxVal = Math.max(...points)
+  const values = pointData.map((p) => p.value)
+  const minVal = Math.min(...values)
+  const maxVal = Math.max(...values)
   const range = maxVal - minVal || 1
 
-  const getY = (val: number) => {
-    return CHART_HEIGHT - ((val - minVal) / range) * (CHART_HEIGHT - 16)
-  }
+  const toX = (i: number) => Y_LABEL_W + (i / (DAYS - 1)) * PLOT_W
+  const toY = (v: number) =>
+    CHART_H - ((v - minVal) / range) * (CHART_H - 12) - 6
 
-  // Build SVG-like path — we use a simple line visualization
-  const pointCoords = points.map((v, i) => ({
-    x: (i / (points.length - 1)) * CHART_WIDTH,
-    y: getY(v),
-  }))
+  const linePath = pointData
+    .map((p, i) => `${i === 0 ? 'M' : 'L'} ${toX(i).toFixed(2)} ${toY(p.value).toFixed(2)}`)
+    .join(' ')
 
-  const currentBalanceFormatted = formatCurrency(currentBalance, currency, true)
-  const startBalance = points[0] ?? 0
-  const endBalance = points[points.length - 1] ?? currentBalance
-  const diff = endBalance - startBalance
+  const areaPath =
+    linePath +
+    ` L ${toX(DAYS - 1).toFixed(2)} ${CHART_H}` +
+    ` L ${toX(0).toFixed(2)} ${CHART_H} Z`
+
+  const diff = (values[DAYS - 1] ?? 0) - (values[0] ?? 0)
   const isPositive = diff >= 0
+
+  // Active tooltip
+  const active = activeIdx !== null ? pointData[activeIdx] : null
+  const ax = activeIdx !== null ? toX(activeIdx) : 0
+  const ay = activeIdx !== null ? toY(active!.value) : 0
+  const tooltipOnRight = ax + TOOLTIP_W + 8 <= SVG_WIDTH
+  const tooltipX = tooltipOnRight ? ax + 8 : ax - TOOLTIP_W - 8
+  const tooltipY = Math.max(4, ay - TOOLTIP_H / 2)
 
   return (
     <View style={styles.container}>
@@ -70,60 +85,142 @@ export function BalanceTrend() {
         </Text>
       </View>
 
-      {/* Simple line visualization using View */}
-      <View style={styles.chartArea}>
-        <Text style={styles.maxLabel}>{formatCurrency(maxVal, currency, true)}</Text>
-        <View style={[styles.lineCanvas, { width: CHART_WIDTH, height: CHART_HEIGHT }]}>
-          {pointCoords.slice(1).map((point, idx) => {
-            const prevPoint = pointCoords[idx]
-            if (!prevPoint) return null
-            const dx = point.x - prevPoint.x
-            const dy = point.y - prevPoint.y
-            const length = Math.sqrt(dx * dx + dy * dy)
-            const angle = Math.atan2(dy, dx) * (180 / Math.PI)
+      <Svg width={SVG_WIDTH} height={SVG_HEIGHT}>
+        <Defs>
+          <LinearGradient id="balGrad" x1="0" y1="0" x2="0" y2="1">
+            <Stop offset="0" stopColor={colors.primary} stopOpacity={0.25} />
+            <Stop offset="1" stopColor={colors.primary} stopOpacity={0} />
+          </LinearGradient>
+        </Defs>
 
-            return (
-              <View
-                key={idx}
-                style={{
-                  position: 'absolute',
-                  left: prevPoint.x,
-                  top: prevPoint.y,
-                  width: length,
-                  height: 2,
-                  backgroundColor: colors.primary,
-                  transformOrigin: 'left center',
-                  transform: [{ rotate: `${angle}deg` }],
-                  opacity: 0.8,
-                }}
+        {/* Y-axis grid lines + labels */}
+        {[0, 0.5, 1].map((frac, i) => {
+          const val = minVal + frac * range
+          const y = toY(val)
+          return (
+            <G key={i}>
+              <Line
+                x1={Y_LABEL_W} y1={y} x2={SVG_WIDTH} y2={y}
+                stroke={colors.border}
+                strokeWidth={0.5}
+                {...(i === 1 ? { strokeDasharray: '4 3' } : {})}
               />
-            )
-          })}
-          {/* Dots */}
-          {pointCoords.filter((_, i) => i % 5 === 0).map((p, i) => (
-            <View
+              <SvgText
+                x={Y_LABEL_W - 4}
+                y={y + 4}
+                textAnchor="end"
+                fill={colors.textMuted}
+                fontSize={9}
+              >
+                {formatCurrency(val, currency, true)}
+              </SvgText>
+            </G>
+          )
+        })}
+
+        {/* Area fill */}
+        <Path d={areaPath} fill="url(#balGrad)" />
+
+        {/* Line */}
+        <Path
+          d={linePath}
+          stroke={colors.primary}
+          strokeWidth={2}
+          fill="none"
+          strokeLinejoin="round"
+          strokeLinecap="round"
+        />
+
+        {/* Hit zones — one vertical strip per day */}
+        {pointData.map((_, i) => {
+          const cx = toX(i)
+          const halfW = PLOT_W / DAYS / 2
+          const hitX = i === 0 ? Y_LABEL_W : cx - halfW
+          const hitW = i === DAYS - 1 ? SVG_WIDTH - hitX : halfW * 2
+          return (
+            <Rect
               key={i}
-              style={{
-                position: 'absolute',
-                left: p.x - 3,
-                top: p.y - 3,
-                width: 6,
-                height: 6,
-                borderRadius: 3,
-                backgroundColor: colors.primary,
-              }}
+              x={hitX}
+              y={0}
+              width={hitW}
+              height={CHART_H}
+              fill="transparent"
+              onPress={() => setActiveIdx(activeIdx === i ? null : i)}
             />
-          ))}
-        </View>
-        <Text style={styles.minLabel}>{formatCurrency(minVal, currency, true)}</Text>
-        <View style={styles.dateLabels}>
-          <Text style={styles.dateLabel}>30 days ago</Text>
-          <Text style={styles.dateLabel}>Today</Text>
-        </View>
-      </View>
+          )
+        })}
+
+        {/* Active point + tooltip */}
+        {activeIdx !== null && active != null && (
+          <G>
+            {/* Vertical crosshair */}
+            <Line
+              x1={ax} y1={0} x2={ax} y2={CHART_H}
+              stroke={colors.primary}
+              strokeWidth={1}
+              strokeDasharray="3 2"
+              opacity={0.5}
+            />
+            {/* Dot */}
+            <Circle cx={ax} cy={ay} r={5} fill={colors.primary} />
+            <Circle cx={ax} cy={ay} r={2.5} fill={colors.surface} />
+
+            {/* Tooltip */}
+            <Rect
+              x={tooltipX}
+              y={tooltipY}
+              width={TOOLTIP_W}
+              height={TOOLTIP_H}
+              rx={8}
+              fill={colors.surfaceElevated}
+              stroke={colors.border}
+              strokeWidth={1}
+            />
+            <SvgText
+              x={tooltipX + TOOLTIP_W / 2}
+              y={tooltipY + 14}
+              textAnchor="middle"
+              fill={colors.textMuted}
+              fontSize={9}
+            >
+              {format(active!.date, 'MMM d, yyyy')}
+            </SvgText>
+            <SvgText
+              x={tooltipX + TOOLTIP_W / 2}
+              y={tooltipY + 30}
+              textAnchor="middle"
+              fill={colors.textPrimary}
+              fontSize={12}
+              fontWeight="bold"
+            >
+              {formatCurrency(active!.value, currency, true)}
+            </SvgText>
+          </G>
+        )}
+
+        {/* X-axis date labels */}
+        <SvgText
+          x={toX(0)} y={SVG_HEIGHT - 2}
+          fill={colors.textMuted}
+          fontSize={9}
+        >
+          30d ago
+        </SvgText>
+        <SvgText
+          x={SVG_WIDTH} y={SVG_HEIGHT - 2}
+          fill={colors.textMuted}
+          fontSize={9}
+          textAnchor="end"
+        >
+          Today
+        </SvgText>
+      </Svg>
 
       <Text style={styles.currentLabel}>
-        Current: <Text style={styles.currentValue}>{currentBalanceFormatted}</Text>
+        Current:{' '}
+        <Text style={styles.currentValue}>
+          {formatCurrency(currentBalance, currency, true)}
+        </Text>
       </Text>
     </View>
   )
@@ -131,67 +228,32 @@ export function BalanceTrend() {
 
 function makeStyles(colors: ColorPalette) {
   return StyleSheet.create({
-  container: {
-    backgroundColor: colors.surface,
-    borderRadius: 20,
-    padding: 20,
-    borderWidth: 1,
-    borderColor: colors.border,
-    gap: 12,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  title: {
-    fontFamily: 'Sora_700Bold',
-    fontSize: 15,
-    color: colors.textPrimary,
-  },
-  diff: {
-    fontFamily: 'DMSans_700Bold',
-    fontSize: 14,
-  },
-  chartArea: {
-    gap: 4,
-  },
-  maxLabel: {
-    fontFamily: 'DMSans_400Regular',
-    fontSize: 10,
-    color: colors.textMuted,
-    textAlign: 'right',
-  },
-  lineCanvas: {
-    position: 'relative',
-    backgroundColor: hexToRgba(colors.primary, 0.05),
-    borderRadius: 8,
-    overflow: 'hidden',
-  },
-  minLabel: {
-    fontFamily: 'DMSans_400Regular',
-    fontSize: 10,
-    color: colors.textMuted,
-  },
-  dateLabels: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 4,
-  },
-  dateLabel: {
-    fontFamily: 'DMSans_400Regular',
-    fontSize: 10,
-    color: colors.textMuted,
-  },
-  currentLabel: {
-    fontFamily: 'DMSans_400Regular',
-    fontSize: 13,
-    color: colors.textMuted,
-    textAlign: 'center',
-  },
-  currentValue: {
-    fontFamily: 'DMSans_700Bold',
-    color: colors.textPrimary,
-  },
-})
+    container: {
+      gap: 12,
+    },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+    title: {
+      fontFamily: 'Sora_700Bold',
+      fontSize: 15,
+      color: colors.textPrimary,
+    },
+    diff: {
+      fontFamily: 'DMSans_700Bold',
+      fontSize: 14,
+    },
+    currentLabel: {
+      fontFamily: 'DMSans_400Regular',
+      fontSize: 13,
+      color: colors.textMuted,
+      textAlign: 'center',
+    },
+    currentValue: {
+      fontFamily: 'DMSans_700Bold',
+      color: colors.textPrimary,
+    },
+  })
 }

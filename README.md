@@ -19,7 +19,7 @@
 - **Dashboard** — time-aware greeting, total balance summary cards, horizontal account carousel, spending donut chart, and recent transactions list
 - **Transactions** — full list with text search, type filter, account filter, and multi-category filter; grouped by date
 - **Accounts** — multiple accounts (checking, savings, cash, credit, investment, wallet) with per-account currency and colour/icon customisation; balances auto-update on every transaction
-- **Analytics** — income vs expense bar chart across the last 6 months, spending donut per period (week / month / 3M / 6M / year), and balance trend line
+- **Analytics** — income vs expense bar chart across the last 6 months, label spending bar chart, spending donut per period (week / month / 3M / 6M / year), and 30-day balance trend line with touch interactions
 - **Categories & Labels** — fully customisable with icon and colour pickers; labels support multi-select tagging on transactions
 - **Transfers** — move money between any two accounts with automatic bidirectional balance adjustment
 - **Local Data Export/Import** — export all data to a JSON file (shareable) and import it back on any device
@@ -39,10 +39,10 @@
 | Language | TypeScript 5.9 (strict) |
 | State | [Zustand](https://zustand.docs.pmnd.rs/) 5 + AsyncStorage persistence |
 | Styling | [NativeWind](https://www.nativewind.dev/) 4 (Tailwind CSS for RN) + `StyleSheet` |
-| Charts | [Victory Native](https://commerce.nearform.com/open-source/victory-native/) 41 |
+| Charts | Custom SVG charts via [`react-native-svg`](https://github.com/software-mansion/react-native-svg) (Victory Native installed but unused) |
 | Forms | [React Hook Form](https://react-hook-form.com/) 7 + [Zod](https://zod.dev/) 4 |
 | Animation | [Reanimated](https://docs.swmansion.com/react-native-reanimated/) 4 |
-| Lists | [@shopify/flash-list](https://shopify.github.io/flash-list/) |
+| Lists | `SectionList` (RN core); [`@shopify/flash-list`](https://shopify.github.io/flash-list/) installed but not currently used |
 | Icons | [lucide-react-native](https://lucide.dev/) |
 | Dates | [date-fns](https://date-fns.org/) 4 |
 | Fonts | DM Sans (400/500/700) + Sora (700/800) via `@expo-google-fonts` |
@@ -58,8 +58,8 @@
 ```
 app/            Expo Router screens (tabs, auth, modals)
 components/     Reusable UI components
-constants/      Color palette (DarkColors, LightColors, AccountColors, CategoryColors)
-data/           Default seed data (accounts, categories, labels, transactions, settings)
+constants/      Color palette (DarkColors, LightColors, AccountColors, CategoryColors, LabelColors)
+data/           Default seed data (24 categories, 9 labels, settings — accounts & transactions start empty)
 hooks/          useColors · useCountUp · useDebounce · useThemeColor
 services/       api.ts · backup.ts · updater.ts
 store/          useFinanceStore · useAuthStore · selectors.ts
@@ -81,7 +81,7 @@ backend/        Self-hosted PHP REST API (optional cloud backup)
 ### 1. Clone & install
 
 ```bash
-git clone https://github.com/your-username/finio.git
+git clone https://github.com/abhi-sawant/finio.git
 cd finio
 npm install
 ```

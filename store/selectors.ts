@@ -122,6 +122,45 @@ export function getCategorySpending(
 }
 
 // ───────────────────────────────────────────────────────────
+// Label spending
+// ───────────────────────────────────────────────────────────
+
+export interface LabelSpending {
+  labelId: string
+  amount: number
+  percentage: number
+}
+
+export function getLabelSpending(
+  transactions: Transaction[],
+  startDate: Date,
+  endDate: Date
+): LabelSpending[] {
+  const map = new Map<string, number>()
+
+  for (const t of transactions) {
+    if (t.type !== 'expense') continue
+    const txDate = parseISO(t.date)
+    if (!isWithinInterval(txDate, { start: startDate, end: endDate })) continue
+    if (t.labels.length === 0) continue
+    const share = t.amount / t.labels.length
+    for (const labelId of t.labels) {
+      map.set(labelId, (map.get(labelId) ?? 0) + share)
+    }
+  }
+
+  const total = Array.from(map.values()).reduce((s, v) => s + v, 0)
+
+  return Array.from(map.entries())
+    .map(([labelId, amount]) => ({
+      labelId,
+      amount,
+      percentage: total > 0 ? (amount / total) * 100 : 0,
+    }))
+    .sort((a, b) => b.amount - a.amount)
+}
+
+// ───────────────────────────────────────────────────────────
 // Period helpers
 // ───────────────────────────────────────────────────────────
 
