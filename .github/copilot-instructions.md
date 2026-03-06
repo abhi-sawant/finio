@@ -9,6 +9,7 @@ This file provides the coding AI agent (GitHub Copilot, Cursor, etc.) with a com
 **Finio** is a personal finance tracker mobile app (React Native / Expo) with an optional cloud backup feature powered by a self-hosted PHP backend.
 
 - **App name in Expo**: `Finio`
+- **App version**: `1.1.0`
 - **App bundle ID**: `com.finio.app`
 - **Backend API base URL**: configured via `EXPO_PUBLIC_API_URL` in `.env` (see `.env.example`); fallback is `https://api.finio.slowatcoding.com`
 - **Target platforms**: Android (primary), iOS
@@ -44,7 +45,7 @@ This file provides the coding AI agent (GitHub Copilot, Cursor, etc.) with a com
 ├── components/             Reusable UI components
 │   ├── accounts/
 │   ├── categories/
-│   ├── charts/             Victory Native charts
+│   ├── charts/             Custom SVG charts (react-native-svg)
 │   ├── common/             AmountInput, BottomSheet, ColorPicker, DatePicker,
 │   │                       EmptyState, IconPicker, LabelPicker, SkeletonLoader, Toast
 │   ├── dashboard/          SummaryCards, RecentTransactions
@@ -54,8 +55,9 @@ This file provides the coding AI agent (GitHub Copilot, Cursor, etc.) with a com
 │   └── Colors.ts           DarkColors, LightColors, Colors (alias for DarkColors),
 │                           AccountColors[], CategoryColors[], ColorPalette, ColorKey
 ├── data/
-│   └── defaultData.ts      Seed data: 3 accounts, 24 categories, 9 labels,
-│                           25 transactions, settings (theme: 'system')
+│   └── defaultData.ts      Seed data: 24 categories, 9 labels,
+│                           settings (currency: 'INR', theme: 'system', userName: 'Alex')
+│                           Accounts and transactions start empty ([]).
 ├── hooks/
 │   ├── useColors.ts        Returns the active ColorPalette based on theme setting
 │   ├── useCountUp.ts       Animated number counter (Reanimated)
@@ -110,10 +112,10 @@ This file provides the coding AI agent (GitHub Copilot, Cursor, etc.) with a com
 | State management | Zustand 5 |
 | Persistence | `@react-native-async-storage/async-storage` (finance data), `expo-secure-store` (JWT token) |
 | Styling | NativeWind 4 (Tailwind CSS for RN) + `StyleSheet` for complex styles |
-| Charts | Victory Native 41 |
+| Charts | Custom SVG charts via `react-native-svg` (Victory Native 41 is installed but unused) |
 | Forms | React Hook Form 7 + Zod 4 validation |
 | Animation | `react-native-reanimated` 4 + `react-native-worklets` |
-| Lists | `@shopify/flash-list` |
+| Lists | `SectionList` (RN core) for transactions; `@shopify/flash-list` installed but not currently used |
 | HTTP | Native `fetch` (wrapped in `services/api.ts`) |
 | Icons | `lucide-react-native` |
 | Fonts | DM Sans (400R / 500M / 700B) + Sora (700B / 800EB) via `@expo-google-fonts` |
@@ -170,10 +172,12 @@ The single source of truth for all financial data.
 - **Persisted** under key `'finio-storage'` via AsyncStorage.
 - Exposes CRUD actions for accounts, transactions, categories, labels.
 - `addTransaction` / `updateTransaction` / `deleteTransaction` automatically adjust account balances (including transfer reversal logic).
-- `deleteAccount` cascades and removes related transactions.
-- `deleteLabel` removes the label ID from all transactions.
-- `importData` is used for backup restore and local JSON import.
+- `deleteAccount` cascades and removes related transactions (both as `accountId` and `toAccountId`).
+- `deleteCategory` only removes the category record — it does **not** scrub `categoryId` from existing transactions.
+- `deleteLabel` removes the label ID from all transactions' `labels` array.
+- `importData` is used for backup restore and local JSON import (merges; keeps existing values for fields not provided).
 - `resetToDefaults` clears accounts and transactions to empty arrays and resets categories, labels, and settings to seed defaults.
+- `generateUUID()` is a local UUID generator (Math.random-based); do not replace with an external package.
 
 ### `useAuthStore` (Zustand, manual SecureStore)
 
@@ -187,12 +191,13 @@ Pure selector functions — always import derived data from here, not inline.
 
 Key exports:
 - `getTotalBalance`, `getAccountById`, `getCategoryById`
-- `filterTransactions` (type / accountId / categoryIds / date range / search query)
+- `filterTransactions` (type / accountId / categoryIds / date range / search query — note: search matches on `note` field only)
 - `getMonthlySummary`, `getLast6MonthsSummaries`
-- `getCategorySpending` → `CategorySpending[]`
+- `getCategorySpending` → `CategorySpending[]` — expense-only, sorted desc by amount
+- `getLabelSpending` → `LabelSpending[]` — expense-only, splits evenly across labels, top 8
 - `getPeriodRange(period: PeriodKey)` — `PeriodKey = 'week' | 'month' | '3months' | '6months' | 'year'`
 - `getRecentTransactions`
-- `getBalanceTrend` — per-account daily balance history
+- `getBalanceTrend(txs, currentBalance, accountId, days)` — reconstructs per-account daily balance history (30-day default)
 
 ---
 
@@ -213,6 +218,8 @@ api.uploadBackup(token, data)
 api.getLatestBackup(token)         → { data: Record<string, unknown> }
 ```
 
+> **Note**: The remaining backend endpoints (`/backup/list`, `/backup/{date}` GET/DELETE, `/user/me` GET/PUT/DELETE) exist in the PHP router but do **not** have typed client-side wrappers in `api.ts` yet.
+
 ### `services/backup.ts`
 
 - `uploadBackup()` — serialises the full store and uploads it; updates `lastBackupAt`.
@@ -221,9 +228,9 @@ api.getLatestBackup(token)         → { data: Record<string, unknown> }
 
 ### `services/updater.ts`
 
-- `checkForUpdate()` — fetches the latest GitHub Release and returns `ReleaseInfo | null`. Returns `null` when up-to-date or when `GITHUB_OWNER` / `GITHUB_REPO` constants are unchanged from their placeholder values.
-- `openReleasePage(url)` — opens the release URL in the device browser.
-- Called in root `_layout.tsx` on startup; displays an `Alert.alert` when a newer version exists.
+- `checkForUpdate()` — fetches the latest GitHub Release (configured with `GITHUB_OWNER = 'abhi-sawant'` / `GITHUB_REPO = 'finio'`), compares semver against `Constants.expoConfig?.version`, and returns `ReleaseInfo | null`.
+- `openReleasePage(url)` — opens the release URL in the device browser via `Linking.openURL`.
+- Called in root `_layout.tsx` on startup; displays an `Alert.alert` (with "Later" / "Download" buttons) when a newer version exists. Release notes are truncated to 200 characters.
 
 ---
 
@@ -263,10 +270,12 @@ Expo Router with three route groups:
 The root `_layout.tsx`:
 - Loads DM Sans + Sora fonts via `expo-font`.
 - Waits for `isHydrated` (store) + `isLoaded` (auth) + fonts before hiding the splash screen.
-- Syncs the Android navigation bar colour to the active theme via `expo-navigation-bar`.
-- Calls `autoBackupIfNeeded()` once per app launch.
+- Syncs the Android navigation bar button style and background colour to the active theme via `expo-navigation-bar`.
+- Calls `autoBackupIfNeeded()` once per app launch (errors are silently swallowed).
 - Calls `checkForUpdate()` and shows an `Alert` when a newer GitHub Release is available.
 - Redirects between auth and tabs based on `useAuthStore().token`.
+- `modals/manage-categories` and `modals/manage-labels` are accessible via Expo Router's automatic routing but are **not** registered as explicit `Stack.Screen` entries.
+- `<Toast />` is rendered inside `SafeAreaProvider` at the root level.
 
 ---
 
@@ -280,20 +289,25 @@ The app supports three theme modes controlled by `settings.theme: Theme`.
 | `'light'` | Always use `LightColors` |
 | `'system'` | Follow device `useColorScheme()` (default) |
 
-**`useColors()`** (`hooks/useColors.ts`) resolves and returns the correct `ColorPalette` at runtime. Use this in every component instead of importing `Colors` or `DarkColors` directly.
+**`useColors()`** (`hooks/useColors.ts`) reads `settings.theme` from the store plus `useColorScheme()` to resolve and return the correct `ColorPalette` at runtime. Use this in every component instead of importing `Colors` or `DarkColors` directly.
 
 **`useThemeColor(key)`** is a convenience wrapper: `useColors()[key]`.
+
+**`useCountUp(options)`** (`hooks/useCountUp.ts`) — animates a number from `from` to `to` using Reanimated `withTiming`. Defined but not currently used in the codebase (the Dashboard uses its own inline `AnimatedBalance` implementation).
+
+**`useDebounce<T>(value, delay?)`** (`hooks/useDebounce.ts`) — standard debounce with configurable delay (default 300 ms).
 
 **`constants/Colors.ts`** exports:
 - `DarkColors` — dark palette object (`as const`)
 - `LightColors` — light palette object (`as const`)
 - `Colors` — alias for `DarkColors`; used only for static/non-component contexts (e.g. chart configs, colour arrays)
-- `AccountColors` — preset colour array for account pickers
-- `CategoryColors` — preset colour array for category pickers
+- `AccountColors` — 12-entry preset colour array for account pickers
+- `CategoryColors` — 12-entry preset colour array for category pickers
+- `LabelColors` — 6-entry preset colour array for label pickers
 - `ColorPalette` — type alias for `typeof DarkColors`
 - `ColorKey` — `keyof ColorPalette`
 
-Key palette tokens: `background`, `surface`, `surfaceElevated`, `primary`, `primaryLight`, `primaryDark`, `income`, `expense`, `transfer`, `textPrimary`, `textMuted`, `textDisabled`, `border`, `borderStrong`, `success`, `warning`, `error`, `info`.
+Key palette tokens: `background`, `surface`, `surfaceElevated`, `primary`, `primaryLight`, `primaryDark`, `income`, `expense`, `transfer`, `textPrimary`, `textMuted`, `textDisabled`, `border`, `borderStrong`, `white`, `black`, `success`, `warning`, `error`, `info`, `shadowColor`.
 
 ---
 
@@ -308,15 +322,15 @@ Key palette tokens: `background`, `surface`, `surfaceElevated`, `primary`, `prim
 
 ## Code Conventions
 
-- **Language**: TypeScript, strict mode. All new files must be `.ts` / `.tsx`.
+- **Language**: TypeScript, strict mode with additional flags (`noUncheckedIndexedAccess`, `noImplicitReturns`, `exactOptionalPropertyTypes`). All new files must be `.ts` / `.tsx`.
 - **No `any`** except where unavoidable; prefer `unknown` and narrowing.
 - **Imports**: Use the `@/` path alias (maps to project root). Never use relative `../..` chains.
 - **Components**: Functional components only. No class components.
 - **Exports**: Named exports for components and utilities. Default export for screens/layouts.
-- **ID generation**: Use the local `generateUUID()` in `useFinanceStore.ts` (crypto-grade UUIDs client-side); do not add nanoid or uuid packages.
+- **ID generation**: Use the local `generateUUID()` in `useFinanceStore.ts`; do not add nanoid or uuid packages.
 - **Dates**: Always store as ISO 8601 strings. Use `date-fns` for formatting/parsing.
 - **Currency amounts**: Store as plain `number` (float). Formatting is done via `utils/formatters.ts`.
-- **Forms**: Always use `react-hook-form` + `zod` for any input that modifies store/API data.
+- **Forms**: Use `react-hook-form` + `zod` for new forms that modify store/API data (e.g., `AccountForm` follows this pattern). Simple modals with few fields may use `useState`, but prefer RHF+Zod for anything complex.
 - **Error handling**: Surface errors via the `<Toast>` / `showToast()` helper, not `Alert.alert` (use `Alert.alert` only for destructive confirmation dialogs).
 
 ### PHP Backend Conventions
