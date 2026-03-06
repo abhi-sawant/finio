@@ -12,6 +12,7 @@ import type { ColorPalette } from '@/constants/Colors'
 import { SpendingDonut } from '@/components/charts/SpendingDonut'
 import { IncomeExpenseBar } from '@/components/charts/IncomeExpenseBar'
 import { BalanceTrend } from '@/components/charts/BalanceTrend'
+import { LabelSpendingBar } from '@/components/charts/LabelSpendingBar'
 import { useFinanceStore } from '@/store/useFinanceStore'
 import {
   getLast6MonthsSummaries,
@@ -121,6 +122,12 @@ export default function AnalyticsScreen() {
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Spending by Category</Text>
           <SpendingDonut startDate={start} endDate={end} />
+        </View>
+
+        {/* Spending by label */}
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>Spending by Label</Text>
+          <LabelSpendingBar startDate={start} endDate={end} />
         </View>
 
         {/* Top categories table */}
