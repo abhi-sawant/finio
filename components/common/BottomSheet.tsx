@@ -30,7 +30,7 @@ interface BottomSheetProps {
   visible: boolean
   onClose: () => void
   title?: string
-  snapPoint?: number // 0-1, fraction of screen height
+  snapPoint?: number // 0-1, fraction of screen height (default: 1 = full height)
   children: React.ReactNode
 }
 
@@ -38,55 +38,62 @@ export function BottomSheet({
   visible,
   onClose,
   title,
-  snapPoint = 0.6,
+  snapPoint = 1,
   children,
 }: BottomSheetProps) {
   const colors = useColors()
   const styles = makeStyles(colors)
   const insets = useSafeAreaInsets()
-  const sheetHeight = SCREEN_HEIGHT * snapPoint
-  const translateY = useSharedValue(sheetHeight)
+  const initialTop = SCREEN_HEIGHT * (1 - snapPoint)
+  const topValue = useSharedValue(SCREEN_HEIGHT)
   const backdropOpacity = useSharedValue(0)
-  const startY = useSharedValue(0)
+  const startTop = useSharedValue(0)
 
   const openSheet = useCallback(() => {
     backdropOpacity.value = withTiming(1, { duration: 250 })
-    translateY.value = withSpring(0, { damping: 30, stiffness: 300, overshootClamping: true })
-  }, [])
+    topValue.value = withSpring(initialTop, { damping: 30, stiffness: 300, overshootClamping: true })
+  }, [initialTop])
 
   const closeSheet = useCallback(() => {
     backdropOpacity.value = withTiming(0, { duration: 200 })
-    translateY.value = withTiming(sheetHeight, { duration: 280, easing: Easing.in(Easing.ease) }, () => {
+    topValue.value = withTiming(SCREEN_HEIGHT, { duration: 280, easing: Easing.in(Easing.ease) }, () => {
       runOnJS(onClose)()
     })
-  }, [sheetHeight, onClose])
+  }, [onClose])
 
   useEffect(() => {
     if (visible) openSheet()
     else {
-      translateY.value = sheetHeight
+      topValue.value = SCREEN_HEIGHT
       backdropOpacity.value = 0
     }
   }, [visible])
 
   const pan = Gesture.Pan()
     .onStart(() => {
-      startY.value = translateY.value
+      startTop.value = topValue.value
     })
     .onUpdate((e) => {
-      const newY = startY.value + e.translationY
-      translateY.value = Math.max(0, newY)
+      const newTop = startTop.value + e.translationY
+      topValue.value = Math.max(0, newTop)
     })
     .onEnd((e) => {
-      if (e.translationY > sheetHeight * 0.3 || e.velocityY > 800) {
-        runOnJS(closeSheet)()
+      'worklet'
+      const distanceDown = topValue.value - initialTop
+      if (e.velocityY > 800 || distanceDown > SCREEN_HEIGHT * 0.25) {
+        backdropOpacity.value = withTiming(0, { duration: 200 })
+        topValue.value = withTiming(SCREEN_HEIGHT, { duration: 280, easing: Easing.in(Easing.ease) }, () => {
+          runOnJS(onClose)()
+        })
+      } else if (e.velocityY < -500 || e.translationY < -80) {
+        topValue.value = withSpring(0, { damping: 30, stiffness: 300, overshootClamping: true })
       } else {
-        translateY.value = withSpring(0, { damping: 30, stiffness: 300, overshootClamping: true })
+        topValue.value = withSpring(initialTop, { damping: 30, stiffness: 300, overshootClamping: true })
       }
     })
 
   const sheetStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: translateY.value }],
+    top: topValue.value,
   }))
 
   const backdropStyle = useAnimatedStyle(() => ({
@@ -111,7 +118,7 @@ export function BottomSheet({
           <Animated.View style={[styles.backdrop, backdropStyle]} />
         </TouchableWithoutFeedback>
 
-        <Animated.View style={[styles.sheet, { height: sheetHeight, paddingBottom: insets.bottom }, sheetStyle]}>
+        <Animated.View style={[styles.sheet, { paddingBottom: insets.bottom, paddingTop: insets.top + 12 }, sheetStyle]}>
           <GestureDetector gesture={pan}>
             <View>
               {/* Drag handle */}
@@ -153,7 +160,6 @@ function makeStyles(colors: ColorPalette) {
     backgroundColor: colors.surface,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
-    paddingTop: 12,
     overflow: 'hidden',
   },
   dragHandle: {

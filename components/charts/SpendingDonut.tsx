@@ -80,9 +80,9 @@ export function SpendingDonut({ startDate, endDate, compact = false }: SpendingD
       : []),
   ]
 
-  const SIZE = compact ? 130 : 170
-  const OUTER_R = compact ? 56 : 74
-  const INNER_R = compact ? 34 : 46
+  const SIZE = compact ? 220 : 320
+  const OUTER_R = compact ? 110 : 130
+  const INNER_R = compact ? 70 : 90
   const CX = SIZE / 2
   const CY = SIZE / 2
   const GAP_DEG = slices.length > 1 ? 2 : 0

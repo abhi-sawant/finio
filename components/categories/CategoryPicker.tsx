@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native'
-import { Check } from 'lucide-react-native'
+import { Check, Plus } from 'lucide-react-native'
+import { useRouter } from 'expo-router'
 import { BottomSheet } from '@/components/common/BottomSheet'
 import { LucideIcon } from '@/components/common/IconPicker'
 import { useColors } from '@/hooks/useColors'
@@ -27,6 +28,7 @@ export function CategoryPicker({
 }: CategoryPickerProps) {
   const colors = useColors()
   const styles = makeStyles(colors)
+  const router = useRouter()
   const categories = useFinanceStore((s) => s.categories)
 
   const filtered = categories.filter((c) => {
@@ -44,8 +46,18 @@ export function CategoryPicker({
   }
 
   return (
-    <BottomSheet visible={visible} onClose={onClose} title="Select Category" snapPoint={0.7}>
+    <BottomSheet visible={visible} onClose={onClose} title="Select Category">
       <ScrollView contentContainerStyle={styles.list}>
+        <TouchableOpacity
+          style={styles.addNew}
+          onPress={async () => { await lightHaptic(); onClose(); router.push('/modals/add-category') }}
+          activeOpacity={0.7}
+        >
+          <View style={styles.addNewIcon}>
+            <Plus size={18} color={colors.primary} />
+          </View>
+          <Text style={styles.addNewText}>New Category</Text>
+        </TouchableOpacity>
         {filtered.map((cat) => {
           const isSelected = cat.id === selectedId
           return (
@@ -92,6 +104,32 @@ function makeStyles(colors: ColorPalette) {
   },
   itemSelected: {
     backgroundColor: colors.primary + '14',
+  },
+  addNew: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 14,
+    paddingVertical: 8,
+    paddingHorizontal: 0,
+    paddingBottom: 12,
+    borderRadius: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+    marginBottom: 8,
+  },
+  addNewIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: colors.primary + '20',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  addNewText: {
+    flex: 1,
+    fontFamily: 'DMSans_500Medium',
+    fontSize: 15,
+    color: colors.primary,
   },
   iconCircle: {
     width: 40,
