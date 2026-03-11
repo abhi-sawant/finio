@@ -22,18 +22,27 @@ export async function restoreLatestBackup(): Promise<void> {
   const { token } = useAuthStore.getState()
   if (!token) throw new Error('Not signed in')
 
-  const res = await api.getLatestBackup(token)
+  // The server streams the raw backup JSON directly (no {data:...} wrapper)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  useFinanceStore.getState().importData(res.data as any)
+  const res = await api.getLatestBackup(token) as any
+  useFinanceStore.getState().importData(res)
 }
 
 /**
  * Silently upload a backup if the last one was more than 24 hours ago.
  * Intended to be called on app startup — errors are swallowed.
+ *
+ * Guard: skip if local store has no data. On iOS, SecureStore survives
+ * reinstalls but AsyncStorage does not, so without this check the auto-
+ * backup would overwrite the real cloud backup with an empty state.
  */
 export async function autoBackupIfNeeded(): Promise<void> {
   const { token, lastBackupAt } = useAuthStore.getState()
   if (!token) return
+
+  // Don't upload empty data — protects against post-reinstall data loss
+  const { accounts, transactions } = useFinanceStore.getState()
+  if (accounts.length === 0 && transactions.length === 0) return
 
   if (!lastBackupAt) {
     await uploadBackup()

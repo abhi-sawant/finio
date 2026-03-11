@@ -91,7 +91,7 @@ export const api = {
     }),
 
   getLatestBackup: (token: string) =>
-    apiFetch<{ data: Record<string, unknown> }>('/backup/latest', {
+    apiFetch<Record<string, unknown>>('/backup/latest', {
       method: 'GET',
       token,
     }),
