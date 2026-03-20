@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
@@ -36,10 +36,15 @@ export function TransactionItem({
   currency = 'INR',
 }: TransactionItemProps) {
   const colors = useColors()
-  const styles = makeStyles(colors)
-  const { categories, labels: allLabels, settings } = useFinanceStore()
+  const styles = useMemo(() => makeStyles(colors), [colors])
+  const categories = useFinanceStore((s) => s.categories)
+  const allLabels = useFinanceStore((s) => s.labels)
+  const storeCurrency = useFinanceStore((s) => s.settings.currency)
   const category = getCategoryById(categories, transaction.categoryId)
-  const txLabels = allLabels.filter((l) => transaction.labels.includes(l.id))
+  const txLabels = useMemo(
+    () => allLabels.filter((l) => transaction.labels.includes(l.id)),
+    [allLabels, transaction.labels]
+  )
 
   const translateX = useSharedValue(0)
   const startX = useSharedValue(0)
@@ -144,7 +149,7 @@ export function TransactionItem({
             {/* Amount */}
             <Text style={[styles.amount, { color: amountColor }]}>
               {amountPrefix}
-              {formatCurrency(transaction.amount, settings.currency as Parameters<typeof formatCurrency>[1])}
+              {formatCurrency(transaction.amount, storeCurrency)}
             </Text>
           </TouchableOpacity>
         </Animated.View>

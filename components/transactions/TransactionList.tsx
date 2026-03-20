@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { View, Text, SectionList, StyleSheet, Alert, RefreshControl } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useColors } from '@/hooks/useColors'
@@ -32,16 +32,18 @@ export function TransactionList({
   emptyDescription = 'Add a transaction to get started',
 }: TransactionListProps) {
   const colors = useColors()
-  const styles = makeStyles(colors)
+  const styles = useMemo(() => makeStyles(colors), [colors])
   const router = useRouter()
   const { deleteTransaction, settings } = useFinanceStore()
 
-  const grouped = groupTransactionsByDate(transactions)
-
-  const sections = grouped.map(({ date, transactions: txns }) => ({
-    title: date,
-    data: txns,
-  }))
+  const sections = useMemo(
+    () =>
+      groupTransactionsByDate(transactions).map(({ date, transactions: txns }) => ({
+        title: date,
+        data: txns,
+      })),
+    [transactions]
+  )
 
   const handlePress = useCallback((tx: Transaction) => {
     router.push({ pathname: '/modals/transaction-detail', params: { id: tx.id } })

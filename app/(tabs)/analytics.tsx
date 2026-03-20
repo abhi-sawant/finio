@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import {
   View,
   Text,
@@ -35,26 +35,33 @@ const PERIODS: { key: PeriodKey; label: string }[] = [
 
 export default function AnalyticsScreen() {
   const colors = useColors()
-  const styles = makeStyles(colors)
+  const styles = useMemo(() => makeStyles(colors), [colors])
   const insets = useSafeAreaInsets()
-  const { transactions, accounts, categories, settings } = useFinanceStore()
+  const { transactions, categories, settings } = useFinanceStore()
   const [period, setPeriod] = useState<PeriodKey>('month')
 
-  const { start, end } = getPeriodRange(period)
-  const periodTransactions = filterTransactions(transactions, {
-    startDate: start,
-    endDate: end,
-  })
+  const { start, end } = useMemo(() => getPeriodRange(period), [period])
 
-  const monthlySummaries = getLast6MonthsSummaries(transactions)
-  const categorySpending = getCategorySpending(periodTransactions, start, end)
+  const periodTransactions = useMemo(
+    () => filterTransactions(transactions, { startDate: start, endDate: end }),
+    [transactions, start, end]
+  )
 
-  const totalIncome = periodTransactions
-    .filter((t) => t.type === 'income')
-    .reduce((sum, t) => sum + t.amount, 0)
-  const totalExpense = periodTransactions
-    .filter((t) => t.type === 'expense')
-    .reduce((sum, t) => sum + t.amount, 0)
+  const monthlySummaries = useMemo(() => getLast6MonthsSummaries(transactions), [transactions])
+  const categorySpending = useMemo(
+    () => getCategorySpending(periodTransactions, start, end),
+    [periodTransactions, start, end]
+  )
+
+  const { totalIncome, totalExpense } = useMemo(() => {
+    let income = 0
+    let expense = 0
+    for (const t of periodTransactions) {
+      if (t.type === 'income') income += t.amount
+      else if (t.type === 'expense') expense += t.amount
+    }
+    return { totalIncome: income, totalExpense: expense }
+  }, [periodTransactions])
 
   const handlePeriod = (key: PeriodKey) => {
     lightHaptic()
