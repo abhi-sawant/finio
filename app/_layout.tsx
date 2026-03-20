@@ -54,7 +54,7 @@ export default function RootLayout() {
   // Load stored JWT + user on startup
   useEffect(() => {
     loadAuth()
-  }, [])
+  }, [loadAuth])
 
   // Hide splash once fonts, store data, and auth are ready
   useEffect(() => {

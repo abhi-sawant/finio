@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import {
   View,
   Text,
@@ -18,7 +18,6 @@ import { SummaryCards } from '@/components/dashboard/SummaryCards'
 import { RecentTransactions } from '@/components/dashboard/RecentTransactions'
 import { AccountCard } from '@/components/accounts/AccountCard'
 import { SpendingDonut } from '@/components/charts/SpendingDonut'
-import { Toast } from '@/components/common/Toast'
 import { useFinanceStore } from '@/store/useFinanceStore'
 import { lightHaptic } from '@/utils/haptics'
 import type { Account } from '@/types'
@@ -34,7 +33,7 @@ export default function DashboardScreen() {
   const insets = useSafeAreaInsets()
   const router = useRouter()
   const colors = useColors()
-  const styles = makeStyles(colors)
+  const styles = useMemo(() => makeStyles(colors), [colors])
   const { accounts, settings } = useFinanceStore()
   const [refreshing, setRefreshing] = useState(false)
 
@@ -133,8 +132,6 @@ export default function DashboardScreen() {
 
         <View style={{ height: 100 }} />
       </ScrollView>
-
-      <Toast />
     </View>
   )
 }

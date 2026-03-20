@@ -95,4 +95,43 @@ export const api = {
       method: 'GET',
       token,
     }),
+
+  listBackups: (token: string) =>
+    apiFetch<{ backups: Array<{ date: string; size: number }> }>('/backup/list', {
+      method: 'GET',
+      token,
+    }),
+
+  getBackup: (token: string, date: string) =>
+    apiFetch<Record<string, unknown>>(`/backup/${encodeURIComponent(date)}`, {
+      method: 'GET',
+      token,
+    }),
+
+  deleteBackup: (token: string, date: string) =>
+    apiFetch(`/backup/${encodeURIComponent(date)}`, {
+      method: 'DELETE',
+      token,
+    }),
+
+  // ── User ─────────────────────────────────────────────────────────────────
+
+  getProfile: (token: string) =>
+    apiFetch<{ user: AuthUser }>('/user/me', {
+      method: 'GET',
+      token,
+    }),
+
+  updateProfile: (token: string, data: { name?: string; email?: string; password?: string }) =>
+    apiFetch<{ user: AuthUser }>('/user/me', {
+      method: 'PUT',
+      token,
+      body: JSON.stringify(data),
+    }),
+
+  deleteAccount: (token: string) =>
+    apiFetch('/user/me', {
+      method: 'DELETE',
+      token,
+    }),
 }

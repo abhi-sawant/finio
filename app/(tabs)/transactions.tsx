@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useMemo } from 'react'
 import {
   View,
   Text,
@@ -22,18 +22,22 @@ const DEFAULT_FILTERS: FilterState = {
 
 export default function TransactionsScreen() {
   const colors = useColors()
-  const styles = makeStyles(colors)
+  const styles = useMemo(() => makeStyles(colors), [colors])
   const insets = useSafeAreaInsets()
   const { transactions } = useFinanceStore()
   const [refreshing, setRefreshing] = useState(false)
   const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS)
 
-  const filtered = filterTransactions(transactions, {
-    ...(filters.type !== 'all' && { type: filters.type }),
-    ...(filters.accountId && { accountId: filters.accountId }),
-    ...(filters.categoryIds.length > 0 && { categoryIds: filters.categoryIds }),
-    ...(filters.searchQuery && { searchQuery: filters.searchQuery }),
-  })
+  const filtered = useMemo(
+    () =>
+      filterTransactions(transactions, {
+        ...(filters.type !== 'all' && { type: filters.type }),
+        ...(filters.accountId && { accountId: filters.accountId }),
+        ...(filters.categoryIds.length > 0 && { categoryIds: filters.categoryIds }),
+        ...(filters.searchQuery && { searchQuery: filters.searchQuery }),
+      }),
+    [transactions, filters]
+  )
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true)

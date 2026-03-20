@@ -16,6 +16,35 @@ function generateUUID(): string {
   })
 }
 
+/**
+ * Apply or reverse a transaction's effect on account balances.
+ * direction = 1  → apply   (addTransaction)
+ * direction = -1 → reverse (deleteTransaction / undo for updateTransaction)
+ */
+function applyBalanceDelta(
+  accounts: Account[],
+  tx: Pick<Transaction, 'type' | 'accountId' | 'toAccountId' | 'amount'>,
+  direction: 1 | -1
+): Account[] {
+  return accounts.map((account) => {
+    if (tx.type === 'expense' && account.id === tx.accountId) {
+      return { ...account, balance: account.balance - direction * tx.amount }
+    }
+    if (tx.type === 'income' && account.id === tx.accountId) {
+      return { ...account, balance: account.balance + direction * tx.amount }
+    }
+    if (tx.type === 'transfer') {
+      if (account.id === tx.accountId) {
+        return { ...account, balance: account.balance - direction * tx.amount }
+      }
+      if (tx.toAccountId && account.id === tx.toAccountId) {
+        return { ...account, balance: account.balance + direction * tx.amount }
+      }
+    }
+    return account
+  })
+}
+
 const defaultState = {
   accounts: [] as Account[],
   transactions: [] as Transaction[],
@@ -66,32 +95,10 @@ export const useFinanceStore = create<FinanceStore>()(
           createdAt: new Date().toISOString(),
         }
 
-        set((state) => {
-          const updatedAccounts = state.accounts.map((account) => {
-            if (transaction.type === 'transfer') {
-              if (account.id === transaction.accountId) {
-                return { ...account, balance: account.balance - transaction.amount }
-              }
-              if (transaction.toAccountId && account.id === transaction.toAccountId) {
-                return { ...account, balance: account.balance + transaction.amount }
-              }
-            } else if (transaction.type === 'expense') {
-              if (account.id === transaction.accountId) {
-                return { ...account, balance: account.balance - transaction.amount }
-              }
-            } else if (transaction.type === 'income') {
-              if (account.id === transaction.accountId) {
-                return { ...account, balance: account.balance + transaction.amount }
-              }
-            }
-            return account
-          })
-
-          return {
-            transactions: [transaction, ...state.transactions],
-            accounts: updatedAccounts,
-          }
-        })
+        set((state) => ({
+          transactions: [transaction, ...state.transactions],
+          accounts: applyBalanceDelta(state.accounts, transaction, 1),
+        }))
       },
 
       updateTransaction: (id, updates) => {
@@ -99,49 +106,9 @@ export const useFinanceStore = create<FinanceStore>()(
         const originalTx = state.transactions.find((t) => t.id === id)
         if (!originalTx) return
 
-        // Reverse original transaction's effect on balances
-        const reversedAccounts = state.accounts.map((account) => {
-          if (originalTx.type === 'transfer') {
-            if (account.id === originalTx.accountId) {
-              return { ...account, balance: account.balance + originalTx.amount }
-            }
-            if (originalTx.toAccountId && account.id === originalTx.toAccountId) {
-              return { ...account, balance: account.balance - originalTx.amount }
-            }
-          } else if (originalTx.type === 'expense') {
-            if (account.id === originalTx.accountId) {
-              return { ...account, balance: account.balance + originalTx.amount }
-            }
-          } else if (originalTx.type === 'income') {
-            if (account.id === originalTx.accountId) {
-              return { ...account, balance: account.balance - originalTx.amount }
-            }
-          }
-          return account
-        })
-
         const updatedTx = { ...originalTx, ...updates }
-
-        // Apply new transaction's effect
-        const finalAccounts = reversedAccounts.map((account) => {
-          if (updatedTx.type === 'transfer') {
-            if (account.id === updatedTx.accountId) {
-              return { ...account, balance: account.balance - updatedTx.amount }
-            }
-            if (updatedTx.toAccountId && account.id === updatedTx.toAccountId) {
-              return { ...account, balance: account.balance + updatedTx.amount }
-            }
-          } else if (updatedTx.type === 'expense') {
-            if (account.id === updatedTx.accountId) {
-              return { ...account, balance: account.balance - updatedTx.amount }
-            }
-          } else if (updatedTx.type === 'income') {
-            if (account.id === updatedTx.accountId) {
-              return { ...account, balance: account.balance + updatedTx.amount }
-            }
-          }
-          return account
-        })
+        const afterReverse = applyBalanceDelta(state.accounts, originalTx, -1)
+        const finalAccounts = applyBalanceDelta(afterReverse, updatedTx, 1)
 
         set({
           transactions: state.transactions.map((t) => (t.id === id ? updatedTx : t)),
@@ -154,30 +121,9 @@ export const useFinanceStore = create<FinanceStore>()(
         const tx = state.transactions.find((t) => t.id === id)
         if (!tx) return
 
-        // Reverse this transaction's effect on balances
-        const updatedAccounts = state.accounts.map((account) => {
-          if (tx.type === 'transfer') {
-            if (account.id === tx.accountId) {
-              return { ...account, balance: account.balance + tx.amount }
-            }
-            if (tx.toAccountId && account.id === tx.toAccountId) {
-              return { ...account, balance: account.balance - tx.amount }
-            }
-          } else if (tx.type === 'expense') {
-            if (account.id === tx.accountId) {
-              return { ...account, balance: account.balance + tx.amount }
-            }
-          } else if (tx.type === 'income') {
-            if (account.id === tx.accountId) {
-              return { ...account, balance: account.balance - tx.amount }
-            }
-          }
-          return account
-        })
-
         set({
           transactions: state.transactions.filter((t) => t.id !== id),
-          accounts: updatedAccounts,
+          accounts: applyBalanceDelta(state.accounts, tx, -1),
         })
       },
 

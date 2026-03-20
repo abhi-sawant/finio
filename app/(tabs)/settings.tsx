@@ -164,7 +164,7 @@ export default function SettingsScreen() {
         await Notifications.cancelAllScheduledNotificationsAsync()
         await Notifications.scheduleNotificationAsync({
           content: {
-            title: 'Fina Reminder',
+            title: 'Finio Reminder',
             body: "Don't forget to log today's expenses!",
           },
           trigger: {
@@ -197,7 +197,7 @@ export default function SettingsScreen() {
         exportedAt: new Date().toISOString(),
       }
       const json = JSON.stringify(data, null, 2)
-      const fileName = `fina-export-${new Date().toISOString().slice(0, 10)}.json`
+      const fileName = `finio-export-${new Date().toISOString().slice(0, 10)}.json`
       const fileUri = `${FileSystem.cacheDirectory}${fileName}`
       await FileSystem.writeAsStringAsync(fileUri, json, { encoding: 'utf8' })
       const canShare = await Sharing.isAvailableAsync()
@@ -207,11 +207,10 @@ export default function SettingsScreen() {
       }
       await Sharing.shareAsync(fileUri, {
         mimeType: 'application/json',
-        dialogTitle: 'Save Fina Export',
+        dialogTitle: 'Save Finio Export',
         UTI: 'public.json',
       })
-    } catch (err) {
-      console.error('Export error:', err)
+    } catch {
       showToast({ message: 'Export failed', type: 'error' })
     }
   }
@@ -246,8 +245,7 @@ export default function SettingsScreen() {
           },
         ]
       )
-    } catch (err) {
-      console.error('Import error:', err)
+    } catch {
       showToast({ message: 'Import failed — check if the file is valid', type: 'error' })
     }
   }

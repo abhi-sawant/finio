@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import Animated, {
   useSharedValue,
   withTiming,
-  useAnimatedStyle,
+  useAnimatedReaction,
   Easing,
-  interpolate,
+  runOnJS,
 } from 'react-native-reanimated'
 import { LinearGradient } from 'expo-linear-gradient'
 import { TrendingUp, TrendingDown } from 'lucide-react-native'
@@ -23,20 +23,19 @@ import type { Currency } from '@/types'
 
 function AnimatedBalance({ value, currency }: { value: number; currency: Currency }) {
   const colors = useColors()
-  const styles = makeStyles(colors)
-  const animValue = useSharedValue(0)
+  const styles = useMemo(() => makeStyles(colors), [colors])
+  const animProgress = useSharedValue(0)
   const [displayValue, setDisplayValue] = useState(0)
 
   useEffect(() => {
-    animValue.value = withTiming(1, { duration: 1400, easing: Easing.out(Easing.cubic) })
-    // Update display every 16ms during animation
-    const interval = setInterval(() => {
-      const current = animValue.value * value
-      setDisplayValue(current)
-      if (animValue.value >= 1) clearInterval(interval)
-    }, 16)
-    return () => clearInterval(interval)
+    animProgress.value = 0
+    animProgress.value = withTiming(1, { duration: 1400, easing: Easing.out(Easing.cubic) })
   }, [value])
+
+  useAnimatedReaction(
+    () => animProgress.value * value,
+    (current) => runOnJS(setDisplayValue)(current)
+  )
 
   return (
     <Text style={styles.balanceAmount}>
@@ -47,7 +46,7 @@ function AnimatedBalance({ value, currency }: { value: number; currency: Currenc
 
 export function SummaryCards() {
   const colors = useColors()
-  const styles = makeStyles(colors)
+  const styles = useMemo(() => makeStyles(colors), [colors])
   const { accounts, transactions, settings } = useFinanceStore()
   const totalBalance = getTotalAccountBalance(accounts)
   const thisMonth = getCurrentMonthTransactions(transactions)
@@ -55,7 +54,8 @@ export function SummaryCards() {
   const monthExpenses = getTotalExpenses(thisMonth)
 
   const currency = settings.currency as Currency
-  const isDark = colors.background === '#0f1117'
+  // Use the primary color's tint for the gradient — avoids hardcoding background hex values
+  const isDark = colors.textPrimary === '#f1f5f9'
   const gradientColors = isDark
     ? (['#2d2a5e', '#1a1a3e', '#0f1117'] as const)
     : (['#ede9fe', '#ddd6fe', '#c4b5fd'] as const)
@@ -133,7 +133,7 @@ function makeStyles(colors: ColorPalette) {
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 12,
-    backgroundColor: hexToRgba(colors.background === '#0f1117' ? '#ffffff' : '#000000', 0.06),
+    backgroundColor: hexToRgba(colors.textPrimary, 0.06),
     borderRadius: 16,
     padding: 14,
     gap: 16,
