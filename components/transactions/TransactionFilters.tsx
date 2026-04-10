@@ -12,17 +12,18 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
 } from 'react-native-reanimated'
-import { Search, X, ChevronDown } from 'lucide-react-native'
+import { Search, X, ChevronDown, Check, FilterX } from 'lucide-react-native'
 import { useColors } from '@/hooks/useColors'
 import type { ColorPalette } from '@/constants/Colors'
 import { BottomSheet } from '@/components/common/BottomSheet'
-import { CategoryPicker } from '@/components/categories/CategoryPicker'
+import { LucideIcon } from '@/components/common/IconPicker'
 import { useFinanceStore } from '@/store/useFinanceStore'
 import { lightHaptic } from '@/utils/haptics'
+import { hexToRgba } from '@/utils/formatters'
 import type { TransactionType } from '@/types'
 
 export interface FilterState {
-  type: TransactionType | 'all'
+  typeIds: TransactionType[]
   accountId: string | null
   categoryIds: string[]
   searchQuery: string
@@ -33,8 +34,7 @@ interface TransactionFiltersProps {
   onChange: (filters: FilterState) => void
 }
 
-const TYPE_FILTERS: Array<{ value: FilterState['type']; label: string }> = [
-  { value: 'all', label: 'All' },
+const TYPE_FILTERS: Array<{ value: TransactionType; label: string }> = [
   { value: 'income', label: 'Income' },
   { value: 'expense', label: 'Expense' },
   { value: 'transfer', label: 'Transfer' },
@@ -43,8 +43,9 @@ const TYPE_FILTERS: Array<{ value: FilterState['type']; label: string }> = [
 export function TransactionFilters({ filters, onChange }: TransactionFiltersProps) {
   const colors = useColors()
   const styles = makeStyles(colors)
-  const { accounts } = useFinanceStore()
+  const { accounts, categories } = useFinanceStore()
   const [searchExpanded, setSearchExpanded] = useState(false)
+  const [showTypeSheet, setShowTypeSheet] = useState(false)
   const [showAccountSheet, setShowAccountSheet] = useState(false)
   const [showCategoryPicker, setShowCategoryPicker] = useState(false)
 
@@ -68,6 +69,29 @@ export function TransactionFilters({ filters, onChange }: TransactionFiltersProp
   }))
 
   const selectedAccount = accounts.find((a) => a.id === filters.accountId)
+  const typeIds = filters.typeIds ?? []
+  const categoryIds = filters.categoryIds ?? []
+  const hasActiveFilters = typeIds.length > 0 || !!filters.accountId || categoryIds.length > 0 || !!filters.searchQuery?.trim()
+  
+  const selectedTypeLabel = typeIds.length > 0
+    ? typeIds.length === 1
+      ? TYPE_FILTERS.find((f) => f.value === typeIds[0])?.label || 'Type'
+      : `${typeIds.length} Types`
+    : 'Type'
+
+  const clearAllFilters = async () => {
+    await lightHaptic()
+    onChange({
+      typeIds: [],
+      accountId: null,
+      categoryIds: [],
+      searchQuery: '',
+    })
+    if (searchExpanded) {
+      searchWidth.value = withTiming(0, { duration: 200 })
+      setSearchExpanded(false)
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -76,30 +100,22 @@ export function TransactionFilters({ filters, onChange }: TransactionFiltersProp
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
-        {/* Type filters */}
-        {TYPE_FILTERS.map((f) => (
-          <TouchableOpacity
-            key={f.value}
-            onPress={async () => {
-              await lightHaptic()
-              onChange({ ...filters, type: f.value })
-            }}
+        {/* Type filter */}
+        <TouchableOpacity
+          onPress={() => setShowTypeSheet(true)}
+          style={[styles.chip, typeIds.length > 0 && styles.chipActive]}
+          activeOpacity={0.7}
+        >
+          <Text
             style={[
-              styles.chip,
-              filters.type === f.value && styles.chipActive,
+              styles.chipText,
+              typeIds.length > 0 && styles.chipTextActive,
             ]}
-            activeOpacity={0.7}
           >
-            <Text
-              style={[
-                styles.chipText,
-                filters.type === f.value && styles.chipTextActive,
-              ]}
-            >
-              {f.label}
-            </Text>
-          </TouchableOpacity>
-        ))}
+            {selectedTypeLabel}
+          </Text>
+          <ChevronDown size={12} color={typeIds.length > 0 ? colors.primary : colors.textMuted} />
+        </TouchableOpacity>
 
         {/* Account filter */}
         <TouchableOpacity
@@ -116,34 +132,33 @@ export function TransactionFilters({ filters, onChange }: TransactionFiltersProp
             {selectedAccount ? selectedAccount.name : 'Account'}
           </Text>
           <ChevronDown size={12} color={filters.accountId ? colors.primary : colors.textMuted} />
-          {filters.accountId && (
-            <TouchableOpacity
-              onPress={() => onChange({ ...filters, accountId: null })}
-              hitSlop={4}
-            >
-              <X size={12} color={colors.primary} />
-            </TouchableOpacity>
-          )}
         </TouchableOpacity>
 
         {/* Category filter */}
         <TouchableOpacity
           onPress={() => setShowCategoryPicker(true)}
-          style={[styles.chip, filters.categoryIds.length > 0 && styles.chipActive]}
+          style={[styles.chip, categoryIds.length > 0 && styles.chipActive]}
           activeOpacity={0.7}
         >
           <Text
             style={[
               styles.chipText,
-              filters.categoryIds.length > 0 && styles.chipTextActive,
+              categoryIds.length > 0 && styles.chipTextActive,
             ]}
           >
-            {filters.categoryIds.length > 0
-              ? `${filters.categoryIds.length} Categories`
+            {categoryIds.length > 0
+              ? `${categoryIds.length} Categories`
               : 'Category'}
           </Text>
-          <ChevronDown size={12} color={filters.categoryIds.length > 0 ? colors.primary : colors.textMuted} />
+          <ChevronDown size={12} color={categoryIds.length > 0 ? colors.primary : colors.textMuted} />
         </TouchableOpacity>
+
+        {/* Clear filters */}
+        {hasActiveFilters && (
+          <TouchableOpacity onPress={clearAllFilters} style={styles.clearBtn} hitSlop={4}>
+            <FilterX size={16} color={colors.error} />
+          </TouchableOpacity>
+        )}
 
         {/* Search */}
         <View style={styles.searchWrapper}>
@@ -168,6 +183,41 @@ export function TransactionFilters({ filters, onChange }: TransactionFiltersProp
         </View>
       </ScrollView>
 
+      {/* Type picker sheet */}
+      <BottomSheet
+        visible={showTypeSheet}
+        onClose={() => setShowTypeSheet(false)}
+        title="Filter by Type"
+        snapPoint={0.4}
+      >
+        <ScrollView contentContainerStyle={styles.accountList}>
+          {TYPE_FILTERS.map((f) => {
+            const isSelected = typeIds.includes(f.value)
+            return (
+              <TouchableOpacity
+                key={f.value}
+                style={[styles.accountItem, isSelected && styles.accountItemActive]}
+                onPress={async () => {
+                  await lightHaptic()
+                  const currentTypeIds = filters.typeIds ?? []
+                  onChange({
+                    ...filters,
+                    typeIds: isSelected
+                      ? currentTypeIds.filter((id) => id !== f.value)
+                      : [...currentTypeIds, f.value],
+                  })
+                }}
+              >
+                <Text style={[styles.accountItemText, isSelected && { color: colors.primary }]}>
+                  {f.label}
+                </Text>
+                {isSelected && <Check size={18} color={colors.primary} />}
+              </TouchableOpacity>
+            )
+          })}
+        </ScrollView>
+      </BottomSheet>
+
       {/* Account picker sheet */}
       <BottomSheet
         visible={showAccountSheet}
@@ -176,49 +226,72 @@ export function TransactionFilters({ filters, onChange }: TransactionFiltersProp
         snapPoint={0.5}
       >
         <ScrollView contentContainerStyle={styles.accountList}>
-          <TouchableOpacity
-            style={[styles.accountItem, !filters.accountId && styles.accountItemActive]}
-            onPress={() => {
-              onChange({ ...filters, accountId: null })
-              setShowAccountSheet(false)
-            }}
-          >
-            <Text style={[styles.accountItemText, !filters.accountId && { color: colors.primary }]}>
-              All Accounts
-            </Text>
-          </TouchableOpacity>
-          {accounts.map((a) => (
-            <TouchableOpacity
-              key={a.id}
-              style={[styles.accountItem, filters.accountId === a.id && styles.accountItemActive]}
-              onPress={() => {
-                onChange({ ...filters, accountId: a.id })
-                setShowAccountSheet(false)
-              }}
-            >
-              <Text style={[styles.accountItemText, filters.accountId === a.id && { color: colors.primary }]}>
-                {a.name}
-              </Text>
-            </TouchableOpacity>
-          ))}
+          {accounts.map((a) => {
+            const isSelected = filters.accountId === a.id
+            return (
+              <TouchableOpacity
+                key={a.id}
+                style={[styles.accountItem, isSelected && styles.accountItemActive]}
+                onPress={async () => {
+                  await lightHaptic()
+                  onChange({ ...filters, accountId: a.id })
+                  setShowAccountSheet(false)
+                }}
+              >
+                <Text style={[styles.accountItemText, isSelected && { color: colors.primary }]}>
+                  {a.name}
+                </Text>
+                {isSelected && <Check size={18} color={colors.primary} />}
+              </TouchableOpacity>
+            )
+          })}
         </ScrollView>
       </BottomSheet>
 
-      {/* Category picker — multi-select workaround using existing picker */}
-      <CategoryPicker
+      {/* Category picker — multi-select */}
+      <BottomSheet
         visible={showCategoryPicker}
         onClose={() => setShowCategoryPicker(false)}
-        selectedId={filters.categoryIds[0] ?? ''}
-        onChange={(cat) => {
-          const existing = filters.categoryIds.includes(cat.id)
-          onChange({
-            ...filters,
-            categoryIds: existing
-              ? filters.categoryIds.filter((id) => id !== cat.id)
-              : [...filters.categoryIds, cat.id],
-          })
-        }}
-      />
+        title="Filter by Category"
+        snapPoint={0.6}
+      >
+        <ScrollView contentContainerStyle={styles.categoryList}>
+          {categories.map((cat) => {
+            const isSelected = categoryIds.includes(cat.id)
+            return (
+              <TouchableOpacity
+                key={cat.id}
+                style={[styles.categoryItem, isSelected && styles.categoryItemActive]}
+                onPress={async () => {
+                  await lightHaptic()
+                  const currentCategoryIds = filters.categoryIds ?? []
+                  onChange({
+                    ...filters,
+                    categoryIds: isSelected
+                      ? currentCategoryIds.filter((id) => id !== cat.id)
+                      : [...currentCategoryIds, cat.id],
+                  })
+                }}
+              >
+                <View style={styles.categoryItemLeft}>
+                  <View
+                    style={[
+                      styles.categoryIcon,
+                      { backgroundColor: hexToRgba(cat.color, 0.2) },
+                    ]}
+                  >
+                    <LucideIcon name={cat.icon} size={18} color={cat.color} />
+                  </View>
+                  <Text style={[styles.categoryItemText, isSelected && { color: colors.primary }]}>
+                    {cat.name}
+                  </Text>
+                </View>
+                {isSelected && <Check size={18} color={colors.primary} />}
+              </TouchableOpacity>
+            )
+          })}
+        </ScrollView>
+      </BottomSheet>
     </View>
   )
 }
@@ -260,6 +333,14 @@ function makeStyles(colors: ColorPalette) {
   chipTextActive: {
     color: colors.primary,
   },
+  clearBtn: {
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    backgroundColor: colors.surface,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
   searchWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -288,6 +369,9 @@ function makeStyles(colors: ColorPalette) {
     paddingVertical: 8,
   },
   accountItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     paddingVertical: 14,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
@@ -296,6 +380,39 @@ function makeStyles(colors: ColorPalette) {
     backgroundColor: 'transparent',
   },
   accountItemText: {
+    fontFamily: 'DMSans_500Medium',
+    fontSize: 15,
+    color: colors.textPrimary,
+  },
+  categoryList: {
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+  },
+  categoryItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  categoryItemActive: {
+    backgroundColor: 'transparent',
+  },
+  categoryItemLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    flex: 1,
+  },
+  categoryIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  categoryItemText: {
     fontFamily: 'DMSans_500Medium',
     fontSize: 15,
     color: colors.textPrimary,

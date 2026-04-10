@@ -15,6 +15,7 @@ import { useColors } from '@/hooks/useColors'
 import type { ColorPalette } from '@/constants/Colors'
 import { AmountInput } from '@/components/common/AmountInput'
 import { DatePicker } from '@/components/common/DatePicker'
+import { TimePicker } from '@/components/common/TimePicker'
 import { CategoryPicker } from '@/components/categories/CategoryPicker'
 import { LabelPicker } from '@/components/common/LabelPicker'
 import { useFinanceStore } from '@/store/useFinanceStore'
@@ -54,6 +55,24 @@ export default function AddTransactionModal() {
   const handleCategoryChange = (cat: Category) => {
     setCategoryId(cat.id)
     setCategoryPickerVisible(false)
+  }
+
+  const handleDateChange = (newDate: Date) => {
+    // Preserve the time when date changes
+    const combined = new Date(newDate)
+    combined.setHours(date.getHours())
+    combined.setMinutes(date.getMinutes())
+    combined.setSeconds(date.getSeconds())
+    setDate(combined)
+  }
+
+  const handleTimeChange = (newTime: Date) => {
+    // Preserve the date when time changes
+    const combined = new Date(date)
+    combined.setHours(newTime.getHours())
+    combined.setMinutes(newTime.getMinutes())
+    combined.setSeconds(newTime.getSeconds())
+    setDate(combined)
   }
 
   const handleSave = () => {
@@ -179,10 +198,17 @@ export default function AddTransactionModal() {
             <AmountInput value={amount} onChange={setAmount} currency={settings.currency} />
           </View>
 
-          {/* Date */}
+          {/* Date & Time */}
           <View style={styles.field}>
-            <Text style={styles.fieldLabel}>Date</Text>
-            <DatePicker value={date} onChange={setDate} />
+            <Text style={styles.fieldLabel}>Date & Time</Text>
+            <View style={styles.dateTimeRow}>
+              <View style={styles.dateTimeItem}>
+                <DatePicker value={date} onChange={handleDateChange} />
+              </View>
+              <View style={styles.dateTimeItem}>
+                <TimePicker value={date} onChange={handleTimeChange} />
+              </View>
+            </View>
           </View>
 
           {/* Account */}
@@ -423,6 +449,13 @@ function makeStyles(colors: ColorPalette) {
   },
   accountChipLabelActive: {
     color: colors.primary,
+  },
+  dateTimeRow: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  dateTimeItem: {
+    flex: 1,
   },
   pickerBtn: {
     flexDirection: 'row',

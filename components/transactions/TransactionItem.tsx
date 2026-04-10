@@ -13,7 +13,7 @@ import { useColors } from '@/hooks/useColors'
 import type { ColorPalette } from '@/constants/Colors'
 import { LucideIcon } from '@/components/common/IconPicker'
 import { formatCurrency, formatTime, hexToRgba } from '@/utils/formatters'
-import { getCategoryById } from '@/store/selectors'
+import { getCategoryById, getBalanceAfterTransaction } from '@/store/selectors'
 import { useFinanceStore } from '@/store/useFinanceStore'
 import type { Transaction } from '@/types'
 
@@ -39,12 +39,24 @@ export function TransactionItem({
   const styles = useMemo(() => makeStyles(colors), [colors])
   const categories = useFinanceStore((s) => s.categories)
   const allLabels = useFinanceStore((s) => s.labels)
+  const allTransactions = useFinanceStore((s) => s.transactions)
+  const accounts = useFinanceStore((s) => s.accounts)
   const storeCurrency = useFinanceStore((s) => s.settings.currency)
   const category = getCategoryById(categories, transaction.categoryId)
   const txLabels = useMemo(
     () => allLabels.filter((l) => transaction.labels.includes(l.id)),
     [allLabels, transaction.labels]
   )
+
+  // Calculate closing balance for this transaction
+  const account = useMemo(
+    () => accounts.find((a) => a.id === transaction.accountId),
+    [accounts, transaction.accountId]
+  )
+  const closingBalance = useMemo(() => {
+    if (!account) return 0
+    return getBalanceAfterTransaction(allTransactions, transaction, account.balance)
+  }, [allTransactions, transaction, account])
 
   const translateX = useSharedValue(0)
   const startX = useSharedValue(0)
@@ -147,10 +159,17 @@ export function TransactionItem({
             </View>
 
             {/* Amount */}
-            <Text style={[styles.amount, { color: amountColor }]}>
-              {amountPrefix}
-              {formatCurrency(transaction.amount, storeCurrency)}
-            </Text>
+            <View style={styles.amountContainer}>
+              <Text style={[styles.amount, { color: amountColor }]}>
+                {amountPrefix}
+                {formatCurrency(transaction.amount, storeCurrency)}
+              </Text>
+              {account && (
+                <Text style={styles.closingBalance}>
+                  {account.name}: {formatCurrency(closingBalance, storeCurrency)}
+                </Text>
+              )}
+            </View>
           </TouchableOpacity>
         </Animated.View>
       </GestureDetector>
@@ -239,9 +258,18 @@ function makeStyles(colors: ColorPalette) {
     height: 6,
     borderRadius: 3,
   },
+  amountContainer: {
+    alignItems: 'flex-end',
+    gap: 2,
+  },
   amount: {
     fontFamily: 'DMSans_700Bold',
     fontSize: 14,
+  },
+  closingBalance: {
+    fontFamily: 'DMSans_400Regular',
+    fontSize: 11,
+    color: colors.textMuted,
   },
 })
 }
