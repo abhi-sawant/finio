@@ -27,6 +27,7 @@ export function filterTransactions(
     typeIds?: TransactionType[]
     accountId?: string
     categoryIds?: string[]
+    labelIds?: string[]
     startDate?: Date
     endDate?: Date
     searchQuery?: string
@@ -36,6 +37,10 @@ export function filterTransactions(
     if (options.typeIds && options.typeIds.length > 0 && !options.typeIds.includes(t.type)) return false
     if (options.accountId && t.accountId !== options.accountId) return false
     if (options.categoryIds && options.categoryIds.length > 0 && !options.categoryIds.includes(t.categoryId)) return false
+    if (options.labelIds && options.labelIds.length > 0) {
+      const hasMatchingLabel = options.labelIds.some(labelId => t.labels.includes(labelId))
+      if (!hasMatchingLabel) return false
+    }
     if (options.startDate && options.endDate) {
       const txDate = parseISO(t.date)
       if (!isWithinInterval(txDate, { start: options.startDate, end: options.endDate })) return false
@@ -143,9 +148,9 @@ export function getLabelSpending(
     const txDate = parseISO(t.date)
     if (!isWithinInterval(txDate, { start: startDate, end: endDate })) continue
     if (t.labels.length === 0) continue
-    const share = t.amount / t.labels.length
+    // Count the full amount for each label (not split)
     for (const labelId of t.labels) {
-      map.set(labelId, (map.get(labelId) ?? 0) + share)
+      map.set(labelId, (map.get(labelId) ?? 0) + t.amount)
     }
   }
 

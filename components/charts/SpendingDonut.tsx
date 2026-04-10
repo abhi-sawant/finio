@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import Svg, { G, Path, Circle } from 'react-native-svg'
+import Svg, { G, Path, Circle, Line, Text as SvgText } from 'react-native-svg'
 import { useColors } from '@/hooks/useColors'
 import type { ColorPalette } from '@/constants/Colors'
 import { formatCurrency } from '@/utils/formatters'
@@ -80,30 +80,38 @@ export function SpendingDonut({ startDate, endDate, compact = false }: SpendingD
       : []),
   ]
 
-  const SIZE = compact ? 220 : 320
-  const OUTER_R = compact ? 110 : 130
-  const INNER_R = compact ? 70 : 90
+  const SIZE = compact ? 220 : 340
+  const OUTER_R = compact ? 90 : 110
+  const INNER_R = compact ? 60 : 75
+  const LABEL_R = compact ? 105 : 135
   const CX = SIZE / 2
   const CY = SIZE / 2
   const GAP_DEG = slices.length > 1 ? 2 : 0
 
-  let angle = -90
+  let angle = 0
   const slicesWithPaths = slices.map((slice) => {
     const sweep = (slice.percentage / 100) * 360
     const startA = angle + (slices.length > 1 ? GAP_DEG / 2 : 0)
     const endA = angle + sweep - (slices.length > 1 ? GAP_DEG / 2 : 0)
+    const midAngle = (startA + endA) / 2
     angle += sweep
     const isSingleFull = slices.length === 1
-    return { ...slice, startA, endA, isSingleFull }
+    
+    // Calculate label position
+    const labelPos = polarToCartesian(CX, CY, LABEL_R, midAngle)
+    const arcPos = polarToCartesian(CX, CY, OUTER_R + 5, midAngle)
+    
+    return { ...slice, startA, endA, midAngle, isSingleFull, labelPos, arcPos }
   })
 
   return (
     <View style={styles.container}>
-      {/* Donut SVG — centred */}
+      {/* Donut SVG with radial labels */}
       <View style={styles.donutRow}>
         <View style={[styles.donutWrapper, { width: SIZE, height: SIZE }]}>
           <Svg width={SIZE} height={SIZE} viewBox={`0 0 ${SIZE} ${SIZE}`}>
             <G>
+              {/* Donut slices */}
               {slicesWithPaths.map((s, i) =>
                 s.isSingleFull ? (
                   <G key={i}>
@@ -118,6 +126,44 @@ export function SpendingDonut({ startDate, endDate, compact = false }: SpendingD
                   />
                 )
               )}
+              
+              {/* Radial labels with connecting lines */}
+              {!compact && slicesWithPaths.map((s, i) => (
+                <G key={`label-${i}`}>
+                  {/* Line from arc to label */}
+                  <Line
+                    x1={s.arcPos.x}
+                    y1={s.arcPos.y}
+                    x2={s.labelPos.x}
+                    y2={s.labelPos.y}
+                    stroke={colors.border}
+                    strokeWidth="1"
+                  />
+                  {/* Label text */}
+                  <SvgText
+                    x={s.labelPos.x}
+                    y={s.labelPos.y}
+                    fill={colors.textPrimary}
+                    fontSize="11"
+                    fontFamily="DMSans_500Medium"
+                    textAnchor={s.labelPos.x > CX ? 'start' : 'end'}
+                    alignmentBaseline="middle"
+                  >
+                    {s.label}
+                  </SvgText>
+                  <SvgText
+                    x={s.labelPos.x}
+                    y={s.labelPos.y + 12}
+                    fill={colors.textMuted}
+                    fontSize="10"
+                    fontFamily="DMSans_400Regular"
+                    textAnchor={s.labelPos.x > CX ? 'start' : 'end'}
+                    alignmentBaseline="middle"
+                  >
+                    {s.percentage.toFixed(0)}%
+                  </SvgText>
+                </G>
+              ))}
             </G>
           </Svg>
           {/* Center label overlay */}
@@ -190,9 +236,11 @@ function makeStyles(colors: ColorPalette) {
     container: {
       gap: 16,
       alignItems: 'center',
+      paddingVertical: 8,
     },
     donutRow: {
       alignItems: 'center',
+      paddingHorizontal: 8,
     },
     donutWrapper: {
       position: 'relative',
@@ -206,16 +254,17 @@ function makeStyles(colors: ColorPalette) {
     },
     centerLabel: {
       fontFamily: 'DMSans_400Regular',
-      fontSize: 10,
+      fontSize: 11,
       color: colors.textMuted,
       textAlign: 'center',
     },
     centerPct: {
       fontFamily: 'Sora_700Bold',
-      fontSize: 14,
+      fontSize: 16,
       color: colors.textPrimary,
       textAlign: 'center',
       paddingHorizontal: 4,
+      marginTop: 2,
     },
     toggleRow: {
       flexDirection: 'row',
