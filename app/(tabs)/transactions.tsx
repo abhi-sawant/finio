@@ -14,7 +14,7 @@ import { filterTransactions } from '@/store/selectors'
 import { lightHaptic } from '@/utils/haptics'
 
 const DEFAULT_FILTERS: FilterState = {
-  type: 'all',
+  typeIds: [],
   accountId: null,
   categoryIds: [],
   searchQuery: '',
@@ -31,10 +31,10 @@ export default function TransactionsScreen() {
   const filtered = useMemo(
     () =>
       filterTransactions(transactions, {
-        ...(filters.type !== 'all' && { type: filters.type }),
+        ...(filters.typeIds?.length && { typeIds: filters.typeIds }),
         ...(filters.accountId && { accountId: filters.accountId }),
-        ...(filters.categoryIds.length > 0 && { categoryIds: filters.categoryIds }),
-        ...(filters.searchQuery && { searchQuery: filters.searchQuery }),
+        ...(filters.categoryIds?.length && { categoryIds: filters.categoryIds }),
+        ...((filters.searchQuery?.trim()) && { searchQuery: filters.searchQuery }),
       }),
     [transactions, filters]
   )
@@ -46,10 +46,10 @@ export default function TransactionsScreen() {
   }, [])
 
   const hasFilters =
-    filters.type !== 'all' ||
+    !!filters.typeIds?.length ||
     !!filters.accountId ||
-    filters.categoryIds.length > 0 ||
-    !!filters.searchQuery
+    !!filters.categoryIds?.length ||
+    !!filters.searchQuery?.trim()
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>

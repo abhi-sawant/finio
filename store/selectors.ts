@@ -24,7 +24,7 @@ export function getCategoryById(categories: Category[], id: string): Category | 
 export function filterTransactions(
   transactions: Transaction[],
   options: {
-    type?: TransactionType | 'all'
+    typeIds?: TransactionType[]
     accountId?: string
     categoryIds?: string[]
     startDate?: Date
@@ -33,7 +33,7 @@ export function filterTransactions(
   }
 ): Transaction[] {
   return transactions.filter((t) => {
-    if (options.type && options.type !== 'all' && t.type !== options.type) return false
+    if (options.typeIds && options.typeIds.length > 0 && !options.typeIds.includes(t.type)) return false
     if (options.accountId && t.accountId !== options.accountId) return false
     if (options.categoryIds && options.categoryIds.length > 0 && !options.categoryIds.includes(t.categoryId)) return false
     if (options.startDate && options.endDate) {
@@ -235,4 +235,43 @@ export function getBalanceTrend(
   }
 
   return points
+}
+
+// ───────────────────────────────────────────────────────────
+// Calculate balance after a specific transaction
+// ───────────────────────────────────────────────────────────
+
+export function getBalanceAfterTransaction(
+  transactions: Transaction[],
+  transaction: Transaction,
+  currentAccountBalance: number
+): number {
+  // Get all transactions for the same account that happened after this transaction
+  const laterTransactions = transactions.filter((t) => {
+    const isSameAccount = t.accountId === transaction.accountId || t.toAccountId === transaction.accountId
+    const txDate = new Date(t.date).getTime()
+    const targetDate = new Date(transaction.date).getTime()
+    // Include transactions that are later by date, or same date but created later
+    const isLater = txDate > targetDate || (txDate === targetDate && t.createdAt > transaction.createdAt)
+    return isSameAccount && isLater && t.id !== transaction.id
+  })
+
+  // Start with current balance and reverse the effects of later transactions
+  let balanceAtTransaction = currentAccountBalance
+
+  for (const t of laterTransactions) {
+    if (t.accountId === transaction.accountId) {
+      // This account was the source
+      if (t.type === 'income') {
+        balanceAtTransaction -= t.amount
+      } else if (t.type === 'expense' || t.type === 'transfer') {
+        balanceAtTransaction += t.amount
+      }
+    } else if (t.toAccountId === transaction.accountId && t.type === 'transfer') {
+      // This account was the destination of a transfer
+      balanceAtTransaction -= t.amount
+    }
+  }
+
+  return balanceAtTransaction
 }
