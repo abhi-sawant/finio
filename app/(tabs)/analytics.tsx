@@ -115,6 +115,12 @@ export default function AnalyticsScreen() {
           </View>
         </View>
 
+        {/* Spending by category */}
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>Spending by Category</Text>
+          <SpendingDonut startDate={start} endDate={end} />
+        </View>
+
         {/* Income vs Expense bar chart */}
         <View style={styles.card}>
           <IncomeExpenseBar />
@@ -123,12 +129,6 @@ export default function AnalyticsScreen() {
         {/* Balance trend */}
         <View style={styles.card}>
           <BalanceTrend />
-        </View>
-
-        {/* Spending by category */}
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Spending by Category</Text>
-          <SpendingDonut startDate={start} endDate={end} />
         </View>
 
         {/* Spending by label */}

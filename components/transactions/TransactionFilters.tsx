@@ -26,6 +26,7 @@ export interface FilterState {
   typeIds: TransactionType[]
   accountId: string | null
   categoryIds: string[]
+  labelIds: string[]
   searchQuery: string
 }
 
@@ -43,11 +44,12 @@ const TYPE_FILTERS: Array<{ value: TransactionType; label: string }> = [
 export function TransactionFilters({ filters, onChange }: TransactionFiltersProps) {
   const colors = useColors()
   const styles = makeStyles(colors)
-  const { accounts, categories } = useFinanceStore()
+  const { accounts, categories, labels } = useFinanceStore()
   const [searchExpanded, setSearchExpanded] = useState(false)
   const [showTypeSheet, setShowTypeSheet] = useState(false)
   const [showAccountSheet, setShowAccountSheet] = useState(false)
   const [showCategoryPicker, setShowCategoryPicker] = useState(false)
+  const [showLabelPicker, setShowLabelPicker] = useState(false)
 
   const searchWidth = useSharedValue(0)
 
@@ -71,7 +73,8 @@ export function TransactionFilters({ filters, onChange }: TransactionFiltersProp
   const selectedAccount = accounts.find((a) => a.id === filters.accountId)
   const typeIds = filters.typeIds ?? []
   const categoryIds = filters.categoryIds ?? []
-  const hasActiveFilters = typeIds.length > 0 || !!filters.accountId || categoryIds.length > 0 || !!filters.searchQuery?.trim()
+  const labelIds = filters.labelIds ?? []
+  const hasActiveFilters = typeIds.length > 0 || !!filters.accountId || categoryIds.length > 0 || labelIds.length > 0 || !!filters.searchQuery?.trim()
   
   const selectedTypeLabel = typeIds.length > 0
     ? typeIds.length === 1
@@ -85,6 +88,7 @@ export function TransactionFilters({ filters, onChange }: TransactionFiltersProp
       typeIds: [],
       accountId: null,
       categoryIds: [],
+      labelIds: [],
       searchQuery: '',
     })
     if (searchExpanded) {
@@ -151,6 +155,25 @@ export function TransactionFilters({ filters, onChange }: TransactionFiltersProp
               : 'Category'}
           </Text>
           <ChevronDown size={12} color={categoryIds.length > 0 ? colors.primary : colors.textMuted} />
+        </TouchableOpacity>
+
+        {/* Label filter */}
+        <TouchableOpacity
+          onPress={() => setShowLabelPicker(true)}
+          style={[styles.chip, labelIds.length > 0 && styles.chipActive]}
+          activeOpacity={0.7}
+        >
+          <Text
+            style={[
+              styles.chipText,
+              labelIds.length > 0 && styles.chipTextActive,
+            ]}
+          >
+            {labelIds.length > 0
+              ? `${labelIds.length} Labels`
+              : 'Label'}
+          </Text>
+          <ChevronDown size={12} color={labelIds.length > 0 ? colors.primary : colors.textMuted} />
         </TouchableOpacity>
 
         {/* Clear filters */}
@@ -292,6 +315,51 @@ export function TransactionFilters({ filters, onChange }: TransactionFiltersProp
           })}
         </ScrollView>
       </BottomSheet>
+
+      {/* Label picker — multi-select */}
+      <BottomSheet
+        visible={showLabelPicker}
+        onClose={() => setShowLabelPicker(false)}
+        title="Filter by Label"
+        snapPoint={0.5}
+      >
+        <ScrollView contentContainerStyle={styles.categoryList}>
+          {labels.map((label) => {
+            const isSelected = labelIds.includes(label.id)
+            return (
+              <TouchableOpacity
+                key={label.id}
+                style={[styles.categoryItem, isSelected && styles.categoryItemActive]}
+                onPress={async () => {
+                  await lightHaptic()
+                  const currentLabelIds = filters.labelIds ?? []
+                  onChange({
+                    ...filters,
+                    labelIds: isSelected
+                      ? currentLabelIds.filter((id) => id !== label.id)
+                      : [...currentLabelIds, label.id],
+                  })
+                }}
+              >
+                <View style={styles.categoryItemLeft}>
+                  <View
+                    style={[
+                      styles.categoryIcon,
+                      { backgroundColor: hexToRgba(label.color, 0.2) },
+                    ]}
+                  >
+                    <View style={[styles.labelDot, { backgroundColor: label.color }]} />
+                  </View>
+                  <Text style={[styles.categoryItemText, isSelected && { color: colors.primary }]}>
+                    {label.name}
+                  </Text>
+                </View>
+                {isSelected && <Check size={18} color={colors.primary} />}
+              </TouchableOpacity>
+            )
+          })}
+        </ScrollView>
+      </BottomSheet>
     </View>
   )
 }
@@ -416,6 +484,11 @@ function makeStyles(colors: ColorPalette) {
     fontFamily: 'DMSans_500Medium',
     fontSize: 15,
     color: colors.textPrimary,
+  },
+  labelDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
   },
 })
 }

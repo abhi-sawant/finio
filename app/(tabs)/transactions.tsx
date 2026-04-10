@@ -17,6 +17,7 @@ const DEFAULT_FILTERS: FilterState = {
   typeIds: [],
   accountId: null,
   categoryIds: [],
+  labelIds: [],
   searchQuery: '',
 }
 
@@ -34,6 +35,7 @@ export default function TransactionsScreen() {
         ...(filters.typeIds?.length && { typeIds: filters.typeIds }),
         ...(filters.accountId && { accountId: filters.accountId }),
         ...(filters.categoryIds?.length && { categoryIds: filters.categoryIds }),
+        ...(filters.labelIds?.length && { labelIds: filters.labelIds }),
         ...((filters.searchQuery?.trim()) && { searchQuery: filters.searchQuery }),
       }),
     [transactions, filters]
@@ -49,6 +51,7 @@ export default function TransactionsScreen() {
     !!filters.typeIds?.length ||
     !!filters.accountId ||
     !!filters.categoryIds?.length ||
+    !!filters.labelIds?.length ||
     !!filters.searchQuery?.trim()
 
   return (
