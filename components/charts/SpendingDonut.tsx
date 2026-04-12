@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import Svg, { G, Path, Circle, Line, Text as SvgText } from 'react-native-svg'
+import Svg, { G, Path, Circle, Text as SvgText } from 'react-native-svg'
 import { useColors } from '@/hooks/useColors'
 import type { ColorPalette } from '@/constants/Colors'
 import { formatCurrency } from '@/utils/formatters'
@@ -80,13 +80,16 @@ export function SpendingDonut({ startDate, endDate, compact = false }: SpendingD
       : []),
   ]
 
-  const SIZE = compact ? 220 : 340
-  const OUTER_R = compact ? 90 : 110
-  const INNER_R = compact ? 60 : 75
-  const LABEL_R = compact ? 105 : 135
-  const CX = SIZE / 2
-  const CY = SIZE / 2
+  // Geometry
+  const OUTER_R = compact ? 90 : 90
+  const INNER_R = compact ? 60 : 62
+  // Non-compact uses a wider viewBox so labels have room on left/right
+  const VB_W = compact ? 220 : 360
+  const VB_H = compact ? 220 : 300
+  const CX = VB_W / 2
+  const CY = VB_H / 2
   const GAP_DEG = slices.length > 1 ? 2 : 0
+  const ELBOW_R = OUTER_R + 8
 
   let angle = 0
   const slicesWithPaths = slices.map((slice) => {
@@ -96,96 +99,193 @@ export function SpendingDonut({ startDate, endDate, compact = false }: SpendingD
     const midAngle = (startA + endA) / 2
     angle += sweep
     const isSingleFull = slices.length === 1
-    
-    // Calculate label position
-    const labelPos = polarToCartesian(CX, CY, LABEL_R, midAngle)
-    const arcPos = polarToCartesian(CX, CY, OUTER_R + 5, midAngle)
-    
-    return { ...slice, startA, endA, midAngle, isSingleFull, labelPos, arcPos }
+
+    const arcPos = polarToCartesian(CX, CY, OUTER_R + 4, midAngle)
+    const elbowPos = polarToCartesian(CX, CY, ELBOW_R, midAngle)
+
+    return { ...slice, startA, endA, midAngle, isSingleFull, arcPos, elbowPos }
   })
+
+  // ─── Two-column label layout ───
+  // Assign labels to left or right column based on which side their slice
+  // midpoint falls. Within each column, sort by natural Y and spread apart
+  // vertically so nothing overlaps. Leader lines connect arc → elbow → label.
+  const LINE_HEIGHT = 24
+  const LABEL_X_RIGHT = CX + OUTER_R + 18
+  const LABEL_X_LEFT = CX - OUTER_R - 18
+
+  const entries = slicesWithPaths.map((s, idx) => {
+    const normAngle = ((s.midAngle % 360) + 360) % 360
+    const side: 'left' | 'right' = normAngle < 180 ? 'right' : 'left'
+    return { idx, side, desiredY: s.elbowPos.y, arcPos: s.arcPos, elbowPos: s.elbowPos }
+  })
+
+  function spreadColumn(items: typeof entries) {
+    if (!items.length) return [] as Array<(typeof items)[0] & { adjustedY: number }>
+    const sorted = items.slice().sort((a, b) => a.desiredY - b.desiredY)
+    const ys = sorted.map((e) => e.desiredY)
+
+    // Enforce minimum spacing
+    for (let i = 1; i < ys.length; i++) {
+      ys[i] = Math.max(ys[i]!, (ys[i - 1] ?? 0) + LINE_HEIGHT)
+    }
+
+    // Shift up if bottom overflows
+    const overflow = (ys[ys.length - 1] ?? 0) - (VB_H - 16)
+    if (overflow > 0) {
+      for (let i = 0; i < ys.length; i++) ys[i] = (ys[i] ?? 0) - overflow
+    }
+
+    // Shift down if top underflows
+    if ((ys[0] ?? 0) < 16) {
+      const shift = 16 - (ys[0] ?? 0)
+      for (let i = 0; i < ys.length; i++) ys[i] = (ys[i] ?? 0) + shift
+    }
+
+    // Final spacing pass
+    for (let i = 1; i < ys.length; i++) {
+      ys[i] = Math.max(ys[i] ?? 0, (ys[i - 1] ?? 0) + LINE_HEIGHT)
+    }
+
+    return sorted.map((e, i) => ({ ...e, adjustedY: ys[i] ?? 0 }))
+  }
+
+  const rightLabels = spreadColumn(entries.filter((e) => e.side === 'right'))
+  const leftLabels = spreadColumn(entries.filter((e) => e.side === 'left'))
+
+  const labelMap = new Map<
+    number,
+    { adjustedY: number; labelX: number; side: 'left' | 'right'; elbowPos: { x: number; y: number } }
+  >()
+  rightLabels.forEach((l) =>
+    labelMap.set(l.idx, { adjustedY: l.adjustedY, labelX: LABEL_X_RIGHT, side: 'right', elbowPos: l.elbowPos })
+  )
+  leftLabels.forEach((l) =>
+    labelMap.set(l.idx, { adjustedY: l.adjustedY, labelX: LABEL_X_LEFT, side: 'left', elbowPos: l.elbowPos })
+  )
+
+  // Donut slices (shared rendering for compact + full)
+  const donutSlices = slicesWithPaths.map((s, i) =>
+    s.isSingleFull ? (
+      <G key={i}>
+        <Circle cx={CX} cy={CY} r={OUTER_R} fill={s.color} />
+        <Circle cx={CX} cy={CY} r={INNER_R} fill={colors.surface} />
+      </G>
+    ) : (
+      <Path
+        key={i}
+        d={describeArc(CX, CY, OUTER_R, INNER_R, s.startA, s.endA)}
+        fill={s.color}
+      />
+    )
+  )
 
   return (
     <View style={styles.container}>
-      {/* Donut SVG with radial labels */}
-      <View style={styles.donutRow}>
-        <View style={[styles.donutWrapper, { width: SIZE, height: SIZE }]}>
-          <Svg width={SIZE} height={SIZE} viewBox={`0 0 ${SIZE} ${SIZE}`}>
-            <G>
-              {/* Donut slices */}
-              {slicesWithPaths.map((s, i) =>
-                s.isSingleFull ? (
-                  <G key={i}>
-                    <Circle cx={CX} cy={CY} r={OUTER_R} fill={s.color} />
-                    <Circle cx={CX} cy={CY} r={INNER_R} fill={colors.surface} />
-                  </G>
-                ) : (
-                  <Path
-                    key={i}
-                    d={describeArc(CX, CY, OUTER_R, INNER_R, s.startA, s.endA)}
-                    fill={s.color}
-                  />
-                )
-              )}
-              
-              {/* Radial labels with connecting lines */}
-              {!compact && slicesWithPaths.map((s, i) => (
-                <G key={`label-${i}`}>
-                  {/* Line from arc to label */}
-                  <Line
-                    x1={s.arcPos.x}
-                    y1={s.arcPos.y}
-                    x2={s.labelPos.x}
-                    y2={s.labelPos.y}
-                    stroke={colors.border}
-                    strokeWidth="1"
-                  />
-                  {/* Label text */}
-                  <SvgText
-                    x={s.labelPos.x}
-                    y={s.labelPos.y}
-                    fill={colors.textPrimary}
-                    fontSize="11"
-                    fontFamily="DMSans_500Medium"
-                    textAnchor={s.labelPos.x > CX ? 'start' : 'end'}
-                    alignmentBaseline="middle"
-                  >
-                    {s.label}
-                  </SvgText>
-                  <SvgText
-                    x={s.labelPos.x}
-                    y={s.labelPos.y + 12}
-                    fill={colors.textMuted}
-                    fontSize="10"
-                    fontFamily="DMSans_400Regular"
-                    textAnchor={s.labelPos.x > CX ? 'start' : 'end'}
-                    alignmentBaseline="middle"
-                  >
-                    {s.percentage.toFixed(0)}%
-                  </SvgText>
-                </G>
-              ))}
-            </G>
-          </Svg>
-          {/* Center label overlay */}
-          <View
-            style={[
-              styles.centerOverlay,
-              {
-                width: INNER_R * 2 - 4,
-                height: INNER_R * 2 - 4,
-                borderRadius: INNER_R,
-                backgroundColor: colors.surface,
-              },
-            ]}
-            pointerEvents="none"
-          >
-            <Text style={styles.centerLabel}>Total</Text>
-            <Text style={styles.centerPct} numberOfLines={1} adjustsFontSizeToFit>
-              {formatCurrency(totalAmount, currency, true)}
-            </Text>
+      {compact ? (
+        /* Compact mode: fixed size, no labels, RN center overlay */
+        <View style={styles.donutRow}>
+          <View style={[styles.donutWrapper, { width: VB_W, height: VB_H }]}>
+            <Svg width={VB_W} height={VB_H} viewBox={`0 0 ${VB_W} ${VB_H}`}>
+              <G>{donutSlices}</G>
+            </Svg>
+            <View
+              style={[
+                styles.centerOverlay,
+                {
+                  width: INNER_R * 2 - 4,
+                  height: INNER_R * 2 - 4,
+                  borderRadius: INNER_R,
+                  backgroundColor: colors.surface,
+                },
+              ]}
+              pointerEvents="none"
+            >
+              <Text style={styles.centerLabel}>Total</Text>
+              <Text style={styles.centerPct} numberOfLines={1} adjustsFontSizeToFit>
+                {formatCurrency(totalAmount, currency, true)}
+              </Text>
+            </View>
           </View>
         </View>
-      </View>
+      ) : (
+        /* Full mode: responsive SVG, labels + center text all in SVG */
+        <View style={{ alignSelf: 'stretch', aspectRatio: VB_W / VB_H }}>
+          <Svg width="100%" height="100%" viewBox={`0 0 ${VB_W} ${VB_H}`}>
+            <G>
+              {donutSlices}
+
+              {/* Center fill + text */}
+              <Circle cx={CX} cy={CY} r={INNER_R - 1} fill={colors.surface} />
+              <SvgText
+                x={CX}
+                y={CY - 8}
+                textAnchor="middle"
+                fill={colors.textMuted}
+                fontSize="11"
+                fontFamily="DMSans_400Regular"
+              >
+                Total
+              </SvgText>
+              <SvgText
+                x={CX}
+                y={CY + 14}
+                textAnchor="middle"
+                fill={colors.textPrimary}
+                fontSize="16"
+                fontFamily="Sora_700Bold"
+              >
+                {formatCurrency(totalAmount, currency, true)}
+              </SvgText>
+
+              {/* Leader lines + labels */}
+              {slicesWithPaths.map((s, i) => {
+                const info = labelMap.get(i)
+                if (!info) return null
+                const { adjustedY, labelX, side, elbowPos } = info
+
+                return (
+                  <G key={`label-${i}`}>
+                    <Path
+                      d={[
+                        `M ${s.arcPos.x.toFixed(2)} ${s.arcPos.y.toFixed(2)}`,
+                        `L ${elbowPos.x.toFixed(2)} ${elbowPos.y.toFixed(2)}`,
+                        `L ${elbowPos.x.toFixed(2)} ${adjustedY.toFixed(2)}`,
+                        `L ${labelX} ${adjustedY.toFixed(2)}`,
+                      ].join(' ')}
+                      stroke={s.color}
+                      strokeWidth="1.5"
+                      fill="none"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <SvgText
+                      x={labelX}
+                      y={adjustedY - 5}
+                      textAnchor={side === 'right' ? 'start' : 'end'}
+                      fill={colors.textPrimary}
+                      fontSize="11"
+                      fontFamily="DMSans_500Medium"
+                    >
+                      {s.label}
+                    </SvgText>
+                    <SvgText
+                      x={labelX}
+                      y={adjustedY + 8}
+                      textAnchor={side === 'right' ? 'start' : 'end'}
+                      fill={colors.textMuted}
+                      fontSize="10"
+                      fontFamily="DMSans_400Regular"
+                    >
+                      {s.percentage.toFixed(0)}%
+                    </SvgText>
+                  </G>
+                )
+              })}
+            </G>
+          </Svg>
+        </View>
+      )}
 
       {/* Toggle — only in full (non-compact) mode */}
       {!compact && (
