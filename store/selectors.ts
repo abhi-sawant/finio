@@ -5,12 +5,40 @@ import type { Account, Category, MonthlySummary, Transaction, TransactionType } 
 // Basic selectors (pass state slices for memoization control)
 // ───────────────────────────────────────────────────────────
 
+/**
+ * Net worth = sum of all account balances.
+ * Credit accounts naturally carry negative balances when money is owed,
+ * so this already correctly subtracts outstanding credit debt from the total.
+ */
 export function getTotalBalance(accounts: Account[]): number {
   return accounts.reduce((sum, a) => sum + a.balance, 0)
 }
 
 export function getAccountById(accounts: Account[], id: string): Account | undefined {
   return accounts.find((a) => a.id === id)
+}
+
+// ───────────────────────────────────────────────────────────
+// Credit card selectors
+// ───────────────────────────────────────────────────────────
+
+/**
+ * Total amount currently owed across all credit accounts (always >= 0).
+ */
+export function getTotalCreditOutstanding(accounts: Account[]): number {
+  return accounts
+    .filter((a) => a.type === 'credit' && a.balance < 0)
+    .reduce((sum, a) => sum + Math.abs(a.balance), 0)
+}
+
+/**
+ * Returns credit accounts that currently have an outstanding balance (balance < 0),
+ * sorted by amount owed descending (largest debt first).
+ */
+export function getUpcomingCreditPayments(accounts: Account[]): Account[] {
+  return accounts
+    .filter((a) => a.type === 'credit' && a.balance < 0)
+    .sort((a, b) => Math.abs(b.balance) - Math.abs(a.balance))
 }
 
 export function getCategoryById(categories: Category[], id: string): Category | undefined {

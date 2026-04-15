@@ -11,8 +11,15 @@ export interface Account {
   currency: Currency
   color: string
   icon: string
+  /**
+   * For regular accounts: money currently held (positive = asset).
+   * For credit accounts: negative = amount owed, 0 = fully paid.
+   */
   balance: number
   createdAt: string
+  // ── Credit-card specific (optional, only meaningful when type === 'credit') ──
+  /** Maximum credit limit, e.g. 100000. */
+  creditLimit?: number
 }
 
 export interface Transaction {

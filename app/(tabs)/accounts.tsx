@@ -14,7 +14,7 @@ import { useColors } from '@/hooks/useColors'
 import type { ColorPalette } from '@/constants/Colors'
 import { AccountCard } from '@/components/accounts/AccountCard'
 import { useFinanceStore } from '@/store/useFinanceStore'
-import { getTotalBalance } from '@/store/selectors'
+import { getTotalBalance, getTotalCreditOutstanding } from '@/store/selectors'
 import { formatCurrency } from '@/utils/formatters'
 import { warningHaptic, lightHaptic } from '@/utils/haptics'
 import { showToast } from '@/components/common/Toast'
@@ -27,6 +27,7 @@ export default function AccountsScreen() {
   const router = useRouter()
   const { accounts, settings, deleteAccount } = useFinanceStore()
   const total = getTotalBalance(accounts)
+  const creditDue = getTotalCreditOutstanding(accounts)
 
   const handleAccountPress = (account: Account) => {
     lightHaptic()
@@ -77,8 +78,13 @@ export default function AccountsScreen() {
         <View>
           <Text style={styles.title}>Accounts</Text>
           <Text style={styles.totalBalance}>
-            {formatCurrency(total, settings.currency)} total
+            {formatCurrency(total, settings.currency)} net worth
           </Text>
+          {creditDue > 0 && (
+            <Text style={styles.creditDue}>
+              {formatCurrency(creditDue, settings.currency)} credit due
+            </Text>
+          )}
         </View>
         <TouchableOpacity
           style={styles.addBtn}
@@ -145,6 +151,12 @@ function makeStyles(colors: ColorPalette) {
     fontSize: 13,
     color: colors.textMuted,
     marginTop: 2,
+  },
+  creditDue: {
+    fontFamily: 'DMSans_500Medium',
+    fontSize: 12,
+    color: colors.expense,
+    marginTop: 1,
   },
   addBtn: {
     width: 40,

@@ -17,8 +17,14 @@ export function getNetBalance(transactions: Transaction[]): number {
   return getTotalIncome(transactions) - getTotalExpenses(transactions)
 }
 
+/**
+ * Sum of balances for all non-credit accounts — the actual money the user has in hand.
+ * Credit accounts are excluded because their balance represents debt, not owned money.
+ */
 export function getTotalAccountBalance(accounts: Account[]): number {
-  return accounts.reduce((sum, a) => sum + a.balance, 0)
+  return accounts
+    .filter((a) => a.type !== 'credit')
+    .reduce((sum, a) => sum + a.balance, 0)
 }
 
 export function getCurrentMonthTransactions(transactions: Transaction[]): Transaction[] {
