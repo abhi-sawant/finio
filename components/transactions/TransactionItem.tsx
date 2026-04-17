@@ -5,8 +5,6 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
-  withTiming,
-  runOnJS,
 } from 'react-native-reanimated'
 import { Pencil, Trash2 } from 'lucide-react-native'
 import { useColors } from '@/hooks/useColors'
@@ -33,7 +31,6 @@ export function TransactionItem({
   onPress,
   onEdit,
   onDelete,
-  currency = 'INR',
 }: TransactionItemProps) {
   const colors = useColors()
   const styles = useMemo(() => makeStyles(colors), [colors])

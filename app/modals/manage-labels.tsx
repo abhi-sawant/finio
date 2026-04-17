@@ -17,7 +17,7 @@ import { BottomSheet } from '@/components/common/BottomSheet'
 import { ColorPicker } from '@/components/common/ColorPicker'
 import { useFinanceStore } from '@/store/useFinanceStore'
 import { showToast } from '@/components/common/Toast'
-import { warningHaptic, lightHaptic, successHaptic } from '@/utils/haptics'
+import { warningHaptic, lightHaptic } from '@/utils/haptics'
 import type { Label } from '@/types'
 
 export default function ManageLabelsModal() {

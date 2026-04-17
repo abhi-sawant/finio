@@ -10,6 +10,7 @@ This file provides the coding AI agent (GitHub Copilot, Cursor, etc.) with a com
 
 - **App name in Expo**: `Finio`
 - **App version**: `1.1.0`
+- **App version**: `1.3.0`
 - **App bundle ID**: `com.finio.app`
 - **Backend API base URL**: configured via `EXPO_PUBLIC_API_URL` in `.env` (see `.env.example`); fallback is `https://api.finio.slowatcoding.com`
 - **Target platforms**: Android (primary), iOS
@@ -47,13 +48,15 @@ This file provides the coding AI agent (GitHub Copilot, Cursor, etc.) with a com
 │   ├── categories/
 │   ├── charts/             Custom SVG charts (react-native-svg)
 │   ├── common/             AmountInput, BottomSheet, ColorPicker, DatePicker,
-│   │                       EmptyState, IconPicker, LabelPicker, SkeletonLoader, Toast
+│   │                       EmptyState, IconPicker, LabelPicker, TimePicker, Toast
 │   ├── dashboard/          SummaryCards, RecentTransactions
+│   ├── dashboard/          SummaryCards, RecentTransactions, UpcomingPayments
 │   ├── layout/             FAB, Header, TabBar
+│   ├── layout/             TabBar
 │   └── transactions/       TransactionFilters, TransactionItem, TransactionList
 ├── constants/
 │   └── Colors.ts           DarkColors, LightColors, Colors (alias for DarkColors),
-│                           AccountColors[], CategoryColors[], ColorPalette, ColorKey
+│                           LabelColors[], ColorPalette, ColorKey
 ├── data/
 │   └── defaultData.ts      Seed data: 24 categories, 9 labels,
 │                           settings (currency: 'INR', theme: 'system', userName: 'Alex')
@@ -112,10 +115,9 @@ This file provides the coding AI agent (GitHub Copilot, Cursor, etc.) with a com
 | State management | Zustand 5 |
 | Persistence | `@react-native-async-storage/async-storage` (finance data), `expo-secure-store` (JWT token) |
 | Styling | NativeWind 4 (Tailwind CSS for RN) + `StyleSheet` for complex styles |
-| Charts | Custom SVG charts via `react-native-svg` (Victory Native 41 is installed but unused) |
+| Charts | Custom SVG charts via `react-native-svg` |
 | Forms | React Hook Form 7 + Zod 4 validation |
 | Animation | `react-native-reanimated` 4 + `react-native-worklets` |
-| Lists | `SectionList` (RN core) for transactions; `@shopify/flash-list` installed but not currently used |
 | HTTP | Native `fetch` (wrapped in `services/api.ts`) |
 | Icons | `lucide-react-native` |
 | Fonts | DM Sans (400R / 500M / 700B) + Sora (700B / 800EB) via `@expo-google-fonts` |
@@ -151,6 +153,8 @@ Currency        = 'USD' | 'EUR' | 'GBP' | 'INR' | 'JPY' | 'CAD' | 'AUD'
 Theme           = 'dark' | 'light' | 'system'
 
 Account        { id, name, type, currency, color, icon, balance, createdAt }
+Account        { id, name, type, currency, color, icon, balance, createdAt,
+                 creditLimit? }   ← credit accounts only
 Transaction    { id, type, amount, accountId, toAccountId?, categoryId,
                  date, note, labels, createdAt }
 Category       { id, name, icon, color, type }
@@ -191,13 +195,16 @@ Pure selector functions — always import derived data from here, not inline.
 
 Key exports:
 - `getTotalBalance`, `getAccountById`, `getCategoryById`
-- `filterTransactions` (type / accountId / categoryIds / date range / search query — note: search matches on `note` field only)
+- `getTotalBalance`, `getTotalCreditOutstanding`, `getUpcomingCreditPayments`, `getCategoryById`
+- `filterTransactions` (type / accountId / categoryIds / labelIds / date range / search query — note: search matches on `note` field only)
 - `getMonthlySummary`, `getLast6MonthsSummaries`
 - `getCategorySpending` → `CategorySpending[]` — expense-only, sorted desc by amount
-- `getLabelSpending` → `LabelSpending[]` — expense-only, splits evenly across labels, top 8
+- `getCategorySpending` → `CategorySpending[]` — expense-only, sorted desc by amount
+- `getLabelSpending` → `LabelSpending[]` — expense-only, full amount counted per label, sorted desc
 - `getPeriodRange(period: PeriodKey)` — `PeriodKey = 'week' | 'month' | '3months' | '6months' | 'year'`
 - `getRecentTransactions`
-- `getBalanceTrend(txs, currentBalance, accountId, days)` — reconstructs per-account daily balance history (30-day default)
+- `getRecentTransactions`
+- `getBalanceAfterTransaction(txs, transaction, currentAccountBalance)` — reconstructs the account balance at the time a specific transaction occurred
 
 ---
 
@@ -302,7 +309,6 @@ The app supports three theme modes controlled by `settings.theme: Theme`.
 - `LightColors` — light palette object (`as const`)
 - `Colors` — alias for `DarkColors`; used only for static/non-component contexts (e.g. chart configs, colour arrays)
 - `AccountColors` — 12-entry preset colour array for account pickers
-- `CategoryColors` — 12-entry preset colour array for category pickers
 - `LabelColors` — 6-entry preset colour array for label pickers
 - `ColorPalette` — type alias for `typeof DarkColors`
 - `ColorKey` — `keyof ColorPalette`

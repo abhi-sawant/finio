@@ -9,7 +9,7 @@ import type { ColorPalette } from '@/constants/Colors'
 import { hexToRgba } from '@/utils/formatters'
 import { lightHaptic } from '@/utils/haptics'
 import { useFinanceStore } from '@/store/useFinanceStore'
-import type { Category, CategoryType, TransactionType } from '@/types'
+import type { Category, TransactionType } from '@/types'
 
 interface CategoryPickerProps {
   visible: boolean

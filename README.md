@@ -8,7 +8,7 @@
 <p align="center">
   <a href="https://github.com/abhi-sawant/finio/releases"><img alt="Latest release" src="https://img.shields.io/github/v/release/abhi-sawant/finio?style=flat-square" /></a>
   <img alt="Platform" src="https://img.shields.io/badge/platform-Android%20%7C%20iOS-blue?style=flat-square" />
-  <img alt="Expo SDK" src="https://img.shields.io/badge/Expo-SDK%2054-000?logo=expo&style=flat-square" />
+  <img alt="Expo SDK" src="https://img.shields.io/badge/Expo-SDK%2054-000?logo=expo&style=flat-square&cacheSeconds=0" />
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.9-3178c6?logo=typescript&logoColor=white&style=flat-square" />
   <img alt="License" src="https://img.shields.io/badge/license-MIT-green?style=flat-square" />
 </p>
@@ -22,6 +22,8 @@ Track income, expenses, and transfers across multiple accounts — all stored lo
 - **Dashboard** — time-aware greeting, total balance card with animated counter, horizontal account carousel, monthly income/expense summary, recent transactions, and a spending donut chart
 - **Transactions** — full list with free-text search, type / account / category filters, and daily date-group headers with net totals; swipe left or right to edit/delete
 - **Accounts** — checking, savings, cash, credit, investment, and wallet accounts; each with a custom colour, icon, and currency; balances update automatically on every add/edit/delete
+- **Accounts** — checking, savings, cash, credit, investment, and wallet accounts; each with a custom colour, icon, and currency; balances update automatically on every add/edit/delete
+- **Credit cards** — credit accounts track outstanding balance and optional credit limit; the Dashboard shows an Upcoming Payments section listing cards with money owed, sorted by amount due and including a utilization indicator
 - **Transfers** — move money between any two accounts with fully bidirectional balance adjustment and one-tap reversal
 - **Analytics** — income vs expense bar chart, 30-day balance trend, spending donut, label spending bar, and a top-categories table; filtered by week / month / 3M / 6M / year
 - **Categories & Labels** — 24 defaults included; fully customisable with icon and colour pickers; labels support multi-select tagging on individual transactions
@@ -94,6 +96,7 @@ npx expo run:ios
 app/            Expo Router screens — (tabs), auth flow, and full-screen modals
 components/     Reusable UI — accounts, categories, charts, common, dashboard, layout, transactions
 constants/      DarkColors, LightColors, AccountColors, CategoryColors, LabelColors
+constants/      DarkColors, LightColors, LabelColors, ColorPalette, ColorKey
 data/           Seed data — 24 categories, 9 labels, default settings
 hooks/          useColors · useCountUp · useDebounce · useThemeColor
 services/       api.ts · backup.ts · updater.ts
@@ -144,7 +147,8 @@ JWT tokens expire after 30 days.
 ## Data model
 
 ```ts
-Account       { id, name, type, currency, color, icon, balance, createdAt }
+Account       { id, name, type, currency, color, icon, balance, createdAt,
+               creditLimit? }   ← credit accounts only
 Transaction   { id, type, amount, accountId, toAccountId?, categoryId,
                 date, note, labels, createdAt }
 Category      { id, name, icon, color, type }

@@ -26,7 +26,6 @@ export function TransactionList({
   transactions,
   onRefresh,
   refreshing = false,
-  currency = 'INR',
   showDateHeaders = true,
   emptyTitle = 'No transactions',
   emptyDescription = 'Add a transaction to get started',

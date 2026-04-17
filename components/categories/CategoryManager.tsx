@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
   View,
   Text,
@@ -14,7 +14,7 @@ import type { ColorPalette } from '@/constants/Colors'
 import { LucideIcon } from '@/components/common/IconPicker'
 import { hexToRgba } from '@/utils/formatters'
 import { useFinanceStore } from '@/store/useFinanceStore'
-import { warningHaptic, successHaptic } from '@/utils/haptics'
+import { warningHaptic } from '@/utils/haptics'
 import { showToast } from '@/components/common/Toast'
 import type { Category } from '@/types'
 

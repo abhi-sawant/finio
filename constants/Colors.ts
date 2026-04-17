@@ -60,36 +60,6 @@ export const Colors = DarkColors
 export type ColorPalette = typeof DarkColors
 export type ColorKey = keyof ColorPalette
 
-export const AccountColors = [
-  '#6C63FF',
-  '#22c55e',
-  '#f59e0b',
-  '#ef4444',
-  '#3b82f6',
-  '#ec4899',
-  '#8b5cf6',
-  '#06b6d4',
-  '#10b981',
-  '#f97316',
-  '#64748b',
-  '#a855f7',
-] as const
-
-export const CategoryColors = [
-  '#ef4444',
-  '#f97316',
-  '#f59e0b',
-  '#22c55e',
-  '#10b981',
-  '#06b6d4',
-  '#3b82f6',
-  '#6C63FF',
-  '#8b5cf6',
-  '#ec4899',
-  '#a855f7',
-  '#64748b',
-] as const
-
 export const LabelColors = [
   '#fbbf24',
   '#34d399',

@@ -14,10 +14,6 @@ export function getTotalBalance(accounts: Account[]): number {
   return accounts.reduce((sum, a) => sum + a.balance, 0)
 }
 
-export function getAccountById(accounts: Account[], id: string): Account | undefined {
-  return accounts.find((a) => a.id === id)
-}
-
 // ───────────────────────────────────────────────────────────
 // Credit card selectors
 // ───────────────────────────────────────────────────────────
@@ -223,51 +219,6 @@ export function getRecentTransactions(transactions: Transaction[], limit = 8): T
   return [...transactions]
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, limit)
-}
-
-// ───────────────────────────────────────────────────────────
-// Balance trend (daily balances for an account for last N days)
-// ───────────────────────────────────────────────────────────
-
-export function getBalanceTrend(
-  transactions: Transaction[],
-  currentBalance: number,
-  accountId: string,
-  days = 30
-): Array<{ day: number; value: number }> {
-  const now = new Date()
-  // Walk backwards from today, reconstructing daily balances
-  const points: Array<{ day: number; value: number }> = []
-
-  // Sort transactions for this account by date descending
-  const acctTxns = transactions
-    .filter((t) => t.accountId === accountId || t.toAccountId === accountId)
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-
-  let runningBalance = currentBalance
-
-  for (let i = 0; i < days; i++) {
-    const day = new Date(now)
-    day.setDate(now.getDate() - i)
-    day.setHours(23, 59, 59, 999)
-
-    // For each transaction that happened on this day, reverse it
-    for (const t of acctTxns) {
-      const txDate = parseISO(t.date)
-      if (txDate.toDateString() === day.toDateString()) {
-        if (t.accountId === accountId) {
-          if (t.type === 'expense' || t.type === 'transfer') runningBalance += t.amount
-          else if (t.type === 'income') runningBalance -= t.amount
-        } else if (t.toAccountId === accountId && t.type === 'transfer') {
-          runningBalance -= t.amount
-        }
-      }
-    }
-
-    points.unshift({ day: days - i, value: runningBalance })
-  }
-
-  return points
 }
 
 // ───────────────────────────────────────────────────────────
