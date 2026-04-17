@@ -81,88 +81,24 @@ export function SpendingDonut({ startDate, endDate, compact = false }: SpendingD
   ]
 
   // Geometry
-  const OUTER_R = compact ? 90 : 90
+  const OUTER_R = 90
   const INNER_R = compact ? 60 : 62
-  // Non-compact uses a wider viewBox so labels have room on left/right
-  const VB_W = compact ? 220 : 360
-  const VB_H = compact ? 220 : 300
+  const VB_W = 220
+  const VB_H = 220
   const CX = VB_W / 2
   const CY = VB_H / 2
   const GAP_DEG = slices.length > 1 ? 2 : 0
-  const ELBOW_R = OUTER_R + 8
 
   let angle = 0
   const slicesWithPaths = slices.map((slice) => {
     const sweep = (slice.percentage / 100) * 360
     const startA = angle + (slices.length > 1 ? GAP_DEG / 2 : 0)
     const endA = angle + sweep - (slices.length > 1 ? GAP_DEG / 2 : 0)
-    const midAngle = (startA + endA) / 2
     angle += sweep
     const isSingleFull = slices.length === 1
 
-    const arcPos = polarToCartesian(CX, CY, OUTER_R + 4, midAngle)
-    const elbowPos = polarToCartesian(CX, CY, ELBOW_R, midAngle)
-
-    return { ...slice, startA, endA, midAngle, isSingleFull, arcPos, elbowPos }
+    return { ...slice, startA, endA, isSingleFull }
   })
-
-  // ─── Two-column label layout ───
-  // Assign labels to left or right column based on which side their slice
-  // midpoint falls. Within each column, sort by natural Y and spread apart
-  // vertically so nothing overlaps. Leader lines connect arc → elbow → label.
-  const LINE_HEIGHT = 24
-  const LABEL_X_RIGHT = CX + OUTER_R + 18
-  const LABEL_X_LEFT = CX - OUTER_R - 18
-
-  const entries = slicesWithPaths.map((s, idx) => {
-    const normAngle = ((s.midAngle % 360) + 360) % 360
-    const side: 'left' | 'right' = normAngle < 180 ? 'right' : 'left'
-    return { idx, side, desiredY: s.elbowPos.y, arcPos: s.arcPos, elbowPos: s.elbowPos }
-  })
-
-  function spreadColumn(items: typeof entries) {
-    if (!items.length) return [] as Array<(typeof items)[0] & { adjustedY: number }>
-    const sorted = items.slice().sort((a, b) => a.desiredY - b.desiredY)
-    const ys = sorted.map((e) => e.desiredY)
-
-    // Enforce minimum spacing
-    for (let i = 1; i < ys.length; i++) {
-      ys[i] = Math.max(ys[i]!, (ys[i - 1] ?? 0) + LINE_HEIGHT)
-    }
-
-    // Shift up if bottom overflows
-    const overflow = (ys[ys.length - 1] ?? 0) - (VB_H - 16)
-    if (overflow > 0) {
-      for (let i = 0; i < ys.length; i++) ys[i] = (ys[i] ?? 0) - overflow
-    }
-
-    // Shift down if top underflows
-    if ((ys[0] ?? 0) < 16) {
-      const shift = 16 - (ys[0] ?? 0)
-      for (let i = 0; i < ys.length; i++) ys[i] = (ys[i] ?? 0) + shift
-    }
-
-    // Final spacing pass
-    for (let i = 1; i < ys.length; i++) {
-      ys[i] = Math.max(ys[i] ?? 0, (ys[i - 1] ?? 0) + LINE_HEIGHT)
-    }
-
-    return sorted.map((e, i) => ({ ...e, adjustedY: ys[i] ?? 0 }))
-  }
-
-  const rightLabels = spreadColumn(entries.filter((e) => e.side === 'right'))
-  const leftLabels = spreadColumn(entries.filter((e) => e.side === 'left'))
-
-  const labelMap = new Map<
-    number,
-    { adjustedY: number; labelX: number; side: 'left' | 'right'; elbowPos: { x: number; y: number } }
-  >()
-  rightLabels.forEach((l) =>
-    labelMap.set(l.idx, { adjustedY: l.adjustedY, labelX: LABEL_X_RIGHT, side: 'right', elbowPos: l.elbowPos })
-  )
-  leftLabels.forEach((l) =>
-    labelMap.set(l.idx, { adjustedY: l.adjustedY, labelX: LABEL_X_LEFT, side: 'left', elbowPos: l.elbowPos })
-  )
 
   // Donut slices (shared rendering for compact + full)
   const donutSlices = slicesWithPaths.map((s, i) =>
@@ -238,50 +174,7 @@ export function SpendingDonut({ startDate, endDate, compact = false }: SpendingD
                 {formatCurrency(totalAmount, currency, true)}
               </SvgText>
 
-              {/* Leader lines + labels */}
-              {slicesWithPaths.map((s, i) => {
-                const info = labelMap.get(i)
-                if (!info) return null
-                const { adjustedY, labelX, side, elbowPos } = info
 
-                return (
-                  <G key={`label-${i}`}>
-                    <Path
-                      d={[
-                        `M ${s.arcPos.x.toFixed(2)} ${s.arcPos.y.toFixed(2)}`,
-                        `L ${elbowPos.x.toFixed(2)} ${elbowPos.y.toFixed(2)}`,
-                        `L ${elbowPos.x.toFixed(2)} ${adjustedY.toFixed(2)}`,
-                        `L ${labelX} ${adjustedY.toFixed(2)}`,
-                      ].join(' ')}
-                      stroke={s.color}
-                      strokeWidth="1.5"
-                      fill="none"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <SvgText
-                      x={labelX}
-                      y={adjustedY - 5}
-                      textAnchor={side === 'right' ? 'start' : 'end'}
-                      fill={colors.textPrimary}
-                      fontSize="11"
-                      fontFamily="DMSans_500Medium"
-                    >
-                      {s.label}
-                    </SvgText>
-                    <SvgText
-                      x={labelX}
-                      y={adjustedY + 8}
-                      textAnchor={side === 'right' ? 'start' : 'end'}
-                      fill={colors.textMuted}
-                      fontSize="10"
-                      fontFamily="DMSans_400Regular"
-                    >
-                      {s.percentage.toFixed(0)}%
-                    </SvgText>
-                  </G>
-                )
-              })}
             </G>
           </Svg>
         </View>

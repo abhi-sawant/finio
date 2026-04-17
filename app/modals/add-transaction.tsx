@@ -21,27 +21,85 @@ import { LabelPicker } from '@/components/common/LabelPicker'
 import { useFinanceStore } from '@/store/useFinanceStore'
 import { showToast } from '@/components/common/Toast'
 import { successHaptic, errorHaptic, lightHaptic } from '@/utils/haptics'
-import type { Category, TransactionType } from '@/types'
+import type { Account, Category, TransactionType } from '@/types'
+
+type ChipStyles = ReturnType<typeof makeStyles>
+
+interface AccountChipGroupProps {
+  accounts: Account[]
+  selectedId: string
+  onSelect: (id: string) => void
+  styles: ChipStyles
+}
+
+function AccountChipGroup({ accounts, selectedId, onSelect, styles }: AccountChipGroupProps) {
+  const regular = accounts.filter((a) => a.type !== 'credit')
+  const credit = accounts.filter((a) => a.type === 'credit')
+  const hasBoth = regular.length > 0 && credit.length > 0
+
+  const renderChips = (list: Account[]) =>
+    list.map((acc) => (
+      <TouchableOpacity
+        key={acc.id}
+        onPress={() => onSelect(acc.id)}
+        style={[
+          styles.accountChip,
+          selectedId === acc.id && styles.accountChipActive,
+        ]}
+      >
+        <Text
+          style={[
+            styles.accountChipLabel,
+            selectedId === acc.id && styles.accountChipLabelActive,
+          ]}
+        >
+          {acc.name}
+        </Text>
+      </TouchableOpacity>
+    ))
+
+  return (
+    <View style={{ gap: 2 }}>
+      {hasBoth ? (
+        <>
+          <View>
+            <Text style={styles.accountGroupLabel}>Cash / Bank</Text>
+            <View style={styles.accountRow}>{renderChips(regular)}</View>
+          </View>
+          <View>
+            <Text style={styles.accountGroupLabel}>Credit Cards</Text>
+            <View style={styles.accountRow}>{renderChips(credit)}</View>
+          </View>
+        </>
+      ) : (
+        <View style={styles.accountRow}>{renderChips(accounts)}</View>
+      )}
+    </View>
+  )
+}
 
 export default function AddTransactionModal() {
   const colors = useColors()
   const styles = makeStyles(colors)
   const router = useRouter()
   const insets = useSafeAreaInsets()
-  const { id } = useLocalSearchParams<{ id?: string }>()
+  const { id, payBillAccountId } = useLocalSearchParams<{ id?: string; payBillAccountId?: string }>()
   const { transactions, accounts, categories, settings, addTransaction, updateTransaction } =
     useFinanceStore()
 
   const existing = id ? transactions.find((t) => t.id === id) : undefined
   const isEdit = !!existing
 
+  // When opened via "Pay Bill", pre-set type to transfer + pre-select the credit card as destination
+  const initialType: TransactionType = existing?.type ?? (payBillAccountId ? 'transfer' : 'expense')
+
   // Form state
-  const [type, setType] = useState<TransactionType>(existing?.type ?? 'expense')
+  const [type, setType] = useState<TransactionType>(initialType)
   const [amount, setAmount] = useState(existing?.amount ?? 0)
   const [accountId, setAccountId] = useState(
-    existing?.accountId ?? (accounts[0]?.id ?? '')
+    existing?.accountId ?? (accounts.find((a) => a.type !== 'credit')?.id ?? accounts[0]?.id ?? '')
   )
-  const [toAccountId, setToAccountId] = useState(existing?.toAccountId ?? '')
+  const [toAccountId, setToAccountId] = useState(existing?.toAccountId ?? payBillAccountId ?? '')
   const [categoryId, setCategoryId] = useState(existing?.categoryId ?? '')
   const [labelIds, setLabelIds] = useState<string[]>(existing?.labels ?? [])
   const [note, setNote] = useState(existing?.note ?? '')
@@ -216,62 +274,24 @@ export default function AddTransactionModal() {
             <Text style={styles.fieldLabel}>
               {type === 'transfer' ? 'From Account' : 'Account'}
             </Text>
-            <View style={styles.accountRow}>
-              {accounts.map((acc) => (
-                <TouchableOpacity
-                  key={acc.id}
-                  onPress={() => {
-                    lightHaptic()
-                    setAccountId(acc.id)
-                  }}
-                  style={[
-                    styles.accountChip,
-                    accountId === acc.id && styles.accountChipActive,
-                  ]}
-                >
-                  <Text
-                    style={[
-                      styles.accountChipLabel,
-                      accountId === acc.id && styles.accountChipLabelActive,
-                    ]}
-                  >
-                    {acc.name}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
+            <AccountChipGroup
+              accounts={accounts}
+              selectedId={accountId}
+              onSelect={(id) => { lightHaptic(); setAccountId(id) }}
+              styles={styles}
+            />
           </View>
 
           {/* To Account (transfer only) */}
           {type === 'transfer' && (
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>To Account</Text>
-              <View style={styles.accountRow}>
-                {accounts
-                  .filter((acc) => acc.id !== accountId)
-                  .map((acc) => (
-                    <TouchableOpacity
-                      key={acc.id}
-                      onPress={() => {
-                        lightHaptic()
-                        setToAccountId(acc.id)
-                      }}
-                      style={[
-                        styles.accountChip,
-                        toAccountId === acc.id && styles.accountChipActive,
-                      ]}
-                    >
-                      <Text
-                        style={[
-                          styles.accountChipLabel,
-                          toAccountId === acc.id && styles.accountChipLabelActive,
-                        ]}
-                      >
-                        {acc.name}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
-              </View>
+              <AccountChipGroup
+                accounts={accounts.filter((acc) => acc.id !== accountId)}
+                selectedId={toAccountId}
+                onSelect={(id) => { lightHaptic(); setToAccountId(id) }}
+                styles={styles}
+              />
             </View>
           )}
 
@@ -449,6 +469,15 @@ function makeStyles(colors: ColorPalette) {
   },
   accountChipLabelActive: {
     color: colors.primary,
+  },
+  accountGroupLabel: {
+    fontFamily: 'DMSans_500Medium',
+    fontSize: 11,
+    color: colors.textMuted,
+    textTransform: 'uppercase' as const,
+    letterSpacing: 0.5,
+    marginBottom: 2,
+    marginTop: 4,
   },
   dateTimeRow: {
     flexDirection: 'row',

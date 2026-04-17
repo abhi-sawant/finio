@@ -5,12 +5,36 @@ import type { Account, Category, MonthlySummary, Transaction, TransactionType } 
 // Basic selectors (pass state slices for memoization control)
 // ───────────────────────────────────────────────────────────
 
+/**
+ * Net worth = sum of all account balances.
+ * Credit accounts naturally carry negative balances when money is owed,
+ * so this already correctly subtracts outstanding credit debt from the total.
+ */
 export function getTotalBalance(accounts: Account[]): number {
   return accounts.reduce((sum, a) => sum + a.balance, 0)
 }
 
-export function getAccountById(accounts: Account[], id: string): Account | undefined {
-  return accounts.find((a) => a.id === id)
+// ───────────────────────────────────────────────────────────
+// Credit card selectors
+// ───────────────────────────────────────────────────────────
+
+/**
+ * Total amount currently owed across all credit accounts (always >= 0).
+ */
+export function getTotalCreditOutstanding(accounts: Account[]): number {
+  return accounts
+    .filter((a) => a.type === 'credit' && a.balance < 0)
+    .reduce((sum, a) => sum + Math.abs(a.balance), 0)
+}
+
+/**
+ * Returns credit accounts that currently have an outstanding balance (balance < 0),
+ * sorted by amount owed descending (largest debt first).
+ */
+export function getUpcomingCreditPayments(accounts: Account[]): Account[] {
+  return accounts
+    .filter((a) => a.type === 'credit' && a.balance < 0)
+    .sort((a, b) => Math.abs(b.balance) - Math.abs(a.balance))
 }
 
 export function getCategoryById(categories: Category[], id: string): Category | undefined {
@@ -195,51 +219,6 @@ export function getRecentTransactions(transactions: Transaction[], limit = 8): T
   return [...transactions]
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, limit)
-}
-
-// ───────────────────────────────────────────────────────────
-// Balance trend (daily balances for an account for last N days)
-// ───────────────────────────────────────────────────────────
-
-export function getBalanceTrend(
-  transactions: Transaction[],
-  currentBalance: number,
-  accountId: string,
-  days = 30
-): Array<{ day: number; value: number }> {
-  const now = new Date()
-  // Walk backwards from today, reconstructing daily balances
-  const points: Array<{ day: number; value: number }> = []
-
-  // Sort transactions for this account by date descending
-  const acctTxns = transactions
-    .filter((t) => t.accountId === accountId || t.toAccountId === accountId)
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-
-  let runningBalance = currentBalance
-
-  for (let i = 0; i < days; i++) {
-    const day = new Date(now)
-    day.setDate(now.getDate() - i)
-    day.setHours(23, 59, 59, 999)
-
-    // For each transaction that happened on this day, reverse it
-    for (const t of acctTxns) {
-      const txDate = parseISO(t.date)
-      if (txDate.toDateString() === day.toDateString()) {
-        if (t.accountId === accountId) {
-          if (t.type === 'expense' || t.type === 'transfer') runningBalance += t.amount
-          else if (t.type === 'income') runningBalance -= t.amount
-        } else if (t.toAccountId === accountId && t.type === 'transfer') {
-          runningBalance -= t.amount
-        }
-      }
-    }
-
-    points.unshift({ day: days - i, value: runningBalance })
-  }
-
-  return points
 }
 
 // ───────────────────────────────────────────────────────────

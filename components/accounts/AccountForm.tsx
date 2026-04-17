@@ -34,6 +34,7 @@ const schema = z.object({
   color: z.string().min(1),
   icon: z.string().min(1),
   balance: z.number().min(0),
+  creditLimit: z.number().min(0).optional(),
 })
 
 type FormData = z.infer<typeof schema>
@@ -56,16 +57,34 @@ export function AccountForm({ initialData, onSubmit }: AccountFormProps) {
       type: initialData?.type ?? 'checking',
       color: initialData?.color ?? '#6C63FF',
       icon: initialData?.icon ?? 'landmark',
-      balance: initialData?.balance ?? 0,
+      // For credit accounts the stored balance is negative (debt); show absolute value in the form
+      balance: initialData?.type === 'credit'
+        ? Math.abs(initialData?.balance ?? 0)
+        : (initialData?.balance ?? 0),
+      creditLimit: initialData?.creditLimit,
     },
   })
 
   const selectedColor = watch('color')
   const selectedIcon = watch('icon')
+  const selectedType = watch('type')
+  const isCredit = selectedType === 'credit'
 
   const handleFormSubmit = async (data: FormData) => {
     await successHaptic()
-    onSubmit({ ...data, currency })
+    // Credit balances are stored as negative numbers (debt) internally
+    const outputBalance = data.type === 'credit' ? -data.balance : data.balance
+    onSubmit({
+      name: data.name,
+      type: data.type,
+      color: data.color,
+      icon: data.icon,
+      balance: outputBalance,
+      currency,
+      ...(data.type === 'credit' && data.creditLimit !== undefined
+        ? { creditLimit: data.creditLimit }
+        : {}),
+    })
     showToast({ message: 'Account saved!', type: 'success' })
   }
 
@@ -99,7 +118,7 @@ export function AccountForm({ initialData, onSubmit }: AccountFormProps) {
                 value={field.value}
                 onChangeText={field.onChange}
                 style={[styles.input, errors.name && styles.inputError]}
-                placeholder="e.g. HDFC Savings"
+                placeholder="e.g. HDFC Credit Card"
                 placeholderTextColor={colors.textMuted}
                 selectionColor={colors.primary}
               />
@@ -140,9 +159,16 @@ export function AccountForm({ initialData, onSubmit }: AccountFormProps) {
           />
         </View>
 
-        {/* Opening Balance */}
+        {/* Opening / Outstanding Balance */}
         <View style={styles.field}>
-          <Text style={styles.label}>Opening Balance</Text>
+          <Text style={styles.label}>
+            {isCredit ? 'Current Outstanding' : 'Opening Balance'}
+          </Text>
+          {isCredit && (
+            <Text style={styles.fieldHint}>
+              How much do you currently owe on this card? Enter 0 if fully paid.
+            </Text>
+          )}
           <Controller
             control={control}
             name="balance"
@@ -157,6 +183,34 @@ export function AccountForm({ initialData, onSubmit }: AccountFormProps) {
             )}
           />
         </View>
+
+        {/* ── Credit-card only fields ── */}
+        {isCredit && (
+          <>
+            {/* Credit Limit */}
+            <View style={styles.field}>
+              <Text style={styles.label}>Credit Limit</Text>
+              <Text style={styles.fieldHint}>
+                Your card's total credit limit (optional but recommended for utilization tracking).
+              </Text>
+              <Controller
+                control={control}
+                name="creditLimit"
+                render={({ field }) => (
+                  <View style={styles.amountWrapper}>
+                    <AmountInput
+                      value={field.value ?? 0}
+                      onChange={field.onChange}
+                      currency={currency}
+                    />
+                  </View>
+                )}
+              />
+            </View>
+
+
+          </>
+        )}
 
         {/* Submit */}
         <TouchableOpacity
@@ -213,6 +267,13 @@ function makeStyles(colors: ColorPalette) {
     color: colors.textMuted,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
+  },
+  fieldHint: {
+    fontFamily: 'DMSans_400Regular',
+    fontSize: 12,
+    color: colors.textMuted,
+    lineHeight: 17,
+    marginTop: -4,
   },
   input: {
     backgroundColor: colors.surfaceElevated,

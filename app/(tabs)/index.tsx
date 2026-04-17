@@ -16,6 +16,7 @@ import { useColors } from '@/hooks/useColors'
 import type { ColorPalette } from '@/constants/Colors'
 import { SummaryCards } from '@/components/dashboard/SummaryCards'
 import { RecentTransactions } from '@/components/dashboard/RecentTransactions'
+import { UpcomingPayments } from '@/components/dashboard/UpcomingPayments'
 import { AccountCard } from '@/components/accounts/AccountCard'
 import { SpendingDonut } from '@/components/charts/SpendingDonut'
 import { useFinanceStore } from '@/store/useFinanceStore'
@@ -121,6 +122,9 @@ export default function DashboardScreen() {
 
         {/* Recent Transactions */}
         <RecentTransactions />
+
+        {/* Upcoming Credit Card Payments (only shown when there are outstanding credit balances) */}
+        <UpcomingPayments />
 
         {/* Spending Donut */}
         <View style={styles.section}>

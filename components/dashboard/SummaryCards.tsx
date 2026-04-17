@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
-import Animated, {
+import {
   useSharedValue,
   withTiming,
   useAnimatedReaction,
@@ -19,6 +19,7 @@ import {
   getTotalIncome,
   getTotalExpenses,
 } from '@/utils/calculations'
+import { getTotalCreditOutstanding } from '@/store/selectors'
 import type { Currency } from '@/types'
 
 function AnimatedBalance({ value, currency }: { value: number; currency: Currency }) {
@@ -33,8 +34,7 @@ function AnimatedBalance({ value, currency }: { value: number; currency: Currenc
   }, [value])
 
   useAnimatedReaction(
-    () => animProgress.value * value,
-    (current) => runOnJS(setDisplayValue)(current)
+    () => animProgress.value * value, (current) => runOnJS(setDisplayValue)(current)
   )
 
   return (
@@ -49,6 +49,8 @@ export function SummaryCards() {
   const styles = useMemo(() => makeStyles(colors), [colors])
   const { accounts, transactions, settings } = useFinanceStore()
   const totalBalance = getTotalAccountBalance(accounts)
+  const creditOutstanding = getTotalCreditOutstanding(accounts)
+  const balanceAfterDues = totalBalance - creditOutstanding
   const thisMonth = getCurrentMonthTransactions(transactions)
   const monthIncome = getTotalIncome(thisMonth)
   const monthExpenses = getTotalExpenses(thisMonth)
@@ -71,6 +73,14 @@ export function SummaryCards() {
       >
         <Text style={styles.balanceLabel}>Total Balance</Text>
         <AnimatedBalance value={totalBalance} currency={currency} />
+        {creditOutstanding > 0 && (
+          <Text style={styles.afterDuesLabel}>
+            After paying dues:{' '}
+            <Text style={styles.afterDuesAmount}>
+              {formatCurrency(balanceAfterDues, currency, true)}
+            </Text>
+          </Text>
+        )}
 
         {/* Month summary row */}
         <View style={styles.monthRow}>
@@ -128,6 +138,17 @@ function makeStyles(colors: ColorPalette) {
     fontSize: 36,
     color: colors.textPrimary,
     marginVertical: 4,
+  },
+  afterDuesLabel: {
+    fontFamily: 'DMSans_400Regular',
+    fontSize: 12,
+    color: colors.textMuted,
+    marginTop: -4,
+    marginBottom: 2,
+  },
+  afterDuesAmount: {
+    fontFamily: 'DMSans_500Medium',
+    color: colors.textPrimary,
   },
   monthRow: {
     flexDirection: 'row',

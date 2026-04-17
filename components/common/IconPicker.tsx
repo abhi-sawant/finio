@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native'
+import { TouchableOpacity, ScrollView, StyleSheet } from 'react-native'
 import * as LucideIcons from 'lucide-react-native'
 import { useColors } from '@/hooks/useColors'
 import type { ColorPalette } from '@/constants/Colors'

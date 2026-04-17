@@ -18,20 +18,6 @@ export async function lightHaptic(): Promise<void> {
   }
 }
 
-export async function mediumHaptic(): Promise<void> {
-  if (!isHapticEnabled()) return
-  try {
-    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
-  } catch {}
-}
-
-export async function heavyHaptic(): Promise<void> {
-  if (!isHapticEnabled()) return
-  try {
-    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
-  } catch {}
-}
-
 export async function successHaptic(): Promise<void> {
   if (!isHapticEnabled()) return
   try {
@@ -50,12 +36,5 @@ export async function warningHaptic(): Promise<void> {
   if (!isHapticEnabled()) return
   try {
     await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning)
-  } catch {}
-}
-
-export async function selectionHaptic(): Promise<void> {
-  if (!isHapticEnabled()) return
-  try {
-    await Haptics.selectionAsync()
   } catch {}
 }

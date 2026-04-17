@@ -40,14 +40,6 @@ export function formatCurrency(
   }).format(amount)
 }
 
-export function formatAmount(amount: number, currency: Currency = 'INR'): string {
-  return formatCurrency(amount, currency)
-}
-
-export function formatNumber(value: number): string {
-  return new Intl.NumberFormat('en-IN').format(value)
-}
-
 // ───────────────────────────────────────────────────────────
 // Date formatting
 // ───────────────────────────────────────────────────────────
@@ -63,54 +55,13 @@ export function formatFullDate(dateStr: string): string {
   return format(parseISO(dateStr), 'dd MMMM yyyy')
 }
 
-export function formatShortDate(dateStr: string): string {
-  return format(parseISO(dateStr), 'dd MMM')
-}
-
-export function formatMonthYear(dateStr: string): string {
-  return format(parseISO(dateStr), 'MMMM yyyy')
-}
-
-export function formatRelativeTime(dateStr: string): string {
-  return formatDistanceToNow(parseISO(dateStr), { addSuffix: true })
-}
-
 export function formatTime(dateStr: string): string {
   return format(parseISO(dateStr), 'h:mm a')
 }
 
 // ───────────────────────────────────────────────────────────
-// Amount input helpers
-// ───────────────────────────────────────────────────────────
-
-export function parseAmountInput(raw: string): number {
-  const cleaned = raw.replace(/[^0-9.]/g, '')
-  const parsed = parseFloat(cleaned)
-  return isNaN(parsed) ? 0 : parsed
-}
-
-export function formatAmountInput(value: number, currency: Currency = 'INR'): string {
-  if (value === 0) return ''
-  const locale = CURRENCY_LOCALE_MAP[currency]
-  return new Intl.NumberFormat(locale, {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 2,
-  }).format(value)
-}
-
-// ───────────────────────────────────────────────────────────
 // Misc
 // ───────────────────────────────────────────────────────────
-
-export function getInitials(name: string): string {
-  return name
-    .trim()
-    .split(' ')
-    .map((w) => w[0]?.toUpperCase() ?? '')
-    .slice(0, 2)
-    .join('')
-}
-
 export function truncate(text: string, maxLength: number): string {
   if (text.length <= maxLength) return text
   return text.slice(0, maxLength - 1) + '…'

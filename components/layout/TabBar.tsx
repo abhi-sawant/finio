@@ -18,7 +18,6 @@ import {
   ArrowLeftRight,
   Wallet,
   BarChart3,
-  Settings2,
   Plus,
 } from 'lucide-react-native'
 import { useColors } from '@/hooks/useColors'
@@ -151,7 +150,7 @@ function FabButton({ onPress }: { onPress: () => void }) {
   )
 }
 
-export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
+export function TabBar({ state, navigation }: BottomTabBarProps) {
   const colors = useColors()
   const styles = makeStyles(colors)
   const insets = useSafeAreaInsets()
