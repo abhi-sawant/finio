@@ -1,105 +1,96 @@
-import React, { useCallback, useMemo } from 'react'
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
-import { Gesture, GestureDetector } from 'react-native-gesture-handler'
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-} from 'react-native-reanimated'
-import { Pencil, Trash2 } from 'lucide-react-native'
-import { useColors } from '@/hooks/useColors'
-import type { ColorPalette } from '@/constants/Colors'
-import { LucideIcon } from '@/components/common/IconPicker'
-import { formatCurrency, formatTime, hexToRgba } from '@/utils/formatters'
-import { getCategoryById, getBalanceAfterTransaction } from '@/store/selectors'
-import { useFinanceStore } from '@/store/useFinanceStore'
-import type { Transaction } from '@/types'
+import React, { useCallback, useMemo } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
+import { Pencil, Trash2 } from 'lucide-react-native';
+import { useColors } from '@/hooks/useColors';
+import type { ColorPalette } from '@/constants/Colors';
+import { LucideIcon } from '@/components/common/IconPicker';
+import { formatCurrency, formatTime, hexToRgba } from '@/utils/formatters';
+import { getCategoryById, getBalanceAfterTransaction } from '@/store/selectors';
+import { useFinanceStore } from '@/store/useFinanceStore';
+import type { Transaction } from '@/types';
 
 interface TransactionItemProps {
-  transaction: Transaction
-  onPress: (transaction: Transaction) => void
-  onEdit: (transaction: Transaction) => void
-  onDelete: (transaction: Transaction) => void
-  currency?: string
+  transaction: Transaction;
+  onPress: (transaction: Transaction) => void;
+  onEdit: (transaction: Transaction) => void;
+  onDelete: (transaction: Transaction) => void;
+  currency?: string;
 }
 
-const SWIPE_THRESHOLD = 60
-const ACTION_WIDTH = 80
+const SWIPE_THRESHOLD = 60;
+const ACTION_WIDTH = 80;
 
-export function TransactionItem({
-  transaction,
-  onPress,
-  onEdit,
-  onDelete,
-}: TransactionItemProps) {
-  const colors = useColors()
-  const styles = useMemo(() => makeStyles(colors), [colors])
-  const categories = useFinanceStore((s) => s.categories)
-  const allLabels = useFinanceStore((s) => s.labels)
-  const allTransactions = useFinanceStore((s) => s.transactions)
-  const accounts = useFinanceStore((s) => s.accounts)
-  const storeCurrency = useFinanceStore((s) => s.settings.currency)
-  const category = getCategoryById(categories, transaction.categoryId)
+export function TransactionItem({ transaction, onPress, onEdit, onDelete }: TransactionItemProps) {
+  const colors = useColors();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
+  const categories = useFinanceStore((s) => s.categories);
+  const allLabels = useFinanceStore((s) => s.labels);
+  const allTransactions = useFinanceStore((s) => s.transactions);
+  const accounts = useFinanceStore((s) => s.accounts);
+  const storeCurrency = useFinanceStore((s) => s.settings.currency);
+  const category = getCategoryById(categories, transaction.categoryId);
   const txLabels = useMemo(
     () => allLabels.filter((l) => transaction.labels.includes(l.id)),
-    [allLabels, transaction.labels]
-  )
+    [allLabels, transaction.labels],
+  );
 
   // Calculate closing balance for this transaction
   const account = useMemo(
     () => accounts.find((a) => a.id === transaction.accountId),
-    [accounts, transaction.accountId]
-  )
+    [accounts, transaction.accountId],
+  );
   const closingBalance = useMemo(() => {
-    if (!account) return 0
-    return getBalanceAfterTransaction(allTransactions, transaction, account.balance)
-  }, [allTransactions, transaction, account])
+    if (!account) return 0;
+    return getBalanceAfterTransaction(allTransactions, transaction, account.balance);
+  }, [allTransactions, transaction, account]);
 
-  const translateX = useSharedValue(0)
-  const startX = useSharedValue(0)
+  const translateX = useSharedValue(0);
+  const startX = useSharedValue(0);
 
   const pan = Gesture.Pan()
     .activeOffsetX([-10, 10])
     .onStart(() => {
-      startX.value = translateX.value
+      startX.value = translateX.value;
     })
     .onUpdate((e) => {
-      const newX = startX.value + e.translationX
-      translateX.value = Math.max(-ACTION_WIDTH, Math.min(ACTION_WIDTH, newX))
+      const newX = startX.value + e.translationX;
+      translateX.value = Math.max(-ACTION_WIDTH, Math.min(ACTION_WIDTH, newX));
     })
     .onEnd((e) => {
       if (e.translationX > SWIPE_THRESHOLD) {
-        translateX.value = withSpring(ACTION_WIDTH, { damping: 20, stiffness: 200 })
+        translateX.value = withSpring(ACTION_WIDTH, { damping: 20, stiffness: 200 });
       } else if (e.translationX < -SWIPE_THRESHOLD) {
-        translateX.value = withSpring(-ACTION_WIDTH, { damping: 20, stiffness: 200 })
+        translateX.value = withSpring(-ACTION_WIDTH, { damping: 20, stiffness: 200 });
       } else {
-        translateX.value = withSpring(0, { damping: 20, stiffness: 200 })
+        translateX.value = withSpring(0, { damping: 20, stiffness: 200 });
       }
-    })
+    });
 
   const rowStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: translateX.value }],
-  }))
+  }));
 
   const amountColor =
     transaction.type === 'income'
       ? colors.income
       : transaction.type === 'expense'
-      ? colors.expense
-      : colors.transfer
+        ? colors.expense
+        : colors.transfer;
 
   const amountPrefix =
-    transaction.type === 'income' ? '+' : transaction.type === 'expense' ? '-' : '↔'
+    transaction.type === 'income' ? '+' : transaction.type === 'expense' ? '-' : '↔';
 
   const handleEdit = useCallback(() => {
-    translateX.value = withSpring(0)
-    onEdit(transaction)
-  }, [transaction])
+    translateX.value = withSpring(0);
+    onEdit(transaction);
+  }, [transaction]);
 
   const handleDelete = useCallback(() => {
-    translateX.value = withSpring(0)
-    onDelete(transaction)
-  }, [transaction])
+    translateX.value = withSpring(0);
+    onDelete(transaction);
+  }, [transaction]);
 
   return (
     <View style={styles.container}>
@@ -125,10 +116,7 @@ export function TransactionItem({
             {/* Category icon */}
             {category ? (
               <View
-                style={[
-                  styles.iconCircle,
-                  { backgroundColor: hexToRgba(category.color, 0.2) },
-                ]}
+                style={[styles.iconCircle, { backgroundColor: hexToRgba(category.color, 0.2) }]}
               >
                 <LucideIcon name={category.icon} size={18} color={category.color} />
               </View>
@@ -171,102 +159,102 @@ export function TransactionItem({
         </Animated.View>
       </GestureDetector>
     </View>
-  )
+  );
 }
 
 function makeStyles(colors: ColorPalette) {
   return StyleSheet.create({
-  container: {
-    position: 'relative',
-    marginVertical: 1,
-  },
-  editAction: {
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    bottom: 0,
-    width: ACTION_WIDTH,
-    backgroundColor: colors.transfer,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 4,
-    borderRadius: 0,
-  },
-  deleteAction: {
-    position: 'absolute',
-    right: 0,
-    top: 0,
-    bottom: 0,
-    width: ACTION_WIDTH,
-    backgroundColor: colors.expense,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 4,
-  },
-  actionText: {
-    fontFamily: 'DMSans_500Medium',
-    fontSize: 11,
-    color: '#fff',
-  },
-  row: {
-    backgroundColor: colors.background,
-  },
-  rowInner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    backgroundColor: colors.background,
-  },
-  iconCircle: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  info: {
-    flex: 1,
-    gap: 4,
-  },
-  note: {
-    fontFamily: 'DMSans_500Medium',
-    fontSize: 14,
-    color: colors.textPrimary,
-  },
-  metaRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  time: {
-    fontFamily: 'DMSans_400Regular',
-    fontSize: 12,
-    color: colors.textMuted,
-  },
-  labelsRow: {
-    flexDirection: 'row',
-    gap: 4,
-    alignItems: 'center',
-  },
-  labelDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-  },
-  amountContainer: {
-    alignItems: 'flex-end',
-    gap: 2,
-  },
-  amount: {
-    fontFamily: 'DMSans_700Bold',
-    fontSize: 14,
-  },
-  closingBalance: {
-    fontFamily: 'DMSans_400Regular',
-    fontSize: 11,
-    color: colors.textMuted,
-  },
-})
+    container: {
+      position: 'relative',
+      marginVertical: 1,
+    },
+    editAction: {
+      position: 'absolute',
+      left: 0,
+      top: 0,
+      bottom: 0,
+      width: ACTION_WIDTH,
+      backgroundColor: colors.transfer,
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 4,
+      borderRadius: 0,
+    },
+    deleteAction: {
+      position: 'absolute',
+      right: 0,
+      top: 0,
+      bottom: 0,
+      width: ACTION_WIDTH,
+      backgroundColor: colors.expense,
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 4,
+    },
+    actionText: {
+      fontFamily: 'DMSans_500Medium',
+      fontSize: 11,
+      color: '#fff',
+    },
+    row: {
+      backgroundColor: colors.background,
+    },
+    rowInner: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 12,
+      paddingVertical: 12,
+      paddingHorizontal: 16,
+      backgroundColor: colors.background,
+    },
+    iconCircle: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    info: {
+      flex: 1,
+      gap: 4,
+    },
+    note: {
+      fontFamily: 'DMSans_500Medium',
+      fontSize: 14,
+      color: colors.textPrimary,
+    },
+    metaRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+    },
+    time: {
+      fontFamily: 'DMSans_400Regular',
+      fontSize: 12,
+      color: colors.textMuted,
+    },
+    labelsRow: {
+      flexDirection: 'row',
+      gap: 4,
+      alignItems: 'center',
+    },
+    labelDot: {
+      width: 6,
+      height: 6,
+      borderRadius: 3,
+    },
+    amountContainer: {
+      alignItems: 'flex-end',
+      gap: 2,
+    },
+    amount: {
+      fontFamily: 'DMSans_700Bold',
+      fontSize: 14,
+    },
+    closingBalance: {
+      fontFamily: 'DMSans_400Regular',
+      fontSize: 11,
+      color: colors.textMuted,
+    },
+  });
 }

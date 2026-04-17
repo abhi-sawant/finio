@@ -1,17 +1,13 @@
-import React, { useState, useCallback, useMemo } from 'react'
-import {
-  View,
-  Text,
-  StyleSheet,
-} from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useColors } from '@/hooks/useColors'
-import type { ColorPalette } from '@/constants/Colors'
-import { TransactionFilters, FilterState } from '@/components/transactions/TransactionFilters'
-import { TransactionList } from '@/components/transactions/TransactionList'
-import { useFinanceStore } from '@/store/useFinanceStore'
-import { filterTransactions } from '@/store/selectors'
-import { lightHaptic } from '@/utils/haptics'
+import React, { useState, useCallback, useMemo } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useColors } from '@/hooks/useColors';
+import type { ColorPalette } from '@/constants/Colors';
+import { TransactionFilters, FilterState } from '@/components/transactions/TransactionFilters';
+import { TransactionList } from '@/components/transactions/TransactionList';
+import { useFinanceStore } from '@/store/useFinanceStore';
+import { filterTransactions } from '@/store/selectors';
+import { lightHaptic } from '@/utils/haptics';
 
 const DEFAULT_FILTERS: FilterState = {
   typeIds: [],
@@ -19,15 +15,15 @@ const DEFAULT_FILTERS: FilterState = {
   categoryIds: [],
   labelIds: [],
   searchQuery: '',
-}
+};
 
 export default function TransactionsScreen() {
-  const colors = useColors()
-  const styles = useMemo(() => makeStyles(colors), [colors])
-  const insets = useSafeAreaInsets()
-  const { transactions } = useFinanceStore()
-  const [refreshing, setRefreshing] = useState(false)
-  const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS)
+  const colors = useColors();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
+  const insets = useSafeAreaInsets();
+  const { transactions } = useFinanceStore();
+  const [refreshing, setRefreshing] = useState(false);
+  const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS);
 
   const filtered = useMemo(
     () =>
@@ -36,23 +32,23 @@ export default function TransactionsScreen() {
         ...(filters.accountId && { accountId: filters.accountId }),
         ...(filters.categoryIds?.length && { categoryIds: filters.categoryIds }),
         ...(filters.labelIds?.length && { labelIds: filters.labelIds }),
-        ...((filters.searchQuery?.trim()) && { searchQuery: filters.searchQuery }),
+        ...(filters.searchQuery?.trim() && { searchQuery: filters.searchQuery }),
       }),
-    [transactions, filters]
-  )
+    [transactions, filters],
+  );
 
   const onRefresh = useCallback(async () => {
-    setRefreshing(true)
-    await lightHaptic()
-    setTimeout(() => setRefreshing(false), 500)
-  }, [])
+    setRefreshing(true);
+    await lightHaptic();
+    setTimeout(() => setRefreshing(false), 500);
+  }, []);
 
   const hasFilters =
     !!filters.typeIds?.length ||
     !!filters.accountId ||
     !!filters.categoryIds?.length ||
     !!filters.labelIds?.length ||
-    !!filters.searchQuery?.trim()
+    !!filters.searchQuery?.trim();
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -82,31 +78,31 @@ export default function TransactionsScreen() {
         }
       />
     </View>
-  )
+  );
 }
 
 function makeStyles(colors: ColorPalette) {
   return StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-  },
-  title: {
-    fontFamily: 'Sora_700Bold',
-    fontSize: 24,
-    color: colors.textPrimary,
-  },
-  filterCount: {
-    fontFamily: 'DMSans_400Regular',
-    fontSize: 13,
-    color: colors.textMuted,
-  },
-})
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingHorizontal: 20,
+      paddingVertical: 16,
+    },
+    title: {
+      fontFamily: 'Sora_700Bold',
+      fontSize: 24,
+      color: colors.textPrimary,
+    },
+    filterCount: {
+      fontFamily: 'DMSans_400Regular',
+      fontSize: 13,
+      color: colors.textMuted,
+    },
+  });
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -9,55 +9,55 @@ import {
   Platform,
   ScrollView,
   ActivityIndicator,
-} from 'react-native'
-import { useRouter } from 'expo-router'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { ArrowLeft, Eye, EyeOff, Mail, Lock, User } from 'lucide-react-native'
-import { useColors } from '@/hooks/useColors'
-import type { ColorPalette } from '@/constants/Colors'
-import { api } from '@/services/api'
-import { showToast } from '@/components/common/Toast'
+} from 'react-native';
+import { useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ArrowLeft, Eye, EyeOff, Mail, Lock, User } from 'lucide-react-native';
+import { useColors } from '@/hooks/useColors';
+import type { ColorPalette } from '@/constants/Colors';
+import { api } from '@/services/api';
+import { showToast } from '@/components/common/Toast';
 
 export default function RegisterScreen() {
-  const router = useRouter()
-  const insets = useSafeAreaInsets()
-  const colors = useColors()
-  const styles = makeStyles(colors)
+  const router = useRouter();
+  const insets = useSafeAreaInsets();
+  const colors = useColors();
+  const styles = makeStyles(colors);
 
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleRegister = async () => {
-    const n = name.trim()
-    const e = email.trim().toLowerCase()
-    const p = password
+    const n = name.trim();
+    const e = email.trim().toLowerCase();
+    const p = password;
 
     if (!n || !e || !p) {
-      showToast({ message: 'Please fill in all fields', type: 'error' })
-      return
+      showToast({ message: 'Please fill in all fields', type: 'error' });
+      return;
     }
     if (p.length < 8) {
-      showToast({ message: 'Password must be at least 8 characters', type: 'error' })
-      return
+      showToast({ message: 'Password must be at least 8 characters', type: 'error' });
+      return;
     }
 
-    setLoading(true)
+    setLoading(true);
     try {
-      await api.register(n, e, p)
-      showToast({ message: 'Check your email for the OTP', type: 'success' })
-      router.push(`/auth/verify-otp?email=${encodeURIComponent(e)}` as never)
+      await api.register(n, e, p);
+      showToast({ message: 'Check your email for the OTP', type: 'success' });
+      router.push(`/auth/verify-otp?email=${encodeURIComponent(e)}` as never);
     } catch (err: unknown) {
       showToast({
         message: err instanceof Error ? err.message : 'Registration failed',
         type: 'error',
-      })
+      });
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <KeyboardAvoidingView
@@ -168,102 +168,102 @@ export default function RegisterScreen() {
         </ScrollView>
       </View>
     </KeyboardAvoidingView>
-  )
+  );
 }
 
 function makeStyles(colors: ColorPalette) {
   return StyleSheet.create({
-  flex: { flex: 1, backgroundColor: colors.background },
-  container: { flex: 1, backgroundColor: colors.background },
-  header: {
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-  },
-  scroll: {
-    paddingHorizontal: 24,
-    paddingTop: 16,
-  },
-  titleBlock: {
-    marginBottom: 36,
-  },
-  title: {
-    fontFamily: 'Sora_700Bold',
-    fontSize: 28,
-    color: colors.textPrimary,
-    marginBottom: 6,
-  },
-  subtitle: {
-    fontFamily: 'DMSans_400Regular',
-    fontSize: 15,
-    color: colors.textMuted,
-    lineHeight: 22,
-  },
-  form: {
-    gap: 12,
-  },
-  field: {
-    backgroundColor: colors.surface,
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  inputRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 14,
-    paddingVertical: 4,
-  },
-  inputIcon: {
-    marginRight: 10,
-  },
-  input: {
-    flex: 1,
-    fontFamily: 'DMSans_400Regular',
-    fontSize: 15,
-    color: colors.textPrimary,
-    paddingVertical: 14,
-  },
-  inputFlex: {
-    flex: 1,
-  },
-  btn: {
-    backgroundColor: colors.primary,
-    borderRadius: 14,
-    paddingVertical: 16,
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  btnDisabled: {
-    opacity: 0.6,
-  },
-  btnLabel: {
-    fontFamily: 'Sora_700Bold',
-    fontSize: 15,
-    color: '#fff',
-  },
-  disclaimer: {
-    fontFamily: 'DMSans_400Regular',
-    fontSize: 12,
-    color: colors.textMuted,
-    textAlign: 'center',
-    lineHeight: 18,
-    marginTop: 4,
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 32,
-  },
-  footerText: {
-    fontFamily: 'DMSans_400Regular',
-    fontSize: 14,
-    color: colors.textMuted,
-  },
-  link: {
-    fontFamily: 'DMSans_500Medium',
-    fontSize: 14,
-    color: colors.primary,
-  },
-})
+    flex: { flex: 1, backgroundColor: colors.background },
+    container: { flex: 1, backgroundColor: colors.background },
+    header: {
+      paddingHorizontal: 20,
+      paddingVertical: 12,
+    },
+    scroll: {
+      paddingHorizontal: 24,
+      paddingTop: 16,
+    },
+    titleBlock: {
+      marginBottom: 36,
+    },
+    title: {
+      fontFamily: 'Sora_700Bold',
+      fontSize: 28,
+      color: colors.textPrimary,
+      marginBottom: 6,
+    },
+    subtitle: {
+      fontFamily: 'DMSans_400Regular',
+      fontSize: 15,
+      color: colors.textMuted,
+      lineHeight: 22,
+    },
+    form: {
+      gap: 12,
+    },
+    field: {
+      backgroundColor: colors.surface,
+      borderRadius: 14,
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    inputRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: 14,
+      paddingVertical: 4,
+    },
+    inputIcon: {
+      marginRight: 10,
+    },
+    input: {
+      flex: 1,
+      fontFamily: 'DMSans_400Regular',
+      fontSize: 15,
+      color: colors.textPrimary,
+      paddingVertical: 14,
+    },
+    inputFlex: {
+      flex: 1,
+    },
+    btn: {
+      backgroundColor: colors.primary,
+      borderRadius: 14,
+      paddingVertical: 16,
+      alignItems: 'center',
+      marginTop: 8,
+    },
+    btnDisabled: {
+      opacity: 0.6,
+    },
+    btnLabel: {
+      fontFamily: 'Sora_700Bold',
+      fontSize: 15,
+      color: '#fff',
+    },
+    disclaimer: {
+      fontFamily: 'DMSans_400Regular',
+      fontSize: 12,
+      color: colors.textMuted,
+      textAlign: 'center',
+      lineHeight: 18,
+      marginTop: 4,
+    },
+    footer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: 32,
+    },
+    footerText: {
+      fontFamily: 'DMSans_400Regular',
+      fontSize: 14,
+      color: colors.textMuted,
+    },
+    link: {
+      fontFamily: 'DMSans_500Medium',
+      fontSize: 14,
+      color: colors.primary,
+    },
+  });
 }

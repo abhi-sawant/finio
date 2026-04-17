@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useCallback } from 'react'
-import { Text, StyleSheet, Dimensions } from 'react-native'
+import React, { useEffect, useRef, useCallback } from 'react';
+import { Text, StyleSheet, Dimensions } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -7,22 +7,22 @@ import Animated, {
   withSpring,
   runOnJS,
   Easing,
-} from 'react-native-reanimated'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { DarkColors } from '@/constants/Colors'
+} from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { DarkColors } from '@/constants/Colors';
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window')
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
-type ToastType = 'success' | 'error' | 'info' | 'warning'
+type ToastType = 'success' | 'error' | 'info' | 'warning';
 
 export interface ToastConfig {
-  message: string
-  type?: ToastType
-  duration?: number
+  message: string;
+  type?: ToastType;
+  duration?: number;
 }
 
 interface ToastHandle {
-  show: (config: ToastConfig) => void
+  show: (config: ToastConfig) => void;
 }
 
 const TOAST_COLORS: Record<ToastType, string> = {
@@ -30,51 +30,56 @@ const TOAST_COLORS: Record<ToastType, string> = {
   error: DarkColors.expense,
   info: DarkColors.primary,
   warning: '#f59e0b',
-}
+};
 
 // Global ref to trigger toasts from anywhere
-let toastRef: ToastHandle | null = null
+let toastRef: ToastHandle | null = null;
 
 export function showToast(config: ToastConfig) {
-  toastRef?.show(config)
+  toastRef?.show(config);
 }
 
 export function Toast() {
-  const insets = useSafeAreaInsets()
-  const translateY = useSharedValue(-120)
-  const opacity = useSharedValue(0)
-  const hideTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const insets = useSafeAreaInsets();
+  const translateY = useSharedValue(-120);
+  const opacity = useSharedValue(0);
+  const hideTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const [currentConfig, setCurrentConfig] = React.useState<ToastConfig | null>(null)
+  const [currentConfig, setCurrentConfig] = React.useState<ToastConfig | null>(null);
 
   const hide = useCallback(() => {
-    translateY.value = withTiming(-120, { duration: 300, easing: Easing.in(Easing.ease) })
+    translateY.value = withTiming(-120, { duration: 300, easing: Easing.in(Easing.ease) });
     opacity.value = withTiming(0, { duration: 300 }, () => {
-      runOnJS(setCurrentConfig)(null)
-    })
-  }, [])
+      runOnJS(setCurrentConfig)(null);
+    });
+  }, []);
 
-  const show = useCallback((config: ToastConfig) => {
-    if (hideTimeout.current) clearTimeout(hideTimeout.current)
-    setCurrentConfig(config)
-    translateY.value = withSpring(0, { damping: 20, stiffness: 200 })
-    opacity.value = withTiming(1, { duration: 200 })
-    hideTimeout.current = setTimeout(hide, config.duration ?? 3000)
-  }, [hide])
+  const show = useCallback(
+    (config: ToastConfig) => {
+      if (hideTimeout.current) clearTimeout(hideTimeout.current);
+      setCurrentConfig(config);
+      translateY.value = withSpring(0, { damping: 20, stiffness: 200 });
+      opacity.value = withTiming(1, { duration: 200 });
+      hideTimeout.current = setTimeout(hide, config.duration ?? 3000);
+    },
+    [hide],
+  );
 
   useEffect(() => {
-    toastRef = { show }
-    return () => { toastRef = null }
-  }, [show])
+    toastRef = { show };
+    return () => {
+      toastRef = null;
+    };
+  }, [show]);
 
   const animStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: translateY.value }],
     opacity: opacity.value,
-  }))
+  }));
 
-  if (!currentConfig) return null
+  if (!currentConfig) return null;
 
-  const bgColor = TOAST_COLORS[currentConfig.type ?? 'info']
+  const bgColor = TOAST_COLORS[currentConfig.type ?? 'info'];
 
   return (
     <Animated.View
@@ -89,7 +94,7 @@ export function Toast() {
     >
       <Text style={styles.message}>{currentConfig.message}</Text>
     </Animated.View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -114,4 +119,4 @@ const styles = StyleSheet.create({
     color: '#fff',
     textAlign: 'center',
   },
-})
+});

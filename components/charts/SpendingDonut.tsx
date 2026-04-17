@@ -1,22 +1,22 @@
-import React, { useState } from 'react'
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import Svg, { G, Path, Circle, Text as SvgText } from 'react-native-svg'
-import { useColors } from '@/hooks/useColors'
-import type { ColorPalette } from '@/constants/Colors'
-import { formatCurrency } from '@/utils/formatters'
-import { useFinanceStore } from '@/store/useFinanceStore'
-import { getCategorySpending } from '@/store/selectors'
-import type { Currency } from '@/types'
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import Svg, { G, Path, Circle, Text as SvgText } from 'react-native-svg';
+import { useColors } from '@/hooks/useColors';
+import type { ColorPalette } from '@/constants/Colors';
+import { formatCurrency } from '@/utils/formatters';
+import { useFinanceStore } from '@/store/useFinanceStore';
+import { getCategorySpending } from '@/store/selectors';
+import type { Currency } from '@/types';
 
 interface SpendingDonutProps {
-  startDate?: Date
-  endDate?: Date
-  compact?: boolean
+  startDate?: Date;
+  endDate?: Date;
+  compact?: boolean;
 }
 
 function polarToCartesian(cx: number, cy: number, r: number, angleDeg: number) {
-  const rad = ((angleDeg - 90) * Math.PI) / 180
-  return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) }
+  const rad = ((angleDeg - 90) * Math.PI) / 180;
+  return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
 }
 
 function describeArc(
@@ -25,80 +25,87 @@ function describeArc(
   outerR: number,
   innerR: number,
   startAngle: number,
-  endAngle: number
+  endAngle: number,
 ): string {
-  const largeArc = endAngle - startAngle > 180 ? 1 : 0
-  const o1 = polarToCartesian(cx, cy, outerR, startAngle)
-  const o2 = polarToCartesian(cx, cy, outerR, endAngle)
-  const i1 = polarToCartesian(cx, cy, innerR, endAngle)
-  const i2 = polarToCartesian(cx, cy, innerR, startAngle)
+  const largeArc = endAngle - startAngle > 180 ? 1 : 0;
+  const o1 = polarToCartesian(cx, cy, outerR, startAngle);
+  const o2 = polarToCartesian(cx, cy, outerR, endAngle);
+  const i1 = polarToCartesian(cx, cy, innerR, endAngle);
+  const i2 = polarToCartesian(cx, cy, innerR, startAngle);
   return (
     `M ${o1.x.toFixed(2)} ${o1.y.toFixed(2)} ` +
     `A ${outerR} ${outerR} 0 ${largeArc} 1 ${o2.x.toFixed(2)} ${o2.y.toFixed(2)} ` +
     `L ${i1.x.toFixed(2)} ${i1.y.toFixed(2)} ` +
     `A ${innerR} ${innerR} 0 ${largeArc} 0 ${i2.x.toFixed(2)} ${i2.y.toFixed(2)} Z`
-  )
+  );
 }
 
 export function SpendingDonut({ startDate, endDate, compact = false }: SpendingDonutProps) {
-  const colors = useColors()
-  const styles = makeStyles(colors)
-  const { transactions, categories, settings } = useFinanceStore()
-  const [showPct, setShowPct] = useState(true)
+  const colors = useColors();
+  const styles = makeStyles(colors);
+  const { transactions, categories, settings } = useFinanceStore();
+  const [showPct, setShowPct] = useState(true);
 
-  const now = new Date()
-  const start = startDate ?? new Date(now.getFullYear(), now.getMonth(), 1)
-  const end = endDate ?? now
+  const now = new Date();
+  const start = startDate ?? new Date(now.getFullYear(), now.getMonth(), 1);
+  const end = endDate ?? now;
 
-  const allSpending = getCategorySpending(transactions, start, end)
-  const currency = settings.currency as Currency
+  const allSpending = getCategorySpending(transactions, start, end);
+  const currency = settings.currency as Currency;
 
   if (allSpending.length === 0) {
     return (
       <View style={styles.empty}>
         <Text style={styles.emptyText}>No expense data for this period</Text>
       </View>
-    )
+    );
   }
 
-  const topItems = allSpending.slice(0, 7)
-  const otherAmount = allSpending.slice(7).reduce((s, i) => s + i.amount, 0)
-  const totalAmount = allSpending.reduce((s, i) => s + i.amount, 0)
+  const topItems = allSpending.slice(0, 7);
+  const otherAmount = allSpending.slice(7).reduce((s, i) => s + i.amount, 0);
+  const totalAmount = allSpending.reduce((s, i) => s + i.amount, 0);
 
   const slices = [
     ...topItems.map((item) => {
-      const cat = categories.find((c) => c.id === item.categoryId)
+      const cat = categories.find((c) => c.id === item.categoryId);
       return {
         label: cat?.name ?? 'Unknown',
         amount: item.amount,
         percentage: item.percentage,
         color: cat?.color ?? colors.primary,
-      }
+      };
     }),
     ...(otherAmount > 0
-      ? [{ label: 'Other', amount: otherAmount, percentage: (otherAmount / totalAmount) * 100, color: colors.textDisabled }]
+      ? [
+          {
+            label: 'Other',
+            amount: otherAmount,
+            percentage: (otherAmount / totalAmount) * 100,
+            color: colors.textDisabled,
+          },
+        ]
       : []),
-  ]
+  ];
 
   // Geometry
-  const OUTER_R = 90
-  const INNER_R = compact ? 60 : 62
-  const VB_W = 220
-  const VB_H = 220
-  const CX = VB_W / 2
-  const CY = VB_H / 2
-  const GAP_DEG = slices.length > 1 ? 2 : 0
+  const OUTER_R = 90;
+  const INNER_R = compact ? 60 : 62;
+  const VB_W = 220;
+  const VB_H = 220;
+  const CX = VB_W / 2;
+  const CY = VB_H / 2;
+  const GAP_DEG = slices.length > 1 ? 2 : 0;
 
-  let angle = 0
+  let angle = 0;
   const slicesWithPaths = slices.map((slice) => {
-    const sweep = (slice.percentage / 100) * 360
-    const startA = angle + (slices.length > 1 ? GAP_DEG / 2 : 0)
-    const endA = angle + sweep - (slices.length > 1 ? GAP_DEG / 2 : 0)
-    angle += sweep
-    const isSingleFull = slices.length === 1
+    const sweep = (slice.percentage / 100) * 360;
+    const startA = angle + (slices.length > 1 ? GAP_DEG / 2 : 0);
+    const endA = angle + sweep - (slices.length > 1 ? GAP_DEG / 2 : 0);
+    angle += sweep;
+    const isSingleFull = slices.length === 1;
 
-    return { ...slice, startA, endA, isSingleFull }
-  })
+    return { ...slice, startA, endA, isSingleFull };
+  });
 
   // Donut slices (shared rendering for compact + full)
   const donutSlices = slicesWithPaths.map((s, i) =>
@@ -108,13 +115,9 @@ export function SpendingDonut({ startDate, endDate, compact = false }: SpendingD
         <Circle cx={CX} cy={CY} r={INNER_R} fill={colors.surface} />
       </G>
     ) : (
-      <Path
-        key={i}
-        d={describeArc(CX, CY, OUTER_R, INNER_R, s.startA, s.endA)}
-        fill={s.color}
-      />
-    )
-  )
+      <Path key={i} d={describeArc(CX, CY, OUTER_R, INNER_R, s.startA, s.endA)} fill={s.color} />
+    ),
+  );
 
   return (
     <View style={styles.container}>
@@ -173,8 +176,6 @@ export function SpendingDonut({ startDate, endDate, compact = false }: SpendingD
               >
                 {formatCurrency(totalAmount, currency, true)}
               </SvgText>
-
-
             </G>
           </Svg>
         </View>
@@ -187,17 +188,13 @@ export function SpendingDonut({ startDate, endDate, compact = false }: SpendingD
             onPress={() => setShowPct(true)}
             style={[styles.toggleBtn, showPct && styles.toggleBtnActive]}
           >
-            <Text style={[styles.toggleText, showPct && styles.toggleTextActive]}>
-              %
-            </Text>
+            <Text style={[styles.toggleText, showPct && styles.toggleTextActive]}>%</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => setShowPct(false)}
             style={[styles.toggleBtn, !showPct && styles.toggleBtnActive]}
           >
-            <Text style={[styles.toggleText, !showPct && styles.toggleTextActive]}>
-              Amt
-            </Text>
+            <Text style={[styles.toggleText, !showPct && styles.toggleTextActive]}>Amt</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -221,7 +218,7 @@ export function SpendingDonut({ startDate, endDate, compact = false }: SpendingD
         </View>
       )}
     </View>
-  )
+  );
 }
 
 function makeStyles(colors: ColorPalette) {
@@ -320,5 +317,5 @@ function makeStyles(colors: ColorPalette) {
       color: colors.textMuted,
       textAlign: 'center',
     },
-  })
+  });
 }

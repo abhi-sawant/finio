@@ -1,25 +1,25 @@
-import React, { useCallback, useMemo } from 'react'
-import { View, Text, SectionList, StyleSheet, Alert, RefreshControl } from 'react-native'
-import { useRouter } from 'expo-router'
-import { useColors } from '@/hooks/useColors'
-import type { ColorPalette } from '@/constants/Colors'
-import { TransactionItem } from './TransactionItem'
-import { EmptyState } from '@/components/common/EmptyState'
-import { groupTransactionsByDate } from '@/utils/calculations'
-import { formatDate, formatCurrency } from '@/utils/formatters'
-import { useFinanceStore } from '@/store/useFinanceStore'
-import { warningHaptic } from '@/utils/haptics'
-import { showToast } from '@/components/common/Toast'
-import type { Transaction } from '@/types'
+import React, { useCallback, useMemo } from 'react';
+import { View, Text, SectionList, StyleSheet, Alert, RefreshControl } from 'react-native';
+import { useRouter } from 'expo-router';
+import { useColors } from '@/hooks/useColors';
+import type { ColorPalette } from '@/constants/Colors';
+import { TransactionItem } from './TransactionItem';
+import { EmptyState } from '@/components/common/EmptyState';
+import { groupTransactionsByDate } from '@/utils/calculations';
+import { formatDate, formatCurrency } from '@/utils/formatters';
+import { useFinanceStore } from '@/store/useFinanceStore';
+import { warningHaptic } from '@/utils/haptics';
+import { showToast } from '@/components/common/Toast';
+import type { Transaction } from '@/types';
 
 interface TransactionListProps {
-  transactions: Transaction[]
-  onRefresh?: () => void
-  refreshing?: boolean
-  currency?: string
-  showDateHeaders?: boolean
-  emptyTitle?: string
-  emptyDescription?: string
+  transactions: Transaction[];
+  onRefresh?: () => void;
+  refreshing?: boolean;
+  currency?: string;
+  showDateHeaders?: boolean;
+  emptyTitle?: string;
+  emptyDescription?: string;
 }
 
 export function TransactionList({
@@ -30,10 +30,10 @@ export function TransactionList({
   emptyTitle = 'No transactions',
   emptyDescription = 'Add a transaction to get started',
 }: TransactionListProps) {
-  const colors = useColors()
-  const styles = useMemo(() => makeStyles(colors), [colors])
-  const router = useRouter()
-  const { deleteTransaction, settings } = useFinanceStore()
+  const colors = useColors();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
+  const router = useRouter();
+  const { deleteTransaction, settings } = useFinanceStore();
 
   const sections = useMemo(
     () =>
@@ -41,35 +41,38 @@ export function TransactionList({
         title: date,
         data: txns,
       })),
-    [transactions]
-  )
+    [transactions],
+  );
 
   const handlePress = useCallback((tx: Transaction) => {
-    router.push({ pathname: '/modals/transaction-detail', params: { id: tx.id } })
-  }, [])
+    router.push({ pathname: '/modals/transaction-detail', params: { id: tx.id } });
+  }, []);
 
   const handleEdit = useCallback((tx: Transaction) => {
-    router.push({ pathname: '/modals/add-transaction', params: { id: tx.id } })
-  }, [])
+    router.push({ pathname: '/modals/add-transaction', params: { id: tx.id } });
+  }, []);
 
-  const handleDelete = useCallback((tx: Transaction) => {
-    Alert.alert(
-      'Delete Transaction',
-      'Are you sure you want to delete this transaction? This will also update the account balance.',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: async () => {
-            await warningHaptic()
-            deleteTransaction(tx.id)
-            showToast({ message: 'Transaction deleted', type: 'error' })
+  const handleDelete = useCallback(
+    (tx: Transaction) => {
+      Alert.alert(
+        'Delete Transaction',
+        'Are you sure you want to delete this transaction? This will also update the account balance.',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          {
+            text: 'Delete',
+            style: 'destructive',
+            onPress: async () => {
+              await warningHaptic();
+              deleteTransaction(tx.id);
+              showToast({ message: 'Transaction deleted', type: 'error' });
+            },
           },
-        },
-      ]
-    )
-  }, [deleteTransaction])
+        ],
+      );
+    },
+    [deleteTransaction],
+  );
 
   if (transactions.length === 0) {
     return (
@@ -80,16 +83,16 @@ export function TransactionList({
         actionLabel="Add Transaction"
         onAction={() => router.push('/modals/add-transaction')}
       />
-    )
+    );
   }
 
   const getDateTotal = (txns: Transaction[]): number => {
     return txns.reduce((sum, t) => {
-      if (t.type === 'income') return sum + t.amount
-      if (t.type === 'expense') return sum - t.amount
-      return sum
-    }, 0)
-  }
+      if (t.type === 'income') return sum + t.amount;
+      if (t.type === 'expense') return sum - t.amount;
+      return sum;
+    }, 0);
+  };
 
   return (
     <SectionList
@@ -107,8 +110,8 @@ export function TransactionList({
       renderSectionHeader={
         showDateHeaders
           ? ({ section }) => {
-              const sectionTotal = getDateTotal(section.data)
-              const totalColor = sectionTotal >= 0 ? colors.income : colors.expense
+              const sectionTotal = getDateTotal(section.data);
+              const totalColor = sectionTotal >= 0 ? colors.income : colors.expense;
               return (
                 <View style={styles.sectionHeader}>
                   <Text style={styles.sectionDate}>{formatDate(section.title + 'T00:00:00')}</Text>
@@ -117,7 +120,7 @@ export function TransactionList({
                     {formatCurrency(Math.abs(sectionTotal), settings.currency as 'INR')}
                   </Text>
                 </View>
-              )
+              );
             }
           : undefined
       }
@@ -135,29 +138,29 @@ export function TransactionList({
       showsVerticalScrollIndicator={false}
       contentContainerStyle={transactions.length === 0 ? { flex: 1 } : { paddingBottom: 100 }}
     />
-  )
+  );
 }
 
 function makeStyles(colors: ColorPalette) {
   return StyleSheet.create({
-  sectionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    backgroundColor: colors.background,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  sectionDate: {
-    fontFamily: 'DMSans_700Bold',
-    fontSize: 13,
-    color: colors.textMuted,
-  },
-  sectionTotal: {
-    fontFamily: 'DMSans_700Bold',
-    fontSize: 13,
-  },
-})
+    sectionHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingHorizontal: 16,
+      paddingVertical: 10,
+      backgroundColor: colors.background,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    sectionDate: {
+      fontFamily: 'DMSans_700Bold',
+      fontSize: 13,
+      color: colors.textMuted,
+    },
+    sectionTotal: {
+      fontFamily: 'DMSans_700Bold',
+      fontSize: 13,
+    },
+  });
 }

@@ -36,20 +36,20 @@ Track income, expenses, and transfers across multiple accounts — all stored lo
 
 ## Tech stack
 
-| Layer | Library |
-|---|---|
-| Framework | [Expo](https://expo.dev) SDK 54 + [Expo Router](https://expo.github.io/router/) 6 |
-| Language | TypeScript 5.9 (strict) |
-| State | [Zustand](https://zustand.docs.pmnd.rs/) 5 + AsyncStorage persistence |
-| Styling | [NativeWind](https://www.nativewind.dev/) 4 (Tailwind for RN) + `StyleSheet` |
-| Charts | Custom SVG via [`react-native-svg`](https://github.com/software-mansion/react-native-svg) |
-| Forms | [React Hook Form](https://react-hook-form.com/) 7 + [Zod](https://zod.dev/) 4 |
-| Animation | [Reanimated](https://docs.swmansion.com/react-native-reanimated/) 4 |
-| Icons | [lucide-react-native](https://lucide.dev/) |
-| Dates | [date-fns](https://date-fns.org/) 4 |
-| Fonts | DM Sans + Sora via `@expo-google-fonts` |
-| Secure storage | [expo-secure-store](https://docs.expo.dev/versions/latest/sdk/securestore/) |
-| Backend | PHP 8.2+, MySQL, PHPMailer (self-hosted, optional) |
+| Layer          | Library                                                                                   |
+| -------------- | ----------------------------------------------------------------------------------------- |
+| Framework      | [Expo](https://expo.dev) SDK 54 + [Expo Router](https://expo.github.io/router/) 6         |
+| Language       | TypeScript 5.9 (strict)                                                                   |
+| State          | [Zustand](https://zustand.docs.pmnd.rs/) 5 + AsyncStorage persistence                     |
+| Styling        | [NativeWind](https://www.nativewind.dev/) 4 (Tailwind for RN) + `StyleSheet`              |
+| Charts         | Custom SVG via [`react-native-svg`](https://github.com/software-mansion/react-native-svg) |
+| Forms          | [React Hook Form](https://react-hook-form.com/) 7 + [Zod](https://zod.dev/) 4             |
+| Animation      | [Reanimated](https://docs.swmansion.com/react-native-reanimated/) 4                       |
+| Icons          | [lucide-react-native](https://lucide.dev/)                                                |
+| Dates          | [date-fns](https://date-fns.org/) 4                                                       |
+| Fonts          | DM Sans + Sora via `@expo-google-fonts`                                                   |
+| Secure storage | [expo-secure-store](https://docs.expo.dev/versions/latest/sdk/securestore/)               |
+| Backend        | PHP 8.2+, MySQL, PHPMailer (self-hosted, optional)                                        |
 
 ## Getting started
 
@@ -110,12 +110,12 @@ backend/        Self-hosted PHP REST API (optional cloud backup)
 
 The backend is a minimal PHP 8.2+ REST API built for cPanel shared hosting — no framework, no Docker required.
 
-| Detail | Value |
-|---|---|
-| Auth | JWT HS256 + 6-digit OTP email verification |
-| Database | MySQL (2 tables: `users` and `backups`) |
-| Email | PHPMailer over SMTP |
-| Config | Stored outside `public_html` — never committed to source control |
+| Detail   | Value                                                            |
+| -------- | ---------------------------------------------------------------- |
+| Auth     | JWT HS256 + 6-digit OTP email verification                       |
+| Database | MySQL (2 tables: `users` and `backups`)                          |
+| Email    | PHPMailer over SMTP                                              |
+| Config   | Stored outside `public_html` — never committed to source control |
 
 ### Deploy in three steps
 
@@ -125,22 +125,22 @@ The backend is a minimal PHP 8.2+ REST API built for cPanel shared hosting — n
 
 ### API reference
 
-| Method | Path | Auth | Description |
-|--------|------|:----:|-------------|
-| POST | `/auth/register` | | Create account, send OTP |
-| POST | `/auth/verify-otp` | | Verify OTP, receive JWT |
-| POST | `/auth/resend-otp` | | Resend OTP |
-| POST | `/auth/login` | | Login, receive JWT |
-| POST | `/auth/forgot-password` | | Send password-reset email |
-| POST | `/auth/reset-password` | | Reset password with OTP |
-| GET | `/user/me` | ✓ | Get profile |
-| PUT | `/user/me` | ✓ | Update profile |
-| DELETE | `/user/me` | ✓ | Delete account |
-| POST | `/backup/upload` | ✓ | Upload JSON backup |
-| GET | `/backup/latest` | ✓ | Fetch latest backup |
-| GET | `/backup/list` | ✓ | List all backups |
-| GET | `/backup/{date}` | ✓ | Download a specific backup |
-| DELETE | `/backup/{date}` | ✓ | Delete a specific backup |
+| Method | Path                    | Auth | Description                |
+| ------ | ----------------------- | :--: | -------------------------- |
+| POST   | `/auth/register`        |      | Create account, send OTP   |
+| POST   | `/auth/verify-otp`      |      | Verify OTP, receive JWT    |
+| POST   | `/auth/resend-otp`      |      | Resend OTP                 |
+| POST   | `/auth/login`           |      | Login, receive JWT         |
+| POST   | `/auth/forgot-password` |      | Send password-reset email  |
+| POST   | `/auth/reset-password`  |      | Reset password with OTP    |
+| GET    | `/user/me`              |  ✓   | Get profile                |
+| PUT    | `/user/me`              |  ✓   | Update profile             |
+| DELETE | `/user/me`              |  ✓   | Delete account             |
+| POST   | `/backup/upload`        |  ✓   | Upload JSON backup         |
+| GET    | `/backup/latest`        |  ✓   | Fetch latest backup        |
+| GET    | `/backup/list`          |  ✓   | List all backups           |
+| GET    | `/backup/{date}`        |  ✓   | Download a specific backup |
+| DELETE | `/backup/{date}`        |  ✓   | Delete a specific backup   |
 
 JWT tokens expire after 30 days.
 

@@ -1,5 +1,15 @@
-import { startOfMonth, endOfMonth, isWithinInterval, parseISO, subMonths, startOfWeek, endOfWeek, startOfYear, endOfYear } from 'date-fns'
-import type { Account, Category, MonthlySummary, Transaction, TransactionType } from '@/types'
+import {
+  startOfMonth,
+  endOfMonth,
+  isWithinInterval,
+  parseISO,
+  subMonths,
+  startOfWeek,
+  endOfWeek,
+  startOfYear,
+  endOfYear,
+} from 'date-fns';
+import type { Account, Category, MonthlySummary, Transaction, TransactionType } from '@/types';
 
 // ───────────────────────────────────────────────────────────
 // Basic selectors (pass state slices for memoization control)
@@ -11,7 +21,7 @@ import type { Account, Category, MonthlySummary, Transaction, TransactionType } 
  * so this already correctly subtracts outstanding credit debt from the total.
  */
 export function getTotalBalance(accounts: Account[]): number {
-  return accounts.reduce((sum, a) => sum + a.balance, 0)
+  return accounts.reduce((sum, a) => sum + a.balance, 0);
 }
 
 // ───────────────────────────────────────────────────────────
@@ -24,7 +34,7 @@ export function getTotalBalance(accounts: Account[]): number {
 export function getTotalCreditOutstanding(accounts: Account[]): number {
   return accounts
     .filter((a) => a.type === 'credit' && a.balance < 0)
-    .reduce((sum, a) => sum + Math.abs(a.balance), 0)
+    .reduce((sum, a) => sum + Math.abs(a.balance), 0);
 }
 
 /**
@@ -34,11 +44,11 @@ export function getTotalCreditOutstanding(accounts: Account[]): number {
 export function getUpcomingCreditPayments(accounts: Account[]): Account[] {
   return accounts
     .filter((a) => a.type === 'credit' && a.balance < 0)
-    .sort((a, b) => Math.abs(b.balance) - Math.abs(a.balance))
+    .sort((a, b) => Math.abs(b.balance) - Math.abs(a.balance));
 }
 
 export function getCategoryById(categories: Category[], id: string): Category | undefined {
-  return categories.find((c) => c.id === id)
+  return categories.find((c) => c.id === id);
 }
 
 // ───────────────────────────────────────────────────────────
@@ -48,71 +58,81 @@ export function getCategoryById(categories: Category[], id: string): Category | 
 export function filterTransactions(
   transactions: Transaction[],
   options: {
-    typeIds?: TransactionType[]
-    accountId?: string
-    categoryIds?: string[]
-    labelIds?: string[]
-    startDate?: Date
-    endDate?: Date
-    searchQuery?: string
-  }
+    typeIds?: TransactionType[];
+    accountId?: string;
+    categoryIds?: string[];
+    labelIds?: string[];
+    startDate?: Date;
+    endDate?: Date;
+    searchQuery?: string;
+  },
 ): Transaction[] {
   return transactions.filter((t) => {
-    if (options.typeIds && options.typeIds.length > 0 && !options.typeIds.includes(t.type)) return false
-    if (options.accountId && t.accountId !== options.accountId) return false
-    if (options.categoryIds && options.categoryIds.length > 0 && !options.categoryIds.includes(t.categoryId)) return false
+    if (options.typeIds && options.typeIds.length > 0 && !options.typeIds.includes(t.type))
+      return false;
+    if (options.accountId && t.accountId !== options.accountId) return false;
+    if (
+      options.categoryIds &&
+      options.categoryIds.length > 0 &&
+      !options.categoryIds.includes(t.categoryId)
+    )
+      return false;
     if (options.labelIds && options.labelIds.length > 0) {
-      const hasMatchingLabel = options.labelIds.some(labelId => t.labels.includes(labelId))
-      if (!hasMatchingLabel) return false
+      const hasMatchingLabel = options.labelIds.some((labelId) => t.labels.includes(labelId));
+      if (!hasMatchingLabel) return false;
     }
     if (options.startDate && options.endDate) {
-      const txDate = parseISO(t.date)
-      if (!isWithinInterval(txDate, { start: options.startDate, end: options.endDate })) return false
+      const txDate = parseISO(t.date);
+      if (!isWithinInterval(txDate, { start: options.startDate, end: options.endDate }))
+        return false;
     }
     if (options.searchQuery && options.searchQuery.trim()) {
-      const q = options.searchQuery.toLowerCase()
-      if (!t.note.toLowerCase().includes(q)) return false
+      const q = options.searchQuery.toLowerCase();
+      if (!t.note.toLowerCase().includes(q)) return false;
     }
-    return true
-  })
+    return true;
+  });
 }
 
 // ───────────────────────────────────────────────────────────
 // Monthly summaries
 // ───────────────────────────────────────────────────────────
 
-export function getMonthlySummary(transactions: Transaction[], date: Date): {
-  income: number
-  expenses: number
-  net: number
+export function getMonthlySummary(
+  transactions: Transaction[],
+  date: Date,
+): {
+  income: number;
+  expenses: number;
+  net: number;
 } {
-  const start = startOfMonth(date)
-  const end = endOfMonth(date)
+  const start = startOfMonth(date);
+  const end = endOfMonth(date);
 
-  let income = 0
-  let expenses = 0
+  let income = 0;
+  let expenses = 0;
 
   for (const t of transactions) {
-    const txDate = parseISO(t.date)
-    if (!isWithinInterval(txDate, { start, end })) continue
-    if (t.type === 'income') income += t.amount
-    else if (t.type === 'expense') expenses += t.amount
+    const txDate = parseISO(t.date);
+    if (!isWithinInterval(txDate, { start, end })) continue;
+    if (t.type === 'income') income += t.amount;
+    else if (t.type === 'expense') expenses += t.amount;
   }
 
-  return { income, expenses, net: income - expenses }
+  return { income, expenses, net: income - expenses };
 }
 
 export function getLast6MonthsSummaries(transactions: Transaction[]): MonthlySummary[] {
-  const now = new Date()
-  const summaries: MonthlySummary[] = []
+  const now = new Date();
+  const summaries: MonthlySummary[] = [];
 
   for (let i = 5; i >= 0; i--) {
-    const date = subMonths(now, i)
-    const { income, expenses, net } = getMonthlySummary(transactions, date)
-    summaries.push({ month: date.getMonth(), year: date.getFullYear(), income, expenses, net })
+    const date = subMonths(now, i);
+    const { income, expenses, net } = getMonthlySummary(transactions, date);
+    summaries.push({ month: date.getMonth(), year: date.getFullYear(), income, expenses, net });
   }
 
-  return summaries
+  return summaries;
 }
 
 // ───────────────────────────────────────────────────────────
@@ -120,26 +140,26 @@ export function getLast6MonthsSummaries(transactions: Transaction[]): MonthlySum
 // ───────────────────────────────────────────────────────────
 
 export interface CategorySpending {
-  categoryId: string
-  amount: number
-  percentage: number
+  categoryId: string;
+  amount: number;
+  percentage: number;
 }
 
 export function getCategorySpending(
   transactions: Transaction[],
   startDate: Date,
-  endDate: Date
+  endDate: Date,
 ): CategorySpending[] {
-  const map = new Map<string, number>()
+  const map = new Map<string, number>();
 
   for (const t of transactions) {
-    if (t.type !== 'expense') continue
-    const txDate = parseISO(t.date)
-    if (!isWithinInterval(txDate, { start: startDate, end: endDate })) continue
-    map.set(t.categoryId, (map.get(t.categoryId) ?? 0) + t.amount)
+    if (t.type !== 'expense') continue;
+    const txDate = parseISO(t.date);
+    if (!isWithinInterval(txDate, { start: startDate, end: endDate })) continue;
+    map.set(t.categoryId, (map.get(t.categoryId) ?? 0) + t.amount);
   }
 
-  const total = Array.from(map.values()).reduce((s, v) => s + v, 0)
+  const total = Array.from(map.values()).reduce((s, v) => s + v, 0);
 
   return Array.from(map.entries())
     .map(([categoryId, amount]) => ({
@@ -147,7 +167,7 @@ export function getCategorySpending(
       amount,
       percentage: total > 0 ? (amount / total) * 100 : 0,
     }))
-    .sort((a, b) => b.amount - a.amount)
+    .sort((a, b) => b.amount - a.amount);
 }
 
 // ───────────────────────────────────────────────────────────
@@ -155,30 +175,30 @@ export function getCategorySpending(
 // ───────────────────────────────────────────────────────────
 
 export interface LabelSpending {
-  labelId: string
-  amount: number
-  percentage: number
+  labelId: string;
+  amount: number;
+  percentage: number;
 }
 
 export function getLabelSpending(
   transactions: Transaction[],
   startDate: Date,
-  endDate: Date
+  endDate: Date,
 ): LabelSpending[] {
-  const map = new Map<string, number>()
+  const map = new Map<string, number>();
 
   for (const t of transactions) {
-    if (t.type !== 'expense') continue
-    const txDate = parseISO(t.date)
-    if (!isWithinInterval(txDate, { start: startDate, end: endDate })) continue
-    if (t.labels.length === 0) continue
+    if (t.type !== 'expense') continue;
+    const txDate = parseISO(t.date);
+    if (!isWithinInterval(txDate, { start: startDate, end: endDate })) continue;
+    if (t.labels.length === 0) continue;
     // Count the full amount for each label (not split)
     for (const labelId of t.labels) {
-      map.set(labelId, (map.get(labelId) ?? 0) + t.amount)
+      map.set(labelId, (map.get(labelId) ?? 0) + t.amount);
     }
   }
 
-  const total = Array.from(map.values()).reduce((s, v) => s + v, 0)
+  const total = Array.from(map.values()).reduce((s, v) => s + v, 0);
 
   return Array.from(map.entries())
     .map(([labelId, amount]) => ({
@@ -186,28 +206,31 @@ export function getLabelSpending(
       amount,
       percentage: total > 0 ? (amount / total) * 100 : 0,
     }))
-    .sort((a, b) => b.amount - a.amount)
+    .sort((a, b) => b.amount - a.amount);
 }
 
 // ───────────────────────────────────────────────────────────
 // Period helpers
 // ───────────────────────────────────────────────────────────
 
-export type PeriodKey = 'week' | 'month' | '3months' | '6months' | 'year'
+export type PeriodKey = 'week' | 'month' | '3months' | '6months' | 'year';
 
 export function getPeriodRange(period: PeriodKey): { start: Date; end: Date } {
-  const now = new Date()
+  const now = new Date();
   switch (period) {
     case 'week':
-      return { start: startOfWeek(now, { weekStartsOn: 1 }), end: endOfWeek(now, { weekStartsOn: 1 }) }
+      return {
+        start: startOfWeek(now, { weekStartsOn: 1 }),
+        end: endOfWeek(now, { weekStartsOn: 1 }),
+      };
     case 'month':
-      return { start: startOfMonth(now), end: endOfMonth(now) }
+      return { start: startOfMonth(now), end: endOfMonth(now) };
     case '3months':
-      return { start: startOfMonth(subMonths(now, 2)), end: endOfMonth(now) }
+      return { start: startOfMonth(subMonths(now, 2)), end: endOfMonth(now) };
     case '6months':
-      return { start: startOfMonth(subMonths(now, 5)), end: endOfMonth(now) }
+      return { start: startOfMonth(subMonths(now, 5)), end: endOfMonth(now) };
     case 'year':
-      return { start: startOfYear(now), end: endOfYear(now) }
+      return { start: startOfYear(now), end: endOfYear(now) };
   }
 }
 
@@ -218,7 +241,7 @@ export function getPeriodRange(period: PeriodKey): { start: Date; end: Date } {
 export function getRecentTransactions(transactions: Transaction[], limit = 8): Transaction[] {
   return [...transactions]
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .slice(0, limit)
+    .slice(0, limit);
 }
 
 // ───────────────────────────────────────────────────────────
@@ -228,34 +251,36 @@ export function getRecentTransactions(transactions: Transaction[], limit = 8): T
 export function getBalanceAfterTransaction(
   transactions: Transaction[],
   transaction: Transaction,
-  currentAccountBalance: number
+  currentAccountBalance: number,
 ): number {
   // Get all transactions for the same account that happened after this transaction
   const laterTransactions = transactions.filter((t) => {
-    const isSameAccount = t.accountId === transaction.accountId || t.toAccountId === transaction.accountId
-    const txDate = new Date(t.date).getTime()
-    const targetDate = new Date(transaction.date).getTime()
+    const isSameAccount =
+      t.accountId === transaction.accountId || t.toAccountId === transaction.accountId;
+    const txDate = new Date(t.date).getTime();
+    const targetDate = new Date(transaction.date).getTime();
     // Include transactions that are later by date, or same date but created later
-    const isLater = txDate > targetDate || (txDate === targetDate && t.createdAt > transaction.createdAt)
-    return isSameAccount && isLater && t.id !== transaction.id
-  })
+    const isLater =
+      txDate > targetDate || (txDate === targetDate && t.createdAt > transaction.createdAt);
+    return isSameAccount && isLater && t.id !== transaction.id;
+  });
 
   // Start with current balance and reverse the effects of later transactions
-  let balanceAtTransaction = currentAccountBalance
+  let balanceAtTransaction = currentAccountBalance;
 
   for (const t of laterTransactions) {
     if (t.accountId === transaction.accountId) {
       // This account was the source
       if (t.type === 'income') {
-        balanceAtTransaction -= t.amount
+        balanceAtTransaction -= t.amount;
       } else if (t.type === 'expense' || t.type === 'transfer') {
-        balanceAtTransaction += t.amount
+        balanceAtTransaction += t.amount;
       }
     } else if (t.toAccountId === transaction.accountId && t.type === 'transfer') {
       // This account was the destination of a transfer
-      balanceAtTransaction -= t.amount
+      balanceAtTransaction -= t.amount;
     }
   }
 
-  return balanceAtTransaction
+  return balanceAtTransaction;
 }

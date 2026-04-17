@@ -1,66 +1,63 @@
-import React, { useEffect, useMemo, useState } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import React, { useEffect, useMemo, useState } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import {
   useSharedValue,
   withTiming,
   useAnimatedReaction,
   Easing,
   runOnJS,
-} from 'react-native-reanimated'
-import { LinearGradient } from 'expo-linear-gradient'
-import { TrendingUp, TrendingDown } from 'lucide-react-native'
-import { useColors } from '@/hooks/useColors'
-import type { ColorPalette } from '@/constants/Colors'
-import { formatCurrency, hexToRgba } from '@/utils/formatters'
-import { useFinanceStore } from '@/store/useFinanceStore'
+} from 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient';
+import { TrendingUp, TrendingDown } from 'lucide-react-native';
+import { useColors } from '@/hooks/useColors';
+import type { ColorPalette } from '@/constants/Colors';
+import { formatCurrency, hexToRgba } from '@/utils/formatters';
+import { useFinanceStore } from '@/store/useFinanceStore';
 import {
   getTotalAccountBalance,
   getCurrentMonthTransactions,
   getTotalIncome,
   getTotalExpenses,
-} from '@/utils/calculations'
-import { getTotalCreditOutstanding } from '@/store/selectors'
-import type { Currency } from '@/types'
+} from '@/utils/calculations';
+import { getTotalCreditOutstanding } from '@/store/selectors';
+import type { Currency } from '@/types';
 
 function AnimatedBalance({ value, currency }: { value: number; currency: Currency }) {
-  const colors = useColors()
-  const styles = useMemo(() => makeStyles(colors), [colors])
-  const animProgress = useSharedValue(0)
-  const [displayValue, setDisplayValue] = useState(0)
+  const colors = useColors();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
+  const animProgress = useSharedValue(0);
+  const [displayValue, setDisplayValue] = useState(0);
 
   useEffect(() => {
-    animProgress.value = 0
-    animProgress.value = withTiming(1, { duration: 1400, easing: Easing.out(Easing.cubic) })
-  }, [value])
+    animProgress.value = 0;
+    animProgress.value = withTiming(1, { duration: 1400, easing: Easing.out(Easing.cubic) });
+  }, [value]);
 
   useAnimatedReaction(
-    () => animProgress.value * value, (current) => runOnJS(setDisplayValue)(current)
-  )
+    () => animProgress.value * value,
+    (current) => runOnJS(setDisplayValue)(current),
+  );
 
-  return (
-    <Text style={styles.balanceAmount}>
-      {formatCurrency(displayValue, currency, true)}
-    </Text>
-  )
+  return <Text style={styles.balanceAmount}>{formatCurrency(displayValue, currency, true)}</Text>;
 }
 
 export function SummaryCards() {
-  const colors = useColors()
-  const styles = useMemo(() => makeStyles(colors), [colors])
-  const { accounts, transactions, settings } = useFinanceStore()
-  const totalBalance = getTotalAccountBalance(accounts)
-  const creditOutstanding = getTotalCreditOutstanding(accounts)
-  const balanceAfterDues = totalBalance - creditOutstanding
-  const thisMonth = getCurrentMonthTransactions(transactions)
-  const monthIncome = getTotalIncome(thisMonth)
-  const monthExpenses = getTotalExpenses(thisMonth)
+  const colors = useColors();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
+  const { accounts, transactions, settings } = useFinanceStore();
+  const totalBalance = getTotalAccountBalance(accounts);
+  const creditOutstanding = getTotalCreditOutstanding(accounts);
+  const balanceAfterDues = totalBalance - creditOutstanding;
+  const thisMonth = getCurrentMonthTransactions(transactions);
+  const monthIncome = getTotalIncome(thisMonth);
+  const monthExpenses = getTotalExpenses(thisMonth);
 
-  const currency = settings.currency as Currency
+  const currency = settings.currency as Currency;
   // Use the primary color's tint for the gradient — avoids hardcoding background hex values
-  const isDark = colors.textPrimary === '#f1f5f9'
+  const isDark = colors.textPrimary === '#f1f5f9';
   const gradientColors = isDark
     ? (['#2d2a5e', '#1a1a3e', '#0f1117'] as const)
-    : (['#ede9fe', '#ddd6fe', '#c4b5fd'] as const)
+    : (['#ede9fe', '#ddd6fe', '#c4b5fd'] as const);
 
   return (
     <View style={styles.container}>
@@ -112,80 +109,80 @@ export function SummaryCards() {
         </View>
       </LinearGradient>
     </View>
-  )
+  );
 }
 
 function makeStyles(colors: ColorPalette) {
   return StyleSheet.create({
-  container: {
-    paddingHorizontal: 16,
-    paddingTop: 8,
-  },
-  balanceCard: {
-    borderRadius: 24,
-    padding: 24,
-    gap: 8,
-    borderWidth: 1,
-    borderColor: hexToRgba(colors.primary, 0.3),
-  },
-  balanceLabel: {
-    fontFamily: 'DMSans_400Regular',
-    fontSize: 14,
-    color: colors.textMuted,
-  },
-  balanceAmount: {
-    fontFamily: 'Sora_800ExtraBold',
-    fontSize: 36,
-    color: colors.textPrimary,
-    marginVertical: 4,
-  },
-  afterDuesLabel: {
-    fontFamily: 'DMSans_400Regular',
-    fontSize: 12,
-    color: colors.textMuted,
-    marginTop: -4,
-    marginBottom: 2,
-  },
-  afterDuesAmount: {
-    fontFamily: 'DMSans_500Medium',
-    color: colors.textPrimary,
-  },
-  monthRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 12,
-    backgroundColor: hexToRgba(colors.textPrimary, 0.06),
-    borderRadius: 16,
-    padding: 14,
-    gap: 16,
-  },
-  monthItem: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  monthIcon: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: hexToRgba(colors.income, 0.15),
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  monthLabel: {
-    fontFamily: 'DMSans_400Regular',
-    fontSize: 11,
-    color: colors.textMuted,
-  },
-  monthAmount: {
-    fontFamily: 'DMSans_700Bold',
-    fontSize: 14,
-  },
-  divider: {
-    width: 1,
-    height: 36,
-    backgroundColor: colors.border,
-  },
-})
+    container: {
+      paddingHorizontal: 16,
+      paddingTop: 8,
+    },
+    balanceCard: {
+      borderRadius: 24,
+      padding: 24,
+      gap: 8,
+      borderWidth: 1,
+      borderColor: hexToRgba(colors.primary, 0.3),
+    },
+    balanceLabel: {
+      fontFamily: 'DMSans_400Regular',
+      fontSize: 14,
+      color: colors.textMuted,
+    },
+    balanceAmount: {
+      fontFamily: 'Sora_800ExtraBold',
+      fontSize: 36,
+      color: colors.textPrimary,
+      marginVertical: 4,
+    },
+    afterDuesLabel: {
+      fontFamily: 'DMSans_400Regular',
+      fontSize: 12,
+      color: colors.textMuted,
+      marginTop: -4,
+      marginBottom: 2,
+    },
+    afterDuesAmount: {
+      fontFamily: 'DMSans_500Medium',
+      color: colors.textPrimary,
+    },
+    monthRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginTop: 12,
+      backgroundColor: hexToRgba(colors.textPrimary, 0.06),
+      borderRadius: 16,
+      padding: 14,
+      gap: 16,
+    },
+    monthItem: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 10,
+    },
+    monthIcon: {
+      width: 28,
+      height: 28,
+      borderRadius: 14,
+      backgroundColor: hexToRgba(colors.income, 0.15),
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    monthLabel: {
+      fontFamily: 'DMSans_400Regular',
+      fontSize: 11,
+      color: colors.textMuted,
+    },
+    monthAmount: {
+      fontFamily: 'DMSans_700Bold',
+      fontSize: 14,
+    },
+    divider: {
+      width: 1,
+      height: 36,
+      backgroundColor: colors.border,
+    },
+  });
 }

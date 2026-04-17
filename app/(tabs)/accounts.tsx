@@ -1,75 +1,63 @@
-import React, { useState } from 'react'
-import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  Alert,
-} from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useRouter } from 'expo-router'
-import { Plus } from 'lucide-react-native'
-import { useColors } from '@/hooks/useColors'
-import type { ColorPalette } from '@/constants/Colors'
-import { AccountCard } from '@/components/accounts/AccountCard'
-import { useFinanceStore } from '@/store/useFinanceStore'
-import { getTotalBalance, getTotalCreditOutstanding } from '@/store/selectors'
-import { formatCurrency } from '@/utils/formatters'
-import { warningHaptic, lightHaptic } from '@/utils/haptics'
-import { showToast } from '@/components/common/Toast'
-import type { Account } from '@/types'
+import React, { useState } from 'react';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
+import { Plus } from 'lucide-react-native';
+import { useColors } from '@/hooks/useColors';
+import type { ColorPalette } from '@/constants/Colors';
+import { AccountCard } from '@/components/accounts/AccountCard';
+import { useFinanceStore } from '@/store/useFinanceStore';
+import { getTotalBalance, getTotalCreditOutstanding } from '@/store/selectors';
+import { formatCurrency } from '@/utils/formatters';
+import { warningHaptic, lightHaptic } from '@/utils/haptics';
+import { showToast } from '@/components/common/Toast';
+import type { Account } from '@/types';
 
 export default function AccountsScreen() {
-  const colors = useColors()
-  const styles = makeStyles(colors)
-  const insets = useSafeAreaInsets()
-  const router = useRouter()
-  const { accounts, settings, deleteAccount } = useFinanceStore()
-  const total = getTotalBalance(accounts)
-  const creditDue = getTotalCreditOutstanding(accounts)
+  const colors = useColors();
+  const styles = makeStyles(colors);
+  const insets = useSafeAreaInsets();
+  const router = useRouter();
+  const { accounts, settings, deleteAccount } = useFinanceStore();
+  const total = getTotalBalance(accounts);
+  const creditDue = getTotalCreditOutstanding(accounts);
 
   const handleAccountPress = (account: Account) => {
-    lightHaptic()
-    router.push({ pathname: '/modals/add-account', params: { id: account.id } })
-  }
+    lightHaptic();
+    router.push({ pathname: '/modals/add-account', params: { id: account.id } });
+  };
 
   const handleAccountLongPress = (account: Account) => {
-    warningHaptic()
-    Alert.alert(
-      account.name,
-      'What would you like to do with this account?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Edit',
-          onPress: () =>
-            router.push({ pathname: '/modals/add-account', params: { id: account.id } }),
-        },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: () => {
-            Alert.alert(
-              'Delete Account',
-              `Delete "${account.name}"? All associated transactions will also be deleted. This cannot be undone.`,
-              [
-                { text: 'Cancel', style: 'cancel' },
-                {
-                  text: 'Delete',
-                  style: 'destructive',
-                  onPress: () => {
-                    deleteAccount(account.id)
-                    showToast({ message: 'Account deleted', type: 'success' })
-                  },
+    warningHaptic();
+    Alert.alert(account.name, 'What would you like to do with this account?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Edit',
+        onPress: () => router.push({ pathname: '/modals/add-account', params: { id: account.id } }),
+      },
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: () => {
+          Alert.alert(
+            'Delete Account',
+            `Delete "${account.name}"? All associated transactions will also be deleted. This cannot be undone.`,
+            [
+              { text: 'Cancel', style: 'cancel' },
+              {
+                text: 'Delete',
+                style: 'destructive',
+                onPress: () => {
+                  deleteAccount(account.id);
+                  showToast({ message: 'Account deleted', type: 'success' });
                 },
-              ]
-            )
-          },
+              },
+            ],
+          );
         },
-      ]
-    )
-  }
+      },
+    ]);
+  };
 
   return (
     <View style={[styles.container]}>
@@ -95,10 +83,7 @@ export default function AccountsScreen() {
         </TouchableOpacity>
       </View>
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-      >
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         {/* 2-column grid */}
         <View style={styles.grid}>
           {accounts.map((account) => (
@@ -116,82 +101,80 @@ export default function AccountsScreen() {
         {accounts.length === 0 && (
           <View style={styles.empty}>
             <Text style={styles.emptyTitle}>No accounts yet</Text>
-            <Text style={styles.emptyDesc}>
-              Tap the + button to add your first account
-            </Text>
+            <Text style={styles.emptyDesc}>Tap the + button to add your first account</Text>
           </View>
         )}
 
         <View style={{ height: 100 }} />
       </ScrollView>
     </View>
-  )
+  );
 }
 
 function makeStyles(colors: ColorPalette) {
   return StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-  },
-  title: {
-    fontFamily: 'Sora_700Bold',
-    fontSize: 24,
-    color: colors.textPrimary,
-  },
-  totalBalance: {
-    fontFamily: 'DMSans_400Regular',
-    fontSize: 13,
-    color: colors.textMuted,
-    marginTop: 2,
-  },
-  creditDue: {
-    fontFamily: 'DMSans_500Medium',
-    fontSize: 12,
-    color: colors.expense,
-    marginTop: 1,
-  },
-  addBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: colors.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  scrollContent: {
-    padding: 16,
-  },
-  grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 12,
-  },
-  gridItem: {
-    width: '47.5%',
-  },
-  empty: {
-    alignItems: 'center',
-    paddingTop: 80,
-    gap: 8,
-  },
-  emptyTitle: {
-    fontFamily: 'Sora_700Bold',
-    fontSize: 18,
-    color: colors.textPrimary,
-  },
-  emptyDesc: {
-    fontFamily: 'DMSans_400Regular',
-    fontSize: 14,
-    color: colors.textMuted,
-    textAlign: 'center',
-  },
-})
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingHorizontal: 20,
+      paddingVertical: 16,
+    },
+    title: {
+      fontFamily: 'Sora_700Bold',
+      fontSize: 24,
+      color: colors.textPrimary,
+    },
+    totalBalance: {
+      fontFamily: 'DMSans_400Regular',
+      fontSize: 13,
+      color: colors.textMuted,
+      marginTop: 2,
+    },
+    creditDue: {
+      fontFamily: 'DMSans_500Medium',
+      fontSize: 12,
+      color: colors.expense,
+      marginTop: 1,
+    },
+    addBtn: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      backgroundColor: colors.primary,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    scrollContent: {
+      padding: 16,
+    },
+    grid: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: 12,
+    },
+    gridItem: {
+      width: '47.5%',
+    },
+    empty: {
+      alignItems: 'center',
+      paddingTop: 80,
+      gap: 8,
+    },
+    emptyTitle: {
+      fontFamily: 'Sora_700Bold',
+      fontSize: 18,
+      color: colors.textPrimary,
+    },
+    emptyDesc: {
+      fontFamily: 'DMSans_400Regular',
+      fontSize: 14,
+      color: colors.textMuted,
+      textAlign: 'center',
+    },
+  });
 }

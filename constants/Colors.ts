@@ -24,7 +24,7 @@ export const DarkColors = {
 
   // card shadows
   shadowColor: '#000000',
-} as const
+} as const;
 
 export const LightColors = {
   background: '#f4f6fb',
@@ -52,13 +52,13 @@ export const LightColors = {
 
   // card shadows
   shadowColor: '#000000',
-} as const
+} as const;
 
 // Kept for static/non-component usage (e.g. chart configs, accent palette arrays)
-export const Colors = DarkColors
+export const Colors = DarkColors;
 
-export type ColorPalette = typeof DarkColors
-export type ColorKey = keyof ColorPalette
+export type ColorPalette = typeof DarkColors;
+export type ColorKey = keyof ColorPalette;
 
 export const LabelColors = [
   '#fbbf24',
@@ -67,4 +67,4 @@ export const LabelColors = [
   '#f472b6',
   '#a78bfa',
   '#fb923c',
-] as const
+] as const;

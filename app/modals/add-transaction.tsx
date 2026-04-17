@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -7,56 +7,50 @@ import {
   TextInput,
   ScrollView,
   KeyboardAvoidingView,
-} from 'react-native'
-import { useRouter, useLocalSearchParams } from 'expo-router'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { X, ArrowDownLeft, ArrowUpRight, ArrowLeftRight, Check, Tag } from 'lucide-react-native'
-import { useColors } from '@/hooks/useColors'
-import type { ColorPalette } from '@/constants/Colors'
-import { AmountInput } from '@/components/common/AmountInput'
-import { DatePicker } from '@/components/common/DatePicker'
-import { TimePicker } from '@/components/common/TimePicker'
-import { CategoryPicker } from '@/components/categories/CategoryPicker'
-import { LabelPicker } from '@/components/common/LabelPicker'
-import { useFinanceStore } from '@/store/useFinanceStore'
-import { showToast } from '@/components/common/Toast'
-import { successHaptic, errorHaptic, lightHaptic } from '@/utils/haptics'
-import type { Account, Category, TransactionType } from '@/types'
+} from 'react-native';
+import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { X, ArrowDownLeft, ArrowUpRight, ArrowLeftRight, Check, Tag } from 'lucide-react-native';
+import { useColors } from '@/hooks/useColors';
+import type { ColorPalette } from '@/constants/Colors';
+import { AmountInput } from '@/components/common/AmountInput';
+import { DatePicker } from '@/components/common/DatePicker';
+import { TimePicker } from '@/components/common/TimePicker';
+import { CategoryPicker } from '@/components/categories/CategoryPicker';
+import { LabelPicker } from '@/components/common/LabelPicker';
+import { useFinanceStore } from '@/store/useFinanceStore';
+import { showToast } from '@/components/common/Toast';
+import { successHaptic, errorHaptic, lightHaptic } from '@/utils/haptics';
+import type { Account, Category, TransactionType } from '@/types';
 
-type ChipStyles = ReturnType<typeof makeStyles>
+type ChipStyles = ReturnType<typeof makeStyles>;
 
 interface AccountChipGroupProps {
-  accounts: Account[]
-  selectedId: string
-  onSelect: (id: string) => void
-  styles: ChipStyles
+  accounts: Account[];
+  selectedId: string;
+  onSelect: (id: string) => void;
+  styles: ChipStyles;
 }
 
 function AccountChipGroup({ accounts, selectedId, onSelect, styles }: AccountChipGroupProps) {
-  const regular = accounts.filter((a) => a.type !== 'credit')
-  const credit = accounts.filter((a) => a.type === 'credit')
-  const hasBoth = regular.length > 0 && credit.length > 0
+  const regular = accounts.filter((a) => a.type !== 'credit');
+  const credit = accounts.filter((a) => a.type === 'credit');
+  const hasBoth = regular.length > 0 && credit.length > 0;
 
   const renderChips = (list: Account[]) =>
     list.map((acc) => (
       <TouchableOpacity
         key={acc.id}
         onPress={() => onSelect(acc.id)}
-        style={[
-          styles.accountChip,
-          selectedId === acc.id && styles.accountChipActive,
-        ]}
+        style={[styles.accountChip, selectedId === acc.id && styles.accountChipActive]}
       >
         <Text
-          style={[
-            styles.accountChipLabel,
-            selectedId === acc.id && styles.accountChipLabelActive,
-          ]}
+          style={[styles.accountChipLabel, selectedId === acc.id && styles.accountChipLabelActive]}
         >
           {acc.name}
         </Text>
       </TouchableOpacity>
-    ))
+    ));
 
   return (
     <View style={{ gap: 2 }}>
@@ -75,79 +69,83 @@ function AccountChipGroup({ accounts, selectedId, onSelect, styles }: AccountChi
         <View style={styles.accountRow}>{renderChips(accounts)}</View>
       )}
     </View>
-  )
+  );
 }
 
 export default function AddTransactionModal() {
-  const colors = useColors()
-  const styles = makeStyles(colors)
-  const router = useRouter()
-  const insets = useSafeAreaInsets()
-  const { id, payBillAccountId } = useLocalSearchParams<{ id?: string; payBillAccountId?: string }>()
+  const colors = useColors();
+  const styles = makeStyles(colors);
+  const router = useRouter();
+  const insets = useSafeAreaInsets();
+  const { id, payBillAccountId } = useLocalSearchParams<{
+    id?: string;
+    payBillAccountId?: string;
+  }>();
   const { transactions, accounts, categories, settings, addTransaction, updateTransaction } =
-    useFinanceStore()
+    useFinanceStore();
 
-  const existing = id ? transactions.find((t) => t.id === id) : undefined
-  const isEdit = !!existing
+  const existing = id ? transactions.find((t) => t.id === id) : undefined;
+  const isEdit = !!existing;
 
   // When opened via "Pay Bill", pre-set type to transfer + pre-select the credit card as destination
-  const initialType: TransactionType = existing?.type ?? (payBillAccountId ? 'transfer' : 'expense')
+  const initialType: TransactionType =
+    existing?.type ?? (payBillAccountId ? 'transfer' : 'expense');
 
   // Form state
-  const [type, setType] = useState<TransactionType>(initialType)
-  const [amount, setAmount] = useState(existing?.amount ?? 0)
+  const [type, setType] = useState<TransactionType>(initialType);
+  const [amount, setAmount] = useState(existing?.amount ?? 0);
   const [accountId, setAccountId] = useState(
-    existing?.accountId ?? (accounts.find((a) => a.type !== 'credit')?.id ?? accounts[0]?.id ?? '')
-  )
-  const [toAccountId, setToAccountId] = useState(existing?.toAccountId ?? payBillAccountId ?? '')
-  const [categoryId, setCategoryId] = useState(existing?.categoryId ?? '')
-  const [labelIds, setLabelIds] = useState<string[]>(existing?.labels ?? [])
-  const [note, setNote] = useState(existing?.note ?? '')
-  const [date, setDate] = useState(existing ? new Date(existing.date) : new Date())
-  const [categoryPickerVisible, setCategoryPickerVisible] = useState(false)
-  const [labelPickerVisible, setLabelPickerVisible] = useState(false)
-  const scrollViewRef = useRef<ScrollView>(null)
+    existing?.accountId ?? accounts.find((a) => a.type !== 'credit')?.id ?? accounts[0]?.id ?? '',
+  );
+  const [toAccountId, setToAccountId] = useState(existing?.toAccountId ?? payBillAccountId ?? '');
+  const [categoryId, setCategoryId] = useState(existing?.categoryId ?? '');
+  const [labelIds, setLabelIds] = useState<string[]>(existing?.labels ?? []);
+  const [note, setNote] = useState(existing?.note ?? '');
+  const [date, setDate] = useState(existing ? new Date(existing.date) : new Date());
+  const [categoryPickerVisible, setCategoryPickerVisible] = useState(false);
+  const [labelPickerVisible, setLabelPickerVisible] = useState(false);
+  const scrollViewRef = useRef<ScrollView>(null);
 
-  const selectedCategory = categories.find((c) => c.id === categoryId)
+  const selectedCategory = categories.find((c) => c.id === categoryId);
 
   const handleCategoryChange = (cat: Category) => {
-    setCategoryId(cat.id)
-    setCategoryPickerVisible(false)
-  }
+    setCategoryId(cat.id);
+    setCategoryPickerVisible(false);
+  };
 
   const handleDateChange = (newDate: Date) => {
     // Preserve the time when date changes
-    const combined = new Date(newDate)
-    combined.setHours(date.getHours())
-    combined.setMinutes(date.getMinutes())
-    combined.setSeconds(date.getSeconds())
-    setDate(combined)
-  }
+    const combined = new Date(newDate);
+    combined.setHours(date.getHours());
+    combined.setMinutes(date.getMinutes());
+    combined.setSeconds(date.getSeconds());
+    setDate(combined);
+  };
 
   const handleTimeChange = (newTime: Date) => {
     // Preserve the date when time changes
-    const combined = new Date(date)
-    combined.setHours(newTime.getHours())
-    combined.setMinutes(newTime.getMinutes())
-    combined.setSeconds(newTime.getSeconds())
-    setDate(combined)
-  }
+    const combined = new Date(date);
+    combined.setHours(newTime.getHours());
+    combined.setMinutes(newTime.getMinutes());
+    combined.setSeconds(newTime.getSeconds());
+    setDate(combined);
+  };
 
   const handleSave = () => {
     if (amount <= 0) {
-      errorHaptic()
-      showToast({ message: 'Enter an amount greater than 0', type: 'error' })
-      return
+      errorHaptic();
+      showToast({ message: 'Enter an amount greater than 0', type: 'error' });
+      return;
     }
     if (!accountId) {
-      errorHaptic()
-      showToast({ message: 'Select an account', type: 'error' })
-      return
+      errorHaptic();
+      showToast({ message: 'Select an account', type: 'error' });
+      return;
     }
     if (type === 'transfer' && (!toAccountId || toAccountId === accountId)) {
-      errorHaptic()
-      showToast({ message: 'Select a different destination account', type: 'error' })
-      return
+      errorHaptic();
+      showToast({ message: 'Select a different destination account', type: 'error' });
+      return;
     }
 
     if (isEdit && existing) {
@@ -160,8 +158,8 @@ export default function AddTransactionModal() {
         labels: labelIds,
         note: note.trim(),
         date: date.toISOString(),
-      })
-      showToast({ message: 'Transaction updated', type: 'success' })
+      });
+      showToast({ message: 'Transaction updated', type: 'success' });
     } else {
       addTransaction({
         type,
@@ -172,34 +170,35 @@ export default function AddTransactionModal() {
         labels: labelIds,
         note: note.trim(),
         date: date.toISOString(),
-      })
-      showToast({ message: 'Transaction added', type: 'success' })
+      });
+      showToast({ message: 'Transaction added', type: 'success' });
     }
 
-    successHaptic()
-    router.back()
-  }
+    successHaptic();
+    router.back();
+  };
 
-  const TYPE_TABS: { key: TransactionType; label: string; icon: React.ReactNode; color: string }[] = [
-    {
-      key: 'expense',
-      label: 'Expense',
-      icon: <ArrowDownLeft size={16} color={type === 'expense' ? '#fff' : colors.expense} />,
-      color: colors.expense,
-    },
-    {
-      key: 'income',
-      label: 'Income',
-      icon: <ArrowUpRight size={16} color={type === 'income' ? '#fff' : colors.income} />,
-      color: colors.income,
-    },
-    {
-      key: 'transfer',
-      label: 'Transfer',
-      icon: <ArrowLeftRight size={16} color={type === 'transfer' ? '#fff' : colors.transfer} />,
-      color: colors.transfer,
-    },
-  ]
+  const TYPE_TABS: { key: TransactionType; label: string; icon: React.ReactNode; color: string }[] =
+    [
+      {
+        key: 'expense',
+        label: 'Expense',
+        icon: <ArrowDownLeft size={16} color={type === 'expense' ? '#fff' : colors.expense} />,
+        color: colors.expense,
+      },
+      {
+        key: 'income',
+        label: 'Income',
+        icon: <ArrowUpRight size={16} color={type === 'income' ? '#fff' : colors.income} />,
+        color: colors.income,
+      },
+      {
+        key: 'transfer',
+        label: 'Transfer',
+        icon: <ArrowLeftRight size={16} color={type === 'transfer' ? '#fff' : colors.transfer} />,
+        color: colors.transfer,
+      },
+    ];
 
   return (
     <View style={styles.container}>
@@ -220,8 +219,8 @@ export default function AddTransactionModal() {
           <TouchableOpacity
             key={tab.key}
             onPress={() => {
-              lightHaptic()
-              setType(tab.key)
+              lightHaptic();
+              setType(tab.key);
             }}
             style={[
               styles.typeTab,
@@ -229,22 +228,14 @@ export default function AddTransactionModal() {
             ]}
           >
             {tab.icon}
-            <Text
-              style={[
-                styles.typeTabLabel,
-                type === tab.key && styles.typeTabLabelActive,
-              ]}
-            >
+            <Text style={[styles.typeTabLabel, type === tab.key && styles.typeTabLabelActive]}>
               {tab.label}
             </Text>
           </TouchableOpacity>
         ))}
       </View>
 
-      <KeyboardAvoidingView
-        behavior="padding"
-        style={styles.flex}
-      >
+      <KeyboardAvoidingView behavior="padding" style={styles.flex}>
         <ScrollView
           ref={scrollViewRef}
           keyboardShouldPersistTaps="handled"
@@ -277,7 +268,10 @@ export default function AddTransactionModal() {
             <AccountChipGroup
               accounts={accounts}
               selectedId={accountId}
-              onSelect={(id) => { lightHaptic(); setAccountId(id) }}
+              onSelect={(id) => {
+                lightHaptic();
+                setAccountId(id);
+              }}
               styles={styles}
             />
           </View>
@@ -289,7 +283,10 @@ export default function AddTransactionModal() {
               <AccountChipGroup
                 accounts={accounts.filter((acc) => acc.id !== accountId)}
                 selectedId={toAccountId}
-                onSelect={(id) => { lightHaptic(); setToAccountId(id) }}
+                onSelect={(id) => {
+                  lightHaptic();
+                  setToAccountId(id);
+                }}
                 styles={styles}
               />
             </View>
@@ -302,8 +299,8 @@ export default function AddTransactionModal() {
               <TouchableOpacity
                 style={styles.pickerBtn}
                 onPress={() => {
-                  lightHaptic()
-                  setCategoryPickerVisible(true)
+                  lightHaptic();
+                  setCategoryPickerVisible(true);
                 }}
               >
                 <Text style={styles.pickerBtnLabel}>
@@ -326,8 +323,8 @@ export default function AddTransactionModal() {
             <TouchableOpacity
               style={styles.pickerBtn}
               onPress={() => {
-                lightHaptic()
-                setLabelPickerVisible(true)
+                lightHaptic();
+                setLabelPickerVisible(true);
               }}
             >
               <Tag size={14} color={colors.textMuted} />
@@ -358,8 +355,8 @@ export default function AddTransactionModal() {
               maxLength={200}
               onFocus={() => {
                 setTimeout(() => {
-                  scrollViewRef.current?.scrollToEnd({ animated: true })
-                }, 300)
+                  scrollViewRef.current?.scrollToEnd({ animated: true });
+                }, 300);
               }}
             />
           </View>
@@ -378,156 +375,156 @@ export default function AddTransactionModal() {
         </TouchableOpacity>
       </KeyboardAvoidingView>
     </View>
-  )
+  );
 }
 
 function makeStyles(colors: ColorPalette) {
   return StyleSheet.create({
-  flex: { flex: 1 },
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingTop: 16,
-    paddingBottom: 12,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: colors.border,
-  },
-  headerTitle: {
-    fontFamily: 'Sora_700Bold',
-    fontSize: 17,
-    color: colors.textPrimary,
-  },
-  typeTabs: {
-    flexDirection: 'row',
-    padding: 16,
-    gap: 8,
-  },
-  typeTab: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    paddingVertical: 10,
-    borderRadius: 12,
-    borderWidth: 1.5,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-  },
-  typeTabLabel: {
-    fontFamily: 'DMSans_500Medium',
-    fontSize: 13,
-    color: colors.textMuted,
-  },
-  typeTabLabelActive: {
-    color: '#fff',
-  },
-  amountContainer: {
-    paddingHorizontal: 16,
-    marginBottom: 8,
-  },
-  scroll: {
-    gap: 4,
-  },
-  field: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    gap: 8,
-  },
-  fieldLabel: {
-    fontFamily: 'DMSans_500Medium',
-    fontSize: 13,
-    color: colors.textMuted,
-  },
-  accountRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-  },
-  accountChip: {
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-  },
-  accountChipActive: {
-    borderColor: colors.primary,
-    backgroundColor: `${colors.primary}22`,
-  },
-  accountChipLabel: {
-    fontFamily: 'DMSans_500Medium',
-    fontSize: 13,
-    color: colors.textMuted,
-  },
-  accountChipLabelActive: {
-    color: colors.primary,
-  },
-  accountGroupLabel: {
-    fontFamily: 'DMSans_500Medium',
-    fontSize: 11,
-    color: colors.textMuted,
-    textTransform: 'uppercase' as const,
-    letterSpacing: 0.5,
-    marginBottom: 2,
-    marginTop: 4,
-  },
-  dateTimeRow: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-  dateTimeItem: {
-    flex: 1,
-  },
-  pickerBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-  },
-  pickerBtnLabel: {
-    fontFamily: 'DMSans_400Regular',
-    fontSize: 15,
-    color: colors.textPrimary,
-    flex: 1,
-  },
-  noteInput: {
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    fontFamily: 'DMSans_400Regular',
-    fontSize: 15,
-    color: colors.textPrimary,
-    minHeight: 80,
-    textAlignVertical: 'top',
-  },
-  saveBtn: {
-    marginHorizontal: 16,
-    backgroundColor: colors.primary,
-    borderRadius: 16,
-    paddingVertical: 16,
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  saveBtnLabel: {
-    fontFamily: 'Sora_700Bold',
-    fontSize: 16,
-    color: '#fff',
-  },
-})
+    flex: { flex: 1 },
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingHorizontal: 20,
+      paddingTop: 16,
+      paddingBottom: 12,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: colors.border,
+    },
+    headerTitle: {
+      fontFamily: 'Sora_700Bold',
+      fontSize: 17,
+      color: colors.textPrimary,
+    },
+    typeTabs: {
+      flexDirection: 'row',
+      padding: 16,
+      gap: 8,
+    },
+    typeTab: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 6,
+      paddingVertical: 10,
+      borderRadius: 12,
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      backgroundColor: colors.surface,
+    },
+    typeTabLabel: {
+      fontFamily: 'DMSans_500Medium',
+      fontSize: 13,
+      color: colors.textMuted,
+    },
+    typeTabLabelActive: {
+      color: '#fff',
+    },
+    amountContainer: {
+      paddingHorizontal: 16,
+      marginBottom: 8,
+    },
+    scroll: {
+      gap: 4,
+    },
+    field: {
+      paddingHorizontal: 16,
+      paddingVertical: 8,
+      gap: 8,
+    },
+    fieldLabel: {
+      fontFamily: 'DMSans_500Medium',
+      fontSize: 13,
+      color: colors.textMuted,
+    },
+    accountRow: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: 8,
+    },
+    accountChip: {
+      paddingHorizontal: 14,
+      paddingVertical: 8,
+      borderRadius: 20,
+      borderWidth: 1,
+      borderColor: colors.border,
+      backgroundColor: colors.surface,
+    },
+    accountChipActive: {
+      borderColor: colors.primary,
+      backgroundColor: `${colors.primary}22`,
+    },
+    accountChipLabel: {
+      fontFamily: 'DMSans_500Medium',
+      fontSize: 13,
+      color: colors.textMuted,
+    },
+    accountChipLabelActive: {
+      color: colors.primary,
+    },
+    accountGroupLabel: {
+      fontFamily: 'DMSans_500Medium',
+      fontSize: 11,
+      color: colors.textMuted,
+      textTransform: 'uppercase' as const,
+      letterSpacing: 0.5,
+      marginBottom: 2,
+      marginTop: 4,
+    },
+    dateTimeRow: {
+      flexDirection: 'row',
+      gap: 8,
+    },
+    dateTimeItem: {
+      flex: 1,
+    },
+    pickerBtn: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+      backgroundColor: colors.surface,
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: 12,
+      paddingHorizontal: 14,
+      paddingVertical: 12,
+    },
+    pickerBtnLabel: {
+      fontFamily: 'DMSans_400Regular',
+      fontSize: 15,
+      color: colors.textPrimary,
+      flex: 1,
+    },
+    noteInput: {
+      backgroundColor: colors.surface,
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: 12,
+      paddingHorizontal: 14,
+      paddingVertical: 12,
+      fontFamily: 'DMSans_400Regular',
+      fontSize: 15,
+      color: colors.textPrimary,
+      minHeight: 80,
+      textAlignVertical: 'top',
+    },
+    saveBtn: {
+      marginHorizontal: 16,
+      backgroundColor: colors.primary,
+      borderRadius: 16,
+      paddingVertical: 16,
+      alignItems: 'center',
+      marginTop: 8,
+    },
+    saveBtnLabel: {
+      fontFamily: 'Sora_700Bold',
+      fontSize: 16,
+      color: '#fff',
+    },
+  });
 }

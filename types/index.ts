@@ -1,106 +1,110 @@
-export type AccountType = 'checking' | 'savings' | 'cash' | 'credit' | 'investment' | 'wallet'
-export type TransactionType = 'expense' | 'income' | 'transfer'
-export type CategoryType = 'expense' | 'income' | 'both'
-export type Currency = 'USD' | 'EUR' | 'GBP' | 'INR' | 'JPY' | 'CAD' | 'AUD'
-export type Theme = 'dark' | 'light' | 'system'
+export type AccountType = 'checking' | 'savings' | 'cash' | 'credit' | 'investment' | 'wallet';
+export type TransactionType = 'expense' | 'income' | 'transfer';
+export type CategoryType = 'expense' | 'income' | 'both';
+export type Currency = 'USD' | 'EUR' | 'GBP' | 'INR' | 'JPY' | 'CAD' | 'AUD';
+export type Theme = 'dark' | 'light' | 'system';
 
 export interface Account {
-  id: string
-  name: string
-  type: AccountType
-  currency: Currency
-  color: string
-  icon: string
+  id: string;
+  name: string;
+  type: AccountType;
+  currency: Currency;
+  color: string;
+  icon: string;
   /**
    * For regular accounts: money currently held (positive = asset).
    * For credit accounts: negative = amount owed, 0 = fully paid.
    */
-  balance: number
-  createdAt: string
+  balance: number;
+  createdAt: string;
   // ── Credit-card specific (optional, only meaningful when type === 'credit') ──
   /** Maximum credit limit, e.g. 100000. */
-  creditLimit?: number
+  creditLimit?: number;
 }
 
 export interface Transaction {
-  id: string
-  type: TransactionType
-  amount: number
-  accountId: string
-  toAccountId?: string
-  categoryId: string
-  date: string
-  note: string
-  labels: string[]
-  createdAt: string
+  id: string;
+  type: TransactionType;
+  amount: number;
+  accountId: string;
+  toAccountId?: string;
+  categoryId: string;
+  date: string;
+  note: string;
+  labels: string[];
+  createdAt: string;
 }
 
 export interface Category {
-  id: string
-  name: string
-  icon: string
-  color: string
-  type: CategoryType
+  id: string;
+  name: string;
+  icon: string;
+  color: string;
+  type: CategoryType;
 }
 
 export interface Label {
-  id: string
-  name: string
-  color: string
+  id: string;
+  name: string;
+  color: string;
 }
 
 export interface Settings {
-  currency: Currency
-  theme: Theme
-  userName: string
-  useBiometrics: boolean
-  hapticFeedback: boolean
-  notifications: boolean
+  currency: Currency;
+  theme: Theme;
+  userName: string;
+  useBiometrics: boolean;
+  hapticFeedback: boolean;
+  notifications: boolean;
 }
 
 export interface MonthlySummary {
-  month: number
-  year: number
-  income: number
-  expenses: number
-  net: number
+  month: number;
+  year: number;
+  income: number;
+  expenses: number;
+  net: number;
 }
 
 export interface FinanceStore {
-  accounts: Account[]
-  transactions: Transaction[]
-  categories: Category[]
-  labels: Label[]
-  settings: Settings
-  isHydrated: boolean
+  accounts: Account[];
+  transactions: Transaction[];
+  categories: Category[];
+  labels: Label[];
+  settings: Settings;
+  isHydrated: boolean;
 
   // Account actions
-  addAccount: (account: Omit<Account, 'id' | 'createdAt'>) => void
-  updateAccount: (id: string, updates: Partial<Omit<Account, 'id'>>) => void
-  deleteAccount: (id: string) => void
+  addAccount: (account: Omit<Account, 'id' | 'createdAt'>) => void;
+  updateAccount: (id: string, updates: Partial<Omit<Account, 'id'>>) => void;
+  deleteAccount: (id: string) => void;
 
   // Transaction actions
-  addTransaction: (transaction: Omit<Transaction, 'id' | 'createdAt'>) => void
-  updateTransaction: (id: string, updates: Partial<Omit<Transaction, 'id'>>) => void
-  deleteTransaction: (id: string) => void
+  addTransaction: (transaction: Omit<Transaction, 'id' | 'createdAt'>) => void;
+  updateTransaction: (id: string, updates: Partial<Omit<Transaction, 'id'>>) => void;
+  deleteTransaction: (id: string) => void;
 
   // Category actions
-  addCategory: (category: Omit<Category, 'id'>) => void
-  updateCategory: (id: string, updates: Partial<Omit<Category, 'id'>>) => void
-  deleteCategory: (id: string) => void
+  addCategory: (category: Omit<Category, 'id'>) => void;
+  updateCategory: (id: string, updates: Partial<Omit<Category, 'id'>>) => void;
+  deleteCategory: (id: string) => void;
 
   // Label actions
-  addLabel: (label: Omit<Label, 'id'>) => void
-  updateLabel: (id: string, updates: Partial<Omit<Label, 'id'>>) => void
-  deleteLabel: (id: string) => void
+  addLabel: (label: Omit<Label, 'id'>) => void;
+  updateLabel: (id: string, updates: Partial<Omit<Label, 'id'>>) => void;
+  deleteLabel: (id: string) => void;
 
   // Settings actions
-  updateSettings: (updates: Partial<Settings>) => void
+  updateSettings: (updates: Partial<Settings>) => void;
 
   // Data actions
-  resetToDefaults: () => void
-  importData: (data: Partial<Pick<FinanceStore, 'accounts' | 'transactions' | 'categories' | 'labels' | 'settings'>>) => void
+  resetToDefaults: () => void;
+  importData: (
+    data: Partial<
+      Pick<FinanceStore, 'accounts' | 'transactions' | 'categories' | 'labels' | 'settings'>
+    >,
+  ) => void;
 
   // Internal
-  setHydrated: (hydrated: boolean) => void
+  setHydrated: (hydrated: boolean) => void;
 }

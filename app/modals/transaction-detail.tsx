@@ -1,14 +1,7 @@
-import React from 'react'
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-  Alert,
-} from 'react-native'
-import { useRouter, useLocalSearchParams } from 'expo-router'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   X,
   Pencil,
@@ -20,25 +13,25 @@ import {
   ArrowDownLeft,
   ArrowUpRight,
   ArrowLeftRight,
-} from 'lucide-react-native'
-import { useColors } from '@/hooks/useColors'
-import type { ColorPalette } from '@/constants/Colors'
-import { CategoryBadge } from '@/components/categories/CategoryBadge'
-import { useFinanceStore } from '@/store/useFinanceStore'
-import { formatCurrency, formatFullDate, formatTime } from '@/utils/formatters'
-import { showToast } from '@/components/common/Toast'
-import { warningHaptic } from '@/utils/haptics'
+} from 'lucide-react-native';
+import { useColors } from '@/hooks/useColors';
+import type { ColorPalette } from '@/constants/Colors';
+import { CategoryBadge } from '@/components/categories/CategoryBadge';
+import { useFinanceStore } from '@/store/useFinanceStore';
+import { formatCurrency, formatFullDate, formatTime } from '@/utils/formatters';
+import { showToast } from '@/components/common/Toast';
+import { warningHaptic } from '@/utils/haptics';
 
 export default function TransactionDetailModal() {
-  const colors = useColors()
-  const styles = makeStyles(colors)
-  const router = useRouter()
-  const insets = useSafeAreaInsets()
-  const { id } = useLocalSearchParams<{ id: string }>()
+  const colors = useColors();
+  const styles = makeStyles(colors);
+  const router = useRouter();
+  const insets = useSafeAreaInsets();
+  const { id } = useLocalSearchParams<{ id: string }>();
   const { transactions, accounts, categories, labels, settings, deleteTransaction } =
-    useFinanceStore()
+    useFinanceStore();
 
-  const transaction = transactions.find((t) => t.id === id)
+  const transaction = transactions.find((t) => t.id === id);
 
   if (!transaction) {
     return (
@@ -54,39 +47,41 @@ export default function TransactionDetailModal() {
           <Text style={styles.notFoundText}>Transaction not found</Text>
         </View>
       </View>
-    )
+    );
   }
 
-  const account = accounts.find((a) => a.id === transaction.accountId)
-  const toAccount =
-    transaction.toAccountId ? accounts.find((a) => a.id === transaction.toAccountId) : undefined
-  const category =
-    transaction.categoryId ? categories.find((c) => c.id === transaction.categoryId) : undefined
-  const txLabels = labels.filter((l) => transaction.labels?.includes(l.id))
+  const account = accounts.find((a) => a.id === transaction.accountId);
+  const toAccount = transaction.toAccountId
+    ? accounts.find((a) => a.id === transaction.toAccountId)
+    : undefined;
+  const category = transaction.categoryId
+    ? categories.find((c) => c.id === transaction.categoryId)
+    : undefined;
+  const txLabels = labels.filter((l) => transaction.labels?.includes(l.id));
 
   const typeColor =
     transaction.type === 'income'
       ? colors.income
       : transaction.type === 'expense'
-      ? colors.expense
-      : colors.transfer
+        ? colors.expense
+        : colors.transfer;
 
   const TypeIcon =
     transaction.type === 'income'
       ? ArrowUpRight
       : transaction.type === 'expense'
-      ? ArrowDownLeft
-      : ArrowLeftRight
+        ? ArrowDownLeft
+        : ArrowLeftRight;
 
   const amountPrefix =
-    transaction.type === 'income' ? '+' : transaction.type === 'expense' ? '−' : '↔'
+    transaction.type === 'income' ? '+' : transaction.type === 'expense' ? '−' : '↔';
 
   const handleEdit = () => {
-    router.replace({ pathname: '/modals/add-transaction', params: { id: transaction.id } })
-  }
+    router.replace({ pathname: '/modals/add-transaction', params: { id: transaction.id } });
+  };
 
   const handleDelete = () => {
-    warningHaptic()
+    warningHaptic();
     Alert.alert(
       'Delete Transaction',
       'Are you sure you want to delete this transaction? This cannot be undone.',
@@ -96,14 +91,14 @@ export default function TransactionDetailModal() {
           text: 'Delete',
           style: 'destructive',
           onPress: () => {
-            deleteTransaction(transaction.id)
-            showToast({ message: 'Transaction deleted', type: 'success' })
-            router.back()
+            deleteTransaction(transaction.id);
+            showToast({ message: 'Transaction deleted', type: 'success' });
+            router.back();
           },
         },
-      ]
-    )
-  }
+      ],
+    );
+  };
 
   return (
     <View style={[styles.container, { paddingBottom: insets.bottom }]}>
@@ -130,9 +125,7 @@ export default function TransactionDetailModal() {
           <Text style={[styles.amount, { color: typeColor }]}>
             {amountPrefix} {formatCurrency(transaction.amount, settings.currency)}
           </Text>
-          {transaction.note ? (
-            <Text style={styles.note}>{transaction.note}</Text>
-          ) : null}
+          {transaction.note ? <Text style={styles.note}>{transaction.note}</Text> : null}
         </View>
 
         {/* Details list */}
@@ -200,7 +193,10 @@ export default function TransactionDetailModal() {
                   {txLabels.map((lbl) => (
                     <View
                       key={lbl.id}
-                      style={[styles.labelChip, { backgroundColor: `${lbl.color}22`, borderColor: lbl.color }]}
+                      style={[
+                        styles.labelChip,
+                        { backgroundColor: `${lbl.color}22`, borderColor: lbl.color },
+                      ]}
                     >
                       <Text style={[styles.labelChipText, { color: lbl.color }]}>{lbl.name}</Text>
                     </View>
@@ -233,156 +229,156 @@ export default function TransactionDetailModal() {
         <View style={{ height: 40 }} />
       </ScrollView>
     </View>
-  )
+  );
 }
 
 function makeStyles(colors: ColorPalette) {
   return StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingTop: 16,
-    paddingBottom: 12,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: colors.border,
-  },
-  headerTitle: {
-    fontFamily: 'Sora_700Bold',
-    fontSize: 17,
-    color: colors.textPrimary,
-  },
-  notFound: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  notFoundText: {
-    fontFamily: 'DMSans_400Regular',
-    fontSize: 16,
-    color: colors.textMuted,
-  },
-  scroll: {
-    padding: 16,
-    gap: 16,
-  },
-  heroCard: {
-    backgroundColor: colors.surface,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: colors.border,
-    padding: 24,
-    alignItems: 'center',
-    gap: 8,
-  },
-  typeIcon: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 4,
-  },
-  txType: {
-    fontFamily: 'DMSans_500Medium',
-    fontSize: 13,
-    color: colors.textMuted,
-    textTransform: 'uppercase',
-    letterSpacing: 0.8,
-  },
-  amount: {
-    fontFamily: 'Sora_800ExtraBold',
-    fontSize: 36,
-  },
-  note: {
-    fontFamily: 'DMSans_400Regular',
-    fontSize: 14,
-    color: colors.textMuted,
-    textAlign: 'center',
-  },
-  detailCard: {
-    backgroundColor: colors.surface,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: colors.border,
-    overflow: 'hidden',
-  },
-  detailRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 16,
-    gap: 12,
-  },
-  detailLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  detailLabel: {
-    fontFamily: 'DMSans_400Regular',
-    fontSize: 14,
-    color: colors.textMuted,
-  },
-  detailRight: {
-    alignItems: 'flex-end',
-  },
-  detailValue: {
-    fontFamily: 'DMSans_500Medium',
-    fontSize: 14,
-    color: colors.textPrimary,
-    textAlign: 'right',
-    flex: 1,
-  },
-  detailSub: {
-    fontFamily: 'DMSans_400Regular',
-    fontSize: 12,
-    color: colors.textMuted,
-  },
-  noteValue: {
-    fontFamily: 'DMSans_400Regular',
-  },
-  divider: {
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: colors.border,
-    marginHorizontal: 16,
-  },
-  labelsRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 6,
-    justifyContent: 'flex-end',
-  },
-  labelChip: {
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 12,
-    borderWidth: 1,
-  },
-  labelChipText: {
-    fontFamily: 'DMSans_500Medium',
-    fontSize: 12,
-  },
-  deleteBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    paddingVertical: 14,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: `${colors.expense}44`,
-    backgroundColor: `${colors.expense}11`,
-  },
-  deleteBtnLabel: {
-    fontFamily: 'DMSans_500Medium',
-    fontSize: 15,
-    color: colors.expense,
-  },
-})
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingHorizontal: 20,
+      paddingTop: 16,
+      paddingBottom: 12,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: colors.border,
+    },
+    headerTitle: {
+      fontFamily: 'Sora_700Bold',
+      fontSize: 17,
+      color: colors.textPrimary,
+    },
+    notFound: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    notFoundText: {
+      fontFamily: 'DMSans_400Regular',
+      fontSize: 16,
+      color: colors.textMuted,
+    },
+    scroll: {
+      padding: 16,
+      gap: 16,
+    },
+    heroCard: {
+      backgroundColor: colors.surface,
+      borderRadius: 20,
+      borderWidth: 1,
+      borderColor: colors.border,
+      padding: 24,
+      alignItems: 'center',
+      gap: 8,
+    },
+    typeIcon: {
+      width: 60,
+      height: 60,
+      borderRadius: 30,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: 4,
+    },
+    txType: {
+      fontFamily: 'DMSans_500Medium',
+      fontSize: 13,
+      color: colors.textMuted,
+      textTransform: 'uppercase',
+      letterSpacing: 0.8,
+    },
+    amount: {
+      fontFamily: 'Sora_800ExtraBold',
+      fontSize: 36,
+    },
+    note: {
+      fontFamily: 'DMSans_400Regular',
+      fontSize: 14,
+      color: colors.textMuted,
+      textAlign: 'center',
+    },
+    detailCard: {
+      backgroundColor: colors.surface,
+      borderRadius: 16,
+      borderWidth: 1,
+      borderColor: colors.border,
+      overflow: 'hidden',
+    },
+    detailRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: 16,
+      gap: 12,
+    },
+    detailLeft: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+    },
+    detailLabel: {
+      fontFamily: 'DMSans_400Regular',
+      fontSize: 14,
+      color: colors.textMuted,
+    },
+    detailRight: {
+      alignItems: 'flex-end',
+    },
+    detailValue: {
+      fontFamily: 'DMSans_500Medium',
+      fontSize: 14,
+      color: colors.textPrimary,
+      textAlign: 'right',
+      flex: 1,
+    },
+    detailSub: {
+      fontFamily: 'DMSans_400Regular',
+      fontSize: 12,
+      color: colors.textMuted,
+    },
+    noteValue: {
+      fontFamily: 'DMSans_400Regular',
+    },
+    divider: {
+      height: StyleSheet.hairlineWidth,
+      backgroundColor: colors.border,
+      marginHorizontal: 16,
+    },
+    labelsRow: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: 6,
+      justifyContent: 'flex-end',
+    },
+    labelChip: {
+      paddingHorizontal: 10,
+      paddingVertical: 4,
+      borderRadius: 12,
+      borderWidth: 1,
+    },
+    labelChipText: {
+      fontFamily: 'DMSans_500Medium',
+      fontSize: 12,
+    },
+    deleteBtn: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 8,
+      paddingVertical: 14,
+      borderRadius: 16,
+      borderWidth: 1,
+      borderColor: `${colors.expense}44`,
+      backgroundColor: `${colors.expense}11`,
+    },
+    deleteBtnLabel: {
+      fontFamily: 'DMSans_500Medium',
+      fontSize: 15,
+      color: colors.expense,
+    },
+  });
 }

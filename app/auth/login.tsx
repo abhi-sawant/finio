@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -10,20 +10,20 @@ import {
   ScrollView,
   ActivityIndicator,
   Alert,
-} from 'react-native'
-import { useRouter } from 'expo-router'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { ArrowLeft, Eye, EyeOff, Mail, Lock } from 'lucide-react-native'
-import { useColors } from '@/hooks/useColors'
-import type { ColorPalette } from '@/constants/Colors'
-import { api } from '@/services/api'
-import { restoreLatestBackup } from '@/services/backup'
-import { useAuthStore } from '@/store/useAuthStore'
-import { showToast } from '@/components/common/Toast'
+} from 'react-native';
+import { useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ArrowLeft, Eye, EyeOff, Mail, Lock } from 'lucide-react-native';
+import { useColors } from '@/hooks/useColors';
+import type { ColorPalette } from '@/constants/Colors';
+import { api } from '@/services/api';
+import { restoreLatestBackup } from '@/services/backup';
+import { useAuthStore } from '@/store/useAuthStore';
+import { showToast } from '@/components/common/Toast';
 
 async function checkAndPromptRestore(token: string) {
   try {
-    await api.getLatestBackup(token)
+    await api.getLatestBackup(token);
     // Backup exists — prompt the user
     Alert.alert(
       'Backup Found',
@@ -34,57 +34,57 @@ async function checkAndPromptRestore(token: string) {
           text: 'Restore',
           onPress: async () => {
             try {
-              await restoreLatestBackup()
-              showToast({ message: 'Backup restored successfully', type: 'success' })
+              await restoreLatestBackup();
+              showToast({ message: 'Backup restored successfully', type: 'success' });
             } catch {
-              showToast({ message: 'Failed to restore backup', type: 'error' })
+              showToast({ message: 'Failed to restore backup', type: 'error' });
             }
           },
         },
-      ]
-    )
+      ],
+    );
   } catch {
     // No backup available — do nothing
   }
 }
 
 export default function LoginScreen() {
-  const router = useRouter()
-  const insets = useSafeAreaInsets()
-  const colors = useColors()
-  const styles = makeStyles(colors)
-  const { setAuth } = useAuthStore()
+  const router = useRouter();
+  const insets = useSafeAreaInsets();
+  const colors = useColors();
+  const styles = makeStyles(colors);
+  const { setAuth } = useAuthStore();
 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
-    const e = email.trim().toLowerCase()
-    const p = password
+    const e = email.trim().toLowerCase();
+    const p = password;
 
     if (!e || !p) {
-      showToast({ message: 'Please fill in all fields', type: 'error' })
-      return
+      showToast({ message: 'Please fill in all fields', type: 'error' });
+      return;
     }
 
-    setLoading(true)
+    setLoading(true);
     try {
-      const res = await api.login(e, p)
-      await setAuth(res.token, res.user)
-      showToast({ message: `Welcome back, ${res.user.name.split(' ')[0]}!`, type: 'success' })
-      router.dismissAll()
-      checkAndPromptRestore(res.token)
+      const res = await api.login(e, p);
+      await setAuth(res.token, res.user);
+      showToast({ message: `Welcome back, ${res.user.name.split(' ')[0]}!`, type: 'success' });
+      router.dismissAll();
+      checkAndPromptRestore(res.token);
     } catch (err: unknown) {
       showToast({
         message: err instanceof Error ? err.message : 'Login failed',
         type: 'error',
-      })
+      });
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <KeyboardAvoidingView
@@ -184,98 +184,98 @@ export default function LoginScreen() {
         </ScrollView>
       </View>
     </KeyboardAvoidingView>
-  )
+  );
 }
 
 function makeStyles(colors: ColorPalette) {
   return StyleSheet.create({
-  flex: { flex: 1, backgroundColor: colors.background },
-  container: { flex: 1, backgroundColor: colors.background },
-  header: {
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-  },
-  scroll: {
-    paddingHorizontal: 24,
-    paddingTop: 16,
-  },
-  titleBlock: {
-    marginBottom: 36,
-  },
-  title: {
-    fontFamily: 'Sora_700Bold',
-    fontSize: 28,
-    color: colors.textPrimary,
-    marginBottom: 6,
-  },
-  subtitle: {
-    fontFamily: 'DMSans_400Regular',
-    fontSize: 15,
-    color: colors.textMuted,
-    lineHeight: 22,
-  },
-  form: {
-    gap: 12,
-  },
-  field: {
-    backgroundColor: colors.surface,
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  inputRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 14,
-    paddingVertical: 4,
-  },
-  inputIcon: {
-    marginRight: 10,
-  },
-  input: {
-    flex: 1,
-    fontFamily: 'DMSans_400Regular',
-    fontSize: 15,
-    color: colors.textPrimary,
-    paddingVertical: 14,
-  },
-  inputFlex: {
-    flex: 1,
-  },
-  forgotLink: {
-    alignSelf: 'flex-end',
-    marginTop: 2,
-  },
-  btn: {
-    backgroundColor: colors.primary,
-    borderRadius: 14,
-    paddingVertical: 16,
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  btnDisabled: {
-    opacity: 0.6,
-  },
-  btnLabel: {
-    fontFamily: 'Sora_700Bold',
-    fontSize: 15,
-    color: '#fff',
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 32,
-  },
-  footerText: {
-    fontFamily: 'DMSans_400Regular',
-    fontSize: 14,
-    color: colors.textMuted,
-  },
-  link: {
-    fontFamily: 'DMSans_500Medium',
-    fontSize: 14,
-    color: colors.primary,
-  },
-})
+    flex: { flex: 1, backgroundColor: colors.background },
+    container: { flex: 1, backgroundColor: colors.background },
+    header: {
+      paddingHorizontal: 20,
+      paddingVertical: 12,
+    },
+    scroll: {
+      paddingHorizontal: 24,
+      paddingTop: 16,
+    },
+    titleBlock: {
+      marginBottom: 36,
+    },
+    title: {
+      fontFamily: 'Sora_700Bold',
+      fontSize: 28,
+      color: colors.textPrimary,
+      marginBottom: 6,
+    },
+    subtitle: {
+      fontFamily: 'DMSans_400Regular',
+      fontSize: 15,
+      color: colors.textMuted,
+      lineHeight: 22,
+    },
+    form: {
+      gap: 12,
+    },
+    field: {
+      backgroundColor: colors.surface,
+      borderRadius: 14,
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    inputRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: 14,
+      paddingVertical: 4,
+    },
+    inputIcon: {
+      marginRight: 10,
+    },
+    input: {
+      flex: 1,
+      fontFamily: 'DMSans_400Regular',
+      fontSize: 15,
+      color: colors.textPrimary,
+      paddingVertical: 14,
+    },
+    inputFlex: {
+      flex: 1,
+    },
+    forgotLink: {
+      alignSelf: 'flex-end',
+      marginTop: 2,
+    },
+    btn: {
+      backgroundColor: colors.primary,
+      borderRadius: 14,
+      paddingVertical: 16,
+      alignItems: 'center',
+      marginTop: 8,
+    },
+    btnDisabled: {
+      opacity: 0.6,
+    },
+    btnLabel: {
+      fontFamily: 'Sora_700Bold',
+      fontSize: 15,
+      color: '#fff',
+    },
+    footer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: 32,
+    },
+    footerText: {
+      fontFamily: 'DMSans_400Regular',
+      fontSize: 14,
+      color: colors.textMuted,
+    },
+    link: {
+      fontFamily: 'DMSans_500Medium',
+      fontSize: 14,
+      color: colors.primary,
+    },
+  });
 }

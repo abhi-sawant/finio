@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react';
 import {
   View,
   Text,
@@ -7,47 +7,47 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
-} from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useRouter } from 'expo-router'
-import { getHours } from 'date-fns'
-import { BellRing, Settings2 } from 'lucide-react-native'
-import { useColors } from '@/hooks/useColors'
-import type { ColorPalette } from '@/constants/Colors'
-import { SummaryCards } from '@/components/dashboard/SummaryCards'
-import { RecentTransactions } from '@/components/dashboard/RecentTransactions'
-import { UpcomingPayments } from '@/components/dashboard/UpcomingPayments'
-import { AccountCard } from '@/components/accounts/AccountCard'
-import { SpendingDonut } from '@/components/charts/SpendingDonut'
-import { useFinanceStore } from '@/store/useFinanceStore'
-import { lightHaptic } from '@/utils/haptics'
-import type { Account } from '@/types'
+} from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
+import { getHours } from 'date-fns';
+import { BellRing, Settings2 } from 'lucide-react-native';
+import { useColors } from '@/hooks/useColors';
+import type { ColorPalette } from '@/constants/Colors';
+import { SummaryCards } from '@/components/dashboard/SummaryCards';
+import { RecentTransactions } from '@/components/dashboard/RecentTransactions';
+import { UpcomingPayments } from '@/components/dashboard/UpcomingPayments';
+import { AccountCard } from '@/components/accounts/AccountCard';
+import { SpendingDonut } from '@/components/charts/SpendingDonut';
+import { useFinanceStore } from '@/store/useFinanceStore';
+import { lightHaptic } from '@/utils/haptics';
+import type { Account } from '@/types';
 
 function getGreeting(): string {
-  const hour = getHours(new Date())
-  if (hour < 12) return 'Good morning'
-  if (hour < 17) return 'Good afternoon'
-  return 'Good evening'
+  const hour = getHours(new Date());
+  if (hour < 12) return 'Good morning';
+  if (hour < 17) return 'Good afternoon';
+  return 'Good evening';
 }
 
 export default function DashboardScreen() {
-  const insets = useSafeAreaInsets()
-  const router = useRouter()
-  const colors = useColors()
-  const styles = useMemo(() => makeStyles(colors), [colors])
-  const { accounts, settings } = useFinanceStore()
-  const [refreshing, setRefreshing] = useState(false)
+  const insets = useSafeAreaInsets();
+  const router = useRouter();
+  const colors = useColors();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
+  const { accounts, settings } = useFinanceStore();
+  const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = useCallback(async () => {
-    setRefreshing(true)
-    await lightHaptic()
+    setRefreshing(true);
+    await lightHaptic();
     // Slightly delay to show refresh indicator
-    setTimeout(() => setRefreshing(false), 500)
-  }, [])
+    setTimeout(() => setRefreshing(false), 500);
+  }, []);
 
   const handleAccountPress = (account: Account) => {
-    router.push({ pathname: '/modals/add-account', params: { id: account.id } })
-  }
+    router.push({ pathname: '/modals/add-account', params: { id: account.id } });
+  };
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -109,11 +109,7 @@ export default function DashboardScreen() {
             >
               {accounts.map((account) => (
                 <View key={account.id} style={styles.accountCardWrapper}>
-                  <AccountCard
-                    account={account}
-                    onPress={handleAccountPress}
-                    variant="grid"
-                  />
+                  <AccountCard account={account} onPress={handleAccountPress} variant="grid" />
                 </View>
               ))}
             </ScrollView>
@@ -137,99 +133,99 @@ export default function DashboardScreen() {
         <View style={{ height: 100 }} />
       </ScrollView>
     </View>
-  )
+  );
 }
 
 function makeStyles(colors: ColorPalette) {
   return StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-  },
-  greeting: {
-    fontFamily: 'DMSans_400Regular',
-    fontSize: 14,
-    color: colors.textMuted,
-  },
-  username: {
-    fontFamily: 'Sora_700Bold',
-    fontSize: 22,
-    color: colors.textPrimary,
-  },
-  settingsBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: colors.surface,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  scrollContent: {
-    gap: 16,
-  },
-  section: {
-    gap: 8,
-  },
-  sectionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-  },
-  sectionTitle: {
-    fontFamily: 'Sora_700Bold',
-    fontSize: 16,
-    color: colors.textPrimary,
-  },
-  seeAll: {
-    fontFamily: 'DMSans_500Medium',
-    fontSize: 13,
-    color: colors.primary,
-  },
-  accountsRow: {
-    paddingHorizontal: 16,
-    gap: 12,
-    paddingBottom: 4,
-  },
-  accountCardWrapper: {
-    width: 160,
-  },
-  addAccountPrompt: {
-    marginHorizontal: 16,
-    borderRadius: 16,
-    borderWidth: 1.5,
-    borderColor: colors.primary,
-    borderStyle: 'dashed',
-    backgroundColor: colors.surface,
-    paddingVertical: 24,
-    paddingHorizontal: 20,
-    alignItems: 'center',
-    gap: 6,
-  },
-  addAccountPromptIcon: {
-    fontSize: 28,
-    color: colors.primary,
-    fontFamily: 'DMSans_400Regular',
-  },
-  addAccountPromptText: {
-    fontFamily: 'Sora_700Bold',
-    fontSize: 15,
-    color: colors.primary,
-  },
-  addAccountPromptSub: {
-    fontFamily: 'DMSans_400Regular',
-    fontSize: 12,
-    color: colors.textMuted,
-    textAlign: 'center',
-  },
-})
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingHorizontal: 20,
+      paddingVertical: 16,
+    },
+    greeting: {
+      fontFamily: 'DMSans_400Regular',
+      fontSize: 14,
+      color: colors.textMuted,
+    },
+    username: {
+      fontFamily: 'Sora_700Bold',
+      fontSize: 22,
+      color: colors.textPrimary,
+    },
+    settingsBtn: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      backgroundColor: colors.surface,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    scrollContent: {
+      gap: 16,
+    },
+    section: {
+      gap: 8,
+    },
+    sectionHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingHorizontal: 16,
+    },
+    sectionTitle: {
+      fontFamily: 'Sora_700Bold',
+      fontSize: 16,
+      color: colors.textPrimary,
+    },
+    seeAll: {
+      fontFamily: 'DMSans_500Medium',
+      fontSize: 13,
+      color: colors.primary,
+    },
+    accountsRow: {
+      paddingHorizontal: 16,
+      gap: 12,
+      paddingBottom: 4,
+    },
+    accountCardWrapper: {
+      width: 160,
+    },
+    addAccountPrompt: {
+      marginHorizontal: 16,
+      borderRadius: 16,
+      borderWidth: 1.5,
+      borderColor: colors.primary,
+      borderStyle: 'dashed',
+      backgroundColor: colors.surface,
+      paddingVertical: 24,
+      paddingHorizontal: 20,
+      alignItems: 'center',
+      gap: 6,
+    },
+    addAccountPromptIcon: {
+      fontSize: 28,
+      color: colors.primary,
+      fontFamily: 'DMSans_400Regular',
+    },
+    addAccountPromptText: {
+      fontFamily: 'Sora_700Bold',
+      fontSize: 15,
+      color: colors.primary,
+    },
+    addAccountPromptSub: {
+      fontFamily: 'DMSans_400Regular',
+      fontSize: 12,
+      color: colors.textMuted,
+      textAlign: 'center',
+    },
+  });
 }

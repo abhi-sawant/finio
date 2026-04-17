@@ -1,4 +1,4 @@
-import type { Category, Label, Settings } from '@/types'
+import type { Category, Label, Settings } from '@/types';
 
 export const defaultCategories: Category[] = [
   // Expense categories
@@ -15,7 +15,13 @@ export const defaultCategories: Category[] = [
   { id: 'cat-17', name: 'Personal Care', icon: 'scissors', color: '#8b5cf6', type: 'expense' },
   { id: 'cat-18', name: 'Subscriptions', icon: 'repeat', color: '#ec4899', type: 'expense' },
   { id: 'cat-19', name: 'Vehicles', icon: 'truck', color: '#06b6d4', type: 'expense' },
-  { id: 'cat-20', name: 'Financial Expenses', icon: 'dollar-sign', color: '#10b981', type: 'expense' },
+  {
+    id: 'cat-20',
+    name: 'Financial Expenses',
+    icon: 'dollar-sign',
+    color: '#10b981',
+    type: 'expense',
+  },
   { id: 'cat-11', name: 'Investments', icon: 'trending-up', color: '#f59e0b', type: 'expense' },
   // Income categories
   { id: 'cat-9', name: 'Salary', icon: 'briefcase', color: '#22c55e', type: 'income' },
@@ -28,7 +34,7 @@ export const defaultCategories: Category[] = [
   { id: 'cat-13', name: 'Transfer', icon: 'repeat', color: '#3b82f6', type: 'both' },
   { id: 'cat-14', name: 'Other', icon: 'circle-ellipsis', color: '#94a3b8', type: 'both' },
   { id: 'cat-24', name: 'Miscellaneous', icon: 'circle-ellipsis', color: '#94a3b8', type: 'both' },
-]
+];
 
 export const defaultLabels: Label[] = [
   { id: 'lbl-1', name: 'Essential', color: '#22c55e' },
@@ -39,8 +45,8 @@ export const defaultLabels: Label[] = [
   { id: 'lbl-6', name: 'Investment', color: '#8b5cf6' },
   { id: 'lbl-7', name: 'Lending', color: '#ec4899' },
   { id: 'lbl-8', name: 'My Expense', color: '#64748b' },
-  { id: 'lbl-9', name: 'Other\'s Expense', color: '#06b6d4' },
-]
+  { id: 'lbl-9', name: "Other's Expense", color: '#06b6d4' },
+];
 
 export const defaultSettings: Settings = {
   currency: 'INR',
@@ -49,4 +55,4 @@ export const defaultSettings: Settings = {
   useBiometrics: false,
   hapticFeedback: true,
   notifications: false,
-}
+};

@@ -1,47 +1,46 @@
-const BASE_URL =
-  process.env.EXPO_PUBLIC_API_URL ?? 'https://api.finio.slowatcoding.com'
+const BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? 'https://api.finio.slowatcoding.com';
 
 interface ApiResponse<T = unknown> {
-  [key: string]: T
+  [key: string]: T;
 }
 
 async function apiFetch<T = ApiResponse>(
   path: string,
-  options?: RequestInit & { token?: string }
+  options?: RequestInit & { token?: string },
 ): Promise<T> {
-  const { token, ...fetchOptions } = options ?? {}
+  const { token, ...fetchOptions } = options ?? {};
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
     ...(fetchOptions.headers as Record<string, string>),
-  }
+  };
 
   const res = await fetch(`${BASE_URL}${path}`, {
     ...fetchOptions,
     headers,
-  })
+  });
 
-  const data = await res.json().catch(() => ({}))
+  const data = await res.json().catch(() => ({}));
 
   if (!res.ok) {
-    throw new Error((data as { error?: string }).error ?? `Request failed (${res.status})`)
+    throw new Error((data as { error?: string }).error ?? `Request failed (${res.status})`);
   }
 
-  return data as T
+  return data as T;
 }
 
 // ── Auth ────────────────────────────────────────────────────────────────────
 
 export interface AuthUser {
-  id: number
-  name: string
-  email: string
+  id: number;
+  name: string;
+  email: string;
 }
 
 export interface LoginResult {
-  token: string
-  user: AuthUser
+  token: string;
+  user: AuthUser;
 }
 
 export const api = {
@@ -134,4 +133,4 @@ export const api = {
       method: 'DELETE',
       token,
     }),
-}
+};

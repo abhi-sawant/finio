@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -9,10 +9,10 @@ import {
   Alert,
   TextInput,
   ActivityIndicator,
-} from 'react-native'
-import Constants from 'expo-constants'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useRouter } from 'expo-router'
+} from 'react-native';
+import Constants from 'expo-constants';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
 import {
   User,
   Bell,
@@ -34,20 +34,20 @@ import {
   CloudDownload,
   LogOut,
   RefreshCw,
-} from 'lucide-react-native'
-import * as FileSystem from 'expo-file-system/legacy'
-import * as Sharing from 'expo-sharing'
-import * as DocumentPicker from 'expo-document-picker'
-import { useColors } from '@/hooks/useColors'
-import type { ColorPalette } from '@/constants/Colors'
-import { BottomSheet } from '@/components/common/BottomSheet'
-import { useFinanceStore } from '@/store/useFinanceStore'
-import { useAuthStore } from '@/store/useAuthStore'
-import { uploadBackup, restoreLatestBackup } from '@/services/backup'
-import { showToast } from '@/components/common/Toast'
-import { warningHaptic, lightHaptic } from '@/utils/haptics'
-import { checkForUpdate, openReleasePage } from '@/services/updater'
-import type { Currency, Theme } from '@/types'
+} from 'lucide-react-native';
+import * as FileSystem from 'expo-file-system/legacy';
+import * as Sharing from 'expo-sharing';
+import * as DocumentPicker from 'expo-document-picker';
+import { useColors } from '@/hooks/useColors';
+import type { ColorPalette } from '@/constants/Colors';
+import { BottomSheet } from '@/components/common/BottomSheet';
+import { useFinanceStore } from '@/store/useFinanceStore';
+import { useAuthStore } from '@/store/useAuthStore';
+import { uploadBackup, restoreLatestBackup } from '@/services/backup';
+import { showToast } from '@/components/common/Toast';
+import { warningHaptic, lightHaptic } from '@/utils/haptics';
+import { checkForUpdate, openReleasePage } from '@/services/updater';
+import type { Currency, Theme } from '@/types';
 
 const CURRENCIES: { code: Currency; symbol: string; name: string }[] = [
   { code: 'INR', symbol: '₹', name: 'Indian Rupee' },
@@ -57,20 +57,19 @@ const CURRENCIES: { code: Currency; symbol: string; name: string }[] = [
   { code: 'JPY', symbol: '¥', name: 'Japanese Yen' },
   { code: 'CAD', symbol: 'CA$', name: 'Canadian Dollar' },
   { code: 'AUD', symbol: 'A$', name: 'Australian Dollar' },
-]
-
+];
 
 type SectionItem = {
-  icon: React.ReactNode
-  label: string
-  onPress?: () => void
-  right?: React.ReactNode
-  danger?: boolean
-}
+  icon: React.ReactNode;
+  label: string;
+  onPress?: () => void;
+  right?: React.ReactNode;
+  danger?: boolean;
+};
 
 function SettingsRow({ icon, label, onPress, right, danger }: SectionItem) {
-  const colors = useColors()
-  const styles = makeStyles(colors)
+  const colors = useColors();
+  const styles = makeStyles(colors);
   return (
     <TouchableOpacity
       style={styles.row}
@@ -84,69 +83,77 @@ function SettingsRow({ icon, label, onPress, right, danger }: SectionItem) {
       </View>
       {right ?? (onPress ? <ChevronRight size={16} color={colors.textMuted} /> : null)}
     </TouchableOpacity>
-  )
+  );
 }
 
 function SectionHeader({ title }: { title: string }) {
-  const colors = useColors()
-  const styles = makeStyles(colors)
-  return <Text style={styles.sectionHeader}>{title}</Text>
+  const colors = useColors();
+  const styles = makeStyles(colors);
+  return <Text style={styles.sectionHeader}>{title}</Text>;
 }
 
 function formatLastBackup(iso: string | null): string {
-  if (!iso) return 'Never'
-  const d = new Date(iso)
-  const now = new Date()
+  if (!iso) return 'Never';
+  const d = new Date(iso);
+  const now = new Date();
   const isToday =
     d.getDate() === now.getDate() &&
     d.getMonth() === now.getMonth() &&
-    d.getFullYear() === now.getFullYear()
-  const time = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-  return isToday ? `Today at ${time}` : d.toLocaleDateString()
+    d.getFullYear() === now.getFullYear();
+  const time = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  return isToday ? `Today at ${time}` : d.toLocaleDateString();
 }
 
 const THEME_OPTIONS: Array<{ value: Theme; label: string; icon: string }> = [
   { value: 'light', label: 'Light', icon: '☀️' },
   { value: 'dark', label: 'Dark', icon: '🌙' },
   { value: 'system', label: 'System', icon: '⚙️' },
-]
+];
 
 export default function SettingsScreen() {
-  const insets = useSafeAreaInsets()
-  const router = useRouter()
-  const colors = useColors()
-  const styles = makeStyles(colors)
-  const { settings, updateSettings, transactions, accounts, categories, labels, resetToDefaults, importData } =
-    useFinanceStore()
-  const { user, token, lastBackupAt, clearAuth } = useAuthStore()
+  const insets = useSafeAreaInsets();
+  const router = useRouter();
+  const colors = useColors();
+  const styles = makeStyles(colors);
+  const {
+    settings,
+    updateSettings,
+    transactions,
+    accounts,
+    categories,
+    labels,
+    resetToDefaults,
+    importData,
+  } = useFinanceStore();
+  const { user, token, lastBackupAt, clearAuth } = useAuthStore();
 
-  const [nameSheetVisible, setNameSheetVisible] = useState(false)
-  const [currencySheetVisible, setCurrencySheetVisible] = useState(false)
-  const [nameInput, setNameInput] = useState(settings.userName)
-  const [backupLoading, setBackupLoading] = useState(false)
-  const [restoreLoading, setRestoreLoading] = useState(false)
-  const [updateChecking, setUpdateChecking] = useState(false)
+  const [nameSheetVisible, setNameSheetVisible] = useState(false);
+  const [currencySheetVisible, setCurrencySheetVisible] = useState(false);
+  const [nameInput, setNameInput] = useState(settings.userName);
+  const [backupLoading, setBackupLoading] = useState(false);
+  const [restoreLoading, setRestoreLoading] = useState(false);
+  const [updateChecking, setUpdateChecking] = useState(false);
 
   // ─── Name ───────────────────────────────────────────────
   const handleSaveName = () => {
     if (nameInput.trim()) {
-      updateSettings({ userName: nameInput.trim() })
-      showToast({ message: 'Name updated', type: 'success' })
+      updateSettings({ userName: nameInput.trim() });
+      showToast({ message: 'Name updated', type: 'success' });
     }
-    setNameSheetVisible(false)
-  }
+    setNameSheetVisible(false);
+  };
 
   // ─── Currency ────────────────────────────────────────────
   const handleSelectCurrency = (code: Currency) => {
-    updateSettings({ currency: code })
-    showToast({ message: `Currency set to ${code}`, type: 'success' })
-    setCurrencySheetVisible(false)
-  }
+    updateSettings({ currency: code });
+    showToast({ message: `Currency set to ${code}`, type: 'success' });
+    setCurrencySheetVisible(false);
+  };
 
   // ─── Notifications ───────────────────────────────────────
   const handleNotificationsToggle = async (enabled: boolean) => {
     try {
-      const Notifications = await import('expo-notifications')
+      const Notifications = await import('expo-notifications');
       Notifications.setNotificationHandler({
         handleNotification: async () => ({
           shouldShowBanner: true,
@@ -154,14 +161,14 @@ export default function SettingsScreen() {
           shouldPlaySound: false,
           shouldSetBadge: false,
         }),
-      })
+      });
       if (enabled) {
-        const { status } = await Notifications.requestPermissionsAsync()
+        const { status } = await Notifications.requestPermissionsAsync();
         if (status !== 'granted') {
-          showToast({ message: 'Notification permission denied', type: 'error' })
-          return
+          showToast({ message: 'Notification permission denied', type: 'error' });
+          return;
         }
-        await Notifications.cancelAllScheduledNotificationsAsync()
+        await Notifications.cancelAllScheduledNotificationsAsync();
         await Notifications.scheduleNotificationAsync({
           content: {
             title: 'Finio Reminder',
@@ -172,22 +179,22 @@ export default function SettingsScreen() {
             hour: 9,
             minute: 0,
           },
-        })
-        updateSettings({ notifications: true })
-        showToast({ message: 'Daily reminders enabled', type: 'success' })
+        });
+        updateSettings({ notifications: true });
+        showToast({ message: 'Daily reminders enabled', type: 'success' });
       } else {
-        await Notifications.cancelAllScheduledNotificationsAsync()
-        updateSettings({ notifications: false })
-        showToast({ message: 'Notifications disabled', type: 'info' })
+        await Notifications.cancelAllScheduledNotificationsAsync();
+        updateSettings({ notifications: false });
+        showToast({ message: 'Notifications disabled', type: 'info' });
       }
     } catch {
-      showToast({ message: 'Notifications not supported in this environment', type: 'error' })
+      showToast({ message: 'Notifications not supported in this environment', type: 'error' });
     }
-  }
+  };
 
   // ─── Export ──────────────────────────────────────────────
   const handleExport = async () => {
-    lightHaptic()
+    lightHaptic();
     try {
       const data = {
         accounts,
@@ -195,41 +202,41 @@ export default function SettingsScreen() {
         categories,
         labels,
         exportedAt: new Date().toISOString(),
-      }
-      const json = JSON.stringify(data, null, 2)
-      const fileName = `finio-export-${new Date().toISOString().slice(0, 10)}.json`
-      const fileUri = `${FileSystem.cacheDirectory}${fileName}`
-      await FileSystem.writeAsStringAsync(fileUri, json, { encoding: 'utf8' })
-      const canShare = await Sharing.isAvailableAsync()
+      };
+      const json = JSON.stringify(data, null, 2);
+      const fileName = `finio-export-${new Date().toISOString().slice(0, 10)}.json`;
+      const fileUri = `${FileSystem.cacheDirectory}${fileName}`;
+      await FileSystem.writeAsStringAsync(fileUri, json, { encoding: 'utf8' });
+      const canShare = await Sharing.isAvailableAsync();
       if (!canShare) {
-        showToast({ message: 'Sharing not available on this device', type: 'error' })
-        return
+        showToast({ message: 'Sharing not available on this device', type: 'error' });
+        return;
       }
       await Sharing.shareAsync(fileUri, {
         mimeType: 'application/json',
         dialogTitle: 'Save Finio Export',
         UTI: 'public.json',
-      })
+      });
     } catch {
-      showToast({ message: 'Export failed', type: 'error' })
+      showToast({ message: 'Export failed', type: 'error' });
     }
-  }
+  };
 
   // ─── Import ──────────────────────────────────────────────
   const handleImport = async () => {
-    lightHaptic()
+    lightHaptic();
     try {
       const result = await DocumentPicker.getDocumentAsync({
         type: 'application/json',
         copyToCacheDirectory: true,
-      })
-      if (result.canceled || !result.assets?.[0]) return
-      const fileUri = result.assets[0].uri
-      const raw = await FileSystem.readAsStringAsync(fileUri, { encoding: 'utf8' })
-      const parsed = JSON.parse(raw)
+      });
+      if (result.canceled || !result.assets?.[0]) return;
+      const fileUri = result.assets[0].uri;
+      const raw = await FileSystem.readAsStringAsync(fileUri, { encoding: 'utf8' });
+      const parsed = JSON.parse(raw);
       if (!parsed.accounts && !parsed.transactions && !parsed.categories) {
-        showToast({ message: 'Invalid Fina export file', type: 'error' })
-        return
+        showToast({ message: 'Invalid Fina export file', type: 'error' });
+        return;
       }
       Alert.alert(
         'Import Data',
@@ -239,36 +246,36 @@ export default function SettingsScreen() {
           {
             text: 'Import',
             onPress: () => {
-              importData(parsed)
-              showToast({ message: 'Data imported successfully', type: 'success' })
+              importData(parsed);
+              showToast({ message: 'Data imported successfully', type: 'success' });
             },
           },
-        ]
-      )
+        ],
+      );
     } catch {
-      showToast({ message: 'Import failed — check if the file is valid', type: 'error' })
+      showToast({ message: 'Import failed — check if the file is valid', type: 'error' });
     }
-  }
+  };
 
   // ─── Cloud Backup ─────────────────────────────────────────
   const handleBackupNow = async () => {
-    if (!token || backupLoading) return
-    setBackupLoading(true)
+    if (!token || backupLoading) return;
+    setBackupLoading(true);
     try {
-      await uploadBackup()
-      showToast({ message: 'Backup uploaded successfully', type: 'success' })
+      await uploadBackup();
+      showToast({ message: 'Backup uploaded successfully', type: 'success' });
     } catch (err: unknown) {
       showToast({
         message: err instanceof Error ? err.message : 'Backup failed',
         type: 'error',
-      })
+      });
     } finally {
-      setBackupLoading(false)
+      setBackupLoading(false);
     }
-  }
+  };
 
   const handleRestore = () => {
-    if (restoreLoading) return
+    if (restoreLoading) return;
     Alert.alert(
       'Restore from Backup',
       'This will replace your current data with your latest cloud backup. This cannot be undone.',
@@ -278,23 +285,23 @@ export default function SettingsScreen() {
           text: 'Restore',
           style: 'destructive',
           onPress: async () => {
-            setRestoreLoading(true)
+            setRestoreLoading(true);
             try {
-              await restoreLatestBackup()
-              showToast({ message: 'Data restored from backup', type: 'success' })
+              await restoreLatestBackup();
+              showToast({ message: 'Data restored from backup', type: 'success' });
             } catch (err: unknown) {
               showToast({
                 message: err instanceof Error ? err.message : 'Restore failed',
                 type: 'error',
-              })
+              });
             } finally {
-              setRestoreLoading(false)
+              setRestoreLoading(false);
             }
           },
         },
-      ]
-    )
-  }
+      ],
+    );
+  };
 
   const handleSignOut = () => {
     Alert.alert('Sign Out', 'You will no longer receive automatic backups.', [
@@ -303,20 +310,20 @@ export default function SettingsScreen() {
         text: 'Sign Out',
         style: 'destructive',
         onPress: async () => {
-          await clearAuth()
-          showToast({ message: 'Signed out', type: 'info' })
+          await clearAuth();
+          showToast({ message: 'Signed out', type: 'info' });
         },
       },
-    ])
-  }
+    ]);
+  };
 
   // ─── Check for Updates ──────────────────────────────────
   const handleCheckForUpdates = async () => {
-    if (updateChecking) return
-    lightHaptic()
-    setUpdateChecking(true)
+    if (updateChecking) return;
+    lightHaptic();
+    setUpdateChecking(true);
     try {
-      const release = await checkForUpdate()
+      const release = await checkForUpdate();
       if (release) {
         Alert.alert(
           '🎉 Update Available',
@@ -331,21 +338,21 @@ export default function SettingsScreen() {
               text: 'Download',
               onPress: () => openReleasePage(release.releaseUrl),
             },
-          ]
-        )
+          ],
+        );
       } else {
-        showToast({ message: "You're on the latest version!", type: 'success' })
+        showToast({ message: "You're on the latest version!", type: 'success' });
       }
     } catch {
-      showToast({ message: 'Could not check for updates', type: 'error' })
+      showToast({ message: 'Could not check for updates', type: 'error' });
     } finally {
-      setUpdateChecking(false)
+      setUpdateChecking(false);
     }
-  }
+  };
 
   // ─── Clear ───────────────────────────────────────────────
   const handleClearData = () => {
-    warningHaptic()
+    warningHaptic();
     Alert.alert(
       'Clear All Data',
       'This will permanently delete all your accounts, transactions, and categories. This action cannot be undone.',
@@ -355,15 +362,15 @@ export default function SettingsScreen() {
           text: 'Clear Everything',
           style: 'destructive',
           onPress: () => {
-            resetToDefaults()
-            showToast({ message: 'All data cleared', type: 'info' })
+            resetToDefaults();
+            showToast({ message: 'All data cleared', type: 'info' });
           },
         },
-      ]
-    )
-  }
+      ],
+    );
+  };
 
-  const selectedCurrency = CURRENCIES.find((c) => c.code === settings.currency)
+  const selectedCurrency = CURRENCIES.find((c) => c.code === settings.currency);
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -372,7 +379,6 @@ export default function SettingsScreen() {
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
-
         {/* Profile */}
         <SectionHeader title="Profile" />
         <View style={styles.section}>
@@ -380,8 +386,8 @@ export default function SettingsScreen() {
             icon={<User size={16} color={colors.primary} />}
             label={settings.userName}
             onPress={() => {
-              setNameInput(settings.userName)
-              setNameSheetVisible(true)
+              setNameInput(settings.userName);
+              setNameSheetVisible(true);
             }}
           />
         </View>
@@ -404,13 +410,13 @@ export default function SettingsScreen() {
             </View>
             <View style={styles.themeToggleGroup}>
               {THEME_OPTIONS.map((opt) => {
-                const isActive = settings.theme === opt.value
+                const isActive = settings.theme === opt.value;
                 return (
                   <TouchableOpacity
                     key={opt.value}
                     onPress={() => {
-                      lightHaptic()
-                      updateSettings({ theme: opt.value })
+                      lightHaptic();
+                      updateSettings({ theme: opt.value });
                     }}
                     style={[
                       styles.themeBtn,
@@ -422,7 +428,7 @@ export default function SettingsScreen() {
                       {opt.label}
                     </Text>
                   </TouchableOpacity>
-                )
+                );
               })}
             </View>
           </View>
@@ -458,12 +464,18 @@ export default function SettingsScreen() {
           <SettingsRow
             icon={<List size={16} color={colors.primary} />}
             label="Manage Categories"
-            onPress={() => { lightHaptic(); router.push('/modals/manage-categories') }}
+            onPress={() => {
+              lightHaptic();
+              router.push('/modals/manage-categories');
+            }}
           />
           <SettingsRow
             icon={<Tag size={16} color={colors.primary} />}
             label="Manage Labels"
-            onPress={() => { lightHaptic(); router.push('/modals/manage-labels') }}
+            onPress={() => {
+              lightHaptic();
+              router.push('/modals/manage-labels');
+            }}
           />
         </View>
 
@@ -472,19 +484,34 @@ export default function SettingsScreen() {
         {user ? (
           <View style={styles.section}>
             {/* Signed-in user info */}
-            <View style={[styles.row, { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.border }]}>
+            <View
+              style={[
+                styles.row,
+                { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.border },
+              ]}
+            >
               <View style={styles.rowLeft}>
                 <View style={styles.iconBox}>
                   <Cloud size={16} color={colors.primary} />
                 </View>
                 <View style={{ flex: 1 }}>
                   <Text style={styles.rowLabel}>{user.name}</Text>
-                  <Text style={[styles.rowLabel, { fontSize: 12, color: colors.textMuted, fontFamily: 'DMSans_400Regular' }]}>
+                  <Text
+                    style={[
+                      styles.rowLabel,
+                      { fontSize: 12, color: colors.textMuted, fontFamily: 'DMSans_400Regular' },
+                    ]}
+                  >
                     {user.email}
                   </Text>
                 </View>
               </View>
-              <Text style={[styles.rowLabel, { fontSize: 12, color: colors.textMuted, fontFamily: 'DMSans_400Regular' }]}>
+              <Text
+                style={[
+                  styles.rowLabel,
+                  { fontSize: 12, color: colors.textMuted, fontFamily: 'DMSans_400Regular' },
+                ]}
+              >
                 {formatLastBackup(lastBackupAt)}
               </Text>
             </View>
@@ -492,13 +519,21 @@ export default function SettingsScreen() {
               icon={<CloudUpload size={16} color={colors.primary} />}
               label="Back Up Now"
               onPress={handleBackupNow}
-              right={backupLoading ? <ActivityIndicator size="small" color={colors.primary} /> : undefined}
+              right={
+                backupLoading ? (
+                  <ActivityIndicator size="small" color={colors.primary} />
+                ) : undefined
+              }
             />
             <SettingsRow
               icon={<CloudDownload size={16} color={colors.primary} />}
               label="Restore from Backup"
               onPress={handleRestore}
-              right={restoreLoading ? <ActivityIndicator size="small" color={colors.primary} /> : undefined}
+              right={
+                restoreLoading ? (
+                  <ActivityIndicator size="small" color={colors.primary} />
+                ) : undefined
+              }
             />
             <SettingsRow
               icon={<LogOut size={16} color={colors.expense} />}
@@ -518,12 +553,18 @@ export default function SettingsScreen() {
             <SettingsRow
               icon={<User size={16} color={colors.primary} />}
               label="Sign In"
-              onPress={() => { lightHaptic(); router.push('/auth/login' as never) }}
+              onPress={() => {
+                lightHaptic();
+                router.push('/auth/login' as never);
+              }}
             />
             <SettingsRow
               icon={<Cloud size={16} color={colors.primary} />}
               label="Create Account"
-              onPress={() => { lightHaptic(); router.push('/auth/register' as never) }}
+              onPress={() => {
+                lightHaptic();
+                router.push('/auth/register' as never);
+              }}
             />
           </View>
         )}
@@ -561,9 +602,7 @@ export default function SettingsScreen() {
             label="Check for Updates"
             onPress={handleCheckForUpdates}
             right={
-              updateChecking
-                ? <ActivityIndicator size="small" color={colors.primary} />
-                : undefined
+              updateChecking ? <ActivityIndicator size="small" color={colors.primary} /> : undefined
             }
           />
           <SettingsRow
@@ -626,7 +665,7 @@ export default function SettingsScreen() {
       >
         <ScrollView contentContainerStyle={styles.currencyList}>
           {CURRENCIES.map((c) => {
-            const isSelected = c.code === settings.currency
+            const isSelected = c.code === settings.currency;
             return (
               <TouchableOpacity
                 key={c.code}
@@ -638,232 +677,234 @@ export default function SettingsScreen() {
                   <Text style={styles.currencySymbol}>{c.symbol}</Text>
                 </View>
                 <View style={styles.currencyInfo}>
-                  <Text style={[styles.currencyCode, isSelected && { color: colors.primary }]}>{c.code}</Text>
+                  <Text style={[styles.currencyCode, isSelected && { color: colors.primary }]}>
+                    {c.code}
+                  </Text>
                   <Text style={styles.currencyName}>{c.name}</Text>
                 </View>
                 {isSelected && <Check size={18} color={colors.primary} strokeWidth={2.5} />}
               </TouchableOpacity>
-            )
+            );
           })}
         </ScrollView>
       </BottomSheet>
     </View>
-  )
+  );
 }
 
 function makeStyles(colors: ColorPalette) {
   return StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  header: {
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-  },
-  title: {
-    fontFamily: 'Sora_700Bold',
-    fontSize: 24,
-    color: colors.textPrimary,
-  },
-  scroll: {
-    paddingHorizontal: 16,
-    gap: 4,
-  },
-  sectionHeader: {
-    fontFamily: 'DMSans_500Medium',
-    fontSize: 12,
-    color: colors.textMuted,
-    textTransform: 'uppercase',
-    letterSpacing: 0.8,
-    paddingHorizontal: 4,
-    marginTop: 16,
-    marginBottom: 4,
-  },
-  section: {
-    backgroundColor: colors.surface,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: colors.border,
-    overflow: 'hidden',
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: colors.border,
-  },
-  rowLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    flex: 1,
-  },
-  iconBox: {
-    width: 30,
-    height: 30,
-    borderRadius: 8,
-    backgroundColor: colors.surfaceElevated ?? colors.surface,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  iconBoxDanger: {
-    backgroundColor: `${colors.expense}22`,
-  },
-  rowLabel: {
-    fontFamily: 'DMSans_400Regular',
-    fontSize: 15,
-    color: colors.textPrimary,
-  },
-  rowLabelDanger: {
-    color: colors.expense,
-  },
-  backupBanner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: colors.border,
-  },
-  backupBannerText: {
-    fontFamily: 'DMSans_400Regular',
-    fontSize: 13,
-    color: colors.textMuted,
-    flex: 1,
-    lineHeight: 18,
-  },
-  statsRow: {
-    flexDirection: 'row',
-    marginTop: 24,
-    backgroundColor: colors.surface,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: colors.border,
-    overflow: 'hidden',
-  },
-  stat: {
-    flex: 1,
-    alignItems: 'center',
-    paddingVertical: 16,
-    borderRightWidth: StyleSheet.hairlineWidth,
-    borderRightColor: colors.border,
-  },
-  statValue: {
-    fontFamily: 'Sora_700Bold',
-    fontSize: 22,
-    color: colors.primary,
-  },
-  statLabel: {
-    fontFamily: 'DMSans_400Regular',
-    fontSize: 12,
-    color: colors.textMuted,
-    marginTop: 2,
-  },
-  // Name form
-  nameForm: {
-    padding: 20,
-    gap: 16,
-  },
-  nameInput: {
-    backgroundColor: colors.surfaceElevated ?? colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 13,
-    fontFamily: 'DMSans_400Regular',
-    fontSize: 16,
-    color: colors.textPrimary,
-  },
-  saveBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    backgroundColor: colors.primary,
-    borderRadius: 14,
-    paddingVertical: 14,
-  },
-  saveBtnLabel: {
-    fontFamily: 'Sora_700Bold',
-    fontSize: 15,
-    color: '#fff',
-  },
-  // Currency picker
-  currencyList: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    gap: 6,
-  },
-  currencyRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 14,
-    padding: 14,
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-  },
-  currencyRowSelected: {
-    borderColor: colors.primary,
-    backgroundColor: `${colors.primary}14`,
-  },
-  currencySymbolBox: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: colors.surfaceElevated ?? colors.surface,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  currencySymbol: {
-    fontFamily: 'Sora_700Bold',
-    fontSize: 16,
-    color: colors.textPrimary,
-  },
-  currencyInfo: {
-    flex: 1,
-  },
-  currencyCode: {
-    fontFamily: 'DMSans_700Bold',
-    fontSize: 15,
-    color: colors.textPrimary,
-  },
-  currencyName: {
-    fontFamily: 'DMSans_400Regular',
-    fontSize: 12,
-    color: colors.textMuted,
-    marginTop: 1,
-  },
-  // Theme picker
-  themeToggleGroup: {
-    flexDirection: 'row',
-    backgroundColor: colors.surfaceElevated ?? colors.surface,
-    borderRadius: 10,
-    padding: 3,
-    gap: 2,
-  },
-  themeBtn: {
-    paddingHorizontal: 11,
-    paddingVertical: 6,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: 'transparent',
-  },
-  themeBtnText: {
-    fontFamily: 'DMSans_500Medium',
-    fontSize: 12,
-    color: colors.textMuted,
-  },
-  themeBtnTextActive: {
-    color: '#fff',
-    fontFamily: 'DMSans_700Bold',
-  },
-  })
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    header: {
+      paddingHorizontal: 20,
+      paddingVertical: 16,
+    },
+    title: {
+      fontFamily: 'Sora_700Bold',
+      fontSize: 24,
+      color: colors.textPrimary,
+    },
+    scroll: {
+      paddingHorizontal: 16,
+      gap: 4,
+    },
+    sectionHeader: {
+      fontFamily: 'DMSans_500Medium',
+      fontSize: 12,
+      color: colors.textMuted,
+      textTransform: 'uppercase',
+      letterSpacing: 0.8,
+      paddingHorizontal: 4,
+      marginTop: 16,
+      marginBottom: 4,
+    },
+    section: {
+      backgroundColor: colors.surface,
+      borderRadius: 16,
+      borderWidth: 1,
+      borderColor: colors.border,
+      overflow: 'hidden',
+    },
+    row: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingHorizontal: 16,
+      paddingVertical: 14,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: colors.border,
+    },
+    rowLeft: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 12,
+      flex: 1,
+    },
+    iconBox: {
+      width: 30,
+      height: 30,
+      borderRadius: 8,
+      backgroundColor: colors.surfaceElevated ?? colors.surface,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    iconBoxDanger: {
+      backgroundColor: `${colors.expense}22`,
+    },
+    rowLabel: {
+      fontFamily: 'DMSans_400Regular',
+      fontSize: 15,
+      color: colors.textPrimary,
+    },
+    rowLabelDanger: {
+      color: colors.expense,
+    },
+    backupBanner: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 10,
+      paddingHorizontal: 16,
+      paddingVertical: 14,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: colors.border,
+    },
+    backupBannerText: {
+      fontFamily: 'DMSans_400Regular',
+      fontSize: 13,
+      color: colors.textMuted,
+      flex: 1,
+      lineHeight: 18,
+    },
+    statsRow: {
+      flexDirection: 'row',
+      marginTop: 24,
+      backgroundColor: colors.surface,
+      borderRadius: 16,
+      borderWidth: 1,
+      borderColor: colors.border,
+      overflow: 'hidden',
+    },
+    stat: {
+      flex: 1,
+      alignItems: 'center',
+      paddingVertical: 16,
+      borderRightWidth: StyleSheet.hairlineWidth,
+      borderRightColor: colors.border,
+    },
+    statValue: {
+      fontFamily: 'Sora_700Bold',
+      fontSize: 22,
+      color: colors.primary,
+    },
+    statLabel: {
+      fontFamily: 'DMSans_400Regular',
+      fontSize: 12,
+      color: colors.textMuted,
+      marginTop: 2,
+    },
+    // Name form
+    nameForm: {
+      padding: 20,
+      gap: 16,
+    },
+    nameInput: {
+      backgroundColor: colors.surfaceElevated ?? colors.surface,
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: 12,
+      paddingHorizontal: 14,
+      paddingVertical: 13,
+      fontFamily: 'DMSans_400Regular',
+      fontSize: 16,
+      color: colors.textPrimary,
+    },
+    saveBtn: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 8,
+      backgroundColor: colors.primary,
+      borderRadius: 14,
+      paddingVertical: 14,
+    },
+    saveBtnLabel: {
+      fontFamily: 'Sora_700Bold',
+      fontSize: 15,
+      color: '#fff',
+    },
+    // Currency picker
+    currencyList: {
+      paddingHorizontal: 16,
+      paddingVertical: 8,
+      gap: 6,
+    },
+    currencyRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 14,
+      padding: 14,
+      borderRadius: 14,
+      borderWidth: 1,
+      borderColor: colors.border,
+      backgroundColor: colors.surface,
+    },
+    currencyRowSelected: {
+      borderColor: colors.primary,
+      backgroundColor: `${colors.primary}14`,
+    },
+    currencySymbolBox: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      backgroundColor: colors.surfaceElevated ?? colors.surface,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    currencySymbol: {
+      fontFamily: 'Sora_700Bold',
+      fontSize: 16,
+      color: colors.textPrimary,
+    },
+    currencyInfo: {
+      flex: 1,
+    },
+    currencyCode: {
+      fontFamily: 'DMSans_700Bold',
+      fontSize: 15,
+      color: colors.textPrimary,
+    },
+    currencyName: {
+      fontFamily: 'DMSans_400Regular',
+      fontSize: 12,
+      color: colors.textMuted,
+      marginTop: 1,
+    },
+    // Theme picker
+    themeToggleGroup: {
+      flexDirection: 'row',
+      backgroundColor: colors.surfaceElevated ?? colors.surface,
+      borderRadius: 10,
+      padding: 3,
+      gap: 2,
+    },
+    themeBtn: {
+      paddingHorizontal: 11,
+      paddingVertical: 6,
+      borderRadius: 8,
+      borderWidth: 1,
+      borderColor: 'transparent',
+    },
+    themeBtnText: {
+      fontFamily: 'DMSans_500Medium',
+      fontSize: 12,
+      color: colors.textMuted,
+    },
+    themeBtnTextActive: {
+      color: '#fff',
+      fontFamily: 'DMSans_700Bold',
+    },
+  });
 }

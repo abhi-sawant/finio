@@ -1,0 +1,12 @@
+node_modules
+.expo
+.vscode
+android/build
+android/app/build
+ios/build
+backend/vendor
+coverage
+dist
+build
+*.log
+*.lock

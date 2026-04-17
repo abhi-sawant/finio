@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import {
   View,
   Text,
@@ -7,40 +7,40 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-} from 'react-native'
-import { useRouter, useLocalSearchParams } from 'expo-router'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { X } from 'lucide-react-native'
-import { useColors } from '@/hooks/useColors'
-import type { ColorPalette } from '@/constants/Colors'
-import { AccountForm } from '@/components/accounts/AccountForm'
-import { useFinanceStore } from '@/store/useFinanceStore'
-import { showToast } from '@/components/common/Toast'
-import { successHaptic } from '@/utils/haptics'
-import type { Account } from '@/types'
+} from 'react-native';
+import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { X } from 'lucide-react-native';
+import { useColors } from '@/hooks/useColors';
+import type { ColorPalette } from '@/constants/Colors';
+import { AccountForm } from '@/components/accounts/AccountForm';
+import { useFinanceStore } from '@/store/useFinanceStore';
+import { showToast } from '@/components/common/Toast';
+import { successHaptic } from '@/utils/haptics';
+import type { Account } from '@/types';
 
 export default function AddAccountModal() {
-  const colors = useColors()
-  const styles = makeStyles(colors)
-  const router = useRouter()
-  const insets = useSafeAreaInsets()
-  const { id } = useLocalSearchParams<{ id?: string }>()
-  const { accounts, addAccount, updateAccount } = useFinanceStore()
+  const colors = useColors();
+  const styles = makeStyles(colors);
+  const router = useRouter();
+  const insets = useSafeAreaInsets();
+  const { id } = useLocalSearchParams<{ id?: string }>();
+  const { accounts, addAccount, updateAccount } = useFinanceStore();
 
-  const existing = id ? accounts.find((a) => a.id === id) : undefined
-  const isEdit = !!existing
+  const existing = id ? accounts.find((a) => a.id === id) : undefined;
+  const isEdit = !!existing;
 
   const handleSubmit = (data: Omit<Account, 'id' | 'createdAt'>) => {
     if (isEdit && existing) {
-      updateAccount(existing.id, data)
-      showToast({ message: 'Account updated', type: 'success' })
+      updateAccount(existing.id, data);
+      showToast({ message: 'Account updated', type: 'success' });
     } else {
-      addAccount(data)
-      showToast({ message: 'Account added', type: 'success' })
+      addAccount(data);
+      showToast({ message: 'Account added', type: 'success' });
     }
-    successHaptic()
-    router.back()
-  }
+    successHaptic();
+    router.back();
+  };
 
   return (
     <View style={[styles.container, { paddingBottom: insets.bottom }]}>
@@ -67,33 +67,33 @@ export default function AddAccountModal() {
         </ScrollView>
       </KeyboardAvoidingView>
     </View>
-  )
+  );
 }
 
 function makeStyles(colors: ColorPalette) {
   return StyleSheet.create({
-  flex: { flex: 1 },
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingTop: 16,
-    paddingBottom: 12,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: colors.border,
-  },
-  headerTitle: {
-    fontFamily: 'Sora_700Bold',
-    fontSize: 17,
-    color: colors.textPrimary,
-  },
-  scroll: {
-    padding: 16,
-  },
-})
+    flex: { flex: 1 },
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingHorizontal: 20,
+      paddingTop: 16,
+      paddingBottom: 12,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: colors.border,
+    },
+    headerTitle: {
+      fontFamily: 'Sora_700Bold',
+      fontSize: 17,
+      color: colors.textPrimary,
+    },
+    scroll: {
+      padding: 16,
+    },
+  });
 }

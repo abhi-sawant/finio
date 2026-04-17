@@ -6,9 +6,7 @@
     "noImplicitReturns": true,
     "exactOptionalPropertyTypes": true,
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"]
     }
   },
   "include": [

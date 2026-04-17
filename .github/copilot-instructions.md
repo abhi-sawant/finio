@@ -108,38 +108,38 @@ This file provides the coding AI agent (GitHub Copilot, Cursor, etc.) with a com
 
 ### Mobile (React Native)
 
-| Area | Library / Tool |
-|---|---|
-| Framework | Expo SDK 54, Expo Router 6 (file-based navigation) |
-| Language | TypeScript 5.9 (strict) |
-| State management | Zustand 5 |
-| Persistence | `@react-native-async-storage/async-storage` (finance data), `expo-secure-store` (JWT token) |
-| Styling | NativeWind 4 (Tailwind CSS for RN) + `StyleSheet` for complex styles |
-| Charts | Custom SVG charts via `react-native-svg` |
-| Forms | React Hook Form 7 + Zod 4 validation |
-| Animation | `react-native-reanimated` 4 + `react-native-worklets` |
-| HTTP | Native `fetch` (wrapped in `services/api.ts`) |
-| Icons | `lucide-react-native` |
-| Fonts | DM Sans (400R / 500M / 700B) + Sora (700B / 800EB) via `@expo-google-fonts` |
-| Date handling | `date-fns` 4 |
-| Haptics | `expo-haptics` |
-| Notifications | `expo-notifications` |
-| File I/O | `expo-file-system`, `expo-sharing`, `expo-document-picker` |
-| Gradients | `expo-linear-gradient` |
-| Navigation bar | `expo-navigation-bar` (Android only) |
-| App info | `expo-constants` |
-| Date picker | `@react-native-community/datetimepicker` |
+| Area             | Library / Tool                                                                              |
+| ---------------- | ------------------------------------------------------------------------------------------- |
+| Framework        | Expo SDK 54, Expo Router 6 (file-based navigation)                                          |
+| Language         | TypeScript 5.9 (strict)                                                                     |
+| State management | Zustand 5                                                                                   |
+| Persistence      | `@react-native-async-storage/async-storage` (finance data), `expo-secure-store` (JWT token) |
+| Styling          | NativeWind 4 (Tailwind CSS for RN) + `StyleSheet` for complex styles                        |
+| Charts           | Custom SVG charts via `react-native-svg`                                                    |
+| Forms            | React Hook Form 7 + Zod 4 validation                                                        |
+| Animation        | `react-native-reanimated` 4 + `react-native-worklets`                                       |
+| HTTP             | Native `fetch` (wrapped in `services/api.ts`)                                               |
+| Icons            | `lucide-react-native`                                                                       |
+| Fonts            | DM Sans (400R / 500M / 700B) + Sora (700B / 800EB) via `@expo-google-fonts`                 |
+| Date handling    | `date-fns` 4                                                                                |
+| Haptics          | `expo-haptics`                                                                              |
+| Notifications    | `expo-notifications`                                                                        |
+| File I/O         | `expo-file-system`, `expo-sharing`, `expo-document-picker`                                  |
+| Gradients        | `expo-linear-gradient`                                                                      |
+| Navigation bar   | `expo-navigation-bar` (Android only)                                                        |
+| App info         | `expo-constants`                                                                            |
+| Date picker      | `@react-native-community/datetimepicker`                                                    |
 
 ### Backend (PHP)
 
-| Area | Detail |
-|---|---|
-| Language | PHP 8.2+ |
-| Database | MySQL (via PDO, prepared statements only) |
-| Auth | JWT (HS256) + OTP email verification |
-| Email | PHPMailer via SMTP |
-| Hosting target | cPanel shared hosting |
-| No framework | Vanilla PHP with a tiny custom router |
+| Area           | Detail                                    |
+| -------------- | ----------------------------------------- |
+| Language       | PHP 8.2+                                  |
+| Database       | MySQL (via PDO, prepared statements only) |
+| Auth           | JWT (HS256) + OTP email verification      |
+| Email          | PHPMailer via SMTP                        |
+| Hosting target | cPanel shared hosting                     |
+| No framework   | Vanilla PHP with a tiny custom router     |
 
 ---
 
@@ -194,6 +194,7 @@ The single source of truth for all financial data.
 Pure selector functions — always import derived data from here, not inline.
 
 Key exports:
+
 - `getTotalBalance`, `getAccountById`, `getCategoryById`
 - `getTotalBalance`, `getTotalCreditOutstanding`, `getUpcomingCreditPayments`, `getCategoryById`
 - `filterTransactions` (type / accountId / categoryIds / labelIds / date range / search query — note: search matches on `note` field only)
@@ -245,22 +246,22 @@ api.getLatestBackup(token)         → { data: Record<string, unknown> }
 
 Base URL: `EXPO_PUBLIC_API_URL` env var (fallback: `https://api.finio.slowatcoding.com`)
 
-| Method | Path | Auth | Description |
-|--------|------|------|-------------|
-| POST | `/auth/register` | No | Create account, send OTP |
-| POST | `/auth/verify-otp` | No | Verify OTP, receive JWT |
-| POST | `/auth/resend-otp` | No | Resend OTP |
-| POST | `/auth/login` | No | Login, receive JWT |
-| POST | `/auth/forgot-password` | No | Send reset email |
-| POST | `/auth/reset-password` | No | Reset with OTP token |
-| GET | `/user/me` | Yes | Get profile |
-| PUT | `/user/me` | Yes | Update profile |
-| DELETE | `/user/me` | Yes | Delete account |
-| POST | `/backup/upload` | Yes | Upload JSON backup |
-| GET | `/backup/latest` | Yes | Fetch latest backup |
-| GET | `/backup/list` | Yes | List all backups |
-| GET | `/backup/{date}` | Yes | Download a specific backup |
-| DELETE | `/backup/{date}` | Yes | Delete a specific backup |
+| Method | Path                    | Auth | Description                |
+| ------ | ----------------------- | ---- | -------------------------- |
+| POST   | `/auth/register`        | No   | Create account, send OTP   |
+| POST   | `/auth/verify-otp`      | No   | Verify OTP, receive JWT    |
+| POST   | `/auth/resend-otp`      | No   | Resend OTP                 |
+| POST   | `/auth/login`           | No   | Login, receive JWT         |
+| POST   | `/auth/forgot-password` | No   | Send reset email           |
+| POST   | `/auth/reset-password`  | No   | Reset with OTP token       |
+| GET    | `/user/me`              | Yes  | Get profile                |
+| PUT    | `/user/me`              | Yes  | Update profile             |
+| DELETE | `/user/me`              | Yes  | Delete account             |
+| POST   | `/backup/upload`        | Yes  | Upload JSON backup         |
+| GET    | `/backup/latest`        | Yes  | Fetch latest backup        |
+| GET    | `/backup/list`          | Yes  | List all backups           |
+| GET    | `/backup/{date}`        | Yes  | Download a specific backup |
+| DELETE | `/backup/{date}`        | Yes  | Delete a specific backup   |
 
 JWT access tokens expire in **30 days**. All secrets live in `~/finio-config/config.php` (outside `public_html`).
 
@@ -275,6 +276,7 @@ Expo Router with three route groups:
 3. **modals/** — full-screen modals pushed over tabs
 
 The root `_layout.tsx`:
+
 - Loads DM Sans + Sora fonts via `expo-font`.
 - Waits for `isHydrated` (store) + `isLoaded` (auth) + fonts before hiding the splash screen.
 - Syncs the Android navigation bar button style and background colour to the active theme via `expo-navigation-bar`.
@@ -290,10 +292,10 @@ The root `_layout.tsx`:
 
 The app supports three theme modes controlled by `settings.theme: Theme`.
 
-| Mode | Description |
-|---|---|
-| `'dark'` | Always use `DarkColors` |
-| `'light'` | Always use `LightColors` |
+| Mode       | Description                                |
+| ---------- | ------------------------------------------ |
+| `'dark'`   | Always use `DarkColors`                    |
+| `'light'`  | Always use `LightColors`                   |
 | `'system'` | Follow device `useColorScheme()` (default) |
 
 **`useColors()`** (`hooks/useColors.ts`) reads `settings.theme` from the store plus `useColorScheme()` to resolve and return the correct `ColorPalette` at runtime. Use this in every component instead of importing `Colors` or `DarkColors` directly.
@@ -305,6 +307,7 @@ The app supports three theme modes controlled by `settings.theme: Theme`.
 **`useDebounce<T>(value, delay?)`** (`hooks/useDebounce.ts`) — standard debounce with configurable delay (default 300 ms).
 
 **`constants/Colors.ts`** exports:
+
 - `DarkColors` — dark palette object (`as const`)
 - `LightColors` — light palette object (`as const`)
 - `Colors` — alias for `DarkColors`; used only for static/non-component contexts (e.g. chart configs, colour arrays)
@@ -351,8 +354,8 @@ Key palette tokens: `background`, `surface`, `surfaceElevated`, `primary`, `prim
 
 ## Environment Variables
 
-| Variable | Required | Description |
-|----------|----------|-------------|
+| Variable              | Required              | Description                             |
+| --------------------- | --------------------- | --------------------------------------- |
 | `EXPO_PUBLIC_API_URL` | Yes (or use fallback) | Backend API base URL, no trailing slash |
 
 Create `.env` from `.env.example`. The `.env` file is gitignored.
@@ -362,6 +365,7 @@ Create `.env` from `.env.example`. The `.env` file is gitignored.
 ## Common Tasks for AI Agents
 
 ### Add a new transaction field
+
 1. Add the field to `Transaction` in `types/index.ts`.
 2. Update `addTransaction` / `updateTransaction` in `useFinanceStore.ts`.
 3. Update the `add-transaction.tsx` modal form.
@@ -369,25 +373,30 @@ Create `.env` from `.env.example`. The `.env` file is gitignored.
 5. Update `backup/upload` PHP endpoint if the field needs to be persisted server-side.
 
 ### Add a new screen
+
 1. Create the file under `app/(tabs)/` or `app/modals/`.
 2. If it's a tab, add a `<Tabs.Screen>` entry in `app/(tabs)/_layout.tsx` and a button in `components/layout/TabBar.tsx`.
 
 ### Add a new API endpoint (PHP)
+
 1. Add the route in `backend/public/index.php`.
 2. Add the controller method in the appropriate `Controllers/*.php` file.
 3. Add the typed `api.*` wrapper in `services/api.ts`.
 
 ### Add or change a theme colour
+
 1. Add/update the key in both `DarkColors` and `LightColors` in `constants/Colors.ts`.
 2. The `ColorPalette` and `ColorKey` types are derived automatically.
 
 ### Run the app
+
 ```bash
 npx expo start          # Expo Go or dev build
 npx expo run:android    # Native Android build
 ```
 
 ### Backend deployment
+
 Follow `backend/SETUP_GUIDE.txt` for full cPanel deployment instructions.
 
 ---

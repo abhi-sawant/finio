@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -7,60 +7,60 @@ import {
   TextInput,
   ScrollView,
   Alert,
-} from 'react-native'
-import { useRouter } from 'expo-router'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { X, Plus, Pencil, Trash2, Check } from 'lucide-react-native'
-import { useColors } from '@/hooks/useColors'
-import type { ColorPalette } from '@/constants/Colors'
-import { BottomSheet } from '@/components/common/BottomSheet'
-import { ColorPicker } from '@/components/common/ColorPicker'
-import { useFinanceStore } from '@/store/useFinanceStore'
-import { showToast } from '@/components/common/Toast'
-import { warningHaptic, lightHaptic } from '@/utils/haptics'
-import type { Label } from '@/types'
+} from 'react-native';
+import { useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { X, Plus, Pencil, Trash2, Check } from 'lucide-react-native';
+import { useColors } from '@/hooks/useColors';
+import type { ColorPalette } from '@/constants/Colors';
+import { BottomSheet } from '@/components/common/BottomSheet';
+import { ColorPicker } from '@/components/common/ColorPicker';
+import { useFinanceStore } from '@/store/useFinanceStore';
+import { showToast } from '@/components/common/Toast';
+import { warningHaptic, lightHaptic } from '@/utils/haptics';
+import type { Label } from '@/types';
 
 export default function ManageLabelsModal() {
-  const colors = useColors()
-  const styles = makeStyles(colors)
-  const router = useRouter()
-  const insets = useSafeAreaInsets()
-  const { labels, addLabel, updateLabel, deleteLabel } = useFinanceStore()
+  const colors = useColors();
+  const styles = makeStyles(colors);
+  const router = useRouter();
+  const insets = useSafeAreaInsets();
+  const { labels, addLabel, updateLabel, deleteLabel } = useFinanceStore();
 
-  const [sheetVisible, setSheetVisible] = useState(false)
-  const [editingLabel, setEditingLabel] = useState<Label | null>(null)
-  const [name, setName] = useState('')
-  const [color, setColor] = useState('#6C63FF')
+  const [sheetVisible, setSheetVisible] = useState(false);
+  const [editingLabel, setEditingLabel] = useState<Label | null>(null);
+  const [name, setName] = useState('');
+  const [color, setColor] = useState('#6C63FF');
 
   const openAdd = () => {
-    setEditingLabel(null)
-    setName('')
-    setColor('#6C63FF')
-    setSheetVisible(true)
-  }
+    setEditingLabel(null);
+    setName('');
+    setColor('#6C63FF');
+    setSheetVisible(true);
+  };
 
   const openEdit = (label: Label) => {
-    setEditingLabel(label)
-    setName(label.name)
-    setColor(label.color)
-    setSheetVisible(true)
-  }
+    setEditingLabel(label);
+    setName(label.name);
+    setColor(label.color);
+    setSheetVisible(true);
+  };
 
   const handleSave = async () => {
     if (!name.trim()) {
-      showToast({ message: 'Enter a label name', type: 'error' })
-      return
+      showToast({ message: 'Enter a label name', type: 'error' });
+      return;
     }
-    await lightHaptic()
+    await lightHaptic();
     if (editingLabel) {
-      updateLabel(editingLabel.id, { name: name.trim(), color })
-      showToast({ message: 'Label updated', type: 'success' })
+      updateLabel(editingLabel.id, { name: name.trim(), color });
+      showToast({ message: 'Label updated', type: 'success' });
     } else {
-      addLabel({ name: name.trim(), color })
-      showToast({ message: 'Label added', type: 'success' })
+      addLabel({ name: name.trim(), color });
+      showToast({ message: 'Label added', type: 'success' });
     }
-    setSheetVisible(false)
-  }
+    setSheetVisible(false);
+  };
 
   const handleDelete = (label: Label) => {
     Alert.alert('Delete Label', `Delete "${label.name}"?`, [
@@ -69,13 +69,13 @@ export default function ManageLabelsModal() {
         text: 'Delete',
         style: 'destructive',
         onPress: async () => {
-          await warningHaptic()
-          deleteLabel(label.id)
-          showToast({ message: `"${label.name}" deleted`, type: 'error' })
+          await warningHaptic();
+          deleteLabel(label.id);
+          showToast({ message: `"${label.name}" deleted`, type: 'error' });
         },
       },
-    ])
-  }
+    ]);
+  };
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -97,18 +97,24 @@ export default function ManageLabelsModal() {
             <View style={[styles.dot, { backgroundColor: label.color }]} />
             <Text style={styles.name}>{label.name}</Text>
             <View style={styles.actions}>
-              <TouchableOpacity onPress={() => openEdit(label)} hitSlop={8} style={styles.actionBtn}>
+              <TouchableOpacity
+                onPress={() => openEdit(label)}
+                hitSlop={8}
+                style={styles.actionBtn}
+              >
                 <Pencil size={16} color={colors.textMuted} />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => handleDelete(label)} hitSlop={8} style={styles.actionBtn}>
+              <TouchableOpacity
+                onPress={() => handleDelete(label)}
+                hitSlop={8}
+                style={styles.actionBtn}
+              >
                 <Trash2 size={16} color={colors.expense} />
               </TouchableOpacity>
             </View>
           </View>
         ))}
-        {labels.length === 0 && (
-          <Text style={styles.empty}>No labels yet. Add one above.</Text>
-        )}
+        {labels.length === 0 && <Text style={styles.empty}>No labels yet. Add one above.</Text>}
       </ScrollView>
 
       {/* Add/Edit sheet */}
@@ -136,120 +142,120 @@ export default function ManageLabelsModal() {
         </ScrollView>
       </BottomSheet>
     </View>
-  )
+  );
 }
 
 function makeStyles(colors: ColorPalette) {
   return StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  title: {
-    fontFamily: 'Sora_700Bold',
-    fontSize: 20,
-    color: colors.textPrimary,
-  },
-  addBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    margin: 16,
-    padding: 14,
-    borderRadius: 14,
-    borderWidth: 1.5,
-    borderColor: colors.primary,
-    justifyContent: 'center',
-  },
-  addBtnText: {
-    fontFamily: 'DMSans_700Bold',
-    fontSize: 15,
-    color: colors.primary,
-  },
-  list: {
-    paddingHorizontal: 16,
-    gap: 8,
-    paddingBottom: 24,
-  },
-  item: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    backgroundColor: colors.surface,
-    borderRadius: 14,
-    padding: 14,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  dot: {
-    width: 14,
-    height: 14,
-    borderRadius: 7,
-  },
-  name: {
-    flex: 1,
-    fontFamily: 'DMSans_500Medium',
-    fontSize: 15,
-    color: colors.textPrimary,
-  },
-  actions: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-  actionBtn: {
-    padding: 6,
-  },
-  empty: {
-    fontFamily: 'DMSans_400Regular',
-    fontSize: 14,
-    color: colors.textMuted,
-    textAlign: 'center',
-    marginTop: 32,
-  },
-  form: {
-    padding: 20,
-    gap: 16,
-  },
-  fieldLabel: {
-    fontFamily: 'DMSans_500Medium',
-    fontSize: 13,
-    color: colors.textMuted,
-    marginBottom: 4,
-  },
-  input: {
-    backgroundColor: colors.surfaceElevated ?? colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    fontFamily: 'DMSans_400Regular',
-    fontSize: 15,
-    color: colors.textPrimary,
-  },
-  saveBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    backgroundColor: colors.primary,
-    borderRadius: 14,
-    paddingVertical: 14,
-    marginTop: 8,
-  },
-  saveBtnLabel: {
-    fontFamily: 'Sora_700Bold',
-    fontSize: 15,
-    color: '#fff',
-  },
-})
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingHorizontal: 20,
+      paddingVertical: 16,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    title: {
+      fontFamily: 'Sora_700Bold',
+      fontSize: 20,
+      color: colors.textPrimary,
+    },
+    addBtn: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+      margin: 16,
+      padding: 14,
+      borderRadius: 14,
+      borderWidth: 1.5,
+      borderColor: colors.primary,
+      justifyContent: 'center',
+    },
+    addBtnText: {
+      fontFamily: 'DMSans_700Bold',
+      fontSize: 15,
+      color: colors.primary,
+    },
+    list: {
+      paddingHorizontal: 16,
+      gap: 8,
+      paddingBottom: 24,
+    },
+    item: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 12,
+      backgroundColor: colors.surface,
+      borderRadius: 14,
+      padding: 14,
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    dot: {
+      width: 14,
+      height: 14,
+      borderRadius: 7,
+    },
+    name: {
+      flex: 1,
+      fontFamily: 'DMSans_500Medium',
+      fontSize: 15,
+      color: colors.textPrimary,
+    },
+    actions: {
+      flexDirection: 'row',
+      gap: 8,
+    },
+    actionBtn: {
+      padding: 6,
+    },
+    empty: {
+      fontFamily: 'DMSans_400Regular',
+      fontSize: 14,
+      color: colors.textMuted,
+      textAlign: 'center',
+      marginTop: 32,
+    },
+    form: {
+      padding: 20,
+      gap: 16,
+    },
+    fieldLabel: {
+      fontFamily: 'DMSans_500Medium',
+      fontSize: 13,
+      color: colors.textMuted,
+      marginBottom: 4,
+    },
+    input: {
+      backgroundColor: colors.surfaceElevated ?? colors.surface,
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: 12,
+      paddingHorizontal: 14,
+      paddingVertical: 12,
+      fontFamily: 'DMSans_400Regular',
+      fontSize: 15,
+      color: colors.textPrimary,
+    },
+    saveBtn: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 8,
+      backgroundColor: colors.primary,
+      borderRadius: 14,
+      paddingVertical: 14,
+      marginTop: 8,
+    },
+    saveBtnLabel: {
+      fontFamily: 'Sora_700Bold',
+      fontSize: 15,
+      color: '#fff',
+    },
+  });
 }

@@ -1,79 +1,83 @@
-import React, { useState } from 'react'
-import { View, Text, StyleSheet, Dimensions } from 'react-native'
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import Svg, {
-  Path, Defs, LinearGradient, Stop, Line,
-  Text as SvgText, Rect, G, Circle,
-} from 'react-native-svg'
-import { useColors } from '@/hooks/useColors'
-import type { ColorPalette } from '@/constants/Colors'
-import { formatCurrency } from '@/utils/formatters'
-import { useFinanceStore } from '@/store/useFinanceStore'
-import { getTotalAccountBalance } from '@/utils/calculations'
-import { subDays, format } from 'date-fns'
-import type { Currency } from '@/types'
+  Path,
+  Defs,
+  LinearGradient,
+  Stop,
+  Line,
+  Text as SvgText,
+  Rect,
+  G,
+  Circle,
+} from 'react-native-svg';
+import { useColors } from '@/hooks/useColors';
+import type { ColorPalette } from '@/constants/Colors';
+import { formatCurrency } from '@/utils/formatters';
+import { useFinanceStore } from '@/store/useFinanceStore';
+import { getTotalAccountBalance } from '@/utils/calculations';
+import { subDays, format } from 'date-fns';
+import type { Currency } from '@/types';
 
-const SCREEN_WIDTH = Dimensions.get('window').width
-const Y_LABEL_W = 52
-const SVG_WIDTH = SCREEN_WIDTH - 64
-const PLOT_W = SVG_WIDTH - Y_LABEL_W
-const CHART_H = 120
-const X_LABEL_H = 16
-const SVG_HEIGHT = CHART_H + X_LABEL_H
-const DAYS = 30
-const TOOLTIP_W = 118
-const TOOLTIP_H = 40
+const SCREEN_WIDTH = Dimensions.get('window').width;
+const Y_LABEL_W = 52;
+const SVG_WIDTH = SCREEN_WIDTH - 64;
+const PLOT_W = SVG_WIDTH - Y_LABEL_W;
+const CHART_H = 120;
+const X_LABEL_H = 16;
+const SVG_HEIGHT = CHART_H + X_LABEL_H;
+const DAYS = 30;
+const TOOLTIP_W = 118;
+const TOOLTIP_H = 40;
 
 export function BalanceTrend() {
-  const colors = useColors()
-  const styles = makeStyles(colors)
-  const { transactions, accounts, settings } = useFinanceStore()
-  const currency = settings.currency as Currency
-  const currentBalance = getTotalAccountBalance(accounts)
-  const [activeIdx, setActiveIdx] = useState<number | null>(null)
+  const colors = useColors();
+  const styles = makeStyles(colors);
+  const { transactions, accounts, settings } = useFinanceStore();
+  const currency = settings.currency as Currency;
+  const currentBalance = getTotalAccountBalance(accounts);
+  const [activeIdx, setActiveIdx] = useState<number | null>(null);
 
   // Build 30-day balance trend with dates
-  const pointData: { value: number; date: Date }[] = []
-  let balance = currentBalance
+  const pointData: { value: number; date: Date }[] = [];
+  let balance = currentBalance;
 
   for (let i = 0; i < DAYS; i++) {
-    const date = subDays(new Date(), i)
-    const dayStr = date.toISOString().slice(0, 10)
+    const date = subDays(new Date(), i);
+    const dayStr = date.toISOString().slice(0, 10);
     for (const t of transactions) {
-      if (!t.date.startsWith(dayStr)) continue
-      if (t.type === 'expense') balance += t.amount
-      else if (t.type === 'income') balance -= t.amount
+      if (!t.date.startsWith(dayStr)) continue;
+      if (t.type === 'expense') balance += t.amount;
+      else if (t.type === 'income') balance -= t.amount;
     }
-    pointData.unshift({ value: balance, date })
+    pointData.unshift({ value: balance, date });
   }
 
-  const values = pointData.map((p) => p.value)
-  const minVal = Math.min(...values)
-  const maxVal = Math.max(...values)
-  const range = maxVal - minVal || 1
+  const values = pointData.map((p) => p.value);
+  const minVal = Math.min(...values);
+  const maxVal = Math.max(...values);
+  const range = maxVal - minVal || 1;
 
-  const toX = (i: number) => Y_LABEL_W + (i / (DAYS - 1)) * PLOT_W
-  const toY = (v: number) =>
-    CHART_H - ((v - minVal) / range) * (CHART_H - 12) - 6
+  const toX = (i: number) => Y_LABEL_W + (i / (DAYS - 1)) * PLOT_W;
+  const toY = (v: number) => CHART_H - ((v - minVal) / range) * (CHART_H - 12) - 6;
 
   const linePath = pointData
     .map((p, i) => `${i === 0 ? 'M' : 'L'} ${toX(i).toFixed(2)} ${toY(p.value).toFixed(2)}`)
-    .join(' ')
+    .join(' ');
 
   const areaPath =
-    linePath +
-    ` L ${toX(DAYS - 1).toFixed(2)} ${CHART_H}` +
-    ` L ${toX(0).toFixed(2)} ${CHART_H} Z`
+    linePath + ` L ${toX(DAYS - 1).toFixed(2)} ${CHART_H}` + ` L ${toX(0).toFixed(2)} ${CHART_H} Z`;
 
-  const diff = (values[DAYS - 1] ?? 0) - (values[0] ?? 0)
-  const isPositive = diff >= 0
+  const diff = (values[DAYS - 1] ?? 0) - (values[0] ?? 0);
+  const isPositive = diff >= 0;
 
   // Active tooltip
-  const active = activeIdx !== null ? pointData[activeIdx] : null
-  const ax = activeIdx !== null ? toX(activeIdx) : 0
-  const ay = activeIdx !== null ? toY(active!.value) : 0
-  const tooltipOnRight = ax + TOOLTIP_W + 8 <= SVG_WIDTH
-  const tooltipX = tooltipOnRight ? ax + 8 : ax - TOOLTIP_W - 8
-  const tooltipY = Math.max(4, ay - TOOLTIP_H / 2)
+  const active = activeIdx !== null ? pointData[activeIdx] : null;
+  const ax = activeIdx !== null ? toX(activeIdx) : 0;
+  const ay = activeIdx !== null ? toY(active!.value) : 0;
+  const tooltipOnRight = ax + TOOLTIP_W + 8 <= SVG_WIDTH;
+  const tooltipX = tooltipOnRight ? ax + 8 : ax - TOOLTIP_W - 8;
+  const tooltipY = Math.max(4, ay - TOOLTIP_H / 2);
 
   return (
     <View style={styles.container}>
@@ -95,12 +99,15 @@ export function BalanceTrend() {
 
         {/* Y-axis grid lines + labels */}
         {[0, 0.5, 1].map((frac, i) => {
-          const val = minVal + frac * range
-          const y = toY(val)
+          const val = minVal + frac * range;
+          const y = toY(val);
           return (
             <G key={i}>
               <Line
-                x1={Y_LABEL_W} y1={y} x2={SVG_WIDTH} y2={y}
+                x1={Y_LABEL_W}
+                y1={y}
+                x2={SVG_WIDTH}
+                y2={y}
                 stroke={colors.border}
                 strokeWidth={0.5}
                 {...(i === 1 ? { strokeDasharray: '4 3' } : {})}
@@ -115,7 +122,7 @@ export function BalanceTrend() {
                 {formatCurrency(val, currency, true)}
               </SvgText>
             </G>
-          )
+          );
         })}
 
         {/* Area fill */}
@@ -133,10 +140,10 @@ export function BalanceTrend() {
 
         {/* Hit zones — one vertical strip per day */}
         {pointData.map((_, i) => {
-          const cx = toX(i)
-          const halfW = PLOT_W / DAYS / 2
-          const hitX = i === 0 ? Y_LABEL_W : cx - halfW
-          const hitW = i === DAYS - 1 ? SVG_WIDTH - hitX : halfW * 2
+          const cx = toX(i);
+          const halfW = PLOT_W / DAYS / 2;
+          const hitX = i === 0 ? Y_LABEL_W : cx - halfW;
+          const hitW = i === DAYS - 1 ? SVG_WIDTH - hitX : halfW * 2;
           return (
             <Rect
               key={i}
@@ -147,7 +154,7 @@ export function BalanceTrend() {
               fill="transparent"
               onPress={() => setActiveIdx(activeIdx === i ? null : i)}
             />
-          )
+          );
         })}
 
         {/* Active point + tooltip */}
@@ -155,7 +162,10 @@ export function BalanceTrend() {
           <G>
             {/* Vertical crosshair */}
             <Line
-              x1={ax} y1={0} x2={ax} y2={CHART_H}
+              x1={ax}
+              y1={0}
+              x2={ax}
+              y2={CHART_H}
               stroke={colors.primary}
               strokeWidth={1}
               strokeDasharray="3 2"
@@ -199,15 +209,12 @@ export function BalanceTrend() {
         )}
 
         {/* X-axis date labels */}
-        <SvgText
-          x={toX(0)} y={SVG_HEIGHT - 2}
-          fill={colors.textMuted}
-          fontSize={9}
-        >
+        <SvgText x={toX(0)} y={SVG_HEIGHT - 2} fill={colors.textMuted} fontSize={9}>
           30d ago
         </SvgText>
         <SvgText
-          x={SVG_WIDTH} y={SVG_HEIGHT - 2}
+          x={SVG_WIDTH}
+          y={SVG_HEIGHT - 2}
           fill={colors.textMuted}
           fontSize={9}
           textAnchor="end"
@@ -218,12 +225,10 @@ export function BalanceTrend() {
 
       <Text style={styles.currentLabel}>
         Current:{' '}
-        <Text style={styles.currentValue}>
-          {formatCurrency(currentBalance, currency, true)}
-        </Text>
+        <Text style={styles.currentValue}>{formatCurrency(currentBalance, currency, true)}</Text>
       </Text>
     </View>
-  )
+  );
 }
 
 function makeStyles(colors: ColorPalette) {
@@ -255,5 +260,5 @@ function makeStyles(colors: ColorPalette) {
       fontFamily: 'DMSans_700Bold',
       color: colors.textPrimary,
     },
-  })
+  });
 }

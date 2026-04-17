@@ -1,22 +1,22 @@
-import React from 'react'
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native'
-import { Check, Plus } from 'lucide-react-native'
-import { useRouter } from 'expo-router'
-import { BottomSheet } from '@/components/common/BottomSheet'
-import { LucideIcon } from '@/components/common/IconPicker'
-import { useColors } from '@/hooks/useColors'
-import type { ColorPalette } from '@/constants/Colors'
-import { hexToRgba } from '@/utils/formatters'
-import { lightHaptic } from '@/utils/haptics'
-import { useFinanceStore } from '@/store/useFinanceStore'
-import type { Category, TransactionType } from '@/types'
+import React from 'react';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import { Check, Plus } from 'lucide-react-native';
+import { useRouter } from 'expo-router';
+import { BottomSheet } from '@/components/common/BottomSheet';
+import { LucideIcon } from '@/components/common/IconPicker';
+import { useColors } from '@/hooks/useColors';
+import type { ColorPalette } from '@/constants/Colors';
+import { hexToRgba } from '@/utils/formatters';
+import { lightHaptic } from '@/utils/haptics';
+import { useFinanceStore } from '@/store/useFinanceStore';
+import type { Category, TransactionType } from '@/types';
 
 interface CategoryPickerProps {
-  visible: boolean
-  onClose: () => void
-  selectedId: string
-  onChange: (category: Category) => void
-  transactionType?: TransactionType
+  visible: boolean;
+  onClose: () => void;
+  selectedId: string;
+  onChange: (category: Category) => void;
+  transactionType?: TransactionType;
 }
 
 export function CategoryPicker({
@@ -26,31 +26,35 @@ export function CategoryPicker({
   onChange,
   transactionType,
 }: CategoryPickerProps) {
-  const colors = useColors()
-  const styles = makeStyles(colors)
-  const router = useRouter()
-  const categories = useFinanceStore((s) => s.categories)
+  const colors = useColors();
+  const styles = makeStyles(colors);
+  const router = useRouter();
+  const categories = useFinanceStore((s) => s.categories);
 
   const filtered = categories.filter((c) => {
-    if (!transactionType) return true
-    if (transactionType === 'transfer') return false
-    if (transactionType === 'income') return c.type === 'income' || c.type === 'both'
-    if (transactionType === 'expense') return c.type === 'expense' || c.type === 'both'
-    return true
-  })
+    if (!transactionType) return true;
+    if (transactionType === 'transfer') return false;
+    if (transactionType === 'income') return c.type === 'income' || c.type === 'both';
+    if (transactionType === 'expense') return c.type === 'expense' || c.type === 'both';
+    return true;
+  });
 
   const handleSelect = async (cat: Category) => {
-    await lightHaptic()
-    onChange(cat)
-    onClose()
-  }
+    await lightHaptic();
+    onChange(cat);
+    onClose();
+  };
 
   return (
     <BottomSheet visible={visible} onClose={onClose} title="Select Category">
       <ScrollView contentContainerStyle={styles.list}>
         <TouchableOpacity
           style={styles.addNew}
-          onPress={async () => { await lightHaptic(); onClose(); router.push('/modals/add-category') }}
+          onPress={async () => {
+            await lightHaptic();
+            onClose();
+            router.push('/modals/add-category');
+          }}
           activeOpacity={0.7}
         >
           <View style={styles.addNewIcon}>
@@ -59,7 +63,7 @@ export function CategoryPicker({
           <Text style={styles.addNewText}>New Category</Text>
         </TouchableOpacity>
         {filtered.map((cat) => {
-          const isSelected = cat.id === selectedId
+          const isSelected = cat.id === selectedId;
           return (
             <TouchableOpacity
               key={cat.id}
@@ -67,82 +71,75 @@ export function CategoryPicker({
               onPress={() => handleSelect(cat)}
               activeOpacity={0.7}
             >
-              <View
-                style={[
-                  styles.iconCircle,
-                  { backgroundColor: hexToRgba(cat.color, 0.2) },
-                ]}
-              >
+              <View style={[styles.iconCircle, { backgroundColor: hexToRgba(cat.color, 0.2) }]}>
                 <LucideIcon name={cat.icon} size={20} color={cat.color} />
               </View>
-              <Text style={[styles.name, isSelected && { color: colors.primary }]}>
-                {cat.name}
-              </Text>
+              <Text style={[styles.name, isSelected && { color: colors.primary }]}>{cat.name}</Text>
               {isSelected && <Check size={18} color={colors.primary} strokeWidth={2.5} />}
             </TouchableOpacity>
-          )
+          );
         })}
       </ScrollView>
     </BottomSheet>
-  )
+  );
 }
 
 function makeStyles(colors: ColorPalette) {
   return StyleSheet.create({
-  list: {
-    paddingHorizontal: 16,
-    paddingBottom: 16,
-  },
-  item: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 14,
-    paddingVertical: 8,
-    paddingHorizontal: 0,
-    borderRadius: 14,
-    marginVertical: 2,
-  },
-  itemSelected: {
-    backgroundColor: colors.primary + '14',
-  },
-  addNew: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 14,
-    paddingVertical: 8,
-    paddingHorizontal: 0,
-    paddingBottom: 12,
-    borderRadius: 14,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-    marginBottom: 8,
-  },
-  addNewIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: colors.primary + '20',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  addNewText: {
-    flex: 1,
-    fontFamily: 'DMSans_500Medium',
-    fontSize: 15,
-    color: colors.primary,
-  },
-  iconCircle: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  name: {
-    flex: 1,
-    fontFamily: 'DMSans_500Medium',
-    fontSize: 15,
-    color: colors.textPrimary,
-  },
-})
+    list: {
+      paddingHorizontal: 16,
+      paddingBottom: 16,
+    },
+    item: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 14,
+      paddingVertical: 8,
+      paddingHorizontal: 0,
+      borderRadius: 14,
+      marginVertical: 2,
+    },
+    itemSelected: {
+      backgroundColor: colors.primary + '14',
+    },
+    addNew: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 14,
+      paddingVertical: 8,
+      paddingHorizontal: 0,
+      paddingBottom: 12,
+      borderRadius: 14,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+      marginBottom: 8,
+    },
+    addNewIcon: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      backgroundColor: colors.primary + '20',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    addNewText: {
+      flex: 1,
+      fontFamily: 'DMSans_500Medium',
+      fontSize: 15,
+      color: colors.primary,
+    },
+    iconCircle: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    name: {
+      flex: 1,
+      fontFamily: 'DMSans_500Medium',
+      fontSize: 15,
+      color: colors.textPrimary,
+    },
+  });
 }

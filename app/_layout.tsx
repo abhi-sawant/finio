@@ -1,39 +1,38 @@
-import '../global.css'
-import { useEffect } from 'react'
-import { useColorScheme, Platform, Alert } from 'react-native'
-import { StatusBar } from 'expo-status-bar'
-import { Stack } from 'expo-router'
-import { GestureHandlerRootView } from 'react-native-gesture-handler'
-import { SafeAreaProvider } from 'react-native-safe-area-context'
-import * as SplashScreen from 'expo-splash-screen'
+import '../global.css';
+import { useEffect } from 'react';
+import { useColorScheme, Platform, Alert } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { Stack } from 'expo-router';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import * as SplashScreen from 'expo-splash-screen';
 import {
   useFonts,
   DMSans_400Regular,
   DMSans_500Medium,
   DMSans_700Bold,
-} from '@expo-google-fonts/dm-sans'
-import { Sora_700Bold, Sora_800ExtraBold } from '@expo-google-fonts/sora'
-import { useFinanceStore } from '@/store/useFinanceStore'
-import { useAuthStore } from '@/store/useAuthStore'
-import { autoBackupIfNeeded } from '@/services/backup'
-import { checkForUpdate, openReleasePage } from '@/services/updater'
-import { useColors } from '@/hooks/useColors'
-import * as NavigationBar from 'expo-navigation-bar'
-import { Toast } from '@/components/common/Toast'
+} from '@expo-google-fonts/dm-sans';
+import { Sora_700Bold, Sora_800ExtraBold } from '@expo-google-fonts/sora';
+import { useFinanceStore } from '@/store/useFinanceStore';
+import { useAuthStore } from '@/store/useAuthStore';
+import { autoBackupIfNeeded } from '@/services/backup';
+import { checkForUpdate, openReleasePage } from '@/services/updater';
+import { useColors } from '@/hooks/useColors';
+import * as NavigationBar from 'expo-navigation-bar';
+import { Toast } from '@/components/common/Toast';
 
-SplashScreen.preventAutoHideAsync()
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const isHydrated = useFinanceStore((s) => s.isHydrated)
-  const { isLoaded, loadAuth } = useAuthStore()
-  const colors = useColors()
-  const theme = useFinanceStore((s) => s.settings.theme)
-  const systemScheme = useColorScheme()
+  const isHydrated = useFinanceStore((s) => s.isHydrated);
+  const { isLoaded, loadAuth } = useAuthStore();
+  const colors = useColors();
+  const theme = useFinanceStore((s) => s.settings.theme);
+  const systemScheme = useColorScheme();
 
   // Resolve effective theme for StatusBar
-  const effectiveTheme =
-    theme === 'system' ? (systemScheme ?? 'dark') : theme
-  const statusBarStyle = effectiveTheme === 'light' ? 'dark' : 'light'
+  const effectiveTheme = theme === 'system' ? (systemScheme ?? 'dark') : theme;
+  const statusBarStyle = effectiveTheme === 'light' ? 'dark' : 'light';
 
   const [fontsLoaded, fontError] = useFonts({
     DMSans_400Regular,
@@ -41,56 +40,58 @@ export default function RootLayout() {
     DMSans_700Bold,
     Sora_700Bold,
     Sora_800ExtraBold,
-  })
+  });
 
   // Sync Android navigation bar style with theme
   useEffect(() => {
-    if (Platform.OS !== 'android') return
-    const buttonStyle = effectiveTheme === 'light' ? 'dark' : 'light'
-    NavigationBar.setButtonStyleAsync(buttonStyle)
-    NavigationBar.setBackgroundColorAsync(colors.background)
-  }, [effectiveTheme, colors.background])
+    if (Platform.OS !== 'android') return;
+    const buttonStyle = effectiveTheme === 'light' ? 'dark' : 'light';
+    NavigationBar.setButtonStyleAsync(buttonStyle);
+    NavigationBar.setBackgroundColorAsync(colors.background);
+  }, [effectiveTheme, colors.background]);
 
   // Load stored JWT + user on startup
   useEffect(() => {
-    loadAuth()
-  }, [loadAuth])
+    loadAuth();
+  }, [loadAuth]);
 
   // Hide splash once fonts, store data, and auth are ready
   useEffect(() => {
     if ((fontsLoaded || fontError) && isHydrated && isLoaded) {
-      SplashScreen.hideAsync()
+      SplashScreen.hideAsync();
     }
-  }, [fontsLoaded, fontError, isHydrated, isLoaded])
+  }, [fontsLoaded, fontError, isHydrated, isLoaded]);
 
   // Silently auto-backup once per day in the background
   useEffect(() => {
     if (isHydrated && isLoaded) {
-      autoBackupIfNeeded().catch(() => {})
+      autoBackupIfNeeded().catch(() => {});
     }
-  }, [isHydrated, isLoaded])
+  }, [isHydrated, isLoaded]);
 
   // Check for app updates via GitHub Releases once on startup
   useEffect(() => {
-    if (!isHydrated || !isLoaded) return
-    checkForUpdate().then((release) => {
-      if (!release) return
-      Alert.alert(
-        '🎉 Update Available',
-        `Version ${release.version} is available.${release.releaseNotes ? `\n\n${release.releaseNotes.slice(0, 200)}${release.releaseNotes.length > 200 ? '…' : ''}` : ''}`,
-        [
-          { text: 'Later', style: 'cancel' },
-          {
-            text: 'Download',
-            onPress: () => openReleasePage(release.releaseUrl),
-          },
-        ]
-      )
-    }).catch(() => {})
-  }, [isHydrated, isLoaded])
+    if (!isHydrated || !isLoaded) return;
+    checkForUpdate()
+      .then((release) => {
+        if (!release) return;
+        Alert.alert(
+          '🎉 Update Available',
+          `Version ${release.version} is available.${release.releaseNotes ? `\n\n${release.releaseNotes.slice(0, 200)}${release.releaseNotes.length > 200 ? '…' : ''}` : ''}`,
+          [
+            { text: 'Later', style: 'cancel' },
+            {
+              text: 'Download',
+              onPress: () => openReleasePage(release.releaseUrl),
+            },
+          ],
+        );
+      })
+      .catch(() => {});
+  }, [isHydrated, isLoaded]);
 
-  if (!fontsLoaded && !fontError) return null
-  if (!isHydrated) return null
+  if (!fontsLoaded && !fontError) return null;
+  if (!isHydrated) return null;
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -148,5 +149,5 @@ export default function RootLayout() {
         <Toast />
       </SafeAreaProvider>
     </GestureHandlerRootView>
-  )
+  );
 }
