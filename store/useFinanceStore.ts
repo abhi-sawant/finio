@@ -98,28 +98,30 @@ export const useFinanceStore = create<FinanceStore>()(
       },
 
       updateTransaction: (id, updates) => {
-        const state = get();
-        const originalTx = state.transactions.find((t) => t.id === id);
-        if (!originalTx) return;
+        set((state) => {
+          const originalTx = state.transactions.find((t) => t.id === id);
+          if (!originalTx) return state;
 
-        const updatedTx = { ...originalTx, ...updates };
-        const afterReverse = applyBalanceDelta(state.accounts, originalTx, -1);
-        const finalAccounts = applyBalanceDelta(afterReverse, updatedTx, 1);
+          const updatedTx = { ...originalTx, ...updates };
+          const afterReverse = applyBalanceDelta(state.accounts, originalTx, -1);
+          const finalAccounts = applyBalanceDelta(afterReverse, updatedTx, 1);
 
-        set({
-          transactions: state.transactions.map((t) => (t.id === id ? updatedTx : t)),
-          accounts: finalAccounts,
+          return {
+            transactions: state.transactions.map((t) => (t.id === id ? updatedTx : t)),
+            accounts: finalAccounts,
+          };
         });
       },
 
       deleteTransaction: (id) => {
-        const state = get();
-        const tx = state.transactions.find((t) => t.id === id);
-        if (!tx) return;
+        set((state) => {
+          const tx = state.transactions.find((t) => t.id === id);
+          if (!tx) return state;
 
-        set({
-          transactions: state.transactions.filter((t) => t.id !== id),
-          accounts: applyBalanceDelta(state.accounts, tx, -1),
+          return {
+            transactions: state.transactions.filter((t) => t.id !== id),
+            accounts: applyBalanceDelta(state.accounts, tx, -1),
+          };
         });
       },
 
