@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Delete } from 'lucide-react-native';
 import { useColors } from '@/hooks/useColors';
@@ -35,27 +35,36 @@ export function AmountInput({ value, onChange, currency = 'INR' }: AmountInputPr
   const styles = makeStyles(colors);
   const [displayText, setDisplayText] = useState(value > 0 ? value.toString() : '');
 
+  useEffect(() => {
+    setDisplayText(value > 0 ? value.toString() : '');
+  }, [value]);
+
   const symbol = CURRENCY_SYMBOLS[currency];
 
   const handleKey = (key: string) => {
     if (key === '⌫') {
-      const next = displayText.slice(0, -1);
-      setDisplayText(next);
-      const parsed = parseFloat(next);
-      onChange(isNaN(parsed) ? 0 : parsed);
+      setDisplayText((prev) => {
+        const next = prev.slice(0, -1);
+        const parsed = parseFloat(next);
+        onChange(isNaN(parsed) ? 0 : parsed);
+        return next;
+      });
       return;
     }
-    if (key === '.' && displayText.includes('.')) return;
-    if (key === '.' && displayText === '') return;
-    if (displayText.includes('.')) {
-      const decimals = displayText.split('.')[1] ?? '';
-      if (decimals.length >= 2) return;
-    }
-    if (!displayText.includes('.') && displayText.replace(/^0/, '').length >= 9) return;
-    const next = displayText === '' && key === '0' ? '0' : displayText + key;
-    setDisplayText(next);
-    const parsed = parseFloat(next);
-    onChange(isNaN(parsed) ? 0 : parsed);
+    setDisplayText((prev) => {
+      if (key === '.' && prev.includes('.')) return prev;
+      if (key === '.' && prev === '') return prev;
+      if (prev.includes('.')) {
+        const decimals = prev.split('.')[1] ?? '';
+        if (decimals.length >= 2) return prev;
+      }
+      if (!prev.includes('.') && prev.replace(/^0/, '').length >= 9) return prev;
+
+      const next = prev === '' && key === '0' ? '0' : prev + key;
+      const parsed = parseFloat(next);
+      onChange(isNaN(parsed) ? 0 : parsed);
+      return next;
+    });
   };
 
   const formattedDisplay = (): string => {
