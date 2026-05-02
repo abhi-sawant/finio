@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useColors } from '@/hooks/useColors';
 import type { ColorPalette } from '@/constants/Colors';
@@ -24,19 +24,31 @@ interface AccountCardProps {
   variant?: 'grid' | 'horizontal';
 }
 
-export function AccountCard({ account, onPress, onLongPress, variant = 'grid' }: AccountCardProps) {
+export const AccountCard = React.memo(function AccountCard({
+  account,
+  onPress,
+  onLongPress,
+  variant = 'grid',
+}: AccountCardProps) {
   const colors = useColors();
-  const styles = makeStyles(colors);
-  const transactions = useFinanceStore((s) => s.transactions);
+  const styles = useMemo(() => makeStyles(colors), [colors]);
 
   const isCredit = account.type === 'credit';
 
-  // "Used this month" — sum of expenses charged to this account in the current month
-  const usedThisMonth = isCredit
-    ? 0
-    : getCurrentMonthTransactions(transactions)
-        .filter((t) => t.type === 'expense' && t.accountId === account.id)
-        .reduce((sum, t) => sum + t.amount, 0);
+  // Narrow selector: returns a pre-computed number, not the full transactions array.
+  // Only re-renders this card when the computed value actually changes.
+  const usedThisMonth = useFinanceStore(
+    useCallback(
+      (s) => {
+        if (isCredit) return 0;
+        return getCurrentMonthTransactions(s.transactions)
+          .filter((t) => t.type === 'expense' && t.accountId === account.id)
+          .reduce((sum, t) => sum + t.amount, 0);
+      },
+      [account.id, isCredit],
+    ),
+  );
+
   // Amount owed is the absolute value of the (negative) balance
   const amountDue = isCredit ? Math.abs(account.balance) : 0;
   const isCreditOwed = isCredit && account.balance < 0;
@@ -47,6 +59,16 @@ export function AccountCard({ account, onPress, onLongPress, variant = 'grid' }:
   const utilizationColor =
     utilization < 0.3 ? colors.income : utilization < 0.7 ? colors.warning : colors.expense;
 
+  // Memoize hexToRgba calls — they parse a hex string on every call
+  const colorVariants = useMemo(
+    () => ({
+      border: hexToRgba(account.color, 0.3),
+      iconBg: hexToRgba(account.color, 0.2),
+      badgeBg: hexToRgba(account.color, 0.15),
+    }),
+    [account.color],
+  );
+
   if (variant === 'horizontal') {
     return (
       <TouchableOpacity
@@ -55,7 +77,7 @@ export function AccountCard({ account, onPress, onLongPress, variant = 'grid' }:
         activeOpacity={0.8}
         style={[styles.horizontal, { borderLeftColor: account.color, borderLeftWidth: 4 }]}
       >
-        <View style={[styles.iconCircle, { backgroundColor: hexToRgba(account.color, 0.2) }]}>
+        <View style={[styles.iconCircle, { backgroundColor: colorVariants.iconBg }]}>
           <LucideIcon name={account.icon} size={18} color={account.color} />
         </View>
         <View style={styles.horizontalInfo}>
@@ -87,13 +109,13 @@ export function AccountCard({ account, onPress, onLongPress, variant = 'grid' }:
       onPress={() => onPress?.(account)}
       onLongPress={() => onLongPress?.(account)}
       activeOpacity={0.8}
-      style={[styles.card, { borderColor: hexToRgba(account.color, 0.3) }]}
+      style={[styles.card, { borderColor: colorVariants.border }]}
     >
       <View style={[styles.cardTop]}>
-        <View style={[styles.iconCircle, { backgroundColor: hexToRgba(account.color, 0.2) }]}>
+        <View style={[styles.iconCircle, { backgroundColor: colorVariants.iconBg }]}>
           <LucideIcon name={account.icon} size={22} color={account.color} />
         </View>
-        <View style={[styles.typeBadge, { backgroundColor: hexToRgba(account.color, 0.15) }]}>
+        <View style={[styles.typeBadge, { backgroundColor: colorVariants.badgeBg }]}>
           <Text style={[styles.typeBadgeText, { color: account.color }]}>
             {ACCOUNT_TYPE_LABELS[account.type]}
           </Text>
@@ -150,7 +172,7 @@ export function AccountCard({ account, onPress, onLongPress, variant = 'grid' }:
       )}
     </TouchableOpacity>
   );
-}
+});
 
 function makeStyles(colors: ColorPalette) {
   return StyleSheet.create({

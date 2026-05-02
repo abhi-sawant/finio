@@ -7,66 +7,79 @@ import { useColors } from '@/hooks/useColors';
 import type { ColorPalette } from '@/constants/Colors';
 import { LucideIcon } from '@/components/common/IconPicker';
 import { formatCurrency, formatTime, hexToRgba } from '@/utils/formatters';
-import { getCategoryById, getBalanceAfterTransaction } from '@/store/selectors';
-import { useFinanceStore } from '@/store/useFinanceStore';
-import type { Transaction } from '@/types';
+import { getCategoryById } from '@/store/selectors';
+import type { Transaction, Category, Label } from '@/types';
 
 interface TransactionItemProps {
   transaction: Transaction;
   onPress: (transaction: Transaction) => void;
   onEdit: (transaction: Transaction) => void;
   onDelete: (transaction: Transaction) => void;
-  currency?: string;
+  /** Passed from parent — avoids per-item store subscriptions */
+  categories: Category[];
+  labels: Label[];
+  currency: string;
+  /** Pre-computed closing balance passed from TransactionList (avoids O(n) work per item) */
+  closingBalance?: number;
+  /** Resolved account name to display alongside the closing balance */
+  accountName?: string;
 }
 
 const SWIPE_THRESHOLD = 60;
 const ACTION_WIDTH = 80;
 
-export function TransactionItem({ transaction, onPress, onEdit, onDelete }: TransactionItemProps) {
+export const TransactionItem = React.memo(function TransactionItem({
+  transaction,
+  onPress,
+  onEdit,
+  onDelete,
+  categories,
+  labels,
+  currency,
+  closingBalance,
+  accountName,
+}: TransactionItemProps) {
   const colors = useColors();
   const styles = useMemo(() => makeStyles(colors), [colors]);
-  const categories = useFinanceStore((s) => s.categories);
-  const allLabels = useFinanceStore((s) => s.labels);
-  const allTransactions = useFinanceStore((s) => s.transactions);
-  const accounts = useFinanceStore((s) => s.accounts);
-  const storeCurrency = useFinanceStore((s) => s.settings.currency);
-  const category = getCategoryById(categories, transaction.categoryId);
-  const txLabels = useMemo(
-    () => allLabels.filter((l) => transaction.labels.includes(l.id)),
-    [allLabels, transaction.labels],
+
+  const category = useMemo(
+    () => getCategoryById(categories, transaction.categoryId),
+    [categories, transaction.categoryId],
   );
 
-  // Calculate closing balance for this transaction
-  const account = useMemo(
-    () => accounts.find((a) => a.id === transaction.accountId),
-    [accounts, transaction.accountId],
+  const txLabels = useMemo(
+    () => labels.filter((l) => transaction.labels.includes(l.id)),
+    [labels, transaction.labels],
   );
-  const closingBalance = useMemo(() => {
-    if (!account) return 0;
-    return getBalanceAfterTransaction(allTransactions, transaction, account.balance);
-  }, [allTransactions, transaction, account]);
 
   const translateX = useSharedValue(0);
   const startX = useSharedValue(0);
 
-  const pan = Gesture.Pan()
-    .activeOffsetX([-10, 10])
-    .onStart(() => {
-      startX.value = translateX.value;
-    })
-    .onUpdate((e) => {
-      const newX = startX.value + e.translationX;
-      translateX.value = Math.max(-ACTION_WIDTH, Math.min(ACTION_WIDTH, newX));
-    })
-    .onEnd((e) => {
-      if (e.translationX > SWIPE_THRESHOLD) {
-        translateX.value = withSpring(ACTION_WIDTH, { damping: 20, stiffness: 200 });
-      } else if (e.translationX < -SWIPE_THRESHOLD) {
-        translateX.value = withSpring(-ACTION_WIDTH, { damping: 20, stiffness: 200 });
-      } else {
-        translateX.value = withSpring(0, { damping: 20, stiffness: 200 });
-      }
-    });
+  // Memoize the gesture object so GestureDetector doesn't reinstall it every render
+  const pan = useMemo(
+    () =>
+      Gesture.Pan()
+        .activeOffsetX([-10, 10])
+        .onStart(() => {
+          startX.value = translateX.value;
+        })
+        .onUpdate((e) => {
+          const newX = startX.value + e.translationX;
+          translateX.value = Math.max(-ACTION_WIDTH, Math.min(ACTION_WIDTH, newX));
+        })
+        .onEnd((e) => {
+          if (e.translationX > SWIPE_THRESHOLD) {
+            translateX.value = withSpring(ACTION_WIDTH, { damping: 20, stiffness: 200 });
+          } else if (e.translationX < -SWIPE_THRESHOLD) {
+            translateX.value = withSpring(-ACTION_WIDTH, { damping: 20, stiffness: 200 });
+          } else {
+            translateX.value = withSpring(0, { damping: 20, stiffness: 200 });
+          }
+        }),
+    // shared values are stable references — empty deps is intentional
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
 
   const rowStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: translateX.value }],
@@ -85,12 +98,12 @@ export function TransactionItem({ transaction, onPress, onEdit, onDelete }: Tran
   const handleEdit = useCallback(() => {
     translateX.value = withSpring(0);
     onEdit(transaction);
-  }, [transaction]);
+  }, [transaction, onEdit]);
 
   const handleDelete = useCallback(() => {
     translateX.value = withSpring(0);
     onDelete(transaction);
-  }, [transaction]);
+  }, [transaction, onDelete]);
 
   return (
     <View style={styles.container}>
@@ -147,11 +160,11 @@ export function TransactionItem({ transaction, onPress, onEdit, onDelete }: Tran
             <View style={styles.amountContainer}>
               <Text style={[styles.amount, { color: amountColor }]}>
                 {amountPrefix}
-                {formatCurrency(transaction.amount, storeCurrency)}
+                {formatCurrency(transaction.amount, currency)}
               </Text>
-              {account && (
+              {accountName !== undefined && closingBalance !== undefined && (
                 <Text style={styles.closingBalance}>
-                  {account.name}: {formatCurrency(closingBalance, storeCurrency)}
+                  {accountName}: {formatCurrency(closingBalance, currency)}
                 </Text>
               )}
             </View>
@@ -160,7 +173,7 @@ export function TransactionItem({ transaction, onPress, onEdit, onDelete }: Tran
       </GestureDetector>
     </View>
   );
-}
+});
 
 function makeStyles(colors: ColorPalette) {
   return StyleSheet.create({

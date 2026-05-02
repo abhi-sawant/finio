@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import React, { useState, useMemo } from 'react';
+import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
 import Svg, {
   Path,
   Defs,
@@ -19,10 +19,7 @@ import { getTotalAccountBalance } from '@/utils/calculations';
 import { subDays, format } from 'date-fns';
 import type { Currency } from '@/types';
 
-const SCREEN_WIDTH = Dimensions.get('window').width;
 const Y_LABEL_W = 52;
-const SVG_WIDTH = SCREEN_WIDTH - 64;
-const PLOT_W = SVG_WIDTH - Y_LABEL_W;
 const CHART_H = 120;
 const X_LABEL_H = 16;
 const SVG_HEIGHT = CHART_H + X_LABEL_H;
@@ -30,44 +27,69 @@ const DAYS = 30;
 const TOOLTIP_W = 118;
 const TOOLTIP_H = 40;
 
-export function BalanceTrend() {
+export const BalanceTrend = React.memo(function BalanceTrend() {
   const colors = useColors();
-  const styles = makeStyles(colors);
-  const { transactions, accounts, settings } = useFinanceStore();
-  const currency = settings.currency as Currency;
-  const currentBalance = getTotalAccountBalance(accounts);
+  const styles = useMemo(() => makeStyles(colors), [colors]);
+  const { width: screenWidth } = useWindowDimensions();
+  const SVG_WIDTH = screenWidth - 64;
+  const PLOT_W = SVG_WIDTH - Y_LABEL_W;
+
+  const transactions = useFinanceStore((s) => s.transactions);
+  const accounts = useFinanceStore((s) => s.accounts);
+  const currency = useFinanceStore((s) => s.settings.currency) as Currency;
+  const currentBalance = useMemo(() => getTotalAccountBalance(accounts), [accounts]);
   const [activeIdx, setActiveIdx] = useState<number | null>(null);
 
-  // Build 30-day balance trend with dates
-  const pointData: { value: number; date: Date }[] = [];
-  let balance = currentBalance;
-
-  for (let i = 0; i < DAYS; i++) {
-    const date = subDays(new Date(), i);
-    const dayStr = date.toISOString().slice(0, 10);
+  // Pre-group transactions by date string: O(n) — avoids the O(30×n) nested loop
+  const txByDay = useMemo(() => {
+    const map = new Map<string, typeof transactions>();
     for (const t of transactions) {
-      if (!t.date.startsWith(dayStr)) continue;
-      if (t.type === 'expense') balance += t.amount;
-      else if (t.type === 'income') balance -= t.amount;
+      const day = t.date.slice(0, 10);
+      const existing = map.get(day);
+      if (existing) existing.push(t);
+      else map.set(day, [t]);
     }
-    pointData.unshift({ value: balance, date });
-  }
+    return map;
+  }, [transactions]);
+
+  // Build 30-day balance trend — O(30) after the O(n) pre-grouping above
+  const pointData = useMemo(() => {
+    const points: { value: number; date: Date }[] = [];
+    let balance = currentBalance;
+
+    for (let i = 0; i < DAYS; i++) {
+      const date = subDays(new Date(), i);
+      const dayStr = date.toISOString().slice(0, 10);
+      const dayTxs = txByDay.get(dayStr) ?? [];
+      for (const t of dayTxs) {
+        if (t.type === 'expense') balance += t.amount;
+        else if (t.type === 'income') balance -= t.amount;
+      }
+      points.unshift({ value: balance, date });
+    }
+    return points;
+  }, [txByDay, currentBalance]);
+
+  const { linePath, areaPath, toX, toY, minVal, range } = useMemo(() => {
+    const values = pointData.map((p) => p.value);
+    const minVal = Math.min(...values);
+    const maxVal = Math.max(...values);
+    const range = maxVal - minVal || 1;
+
+    const tX = (i: number) => Y_LABEL_W + (i / (DAYS - 1)) * PLOT_W;
+    const tY = (v: number) => CHART_H - ((v - minVal) / range) * (CHART_H - 12) - 6;
+
+    const line = pointData
+      .map((p, i) => `${i === 0 ? 'M' : 'L'} ${tX(i).toFixed(2)} ${tY(p.value).toFixed(2)}`)
+      .join(' ');
+
+    const area =
+      line + ` L ${tX(DAYS - 1).toFixed(2)} ${CHART_H}` + ` L ${tX(0).toFixed(2)} ${CHART_H} Z`;
+
+    return { linePath: line, areaPath: area, toX: tX, toY: tY, minVal, range };
+  }, [pointData, PLOT_W]);
 
   const values = pointData.map((p) => p.value);
-  const minVal = Math.min(...values);
-  const maxVal = Math.max(...values);
-  const range = maxVal - minVal || 1;
-
-  const toX = (i: number) => Y_LABEL_W + (i / (DAYS - 1)) * PLOT_W;
-  const toY = (v: number) => CHART_H - ((v - minVal) / range) * (CHART_H - 12) - 6;
-
-  const linePath = pointData
-    .map((p, i) => `${i === 0 ? 'M' : 'L'} ${toX(i).toFixed(2)} ${toY(p.value).toFixed(2)}`)
-    .join(' ');
-
-  const areaPath =
-    linePath + ` L ${toX(DAYS - 1).toFixed(2)} ${CHART_H}` + ` L ${toX(0).toFixed(2)} ${CHART_H} Z`;
-
   const diff = (values[DAYS - 1] ?? 0) - (values[0] ?? 0);
   const isPositive = diff >= 0;
 
@@ -229,7 +251,7 @@ export function BalanceTrend() {
       </Text>
     </View>
   );
-}
+});
 
 function makeStyles(colors: ColorPalette) {
   return StyleSheet.create({

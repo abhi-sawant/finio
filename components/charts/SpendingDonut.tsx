@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Svg, { G, Path, Circle, Text as SvgText } from 'react-native-svg';
 import { useColors } from '@/hooks/useColors';
@@ -40,18 +40,30 @@ function describeArc(
   );
 }
 
-export function SpendingDonut({ startDate, endDate, compact = false }: SpendingDonutProps) {
+export const SpendingDonut = React.memo(function SpendingDonut({
+  startDate,
+  endDate,
+  compact = false,
+}: SpendingDonutProps) {
   const colors = useColors();
-  const styles = makeStyles(colors);
-  const { transactions, categories, settings } = useFinanceStore();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
+  const transactions = useFinanceStore((s) => s.transactions);
+  const categories = useFinanceStore((s) => s.categories);
+  const currency = useFinanceStore((s) => s.settings.currency) as Currency;
   const [showPct, setShowPct] = useState(true);
 
-  const now = new Date();
-  const start = startDate ?? new Date(now.getFullYear(), now.getMonth(), 1);
-  const end = endDate ?? now;
+  // Stabilize dates as timestamps for useMemo deps (new Date() on every render = never skips)
+  const startMs = useMemo(() => {
+    if (startDate) return startDate.getTime();
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+  }, [startDate]);
+  const endMs = useMemo(() => (endDate ? endDate.getTime() : Date.now()), [endDate]);
 
-  const allSpending = getCategorySpending(transactions, start, end);
-  const currency = settings.currency as Currency;
+  const allSpending = useMemo(
+    () => getCategorySpending(transactions, new Date(startMs), new Date(endMs)),
+    [transactions, startMs, endMs],
+  );
 
   if (allSpending.length === 0) {
     return (
@@ -219,7 +231,7 @@ export function SpendingDonut({ startDate, endDate, compact = false }: SpendingD
       )}
     </View>
   );
-}
+});
 
 function makeStyles(colors: ColorPalette) {
   return StyleSheet.create({

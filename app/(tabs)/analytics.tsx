@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, InteractionManager } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
 import type { ColorPalette } from '@/constants/Colors';
@@ -31,8 +31,17 @@ export default function AnalyticsScreen() {
   const colors = useColors();
   const styles = useMemo(() => makeStyles(colors), [colors]);
   const insets = useSafeAreaInsets();
-  const { transactions, categories, settings } = useFinanceStore();
+  const transactions = useFinanceStore((s) => s.transactions);
+  const categories = useFinanceStore((s) => s.categories);
+  const currency = useFinanceStore((s) => s.settings.currency);
   const [period, setPeriod] = useState<PeriodKey>('month');
+  // Defer chart rendering until after the screen transition animation completes
+  const [chartsReady, setChartsReady] = useState(false);
+
+  useEffect(() => {
+    const task = InteractionManager.runAfterInteractions(() => setChartsReady(true));
+    return () => task.cancel();
+  }, []);
 
   const { start, end } = useMemo(() => getPeriodRange(period), [period]);
 
@@ -42,9 +51,16 @@ export default function AnalyticsScreen() {
   );
 
   const monthlySummaries = useMemo(() => getLast6MonthsSummaries(transactions), [transactions]);
+  const reversedSummaries = useMemo(() => monthlySummaries.slice().reverse(), [monthlySummaries]);
   const categorySpending = useMemo(
     () => getCategorySpending(periodTransactions, start, end),
     [periodTransactions, start, end],
+  );
+
+  // Pre-build a Map so the table render doesn't linear-scan categories per row
+  const categoryMap = useMemo(
+    () => new Map(categories.map((c) => [c.id, c])),
+    [categories],
   );
 
   const { totalIncome, totalExpense } = useMemo(() => {
@@ -57,10 +73,10 @@ export default function AnalyticsScreen() {
     return { totalIncome: income, totalExpense: expense };
   }, [periodTransactions]);
 
-  const handlePeriod = (key: PeriodKey) => {
+  const handlePeriod = useCallback((key: PeriodKey) => {
     lightHaptic();
     setPeriod(key);
-  };
+  }, []);
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -90,13 +106,13 @@ export default function AnalyticsScreen() {
           <View style={[styles.summaryCard, styles.incomeCard]}>
             <Text style={styles.summaryLabel}>Income</Text>
             <Text style={[styles.summaryValue, { color: colors.income }]}>
-              {formatCurrency(totalIncome, settings.currency)}
-            </Text>
+          {formatCurrency(totalIncome, currency)}
+          </Text>
           </View>
           <View style={[styles.summaryCard, styles.expenseCard]}>
             <Text style={styles.summaryLabel}>Expenses</Text>
             <Text style={[styles.summaryValue, { color: colors.expense }]}>
-              {formatCurrency(totalExpense, settings.currency)}
+              {formatCurrency(totalExpense, currency)}
             </Text>
           </View>
         </View>
@@ -104,23 +120,23 @@ export default function AnalyticsScreen() {
         {/* Spending by category */}
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Spending by Category</Text>
-          <SpendingDonut startDate={start} endDate={end} />
+          {chartsReady && <SpendingDonut startDate={start} endDate={end} />}
         </View>
 
         {/* Income vs Expense bar chart */}
         <View style={styles.card}>
-          <IncomeExpenseBar />
+          {chartsReady && <IncomeExpenseBar />}
         </View>
 
         {/* Balance trend */}
         <View style={styles.card}>
-          <BalanceTrend />
+          {chartsReady && <BalanceTrend />}
         </View>
 
         {/* Spending by label */}
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Spending by Label</Text>
-          <LabelSpendingBar startDate={start} endDate={end} />
+          {chartsReady && <LabelSpendingBar startDate={start} endDate={end} />}
         </View>
 
         {/* Top categories table */}
@@ -129,7 +145,7 @@ export default function AnalyticsScreen() {
             <Text style={styles.cardTitle}>Top Categories</Text>
             <View style={styles.categoryTable}>
               {categorySpending.slice(0, 8).map((item, index) => {
-                const cat = categories.find((c) => c.id === item.categoryId);
+                const cat = categoryMap.get(item.categoryId);
                 if (!cat) return null;
                 return (
                   <View key={item.categoryId} style={styles.categoryRow}>
@@ -140,7 +156,7 @@ export default function AnalyticsScreen() {
                     </View>
                     <View style={styles.categoryRight}>
                       <Text style={styles.categoryAmount}>
-                        {formatCurrency(item.amount, settings.currency)}
+                        {formatCurrency(item.amount, currency)}
                       </Text>
                       <Text style={styles.categoryPct}>{item.percentage.toFixed(0)}%</Text>
                     </View>
@@ -165,9 +181,7 @@ export default function AnalyticsScreen() {
               </Text>
               <Text style={[styles.monthlyCell, styles.monthlyHeaderText, styles.right]}>Net</Text>
             </View>
-            {monthlySummaries
-              .slice()
-              .reverse()
+            {reversedSummaries
               .map((summary) => {
                 const net = summary.income - summary.expenses;
                 const monthDate = new Date(summary.year, summary.month, 1);
@@ -175,10 +189,10 @@ export default function AnalyticsScreen() {
                   <View key={`${summary.year}-${summary.month}`} style={styles.monthlyRow}>
                     <Text style={styles.monthlyCell}>{format(monthDate, 'MMM yy')}</Text>
                     <Text style={[styles.monthlyCell, styles.right, { color: colors.income }]}>
-                      {formatCurrency(summary.income, settings.currency)}
+                      {formatCurrency(summary.income, currency)}
                     </Text>
                     <Text style={[styles.monthlyCell, styles.right, { color: colors.expense }]}>
-                      {formatCurrency(summary.expenses, settings.currency)}
+                      {formatCurrency(summary.expenses, currency)}
                     </Text>
                     <Text
                       style={[
@@ -188,7 +202,7 @@ export default function AnalyticsScreen() {
                       ]}
                     >
                       {net >= 0 ? '+' : ''}
-                      {formatCurrency(net, settings.currency)}
+                      {formatCurrency(net, currency)}
                     </Text>
                   </View>
                 );

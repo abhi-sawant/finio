@@ -124,15 +124,27 @@ export function getMonthlySummary(
 
 export function getLast6MonthsSummaries(transactions: Transaction[]): MonthlySummary[] {
   const now = new Date();
-  const summaries: MonthlySummary[] = [];
 
-  for (let i = 5; i >= 0; i--) {
-    const date = subMonths(now, i);
-    const { income, expenses, net } = getMonthlySummary(transactions, date);
-    summaries.push({ month: date.getMonth(), year: date.getFullYear(), income, expenses, net });
+  // Build the 6-month bucket array (oldest → newest)
+  const months = Array.from({ length: 6 }, (_, i) => {
+    const d = subMonths(now, 5 - i);
+    return { month: d.getMonth(), year: d.getFullYear(), income: 0, expenses: 0, net: 0 };
+  });
+
+  const earliest = startOfMonth(subMonths(now, 5));
+
+  // Single O(n) pass — one parseISO call per transaction instead of 6×
+  for (const t of transactions) {
+    if (t.type === 'transfer') continue;
+    const d = parseISO(t.date);
+    if (d < earliest) continue;
+    const idx = months.findIndex((m) => m.month === d.getMonth() && m.year === d.getFullYear());
+    if (idx === -1) continue;
+    if (t.type === 'income') months[idx]!.income += t.amount;
+    else months[idx]!.expenses += t.amount;
   }
 
-  return summaries;
+  return months.map((m) => ({ ...m, net: m.income - m.expenses }));
 }
 
 // ───────────────────────────────────────────────────────────
@@ -239,29 +251,85 @@ export function getPeriodRange(period: PeriodKey): { start: Date; end: Date } {
 // ───────────────────────────────────────────────────────────
 
 export function getRecentTransactions(transactions: Transaction[], limit = 8): Transaction[] {
-  return [...transactions]
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .slice(0, limit);
+  // addTransaction prepends, so the array is already newest-first.
+  // Avoid the O(n log n) sort — a slice is O(1).
+  return transactions.slice(0, limit);
 }
 
 // ───────────────────────────────────────────────────────────
 // Calculate balance after a specific transaction
 // ───────────────────────────────────────────────────────────
 
+/**
+ * Pre-compute the closing balance (balance of transaction.accountId immediately after the
+ * transaction was applied) for ALL transactions in a single O(n log n) pass.
+ *
+ * Prefer this over calling getBalanceAfterTransaction per item to avoid O(n × m) work.
+ */
+export function buildClosingBalanceMap(
+  transactions: Transaction[],
+  accounts: Account[],
+): Map<string, number> {
+  const result = new Map<string, number>();
+  const accountBalanceMap = new Map(accounts.map((a) => [a.id, a.balance]));
+
+  // Build per-account transaction lists (include both source and transfer-destination sides)
+  const byAccount = new Map<string, Transaction[]>();
+  for (const t of transactions) {
+    if (!byAccount.has(t.accountId)) byAccount.set(t.accountId, []);
+    byAccount.get(t.accountId)!.push(t);
+    if (t.type === 'transfer' && t.toAccountId) {
+      if (!byAccount.has(t.toAccountId)) byAccount.set(t.toAccountId, []);
+      byAccount.get(t.toAccountId)!.push(t);
+    }
+  }
+
+  for (const [accountId, acctTxs] of byAccount) {
+    const currentBalance = accountBalanceMap.get(accountId) ?? 0;
+
+    // Sort newest-first (ISO strings compare lexicographically — no Date allocation needed)
+    const sorted = acctTxs.slice().sort((a, b) => {
+      if (a.date !== b.date) return a.date < b.date ? 1 : -1;
+      return a.createdAt < b.createdAt ? 1 : -1;
+    });
+
+    // Walk backwards: the newest transaction's closing balance equals currentBalance.
+    // Reverse each transaction's effect to recover the balance before it.
+    let runningBalance = currentBalance;
+    for (const t of sorted) {
+      if (t.accountId === accountId) {
+        // Store closing balance only for the source-account perspective
+        result.set(t.id, runningBalance);
+        // Reverse the effect
+        if (t.type === 'income') runningBalance -= t.amount;
+        else if (t.type === 'expense') runningBalance += t.amount;
+        else if (t.type === 'transfer') runningBalance += t.amount;
+      } else if (t.toAccountId === accountId && t.type === 'transfer') {
+        // Transfer TO this account: balance increased; reverse by subtracting
+        runningBalance -= t.amount;
+      }
+    }
+  }
+
+  return result;
+}
+
 export function getBalanceAfterTransaction(
   transactions: Transaction[],
   transaction: Transaction,
   currentAccountBalance: number,
 ): number {
+  // Hoist constant outside the filter to avoid redundant Date allocations
+  const targetDate = transaction.date;
+  const targetCreatedAt = transaction.createdAt;
+
   // Get all transactions for the same account that happened after this transaction
   const laterTransactions = transactions.filter((t) => {
     const isSameAccount =
       t.accountId === transaction.accountId || t.toAccountId === transaction.accountId;
-    const txDate = new Date(t.date).getTime();
-    const targetDate = new Date(transaction.date).getTime();
-    // Include transactions that are later by date, or same date but created later
+    // ISO strings compare lexicographically — no new Date() needed
     const isLater =
-      txDate > targetDate || (txDate === targetDate && t.createdAt > transaction.createdAt);
+      t.date > targetDate || (t.date === targetDate && t.createdAt > targetCreatedAt);
     return isSameAccount && isLater && t.id !== transaction.id;
   });
 

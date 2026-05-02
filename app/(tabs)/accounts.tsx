@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -15,49 +15,57 @@ import type { Account } from '@/types';
 
 export default function AccountsScreen() {
   const colors = useColors();
-  const styles = makeStyles(colors);
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const { accounts, settings, deleteAccount } = useFinanceStore();
-  const total = getTotalBalance(accounts);
-  const creditDue = getTotalCreditOutstanding(accounts);
+  const accounts = useFinanceStore((s) => s.accounts);
+  const currency = useFinanceStore((s) => s.settings.currency);
+  const deleteAccount = useFinanceStore((s) => s.deleteAccount);
+  const total = useMemo(() => getTotalBalance(accounts), [accounts]);
+  const creditDue = useMemo(() => getTotalCreditOutstanding(accounts), [accounts]);
 
-  const handleAccountPress = (account: Account) => {
-    lightHaptic();
-    router.push({ pathname: '/modals/add-account', params: { id: account.id } });
-  };
+  const handleAccountPress = useCallback(
+    (account: Account) => {
+      lightHaptic();
+      router.push({ pathname: '/modals/add-account', params: { id: account.id } });
+    },
+    [router],
+  );
 
-  const handleAccountLongPress = (account: Account) => {
-    warningHaptic();
-    Alert.alert(account.name, 'What would you like to do with this account?', [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Edit',
-        onPress: () => router.push({ pathname: '/modals/add-account', params: { id: account.id } }),
-      },
-      {
-        text: 'Delete',
-        style: 'destructive',
-        onPress: () => {
-          Alert.alert(
-            'Delete Account',
-            `Delete "${account.name}"? All associated transactions will also be deleted. This cannot be undone.`,
-            [
-              { text: 'Cancel', style: 'cancel' },
-              {
-                text: 'Delete',
-                style: 'destructive',
-                onPress: () => {
-                  deleteAccount(account.id);
-                  showToast({ message: 'Account deleted', type: 'success' });
-                },
-              },
-            ],
-          );
+  const handleAccountLongPress = useCallback(
+    (account: Account) => {
+      warningHaptic();
+      Alert.alert(account.name, 'What would you like to do with this account?', [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Edit',
+          onPress: () => router.push({ pathname: '/modals/add-account', params: { id: account.id } }),
         },
-      },
-    ]);
-  };
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: () => {
+            Alert.alert(
+              'Delete Account',
+              `Delete "${account.name}"? All associated transactions will also be deleted. This cannot be undone.`,
+              [
+                { text: 'Cancel', style: 'cancel' },
+                {
+                  text: 'Delete',
+                  style: 'destructive',
+                  onPress: () => {
+                    deleteAccount(account.id);
+                    showToast({ message: 'Account deleted', type: 'success' });
+                  },
+                },
+              ],
+            );
+          },
+        },
+      ]);
+    },
+    [router, deleteAccount],
+  );
 
   return (
     <View style={[styles.container]}>
@@ -66,11 +74,11 @@ export default function AccountsScreen() {
         <View>
           <Text style={styles.title}>Accounts</Text>
           <Text style={styles.totalBalance}>
-            {formatCurrency(total, settings.currency)} net worth
+            {formatCurrency(total, currency)} net worth
           </Text>
           {creditDue > 0 && (
             <Text style={styles.creditDue}>
-              {formatCurrency(creditDue, settings.currency)} credit due
+              {formatCurrency(creditDue, currency)} credit due
             </Text>
           )}
         </View>

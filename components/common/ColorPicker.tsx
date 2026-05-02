@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { View, TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { Check } from 'lucide-react-native';
 import { useColors } from '@/hooks/useColors';
@@ -34,11 +34,15 @@ export function ColorPicker({
   label = 'Color',
 }: ColorPickerProps) {
   const colors = useColors();
-  const styles = makeStyles(colors);
-  const handleSelect = async (color: string) => {
-    await lightHaptic();
-    onChange(color);
-  };
+  const styles = useMemo(() => makeStyles(colors), [colors]);
+
+  const handleSelect = useCallback(
+    async (color: string) => {
+      await lightHaptic();
+      onChange(color);
+    },
+    [onChange],
+  );
 
   return (
     <View style={styles.container}>

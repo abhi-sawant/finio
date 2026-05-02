@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo, useCallback } from 'react';
 import {
   View,
   Text,
@@ -74,17 +74,21 @@ function AccountChipGroup({ accounts, selectedId, onSelect, styles }: AccountChi
 
 export default function AddTransactionModal() {
   const colors = useColors();
-  const styles = makeStyles(colors);
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { id, payBillAccountId } = useLocalSearchParams<{
     id?: string;
     payBillAccountId?: string;
   }>();
-  const { transactions, accounts, categories, settings, addTransaction, updateTransaction } =
-    useFinanceStore();
-
-  const existing = id ? transactions.find((t) => t.id === id) : undefined;
+  const accounts = useFinanceStore((s) => s.accounts);
+  const categories = useFinanceStore((s) => s.categories);
+  const currency = useFinanceStore((s) => s.settings.currency);
+  const addTransaction = useFinanceStore((s) => s.addTransaction);
+  const updateTransaction = useFinanceStore((s) => s.updateTransaction);
+  const existing = useFinanceStore(
+    useCallback((s) => (id ? s.transactions.find((t) => t.id === id) : undefined), [id]),
+  );
   const isEdit = !!existing;
 
   // When opened via "Pay Bill", pre-set type to transfer + pre-select the credit card as destination
@@ -106,7 +110,10 @@ export default function AddTransactionModal() {
   const [labelPickerVisible, setLabelPickerVisible] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
 
-  const selectedCategory = categories.find((c) => c.id === categoryId);
+  const selectedCategory = useMemo(
+    () => categories.find((c) => c.id === categoryId),
+    [categories, categoryId],
+  );
 
   const handleCategoryChange = (cat: Category) => {
     setCategoryId(cat.id);
@@ -244,7 +251,7 @@ export default function AddTransactionModal() {
         >
           {/* Amount */}
           <View style={styles.amountContainer}>
-            <AmountInput value={amount} onChange={setAmount} currency={settings.currency} />
+            <AmountInput value={amount} onChange={setAmount} currency={currency} />
           </View>
 
           {/* Date & Time */}

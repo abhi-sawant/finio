@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Alert, StyleSheet } from 'react-native';
+import React, { useCallback, useMemo } from 'react';
+import { View, Text, TouchableOpacity, FlatList, Alert, StyleSheet } from 'react-native';
 import { Plus, Pencil, Trash2 } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 import { useColors } from '@/hooks/useColors';
@@ -15,33 +15,70 @@ interface CategoryManagerProps {
   filterType?: 'expense' | 'income' | 'both' | 'all';
 }
 
+const TYPE_LABELS = { expense: 'Expense', income: 'Income', both: 'Both' } as const;
+const keyExtractor = (item: Category) => item.id;
+
 export function CategoryManager({ filterType = 'all' }: CategoryManagerProps) {
   const colors = useColors();
-  const styles = makeStyles(colors);
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const router = useRouter();
   const { categories, deleteCategory } = useFinanceStore();
 
-  const filtered =
-    filterType === 'all'
-      ? categories
-      : categories.filter((c) => c.type === filterType || c.type === 'both');
+  const filtered = useMemo(
+    () =>
+      filterType === 'all'
+        ? categories
+        : categories.filter((c) => c.type === filterType || c.type === 'both'),
+    [categories, filterType],
+  );
 
-  const handleDelete = (cat: Category) => {
-    Alert.alert('Delete Category', `Are you sure you want to delete "${cat.name}"?`, [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Delete',
-        style: 'destructive',
-        onPress: async () => {
-          await warningHaptic();
-          deleteCategory(cat.id);
-          showToast({ message: `"${cat.name}" deleted`, type: 'error' });
+  const handleDelete = useCallback(
+    (cat: Category) => {
+      Alert.alert('Delete Category', `Are you sure you want to delete "${cat.name}"?`, [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            await warningHaptic();
+            deleteCategory(cat.id);
+            showToast({ message: `"${cat.name}" deleted`, type: 'error' });
+          },
         },
-      },
-    ]);
-  };
+      ]);
+    },
+    [deleteCategory],
+  );
 
-  const TYPE_LABELS = { expense: 'Expense', income: 'Income', both: 'Both' };
+  const handleEdit = useCallback(
+    (id: string) => {
+      router.push({ pathname: '/modals/add-category', params: { id } });
+    },
+    [router],
+  );
+
+  const renderItem = useCallback(
+    ({ item }: { item: Category }) => (
+      <View style={styles.item}>
+        <View style={[styles.iconCircle, { backgroundColor: hexToRgba(item.color, 0.2) }]}>
+          <LucideIcon name={item.icon} size={20} color={item.color} />
+        </View>
+        <View style={styles.info}>
+          <Text style={styles.name}>{item.name}</Text>
+          <Text style={styles.type}>{TYPE_LABELS[item.type]}</Text>
+        </View>
+        <View style={styles.actions}>
+          <TouchableOpacity onPress={() => handleEdit(item.id)} hitSlop={8} style={styles.actionBtn}>
+            <Pencil size={16} color={colors.textMuted} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handleDelete(item)} hitSlop={8} style={styles.actionBtn}>
+            <Trash2 size={16} color={colors.expense} />
+          </TouchableOpacity>
+        </View>
+      </View>
+    ),
+    [styles, colors.textMuted, colors.expense, handleEdit, handleDelete],
+  );
 
   return (
     <View style={styles.container}>
@@ -54,41 +91,14 @@ export function CategoryManager({ filterType = 'all' }: CategoryManagerProps) {
         <Text style={styles.addBtnText}>Add Category</Text>
       </TouchableOpacity>
 
-      <ScrollView contentContainerStyle={styles.list}>
-        {filtered.map((cat) => (
-          <View key={cat.id} style={styles.item}>
-            <View style={[styles.iconCircle, { backgroundColor: hexToRgba(cat.color, 0.2) }]}>
-              <LucideIcon name={cat.icon} size={20} color={cat.color} />
-            </View>
-
-            <View style={styles.info}>
-              <Text style={styles.name}>{cat.name}</Text>
-              <Text style={styles.type}>{TYPE_LABELS[cat.type]}</Text>
-            </View>
-
-            <View style={styles.actions}>
-              <TouchableOpacity
-                onPress={() =>
-                  router.push({ pathname: '/modals/add-category', params: { id: cat.id } })
-                }
-                hitSlop={8}
-                style={styles.actionBtn}
-              >
-                <Pencil size={16} color={colors.textMuted} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => handleDelete(cat)}
-                hitSlop={8}
-                style={styles.actionBtn}
-              >
-                <Trash2 size={16} color={colors.expense} />
-              </TouchableOpacity>
-            </View>
-          </View>
-        ))}
-
-        {filtered.length === 0 && <Text style={styles.empty}>No categories yet.</Text>}
-      </ScrollView>
+      <FlatList
+        data={filtered}
+        keyExtractor={keyExtractor}
+        renderItem={renderItem}
+        contentContainerStyle={styles.list}
+        ListEmptyComponent={<Text style={styles.empty}>No categories yet.</Text>}
+        showsVerticalScrollIndicator={false}
+      />
     </View>
   );
 }

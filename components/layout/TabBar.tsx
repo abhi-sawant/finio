@@ -91,19 +91,20 @@ function FabButton({ onPress }: { onPress: () => void }) {
   const pulse = useSharedValue(1);
 
   useEffect(() => {
+    // 3 pulses on mount then stop — continuous animation at 60fps wastes GPU on low-end devices
     pulse.value = withRepeat(
       withSequence(
         withTiming(1.15, { duration: 800, easing: Easing.out(Easing.ease) }),
         withTiming(1, { duration: 800, easing: Easing.in(Easing.ease) }),
       ),
-      -1, // infinite
+      3,
       false,
     );
   }, []);
 
   const pulseStyle = useAnimatedStyle(() => ({
     transform: [{ scale: pulse.value }],
-    opacity: 2 - pulse.value,
+    opacity: Math.max(0, Math.min(1, 2 - pulse.value)),
   }));
 
   const handlePress = async () => {

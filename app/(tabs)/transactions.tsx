@@ -21,7 +21,7 @@ export default function TransactionsScreen() {
   const colors = useColors();
   const styles = useMemo(() => makeStyles(colors), [colors]);
   const insets = useSafeAreaInsets();
-  const { transactions } = useFinanceStore();
+  const transactions = useFinanceStore((s) => s.transactions);
   const [refreshing, setRefreshing] = useState(false);
   const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS);
 
@@ -43,12 +43,15 @@ export default function TransactionsScreen() {
     setTimeout(() => setRefreshing(false), 500);
   }, []);
 
-  const hasFilters =
-    !!filters.typeIds?.length ||
-    !!filters.accountId ||
-    !!filters.categoryIds?.length ||
-    !!filters.labelIds?.length ||
-    !!filters.searchQuery?.trim();
+  const hasFilters = useMemo(
+    () =>
+      !!filters.typeIds?.length ||
+      !!filters.accountId ||
+      !!filters.categoryIds?.length ||
+      !!filters.labelIds?.length ||
+      !!filters.searchQuery?.trim(),
+    [filters],
+  );
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
