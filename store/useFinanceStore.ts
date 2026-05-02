@@ -22,6 +22,11 @@ function applyBalanceDelta(
   tx: Pick<Transaction, 'type' | 'accountId' | 'toAccountId' | 'amount'>,
   direction: 1 | -1,
 ): Account[] {
+  // Check if any account in the array is actually affected before allocating a new array
+  const affectedIds = new Set([tx.accountId]);
+  if (tx.type === 'transfer' && tx.toAccountId) affectedIds.add(tx.toAccountId);
+  if (!accounts.some((a) => affectedIds.has(a.id))) return accounts;
+
   return accounts.map((account) => {
     if (tx.type === 'expense' && account.id === tx.accountId) {
       return { ...account, balance: account.balance - direction * tx.amount };
@@ -162,14 +167,18 @@ export const useFinanceStore = create<FinanceStore>()(
       },
 
       deleteLabel: (id) => {
-        set((state) => ({
-          labels: state.labels.filter((l) => l.id !== id),
-          // Remove this label from all transactions
-          transactions: state.transactions.map((t) => ({
-            ...t,
-            labels: t.labels.filter((lId) => lId !== id),
-          })),
-        }));
+        set((state) => {
+          const anyHasLabel = state.transactions.some((t) => t.labels.includes(id));
+          return {
+            labels: state.labels.filter((l) => l.id !== id),
+            // Only rebuild the transactions array if something actually changed
+            transactions: anyHasLabel
+              ? state.transactions.map((t) =>
+                  t.labels.includes(id) ? { ...t, labels: t.labels.filter((lId) => lId !== id) } : t,
+                )
+              : state.transactions,
+          };
+        });
       },
 
       // --------------- Settings Actions ---------------

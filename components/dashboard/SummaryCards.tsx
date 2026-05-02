@@ -41,18 +41,19 @@ function AnimatedBalance({ value, currency }: { value: number; currency: Currenc
   return <Text style={styles.balanceAmount}>{formatCurrency(displayValue, currency, true)}</Text>;
 }
 
-export function SummaryCards() {
+export const SummaryCards = React.memo(function SummaryCards() {
   const colors = useColors();
   const styles = useMemo(() => makeStyles(colors), [colors]);
-  const { accounts, transactions, settings } = useFinanceStore();
-  const totalBalance = getTotalAccountBalance(accounts);
-  const creditOutstanding = getTotalCreditOutstanding(accounts);
-  const balanceAfterDues = totalBalance - creditOutstanding;
-  const thisMonth = getCurrentMonthTransactions(transactions);
-  const monthIncome = getTotalIncome(thisMonth);
-  const monthExpenses = getTotalExpenses(thisMonth);
+  const accounts = useFinanceStore((s) => s.accounts);
+  const transactions = useFinanceStore((s) => s.transactions);
+  const currency = useFinanceStore((s) => s.settings.currency) as Currency;
 
-  const currency = settings.currency as Currency;
+  const totalBalance = useMemo(() => getTotalAccountBalance(accounts), [accounts]);
+  const creditOutstanding = useMemo(() => getTotalCreditOutstanding(accounts), [accounts]);
+  const balanceAfterDues = totalBalance - creditOutstanding;
+  const thisMonth = useMemo(() => getCurrentMonthTransactions(transactions), [transactions]);
+  const monthIncome = useMemo(() => getTotalIncome(thisMonth), [thisMonth]);
+  const monthExpenses = useMemo(() => getTotalExpenses(thisMonth), [thisMonth]);
   // Use the primary color's tint for the gradient — avoids hardcoding background hex values
   const isDark = colors.textPrimary === '#f1f5f9';
   const gradientColors = isDark
@@ -110,7 +111,7 @@ export function SummaryCards() {
       </LinearGradient>
     </View>
   );
-}
+});
 
 function makeStyles(colors: ColorPalette) {
   return StyleSheet.create({

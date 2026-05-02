@@ -2,7 +2,7 @@
   "expo": {
     "name": "Finio",
     "slug": "finio",
-    "version": "1.4.1",
+    "version": "1.5.0",
     "scheme": "finio",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

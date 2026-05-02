@@ -35,7 +35,8 @@ export default function DashboardScreen() {
   const router = useRouter();
   const colors = useColors();
   const styles = useMemo(() => makeStyles(colors), [colors]);
-  const { accounts, settings } = useFinanceStore();
+  const accounts = useFinanceStore((s) => s.accounts);
+  const userName = useFinanceStore((s) => s.settings.userName);
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = useCallback(async () => {
@@ -45,9 +46,9 @@ export default function DashboardScreen() {
     setTimeout(() => setRefreshing(false), 500);
   }, []);
 
-  const handleAccountPress = (account: Account) => {
+  const handleAccountPress = useCallback((account: Account) => {
     router.push({ pathname: '/modals/add-account', params: { id: account.id } });
-  };
+  }, [router]);
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -55,7 +56,7 @@ export default function DashboardScreen() {
       <View style={styles.header}>
         <View>
           <Text style={styles.greeting}>{getGreeting()},</Text>
-          <Text style={styles.username}>{settings.userName} 👋</Text>
+          <Text style={styles.username}>{userName} 👋</Text>
         </View>
         <TouchableOpacity
           onPress={() => router.push('/(tabs)/settings')}

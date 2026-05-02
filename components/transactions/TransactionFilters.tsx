@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, TextInput, StyleSheet } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import { Search, X, ChevronDown, Check, FilterX } from 'lucide-react-native';
@@ -7,6 +7,7 @@ import type { ColorPalette } from '@/constants/Colors';
 import { BottomSheet } from '@/components/common/BottomSheet';
 import { LucideIcon } from '@/components/common/IconPicker';
 import { useFinanceStore } from '@/store/useFinanceStore';
+import { useDebounce } from '@/hooks/useDebounce';
 import { lightHaptic } from '@/utils/haptics';
 import { hexToRgba } from '@/utils/formatters';
 import type { TransactionType } from '@/types';
@@ -32,20 +33,48 @@ const TYPE_FILTERS: Array<{ value: TransactionType; label: string }> = [
 
 export function TransactionFilters({ filters, onChange }: TransactionFiltersProps) {
   const colors = useColors();
-  const styles = makeStyles(colors);
-  const { accounts, categories, labels } = useFinanceStore();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
+  const accounts = useFinanceStore((s) => s.accounts);
+  const categories = useFinanceStore((s) => s.categories);
+  const labels = useFinanceStore((s) => s.labels);
   const [searchExpanded, setSearchExpanded] = useState(false);
   const [showTypeSheet, setShowTypeSheet] = useState(false);
   const [showAccountSheet, setShowAccountSheet] = useState(false);
   const [showCategoryPicker, setShowCategoryPicker] = useState(false);
   const [showLabelPicker, setShowLabelPicker] = useState(false);
 
+  // Local search state so keystrokes don't trigger filterTransactions on every character
+  const [localQuery, setLocalQuery] = useState(filters.searchQuery);
+  const debouncedQuery = useDebounce(localQuery, 300);
+
+  // Propagate to parent only when the debounced value settles
+  useEffect(() => {
+    if (debouncedQuery !== filters.searchQuery) {
+      onChange({ ...filters, searchQuery: debouncedQuery });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedQuery]);
+
+  // Keep local query in sync if parent clears the filter externally (e.g. "Clear all")
+  useEffect(() => {
+    if (filters.searchQuery !== localQuery && filters.searchQuery === '') {
+      setLocalQuery('');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters.searchQuery]);
+
   const searchWidth = useSharedValue(0);
+
+  const selectedAccount = useMemo(
+    () => accounts.find((a) => a.id === filters.accountId),
+    [accounts, filters.accountId],
+  );
 
   const toggleSearch = async () => {
     await lightHaptic();
     if (searchExpanded) {
       searchWidth.value = withTiming(0, { duration: 200 });
+      setLocalQuery('');
       onChange({ ...filters, searchQuery: '' });
       setSearchExpanded(false);
     } else {
@@ -59,7 +88,6 @@ export function TransactionFilters({ filters, onChange }: TransactionFiltersProp
     overflow: 'hidden',
   }));
 
-  const selectedAccount = accounts.find((a) => a.id === filters.accountId);
   const typeIds = filters.typeIds ?? [];
   const categoryIds = filters.categoryIds ?? [];
   const labelIds = filters.labelIds ?? [];
@@ -79,6 +107,7 @@ export function TransactionFilters({ filters, onChange }: TransactionFiltersProp
 
   const clearAllFilters = async () => {
     await lightHaptic();
+    setLocalQuery('');
     onChange({
       typeIds: [],
       accountId: null,
@@ -168,8 +197,8 @@ export function TransactionFilters({ filters, onChange }: TransactionFiltersProp
           </TouchableOpacity>
           <Animated.View style={[styles.searchInput, searchStyle]}>
             <TextInput
-              value={filters.searchQuery}
-              onChangeText={(q) => onChange({ ...filters, searchQuery: q })}
+              value={localQuery}
+              onChangeText={setLocalQuery}
               placeholder="Search..."
               placeholderTextColor={colors.textMuted}
               style={styles.searchText}

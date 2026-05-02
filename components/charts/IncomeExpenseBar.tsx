@@ -1,14 +1,11 @@
-import React from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import React, { useMemo } from 'react';
+import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
 import Svg, { Rect, Line, Text as SvgText, G } from 'react-native-svg';
 import { useColors } from '@/hooks/useColors';
 import type { ColorPalette } from '@/constants/Colors';
 import { getLast6MonthsSummaries } from '@/store/selectors';
 import { useFinanceStore } from '@/store/useFinanceStore';
 
-const SCREEN_WIDTH = Dimensions.get('window').width;
-// 16 scrollContent padding + 16 card padding on each side
-const CHART_WIDTH = SCREEN_WIDTH - 64;
 const CHART_HEIGHT = 130;
 const LABEL_H = 18;
 const SVG_HEIGHT = CHART_HEIGHT + LABEL_H;
@@ -28,11 +25,14 @@ const MONTH_NAMES = [
   'Dec',
 ];
 
-export function IncomeExpenseBar() {
+export const IncomeExpenseBar = React.memo(function IncomeExpenseBar() {
   const colors = useColors();
-  const styles = makeStyles(colors);
-  const { transactions } = useFinanceStore();
-  const summaries = getLast6MonthsSummaries(transactions);
+  const styles = useMemo(() => makeStyles(colors), [colors]);
+  const { width: screenWidth } = useWindowDimensions();
+  // 16 scrollContent padding + 16 card padding on each side
+  const CHART_WIDTH = screenWidth - 64;
+  const transactions = useFinanceStore((s) => s.transactions);
+  const summaries = useMemo(() => getLast6MonthsSummaries(transactions), [transactions]);
 
   const maxAmount = Math.max(...summaries.map((s) => Math.max(s.income, s.expenses)), 1);
 
@@ -60,7 +60,7 @@ export function IncomeExpenseBar() {
               y2={y}
               stroke={colors.border}
               strokeWidth={0.5}
-              strokeDasharray={i > 0 && i < 4 ? '4 4' : undefined}
+              {...(i > 0 && i < 4 ? { strokeDasharray: '4 4' } : {})}
             />
           );
         })}
@@ -118,7 +118,7 @@ export function IncomeExpenseBar() {
       </View>
     </View>
   );
-}
+});
 
 function makeStyles(colors: ColorPalette) {
   return StyleSheet.create({

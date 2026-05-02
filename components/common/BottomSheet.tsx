@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import {
   View,
   TouchableWithoutFeedback,
@@ -18,7 +18,7 @@ import Animated, {
   runOnJS,
   Easing,
 } from 'react-native-reanimated';
-import { GestureDetector, Gesture, GestureHandlerRootView } from 'react-native-gesture-handler';
+import { GestureDetector, Gesture } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { X } from 'lucide-react-native';
 import { useColors } from '@/hooks/useColors';
@@ -42,7 +42,7 @@ export function BottomSheet({
   children,
 }: BottomSheetProps) {
   const colors = useColors();
-  const styles = makeStyles(colors);
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const insets = useSafeAreaInsets();
   const initialTop = SCREEN_HEIGHT * (1 - snapPoint);
   const topValue = useSharedValue(SCREEN_HEIGHT);
@@ -75,38 +75,44 @@ export function BottomSheet({
       topValue.value = SCREEN_HEIGHT;
       backdropOpacity.value = 0;
     }
-  }, [visible]);
+  }, [visible, openSheet]);
 
-  const pan = Gesture.Pan()
-    .onStart(() => {
-      startTop.value = topValue.value;
-    })
-    .onUpdate((e) => {
-      const newTop = startTop.value + e.translationY;
-      topValue.value = Math.max(0, newTop);
-    })
-    .onEnd((e) => {
-      'worklet';
-      const distanceDown = topValue.value - initialTop;
-      if (e.velocityY > 800 || distanceDown > SCREEN_HEIGHT * 0.25) {
-        backdropOpacity.value = withTiming(0, { duration: 200 });
-        topValue.value = withTiming(
-          SCREEN_HEIGHT,
-          { duration: 280, easing: Easing.in(Easing.ease) },
-          () => {
-            runOnJS(onClose)();
-          },
-        );
-      } else if (e.velocityY < -500 || e.translationY < -80) {
-        topValue.value = withSpring(0, { damping: 30, stiffness: 300, overshootClamping: true });
-      } else {
-        topValue.value = withSpring(initialTop, {
-          damping: 30,
-          stiffness: 300,
-          overshootClamping: true,
-        });
-      }
-    });
+  // Memoize the gesture object — Gesture.Pan() on every render causes GestureDetector to
+  // reinstall the gesture recognizer, adding unnecessary overhead.
+  const pan = useMemo(
+    () =>
+      Gesture.Pan()
+        .onStart(() => {
+          startTop.value = topValue.value;
+        })
+        .onUpdate((e) => {
+          const newTop = startTop.value + e.translationY;
+          topValue.value = Math.max(0, newTop);
+        })
+        .onEnd((e) => {
+          'worklet';
+          const distanceDown = topValue.value - initialTop;
+          if (e.velocityY > 800 || distanceDown > SCREEN_HEIGHT * 0.25) {
+            backdropOpacity.value = withTiming(0, { duration: 200 });
+            topValue.value = withTiming(
+              SCREEN_HEIGHT,
+              { duration: 280, easing: Easing.in(Easing.ease) },
+              () => {
+                runOnJS(onClose)();
+              },
+            );
+          } else if (e.velocityY < -500 || e.translationY < -80) {
+            topValue.value = withSpring(0, { damping: 30, stiffness: 300, overshootClamping: true });
+          } else {
+            topValue.value = withSpring(initialTop, {
+              damping: 30,
+              stiffness: 300,
+              overshootClamping: true,
+            });
+          }
+        }),
+    [initialTop, onClose],
+  );
 
   const sheetStyle = useAnimatedStyle(() => ({
     top: topValue.value,
@@ -124,7 +130,10 @@ export function BottomSheet({
       statusBarTranslucent
       onRequestClose={closeSheet}
     >
-      <GestureHandlerRootView style={StyleSheet.absoluteFill}>
+      {/* Plain View replaces the inner GestureHandlerRootView — nesting two roots
+          creates a redundant gesture context on every sheet mount. The app-level
+          GestureHandlerRootView in _layout.tsx already covers Modal portals. */}
+      <View style={StyleSheet.absoluteFill}>
         <KeyboardAvoidingView
           style={StyleSheet.absoluteFill}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -161,7 +170,7 @@ export function BottomSheet({
             <View style={{ flex: 1 }}>{children}</View>
           </Animated.View>
         </KeyboardAvoidingView>
-      </GestureHandlerRootView>
+      </View>
     </Modal>
   );
 }

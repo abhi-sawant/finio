@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, TextInput } from 'react-native';
+import React, { useState, useCallback, useMemo } from 'react';
+import { View, Text, TouchableOpacity, FlatList, StyleSheet, TextInput } from 'react-native';
 import { Check, Plus, X } from 'lucide-react-native';
 import { useColors } from '@/hooks/useColors';
 import type { ColorPalette } from '@/constants/Colors';
@@ -16,9 +16,11 @@ interface LabelPickerProps {
   onClose: () => void;
 }
 
+const keyExtractor = (item: { id: string }) => item.id;
+
 export function LabelPicker({ selectedIds, onChange, visible, onClose }: LabelPickerProps) {
   const colors = useColors();
-  const styles = makeStyles(colors);
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const labels = useFinanceStore((s) => s.labels);
   const addLabel = useFinanceStore((s) => s.addLabel);
 
@@ -26,16 +28,19 @@ export function LabelPicker({ selectedIds, onChange, visible, onClose }: LabelPi
   const [newName, setNewName] = useState('');
   const [newColor, setNewColor] = useState(LabelColors[0] as string);
 
-  const toggle = async (id: string) => {
-    await lightHaptic();
-    if (selectedIds.includes(id)) {
-      onChange(selectedIds.filter((l) => l !== id));
-    } else {
-      onChange([...selectedIds, id]);
-    }
-  };
+  const toggle = useCallback(
+    async (id: string) => {
+      await lightHaptic();
+      if (selectedIds.includes(id)) {
+        onChange(selectedIds.filter((l) => l !== id));
+      } else {
+        onChange([...selectedIds, id]);
+      }
+    },
+    [selectedIds, onChange],
+  );
 
-  const handleAdd = async () => {
+  const handleAdd = useCallback(async () => {
     if (!newName.trim()) {
       showToast({ message: 'Enter a label name', type: 'error' });
       return;
@@ -46,84 +51,102 @@ export function LabelPicker({ selectedIds, onChange, visible, onClose }: LabelPi
     setNewName('');
     setNewColor(LabelColors[0] as string);
     setAdding(false);
-  };
+  }, [newName, newColor, addLabel]);
+
+  const renderItem = useCallback(
+    ({ item: label }: { item: { id: string; name: string; color: string } }) => {
+      const isSelected = selectedIds.includes(label.id);
+      return (
+        <TouchableOpacity
+          onPress={() => toggle(label.id)}
+          style={styles.item}
+          activeOpacity={0.7}
+        >
+          <View style={[styles.dot, { backgroundColor: label.color }]} />
+          <Text style={styles.labelName}>{label.name}</Text>
+          {isSelected && <Check size={18} color={colors.primary} strokeWidth={2.5} />}
+        </TouchableOpacity>
+      );
+    },
+    [styles, selectedIds, toggle, colors.primary],
+  );
+
+  const listEmpty = useMemo(
+    () =>
+      !adding ? <Text style={styles.empty}>No labels yet. Add one below.</Text> : null,
+    [adding, styles.empty],
+  );
+
+  const listFooter = useMemo(
+    () =>
+      adding ? (
+        <View style={styles.addForm}>
+          <View style={styles.addFormRow}>
+            <TextInput
+              style={styles.addInput}
+              value={newName}
+              onChangeText={setNewName}
+              placeholder="Label name..."
+              placeholderTextColor={colors.textMuted}
+              autoFocus
+              returnKeyType="done"
+              onSubmitEditing={handleAdd}
+            />
+            <TouchableOpacity onPress={handleAdd} style={styles.addConfirm} activeOpacity={0.8}>
+              <Check size={16} color="#fff" strokeWidth={2.5} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setAdding(false)}
+              style={styles.addCancel}
+              activeOpacity={0.8}
+            >
+              <X size={16} color={colors.textMuted} strokeWidth={2} />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.colorRow}>
+            {(LabelColors as readonly string[]).map((c) => (
+              <TouchableOpacity
+                key={c}
+                style={[
+                  styles.colorSwatch,
+                  { backgroundColor: c },
+                  newColor === c && styles.colorSwatchSelected,
+                ]}
+                onPress={() => setNewColor(c)}
+                activeOpacity={0.8}
+              />
+            ))}
+          </View>
+        </View>
+      ) : (
+        <TouchableOpacity
+          style={styles.addNew}
+          onPress={async () => {
+            await lightHaptic();
+            setAdding(true);
+          }}
+          activeOpacity={0.7}
+        >
+          <Plus size={16} color={colors.primary} />
+          <Text style={styles.addNewText}>New Label</Text>
+        </TouchableOpacity>
+      ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [adding, newName, newColor, styles, colors.textMuted, colors.primary, handleAdd],
+  );
 
   return (
     <BottomSheet visible={visible} onClose={onClose} title="Select Labels">
-      <ScrollView contentContainerStyle={styles.list} keyboardShouldPersistTaps="handled">
-        {labels.map((label) => {
-          const isSelected = selectedIds.includes(label.id);
-          return (
-            <TouchableOpacity
-              key={label.id}
-              onPress={() => toggle(label.id)}
-              style={styles.item}
-              activeOpacity={0.7}
-            >
-              <View style={[styles.dot, { backgroundColor: label.color }]} />
-              <Text style={styles.labelName}>{label.name}</Text>
-              {isSelected && <Check size={18} color={colors.primary} strokeWidth={2.5} />}
-            </TouchableOpacity>
-          );
-        })}
-        {labels.length === 0 && !adding && (
-          <Text style={styles.empty}>No labels yet. Add one below.</Text>
-        )}
-
-        {/* Inline add form */}
-        {adding ? (
-          <View style={styles.addForm}>
-            <View style={styles.addFormRow}>
-              <TextInput
-                style={styles.addInput}
-                value={newName}
-                onChangeText={setNewName}
-                placeholder="Label name..."
-                placeholderTextColor={colors.textMuted}
-                autoFocus
-                returnKeyType="done"
-                onSubmitEditing={handleAdd}
-              />
-              <TouchableOpacity onPress={handleAdd} style={styles.addConfirm} activeOpacity={0.8}>
-                <Check size={16} color="#fff" strokeWidth={2.5} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => setAdding(false)}
-                style={styles.addCancel}
-                activeOpacity={0.8}
-              >
-                <X size={16} color={colors.textMuted} strokeWidth={2} />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.colorRow}>
-              {(LabelColors as readonly string[]).map((c) => (
-                <TouchableOpacity
-                  key={c}
-                  style={[
-                    styles.colorSwatch,
-                    { backgroundColor: c },
-                    newColor === c && styles.colorSwatchSelected,
-                  ]}
-                  onPress={() => setNewColor(c)}
-                  activeOpacity={0.8}
-                />
-              ))}
-            </View>
-          </View>
-        ) : (
-          <TouchableOpacity
-            style={styles.addNew}
-            onPress={async () => {
-              await lightHaptic();
-              setAdding(true);
-            }}
-            activeOpacity={0.7}
-          >
-            <Plus size={16} color={colors.primary} />
-            <Text style={styles.addNewText}>New Label</Text>
-          </TouchableOpacity>
-        )}
-      </ScrollView>
+      <FlatList
+        data={labels}
+        keyExtractor={keyExtractor}
+        renderItem={renderItem}
+        contentContainerStyle={styles.list}
+        ListEmptyComponent={listEmpty}
+        ListFooterComponent={listFooter}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      />
     </BottomSheet>
   );
 }

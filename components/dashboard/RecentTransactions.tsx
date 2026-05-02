@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ArrowRight } from 'lucide-react-native';
@@ -12,36 +12,49 @@ import { warningHaptic } from '@/utils/haptics';
 import { showToast } from '@/components/common/Toast';
 import type { Transaction } from '@/types';
 
-export function RecentTransactions() {
+export const RecentTransactions = React.memo(function RecentTransactions() {
   const colors = useColors();
-  const styles = makeStyles(colors);
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const router = useRouter();
-  const { transactions, deleteTransaction } = useFinanceStore();
+  const transactions = useFinanceStore((s) => s.transactions);
+  const deleteTransaction = useFinanceStore((s) => s.deleteTransaction);
+  const categories = useFinanceStore((s) => s.categories);
+  const labels = useFinanceStore((s) => s.labels);
+  const currency = useFinanceStore((s) => s.settings.currency);
 
-  const recent = getRecentTransactions(transactions, 8);
+  const recent = useMemo(() => getRecentTransactions(transactions, 8), [transactions]);
 
-  const handlePress = (tx: Transaction) => {
-    router.push({ pathname: '/modals/transaction-detail', params: { id: tx.id } });
-  };
+  const handlePress = useCallback(
+    (tx: Transaction) => {
+      router.push({ pathname: '/modals/transaction-detail', params: { id: tx.id } });
+    },
+    [router],
+  );
 
-  const handleEdit = (tx: Transaction) => {
-    router.push({ pathname: '/modals/add-transaction', params: { id: tx.id } });
-  };
+  const handleEdit = useCallback(
+    (tx: Transaction) => {
+      router.push({ pathname: '/modals/add-transaction', params: { id: tx.id } });
+    },
+    [router],
+  );
 
-  const handleDelete = (tx: Transaction) => {
-    Alert.alert('Delete Transaction', 'This will also update the account balance.', [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Delete',
-        style: 'destructive',
-        onPress: async () => {
-          await warningHaptic();
-          deleteTransaction(tx.id);
-          showToast({ message: 'Transaction deleted', type: 'error' });
+  const handleDelete = useCallback(
+    (tx: Transaction) => {
+      Alert.alert('Delete Transaction', 'This will also update the account balance.', [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            await warningHaptic();
+            deleteTransaction(tx.id);
+            showToast({ message: 'Transaction deleted', type: 'error' });
+          },
         },
-      },
-    ]);
-  };
+      ]);
+    },
+    [deleteTransaction],
+  );
 
   return (
     <View style={styles.container}>
@@ -72,13 +85,16 @@ export function RecentTransactions() {
               onPress={handlePress}
               onEdit={handleEdit}
               onDelete={handleDelete}
+              categories={categories}
+              labels={labels}
+              currency={currency}
             />
           ))}
         </View>
       )}
     </View>
   );
-}
+});
 
 function makeStyles(colors: ColorPalette) {
   return StyleSheet.create({

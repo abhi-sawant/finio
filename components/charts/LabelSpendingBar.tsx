@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import React, { useMemo } from 'react';
+import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
 import Svg, { Rect, G, Text as SvgText } from 'react-native-svg';
 import { useColors } from '@/hooks/useColors';
 import type { ColorPalette } from '@/constants/Colors';
@@ -13,26 +13,38 @@ interface LabelSpendingBarProps {
   endDate?: Date;
 }
 
-const SCREEN_WIDTH = Dimensions.get('window').width;
-// 16 scrollContent padding + 16 card padding on each side
-const CHART_WIDTH = SCREEN_WIDTH - 64;
 const LABEL_COL = 78;
 const AMOUNT_COL = 58;
-const BAR_AREA = CHART_WIDTH - LABEL_COL - AMOUNT_COL - 8;
 const BAR_H = 12;
 const ROW_H = 26;
 
-export function LabelSpendingBar({ startDate, endDate }: LabelSpendingBarProps) {
+export const LabelSpendingBar = React.memo(function LabelSpendingBar({
+  startDate,
+  endDate,
+}: LabelSpendingBarProps) {
   const colors = useColors();
-  const styles = makeStyles(colors);
-  const { transactions, labels: allLabels, settings } = useFinanceStore();
-  const currency = settings.currency as Currency;
+  const styles = useMemo(() => makeStyles(colors), [colors]);
+  const { width: screenWidth } = useWindowDimensions();
+  // 16 scrollContent padding + 16 card padding on each side
+  const CHART_WIDTH = screenWidth - 64;
+  const BAR_AREA = CHART_WIDTH - LABEL_COL - AMOUNT_COL - 8;
 
-  const now = new Date();
-  const start = startDate ?? new Date(now.getFullYear(), now.getMonth(), 1);
-  const end = endDate ?? now;
+  const transactions = useFinanceStore((s) => s.transactions);
+  const allLabels = useFinanceStore((s) => s.labels);
+  const currency = useFinanceStore((s) => s.settings.currency) as Currency;
 
-  const labelSpending = getLabelSpending(transactions, start, end).slice(0, 8);
+  // Stabilize dates as timestamps so useMemo deps don't see new Date() every render
+  const startMs = useMemo(() => {
+    if (startDate) return startDate.getTime();
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+  }, [startDate]);
+  const endMs = useMemo(() => (endDate ? endDate.getTime() : Date.now()), [endDate]);
+
+  const labelSpending = useMemo(
+    () => getLabelSpending(transactions, new Date(startMs), new Date(endMs)).slice(0, 8),
+    [transactions, startMs, endMs],
+  );
 
   if (labelSpending.length === 0) {
     return (
@@ -99,7 +111,7 @@ export function LabelSpendingBar({ startDate, endDate }: LabelSpendingBarProps) 
       })}
     </Svg>
   );
-}
+});
 
 function makeStyles(colors: ColorPalette) {
   return StyleSheet.create({

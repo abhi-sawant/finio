@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import React, { useCallback, useMemo } from 'react';
+import { View, Text, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
 import { Check, Plus } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 import { BottomSheet } from '@/components/common/BottomSheet';
@@ -19,6 +19,8 @@ interface CategoryPickerProps {
   transactionType?: TransactionType;
 }
 
+const keyExtractor = (item: Category) => item.id;
+
 export function CategoryPicker({
   visible,
   onClose,
@@ -27,59 +29,81 @@ export function CategoryPicker({
   transactionType,
 }: CategoryPickerProps) {
   const colors = useColors();
-  const styles = makeStyles(colors);
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const router = useRouter();
   const categories = useFinanceStore((s) => s.categories);
 
-  const filtered = categories.filter((c) => {
-    if (!transactionType) return true;
-    if (transactionType === 'transfer') return false;
-    if (transactionType === 'income') return c.type === 'income' || c.type === 'both';
-    if (transactionType === 'expense') return c.type === 'expense' || c.type === 'both';
-    return true;
-  });
+  const filtered = useMemo(
+    () =>
+      categories.filter((c) => {
+        if (!transactionType) return true;
+        if (transactionType === 'transfer') return false;
+        if (transactionType === 'income') return c.type === 'income' || c.type === 'both';
+        if (transactionType === 'expense') return c.type === 'expense' || c.type === 'both';
+        return true;
+      }),
+    [categories, transactionType],
+  );
 
-  const handleSelect = async (cat: Category) => {
-    await lightHaptic();
-    onChange(cat);
-    onClose();
-  };
+  const handleSelect = useCallback(
+    async (cat: Category) => {
+      await lightHaptic();
+      onChange(cat);
+      onClose();
+    },
+    [onChange, onClose],
+  );
+
+  const listHeader = useMemo(
+    () => (
+      <TouchableOpacity
+        style={styles.addNew}
+        onPress={async () => {
+          await lightHaptic();
+          onClose();
+          router.push('/modals/add-category');
+        }}
+        activeOpacity={0.7}
+      >
+        <View style={styles.addNewIcon}>
+          <Plus size={18} color={colors.primary} />
+        </View>
+        <Text style={styles.addNewText}>New Category</Text>
+      </TouchableOpacity>
+    ),
+    [styles, colors.primary, onClose, router],
+  );
+
+  const renderItem = useCallback(
+    ({ item: cat }: { item: Category }) => {
+      const isSelected = cat.id === selectedId;
+      return (
+        <TouchableOpacity
+          style={[styles.item, isSelected && styles.itemSelected]}
+          onPress={() => handleSelect(cat)}
+          activeOpacity={0.7}
+        >
+          <View style={[styles.iconCircle, { backgroundColor: hexToRgba(cat.color, 0.2) }]}>
+            <LucideIcon name={cat.icon} size={20} color={cat.color} />
+          </View>
+          <Text style={[styles.name, isSelected && { color: colors.primary }]}>{cat.name}</Text>
+          {isSelected && <Check size={18} color={colors.primary} strokeWidth={2.5} />}
+        </TouchableOpacity>
+      );
+    },
+    [styles, selectedId, handleSelect, colors.primary],
+  );
 
   return (
     <BottomSheet visible={visible} onClose={onClose} title="Select Category">
-      <ScrollView contentContainerStyle={styles.list}>
-        <TouchableOpacity
-          style={styles.addNew}
-          onPress={async () => {
-            await lightHaptic();
-            onClose();
-            router.push('/modals/add-category');
-          }}
-          activeOpacity={0.7}
-        >
-          <View style={styles.addNewIcon}>
-            <Plus size={18} color={colors.primary} />
-          </View>
-          <Text style={styles.addNewText}>New Category</Text>
-        </TouchableOpacity>
-        {filtered.map((cat) => {
-          const isSelected = cat.id === selectedId;
-          return (
-            <TouchableOpacity
-              key={cat.id}
-              style={[styles.item, isSelected && styles.itemSelected]}
-              onPress={() => handleSelect(cat)}
-              activeOpacity={0.7}
-            >
-              <View style={[styles.iconCircle, { backgroundColor: hexToRgba(cat.color, 0.2) }]}>
-                <LucideIcon name={cat.icon} size={20} color={cat.color} />
-              </View>
-              <Text style={[styles.name, isSelected && { color: colors.primary }]}>{cat.name}</Text>
-              {isSelected && <Check size={18} color={colors.primary} strokeWidth={2.5} />}
-            </TouchableOpacity>
-          );
-        })}
-      </ScrollView>
+      <FlatList
+        data={filtered}
+        keyExtractor={keyExtractor}
+        renderItem={renderItem}
+        ListHeaderComponent={listHeader}
+        contentContainerStyle={styles.list}
+        showsVerticalScrollIndicator={false}
+      />
     </BottomSheet>
   );
 }

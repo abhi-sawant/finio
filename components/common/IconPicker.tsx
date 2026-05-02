@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 import {
   Landmark,
@@ -183,12 +183,16 @@ export function IconPicker({
 }: IconPickerProps) {
   const colors = useColors();
   const resolvedAccent = accentColor ?? colors.primary;
-  const styles = makeStyles(colors);
-  const handleSelect = async (icon: string) => {
-    await lightHaptic();
-    onChange(icon);
-    onClose();
-  };
+  const styles = useMemo(() => makeStyles(colors), [colors]);
+
+  const handleSelect = useCallback(
+    async (icon: string) => {
+      await lightHaptic();
+      onChange(icon);
+      onClose();
+    },
+    [onChange, onClose],
+  );
 
   return (
     <BottomSheet visible={visible} onClose={onClose} title="Select Icon" snapPoint={0.75}>

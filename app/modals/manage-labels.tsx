@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   TextInput,
-  ScrollView,
+  FlatList,
   Alert,
 } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -22,7 +22,7 @@ import type { Label } from '@/types';
 
 export default function ManageLabelsModal() {
   const colors = useColors();
-  const styles = makeStyles(colors);
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { labels, addLabel, updateLabel, deleteLabel } = useFinanceStore();
@@ -32,21 +32,21 @@ export default function ManageLabelsModal() {
   const [name, setName] = useState('');
   const [color, setColor] = useState('#6C63FF');
 
-  const openAdd = () => {
+  const openAdd = useCallback(() => {
     setEditingLabel(null);
     setName('');
     setColor('#6C63FF');
     setSheetVisible(true);
-  };
+  }, []);
 
-  const openEdit = (label: Label) => {
+  const openEdit = useCallback((label: Label) => {
     setEditingLabel(label);
     setName(label.name);
     setColor(label.color);
     setSheetVisible(true);
-  };
+  }, []);
 
-  const handleSave = async () => {
+  const handleSave = useCallback(async () => {
     if (!name.trim()) {
       showToast({ message: 'Enter a label name', type: 'error' });
       return;
@@ -60,22 +60,53 @@ export default function ManageLabelsModal() {
       showToast({ message: 'Label added', type: 'success' });
     }
     setSheetVisible(false);
-  };
+  }, [name, color, editingLabel, updateLabel, addLabel]);
 
-  const handleDelete = (label: Label) => {
-    Alert.alert('Delete Label', `Delete "${label.name}"?`, [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Delete',
-        style: 'destructive',
-        onPress: async () => {
-          await warningHaptic();
-          deleteLabel(label.id);
-          showToast({ message: `"${label.name}" deleted`, type: 'error' });
+  const handleDelete = useCallback(
+    (label: Label) => {
+      Alert.alert('Delete Label', `Delete "${label.name}"?`, [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            await warningHaptic();
+            deleteLabel(label.id);
+            showToast({ message: `"${label.name}" deleted`, type: 'error' });
+          },
         },
-      },
-    ]);
-  };
+      ]);
+    },
+    [deleteLabel],
+  );
+
+  const keyExtractor = useCallback((item: Label) => item.id, []);
+
+  const renderItem = useCallback(
+    ({ item: label }: { item: Label }) => (
+      <View style={styles.item}>
+        <View style={[styles.dot, { backgroundColor: label.color }]} />
+        <Text style={styles.name}>{label.name}</Text>
+        <View style={styles.actions}>
+          <TouchableOpacity
+            onPress={() => openEdit(label)}
+            hitSlop={8}
+            style={styles.actionBtn}
+          >
+            <Pencil size={16} color={colors.textMuted} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => handleDelete(label)}
+            hitSlop={8}
+            style={styles.actionBtn}
+          >
+            <Trash2 size={16} color={colors.expense} />
+          </TouchableOpacity>
+        </View>
+      </View>
+    ),
+    [styles, colors.textMuted, colors.expense, openEdit, handleDelete],
+  );
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -91,31 +122,14 @@ export default function ManageLabelsModal() {
         <Text style={styles.addBtnText}>Add Label</Text>
       </TouchableOpacity>
 
-      <ScrollView contentContainerStyle={styles.list}>
-        {labels.map((label) => (
-          <View key={label.id} style={styles.item}>
-            <View style={[styles.dot, { backgroundColor: label.color }]} />
-            <Text style={styles.name}>{label.name}</Text>
-            <View style={styles.actions}>
-              <TouchableOpacity
-                onPress={() => openEdit(label)}
-                hitSlop={8}
-                style={styles.actionBtn}
-              >
-                <Pencil size={16} color={colors.textMuted} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => handleDelete(label)}
-                hitSlop={8}
-                style={styles.actionBtn}
-              >
-                <Trash2 size={16} color={colors.expense} />
-              </TouchableOpacity>
-            </View>
-          </View>
-        ))}
-        {labels.length === 0 && <Text style={styles.empty}>No labels yet. Add one above.</Text>}
-      </ScrollView>
+      <FlatList
+        data={labels}
+        keyExtractor={keyExtractor}
+        renderItem={renderItem}
+        contentContainerStyle={styles.list}
+        ListEmptyComponent={<Text style={styles.empty}>No labels yet. Add one above.</Text>}
+        showsVerticalScrollIndicator={false}
+      />
 
       {/* Add/Edit sheet */}
       <BottomSheet
