@@ -239,16 +239,20 @@ class AuthController
         $pdo     = Database::connect();
 
         $stmt = $pdo->prepare(
-            'SELECT id FROM users
-             WHERE email = ?
-               AND reset_token_hash = ?
-               AND reset_token_expires > NOW()'
+            'SELECT id, reset_token_hash, reset_token_expires FROM users
+             WHERE email = ?'
         );
-        $stmt->execute([$email, $otpHash]);
+        $stmt->execute([$email]);
         $user = $stmt->fetch();
 
-        if (!$user) {
+        if (!$user || empty($user['reset_token_hash'])) {
             json_error('Invalid or expired OTP.', 404);
+        }
+        if (strtotime($user['reset_token_expires']) < time()) {
+            json_error('OTP has expired. Please request a new one.', 410);
+        }
+        if (!hash_equals($user['reset_token_hash'], $otpHash)) {
+            json_error('Invalid OTP.', 401);
         }
 
         $newHash = password_hash($newPass, PASSWORD_BCRYPT, ['cost' => 12]);
