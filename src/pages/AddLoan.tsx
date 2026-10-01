@@ -1,6 +1,7 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { ArrowLeft, Trash2 } from 'lucide-react';
+import { toast } from 'sonner';
 import { useFinanceStore } from '@/store/useFinanceStore';
 import { MISC_CATEGORY_ID } from '@/data/defaultData';
 import { calculateEmi } from '@/utils/loan';
@@ -64,16 +65,17 @@ export default function AddLoan() {
   const parsedTenure = parseInt(tenureMonths, 10) || 0;
   const previewEmi = calculateEmi(parsedPrincipal, parsedRate, parsedTenure);
 
-  const canSubmit =
-    name.trim() !== '' &&
-    parsedPrincipal > 0 &&
-    parsedTenure > 0 &&
-    startDate !== '' &&
-    accountId !== '' &&
-    categoryId !== '';
+  const submitting = useRef(false);
 
   const handleSubmit = () => {
-    if (!canSubmit) return;
+    if (submitting.current) return;
+    if (name.trim() === '') return void toast.error('Enter a loan name');
+    if (parsedPrincipal <= 0) return void toast.error('Enter the loan amount');
+    if (parsedTenure <= 0) return void toast.error('Enter the tenure in months');
+    if (startDate === '') return void toast.error('Select a start date');
+    if (accountId === '') return void toast.error('Select an account');
+    if (categoryId === '') return void toast.error('Select a category');
+    submitting.current = true;
 
     const data = {
       name: name.trim(),
@@ -272,8 +274,7 @@ export default function AddLoan() {
 
         <Button
           onClick={handleSubmit}
-          disabled={!canSubmit}
-          className="bg-grad-primary shadow-glow-primary h-auto w-full rounded-sm py-3.5 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
+          className="bg-grad-primary shadow-glow-primary h-auto w-full rounded-sm py-3.5 text-sm font-medium text-white"
         >
           {existing ? 'Update Loan' : 'Add Loan'}
         </Button>

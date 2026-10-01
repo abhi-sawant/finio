@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from 'react-router';
 import { Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { navTabs } from './navItems';
+import { navTabs, moreNavItems } from './navItems';
 
 export function Sidebar() {
   const location = useLocation();
@@ -44,6 +44,32 @@ export function Sidebar() {
             >
               <Icon size={19} strokeWidth={isActive ? 2.4 : 2} />
               {tab.label === 'Txns' ? 'Transactions' : tab.label}
+            </button>
+          );
+        })}
+      </nav>
+
+      {/* Manage */}
+      <p className="text-muted-foreground mt-4 px-3 pb-1 text-xs font-medium tracking-wide uppercase">
+        Manage
+      </p>
+      <nav className="flex flex-col gap-1">
+        {moreNavItems.map((item) => {
+          const isActive = location.pathname.startsWith(item.path);
+          const Icon = item.icon;
+          return (
+            <button
+              key={item.path}
+              onClick={() => navigate(item.path)}
+              className={cn(
+                'flex items-center gap-3 rounded-full px-3 py-2.5 text-sm font-medium transition-colors',
+                isActive
+                  ? 'bg-accent text-accent-foreground'
+                  : 'text-muted-foreground hover:bg-muted/60 hover:text-foreground',
+              )}
+            >
+              <Icon size={19} strokeWidth={isActive ? 2.4 : 2} />
+              {item.label}
             </button>
           );
         })}

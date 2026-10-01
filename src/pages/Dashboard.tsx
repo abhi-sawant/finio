@@ -451,12 +451,14 @@ export default function Dashboard() {
             <div className="space-y-3">
               {topGoals.map((s) => (
                 <div key={s.goal.id}>
-                  <div className="mb-1 flex items-center justify-between">
-                    <span className="flex items-center gap-1.5 text-xs font-medium">
-                      <GoalIcon icon={s.goal.icon} size={12} color={s.goal.color} />
-                      {s.goal.name}
+                  <div className="mb-1 flex items-center justify-between gap-2">
+                    <span className="flex min-w-0 flex-1 items-center gap-1.5 text-xs font-medium">
+                      <span className="shrink-0">
+                        <GoalIcon icon={s.goal.icon} size={12} color={s.goal.color} />
+                      </span>
+                      <span className="truncate">{s.goal.name}</span>
                     </span>
-                    <span className="text-muted-foreground text-xs font-semibold">
+                    <span className="text-muted-foreground shrink-0 text-xs font-semibold">
                       {formatCurrency(s.current, true, hideAmounts)} /{' '}
                       {formatCurrency(s.goal.targetAmount, true, hideAmounts)}
                     </span>

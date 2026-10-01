@@ -105,27 +105,27 @@ Everything reachable was exercised, including conditional UI and empty states:
 
 ---
 
-### 3.2 Medium
+### 3.2 Medium — ✅ all fixed (code; manual retest pending)
 
 | # | Finding | Detail |
 | --- | --- | --- |
-| M1 | **Rapid multi-click on "Add Transaction" creates duplicates** | 3 quick clicks → 3 transactions + 3 toasts. No in-flight guard on submit. Likely the same on other forms. |
-| M2 | **CSV export is vulnerable to formula injection** | A note `=HYPERLINK("http://evil.example","click")` is exported verbatim (`…,"=HYPERLINK(""http://evil.example"",""click"")",…`). Notes can be attacker-controlled via bank CSV import or the Share Target. Prefix cells starting with `= + - @` with `'`. |
-| M3 | **Import "Replace everything" is offered when nothing valid will be imported** | `{"accounts":"x","transactions":[{"id":1}]}` → Review dialog shows `Accounts 0 / Transactions 0 (1 skipped)` and still offers **Replace everything** (wipe). `validateBackup` only requires keys to be *present* ([`importValidation.ts:777`](src/utils/importValidation.ts:777)). |
-| M4 | **Raw JS error shown to users on bad import** | Non-JSON file → `Unexpected token 'h', "this is not json" is not valid JSON`. |
-| M5 | **Year in Review: navigating to an empty year removes the year navigation** | Prev-year ×1 → "Add some transactions to see a year in review." with **no prev/next controls** (not even a year label). Only browser Back/reload escapes. Header alignment also differs from other pages. |
-| M6 | **Analytics custom-range popover overflows the viewport** | At 411 px the two-month calendar starts at x=276 and ends at x=488 (viewport 411) — right half unreachable. |
-| M7 | **Dashboard Savings-Goals card overflows with a long unbroken name** | A 120-char goal name runs past the card edge on the dashboard (the Goals page truncates correctly). |
-| M8 | **Insights/forecast are misleading early in a period** | Day 1 of October with a single ₹5,075 adjustment: "Overall spending is on pace to go over — you'll spend ₹1.6L against ₹40,000", "Miscellaneous is 100 % of this month's spending", "Food is down 100 % on your average", "Housing −100 %". "THIS MONTH" label is shown even when a different period chip is selected. |
-| M9 | **Forecast double-counts recurring-looking spend** | Sample data's historic "Monthly rent" rows have no `recurringId`, so the forecast reports "Everyday spend ₹850.57/day, led by **Housing**…" *and* lists Monthly rent ₹15,000 as scheduled. Same happens to any user who logged rent manually before creating a rule. |
-| M10 | **`BalanceTrend` emits duplicate x-axis keys** | Console: `Encountered two children with the same key … Oct 26` ([`BalanceTrend.tsx:63,71`](src/components/charts/BalanceTrend.tsx:63): last monthly bucket and the appended end-point share the label). Affects every >90-day range; also uses calendar months, not the financial month. |
-| M11 | **Silent disabled submit buttons — no message says what is missing** | Add Account (empty name, FD without rate/dates, maturity ≤ start, negative/>100 % rate) is correctly blocked, but the button just looks washed-out. Add Transaction with ₹0 or no account does nothing and shows nothing, while a missing category shows a toast — three different behaviours on one form. |
-| M12 | **Duplicate names accepted silently** | Two accounts named "HDFC Savings" (a transfer reads `HDFC Savings → HDFC Savings`); a second category "food" next to "Food" with no warning and no success toast. |
-| M13 | **Invalid `:id` on edit routes shows the *Add* form** | `/edit-account/bogus`, `/edit-transaction/bogus`, `/edit-loan/bogus` render "Add Account/…" under an edit URL; saving creates a new record. Should 404/redirect. |
-| M14 | **Archive and Delete icons sit side-by-side and the list shifts after Archive** | After archiving "Savings" the cursor lands on the next row's red Delete icon (hover state visible). A second tap = delete-confirm dialog. Small (~28 px) targets. |
-| M15 | **"Mark Paid Off" has no confirmation, toast or Undo** | One tap silently closes the loan, pauses its EMI rule and moves it to a collapsed "Paid off (1)" group. |
-| M16 | **Desktop users can't reach key actions** | Row actions (Select / Duplicate / Save as template / Delete) and Templates are long-press only — no right-click, kebab or tooltip. PIN pad, amount pad and onboarding pad ignore the physical keyboard (typed `9999`, `12345.678.9`: nothing registered). |
-| M17 | **Core features are buried** | Budgets, Recurring, Goals, Debts, Loans, Merchants, Year in Review live only in a long Settings list (sidebar and tab bar don't list them). |
+| M1 ✅ | **Rapid multi-click on "Add Transaction" creates duplicates** | 3 quick clicks → 3 transactions + 3 toasts. No in-flight guard on submit. Likely the same on other forms. |
+| M2 ✅ | **CSV export is vulnerable to formula injection** | A note `=HYPERLINK("http://evil.example","click")` is exported verbatim (`…,"=HYPERLINK(""http://evil.example"",""click"")",…`). Notes can be attacker-controlled via bank CSV import or the Share Target. Prefix cells starting with `= + - @` with `'`. |
+| M3 ✅ | **Import "Replace everything" is offered when nothing valid will be imported** | `{"accounts":"x","transactions":[{"id":1}]}` → Review dialog shows `Accounts 0 / Transactions 0 (1 skipped)` and still offers **Replace everything** (wipe). `validateBackup` only requires keys to be *present* ([`importValidation.ts:777`](src/utils/importValidation.ts:777)). |
+| M4 ✅ | **Raw JS error shown to users on bad import** | Non-JSON file → `Unexpected token 'h', "this is not json" is not valid JSON`. |
+| M5 ✅ | **Year in Review: navigating to an empty year removes the year navigation** | Prev-year ×1 → "Add some transactions to see a year in review." with **no prev/next controls** (not even a year label). Only browser Back/reload escapes. Header alignment also differs from other pages. |
+| M6 ✅ | **Analytics custom-range popover overflows the viewport** | At 411 px the two-month calendar starts at x=276 and ends at x=488 (viewport 411) — right half unreachable. |
+| M7 ✅ | **Dashboard Savings-Goals card overflows with a long unbroken name** | A 120-char goal name runs past the card edge on the dashboard (the Goals page truncates correctly). |
+| M8 ✅ | **Insights/forecast are misleading early in a period** | Day 1 of October with a single ₹5,075 adjustment: "Overall spending is on pace to go over — you'll spend ₹1.6L against ₹40,000", "Miscellaneous is 100 % of this month's spending", "Food is down 100 % on your average", "Housing −100 %". "THIS MONTH" label is shown even when a different period chip is selected. |
+| M9 ✅ | **Forecast double-counts recurring-looking spend** | Sample data's historic "Monthly rent" rows have no `recurringId`, so the forecast reports "Everyday spend ₹850.57/day, led by **Housing**…" *and* lists Monthly rent ₹15,000 as scheduled. Same happens to any user who logged rent manually before creating a rule. |
+| M10 ✅ | **`BalanceTrend` emits duplicate x-axis keys** | Console: `Encountered two children with the same key … Oct 26` ([`BalanceTrend.tsx:63,71`](src/components/charts/BalanceTrend.tsx:63): last monthly bucket and the appended end-point share the label). Affects every >90-day range; also uses calendar months, not the financial month. |
+| M11 ✅ | **Silent disabled submit buttons — no message says what is missing** | Add Account (empty name, FD without rate/dates, maturity ≤ start, negative/>100 % rate) is correctly blocked, but the button just looks washed-out. Add Transaction with ₹0 or no account does nothing and shows nothing, while a missing category shows a toast — three different behaviours on one form. |
+| M12 ✅ | **Duplicate names accepted silently** | Two accounts named "HDFC Savings" (a transfer reads `HDFC Savings → HDFC Savings`); a second category "food" next to "Food" with no warning and no success toast. |
+| M13 ✅ | **Invalid `:id` on edit routes shows the *Add* form** | `/edit-account/bogus`, `/edit-transaction/bogus`, `/edit-loan/bogus` render "Add Account/…" under an edit URL; saving creates a new record. Should 404/redirect. |
+| M14 ✅ | **Archive and Delete icons sit side-by-side and the list shifts after Archive** | After archiving "Savings" the cursor lands on the next row's red Delete icon (hover state visible). A second tap = delete-confirm dialog. Small (~28 px) targets. |
+| M15 ✅ | **"Mark Paid Off" has no confirmation, toast or Undo** | One tap silently closes the loan, pauses its EMI rule and moves it to a collapsed "Paid off (1)" group. |
+| M16 ✅ | **Desktop users can't reach key actions** | Row actions (Select / Duplicate / Save as template / Delete) and Templates are long-press only — no right-click, kebab or tooltip. PIN pad, amount pad and onboarding pad ignore the physical keyboard (typed `9999`, `12345.678.9`: nothing registered). |
+| M17 ✅ | **Core features are buried** | Budgets, Recurring, Goals, Debts, Loans, Merchants, Year in Review live only in a long Settings list (sidebar and tab bar don't list them). |
 
 ---
 

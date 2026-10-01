@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import {
   ArrowLeft,
@@ -122,7 +122,13 @@ export default function AddAccount() {
   const depositTerms = isDepositType
     ? depositTermsFromForm(type as 'fd' | 'rd', depositForm)
     : null;
-  const canSubmit = Boolean(name.trim()) && (!isDepositType || depositTerms !== null);
+  const submitting = useRef(false);
+  const isDuplicateName = () => {
+    const key = name.trim().toLowerCase();
+    return accounts.some(
+      (a) => a.id !== existing?.id && !a.archivedAt && a.name.trim().toLowerCase() === key,
+    );
+  };
   // Converting between a deposit and a regular account would orphan its terms or its history.
   const typeOptions = !existing
     ? accountTypes
@@ -132,6 +138,7 @@ export default function AddAccount() {
 
   const submitDeposit = () => {
     if (!depositTerms) return;
+    submitting.current = true;
     if (existing) {
       updateDeposit(existing.id, {
         name: name.trim(),
@@ -140,6 +147,7 @@ export default function AddAccount() {
         compounding: depositTerms.compounding,
         maturityDate: depositTerms.maturityDate,
       });
+      toast.success('Account updated');
       navigate(-1);
       return;
     }
@@ -159,15 +167,33 @@ export default function AddAccount() {
         });
       }
     }
+    toast.success('Account added');
     navigate(-1);
   };
 
   const handleSubmit = () => {
-    if (!canSubmit) return;
+    if (submitting.current) return;
+    if (!name.trim()) {
+      toast.error('Enter a name');
+      return;
+    }
+    if (isDuplicateName()) {
+      toast.error('An account with this name already exists');
+      return;
+    }
     if (isDepositType) {
+      if (!depositTerms) {
+        toast.error(
+          type === 'fd'
+            ? 'Enter the amount, rate, linked account, and a maturity date after the start date'
+            : 'Enter the installment, rate, linked account, and tenure in months',
+        );
+        return;
+      }
       submitDeposit();
       return;
     }
+    submitting.current = true;
 
     const isCredit = type === 'credit';
     const data = {
@@ -191,8 +217,10 @@ export default function AddAccount() {
 
     if (existing) {
       updateAccount(existing.id, data);
+      toast.success('Account updated');
     } else {
       addAccount(data);
+      toast.success('Account added');
     }
     navigate(-1);
   };
@@ -434,8 +462,7 @@ export default function AddAccount() {
         {/* Submit */}
         <Button
           onClick={handleSubmit}
-          disabled={!canSubmit}
-          className="bg-grad-primary shadow-glow-primary h-auto w-full rounded-sm py-3.5 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
+          className="bg-grad-primary shadow-glow-primary h-auto w-full rounded-sm py-3.5 text-sm font-medium text-white"
         >
           {existing ? 'Update Account' : 'Add Account'}
         </Button>

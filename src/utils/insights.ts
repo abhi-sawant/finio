@@ -115,6 +115,11 @@ export function normalizeNote(note: string): string {
     .trim();
 }
 
+/** True when two amounts are "the same charge": within 5%, or a couple of rupees for small ones. */
+export function amountsMatch(a: number, b: number): boolean {
+  return Math.abs(a - b) <= Math.max(Math.max(a, b) * AMOUNT_TOLERANCE, AMOUNT_TOLERANCE_FLOOR);
+}
+
 function advanceByFrequency(date: Date, frequency: RecurrenceFrequency): Date {
   switch (frequency) {
     case 'daily':
@@ -264,6 +269,12 @@ function formatSpikeTitle(categoryName: string, change: number, months: number):
   return `${categoryName} is ${Math.round(change * 100)}% above your ${months}-month average`;
 }
 
+/**
+ * Pace-based insights (spikes, drops, "on pace to go over", concentration) extrapolate the
+ * period so far; with fewer elapsed days than this the projection is noise.
+ */
+const MIN_PACE_DAYS = 7;
+
 const SEVERITY_ORDER: Record<InsightSeverity, number> = { warn: 0, info: 1, good: 2 };
 
 function categorySpend(rows: Transaction[]): Map<string, number> {
@@ -299,6 +310,8 @@ export function buildInsights(input: InsightInput, options: InsightOptions): Ins
   const periodKey = format(range.start, 'yyyy-MM');
   const rows = transactionsInPeriod(input.transactions, range);
   const insights: Insight[] = [];
+  const elapsed = daysElapsedInPeriod(range, now);
+  const hasPace = elapsed >= MIN_PACE_DAYS;
 
   const categoryName = (id: string) =>
     input.categories.find((c) => c.id === id)?.name ?? 'Uncategorized';
@@ -328,7 +341,7 @@ export function buildInsights(input: InsightInput, options: InsightOptions): Ins
     transactionsInPeriod(input.transactions, shiftPeriod(range, -(i + 1))),
   ).filter((month) => month.length > 0);
 
-  if (priorMonths.length >= MIN_BASELINE_MONTHS) {
+  if (hasPace && priorMonths.length >= MIN_BASELINE_MONTHS) {
     const baselines = new Map<string, number>();
     for (const month of priorMonths) {
       for (const [categoryId, amount] of categorySpend(month)) {
@@ -403,7 +416,7 @@ export function buildInsights(input: InsightInput, options: InsightOptions): Ins
     });
   }
 
-  const onPace = statuses
+  const onPace = (hasPace ? statuses : [])
     .filter((s) => !s.isOver && paceToFullPeriod(s.spent, s.range, now) > s.limit && s.limit > 0)
     .sort((a, b) => b.percent - a.percent);
   for (const status of onPace.slice(0, 1)) {
@@ -463,7 +476,8 @@ export function buildInsights(input: InsightInput, options: InsightOptions): Ins
   }
 
   // ── Concentration ────────────────────────────────────────────────────────
-  if (expenses >= MIN_NOTABLE_AMOUNT * 2) {
+  const expenseRowCount = rows.filter((t) => t.type === 'expense').length;
+  if (hasPace && expenseRowCount >= 3 && expenses >= MIN_NOTABLE_AMOUNT * 2) {
     const [top] = Array.from(categorySpend(rows)).sort((a, b) => b[1] - a[1]);
     if (top && top[1] / expenses >= 0.4) {
       insights.push({

@@ -96,23 +96,23 @@ export const AccountCard = memo(function AccountCard({
         </button>
       )}
       {!isArchived && (onToggleArchive || onDelete) && (
-        <div className="flex shrink-0 gap-1">
+        <div className="flex shrink-0 gap-3">
           {onToggleArchive && (
             <button
               onClick={onToggleArchive}
-              className="border-border bg-card hover:bg-muted flex h-7 w-7 items-center justify-center rounded-full border"
+              className="border-border bg-card hover:bg-muted flex h-9 w-9 items-center justify-center rounded-full border"
               aria-label={`Archive ${account.name}`}
             >
-              <Archive size={12} className="text-muted-foreground" />
+              <Archive size={16} className="text-muted-foreground" />
             </button>
           )}
           {onDelete && (
             <button
               onClick={onDelete}
-              className="border-border bg-card hover:bg-muted flex h-7 w-7 items-center justify-center rounded-full border"
+              className="border-border bg-card hover:bg-muted flex h-9 w-9 items-center justify-center rounded-full border"
               aria-label={`Delete ${account.name}`}
             >
-              <Trash2 size={12} className="text-destructive" />
+              <Trash2 size={16} className="text-destructive" />
             </button>
           )}
         </div>
@@ -120,10 +120,10 @@ export const AccountCard = memo(function AccountCard({
       {isArchived && onDelete && (
         <button
           onClick={onDelete}
-          className="border-border bg-card hover:bg-muted flex h-7 w-7 shrink-0 items-center justify-center rounded-full border"
+          className="border-border bg-card hover:bg-muted flex h-9 w-9 shrink-0 items-center justify-center rounded-full border"
           aria-label={`Delete ${account.name}`}
         >
-          <Trash2 size={12} className="text-destructive" />
+          <Trash2 size={16} className="text-destructive" />
         </button>
       )}
     </div>

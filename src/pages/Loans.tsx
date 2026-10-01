@@ -312,6 +312,18 @@ export default function Loans() {
     if (confirmed) deleteLoan(loan.id);
   };
 
+  const handleToggleClosed = (loan: Loan) => {
+    if (loan.closedAt) {
+      setLoanClosed(loan.id, false);
+      toast.success(`"${loan.name}" reopened`);
+      return;
+    }
+    setLoanClosed(loan.id, true);
+    toast.success(`"${loan.name}" marked paid off`, {
+      action: { label: 'Undo', onClick: () => setLoanClosed(loan.id, false) },
+    });
+  };
+
   const renderCard = (loan: Loan) => (
     <LoanCard
       key={loan.id}
@@ -321,7 +333,7 @@ export default function Loans() {
       onToggle={() => setExpandedId((k) => (k === loan.id ? null : loan.id))}
       onEdit={() => navigate(`/edit-loan/${loan.id}`)}
       onDelete={() => handleDelete(loan)}
-      onToggleClosed={() => setLoanClosed(loan.id, !loan.closedAt)}
+      onToggleClosed={() => handleToggleClosed(loan)}
       onAddPrepayment={() => openPrepay(loan)}
       onDeletePrepayment={(id) => {
         const removed = deleteLoanPrepayment(id);

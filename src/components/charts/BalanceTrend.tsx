@@ -9,7 +9,8 @@ import {
   Tooltip,
 } from 'recharts';
 import { useFinanceStore } from '@/store/useFinanceStore';
-import { subDays, format, differenceInDays, startOfMonth, addMonths } from 'date-fns';
+import { subDays, format, differenceInDays } from 'date-fns';
+import { monthPeriodStart, addPeriods, normalizeMonthStartDay } from '@/utils/period';
 import { formatCurrency, localDayKey } from '@/utils/formatters';
 import { getNetWorth } from '@/utils/calculations';
 import { sampleForTable } from '@/utils/chartTable';
@@ -24,6 +25,7 @@ export function BalanceTrend({ from, to }: Props) {
   const transactions = useFinanceStore((s) => s.transactions);
   const accounts = useFinanceStore((s) => s.accounts);
   const hideAmounts = useFinanceStore((s) => s.settings.hideAmounts);
+  const monthStartDay = normalizeMonthStartDay(useFinanceStore((s) => s.settings.monthStartDay));
 
   const data = useMemo(() => {
     const today = new Date();
@@ -54,21 +56,36 @@ export function BalanceTrend({ from, to }: Props) {
         balance -= dayDelta.get(dayKey) ?? 0;
       }
 
-      // Sample first day of each month within [from, to]
-      const monthly: { date: string; balance: number }[] = [];
-      let cursor = startOfMonth(from);
+      // Sample the first day of each financial month within [from, to]; the first point is
+      // clamped to `from` so a mid-month range doesn't read from a day outside it.
+      const monthly: { dateKey: string; date: string; balance: number }[] = [];
+      const fromKey = format(from, 'yyyy-MM-dd');
+      let cursor = monthPeriodStart(from, monthStartDay);
       while (cursor <= to) {
-        const key = format(cursor, 'yyyy-MM-dd');
+        const cursorKey = format(cursor, 'yyyy-MM-dd');
+        const key = cursorKey < fromKey ? fromKey : cursorKey;
         const point = allDaily.find((p) => p.dateKey >= key);
-        if (point) monthly.push({ date: format(cursor, 'MMM yy'), balance: point.balance });
-        cursor = addMonths(cursor, 1);
+        if (point) {
+          monthly.push({
+            dateKey: point.dateKey,
+            date: format(cursor, 'MMM yy'),
+            balance: point.balance,
+          });
+        }
+        cursor = addPeriods('monthly', cursor, 1);
       }
-      // Always include the 'to' endpoint
+      // Always include the 'to' endpoint (replacing the last bucket if it is the same month)
       const lastKey = format(to, 'yyyy-MM-dd');
       const lastPoint = allDaily.findLast
         ? allDaily.findLast((p) => p.dateKey <= lastKey)
         : [...allDaily].reverse().find((p) => p.dateKey <= lastKey);
-      if (lastPoint) monthly.push({ date: format(to, 'MMM yy'), balance: lastPoint.balance });
+      if (lastPoint) {
+        const endLabel = format(to, 'MMM yy');
+        const entry = { dateKey: lastPoint.dateKey, date: endLabel, balance: lastPoint.balance };
+        const prev = monthly[monthly.length - 1];
+        if (prev && prev.date === endLabel) monthly[monthly.length - 1] = entry;
+        else monthly.push(entry);
+      }
       return monthly;
     }
 
@@ -88,8 +105,8 @@ export function BalanceTrend({ from, to }: Props) {
     const toKey = format(to, 'yyyy-MM-dd');
     return points
       .filter((p) => p.dateKey >= fromKey && p.dateKey <= toKey)
-      .map(({ date, balance }) => ({ date, balance }));
-  }, [transactions, accounts, from, to]);
+      .map(({ dateKey, date, balance }) => ({ dateKey, date, balance }));
+  }, [transactions, accounts, from, to, monthStartDay]);
 
   const numDays = differenceInDays(to, from);
   const xAxisInterval = numDays <= 31 ? 4 : numDays <= 60 ? 9 : 'preserveStartEnd';
@@ -100,6 +117,7 @@ export function BalanceTrend({ from, to }: Props) {
   const first = data[0];
   const last = data[data.length - 1];
   const money = (value: number) => formatCurrency(value, true, hideAmounts);
+  const labelByKey = new Map(data.map((p) => [p.dateKey, p.date]));
   const table = sampleForTable(data);
 
   return (
@@ -124,7 +142,8 @@ export function BalanceTrend({ from, to }: Props) {
             </defs>
             <CartesianGrid strokeDasharray="3 3" opacity={0.12} />
             <XAxis
-              dataKey="date"
+              dataKey="dateKey"
+              tickFormatter={(k) => labelByKey.get(String(k)) ?? String(k)}
               fontSize={10}
               tickLine={false}
               axisLine={false}
@@ -146,6 +165,7 @@ export function BalanceTrend({ from, to }: Props) {
                 fontSize: 12,
               }}
               formatter={(v) => formatCurrency(Number(v) || 0, false, hideAmounts)}
+              labelFormatter={(k) => labelByKey.get(String(k)) ?? String(k)}
               labelStyle={{ color: 'var(--muted-foreground)' }}
             />
             <Line
@@ -165,7 +185,7 @@ export function BalanceTrend({ from, to }: Props) {
           table.sampled ? `sampled to ${table.rows.length} of ${data.length} points` : undefined
         }
         rows={table.rows.map((point) => ({
-          key: point.date,
+          key: point.dateKey,
           cells: [point.date, money(point.balance)],
         }))}
       />

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { validateBackup } from './importValidation';
+import { hasImportableData, validateBackup } from './importValidation';
 
 const validAccount = {
   id: 'acc-1',
@@ -679,5 +679,17 @@ describe('validateBackup', () => {
       accepted: 1,
       rejected: 2,
     });
+  });
+});
+
+describe('hasImportableData', () => {
+  it('is false when every row was rejected and there are no settings', () => {
+    const { report } = validateBackup({ accounts: [{ id: 'bad' }] });
+    expect(hasImportableData(report)).toBe(false);
+  });
+
+  it('is true with an accepted row, or with settings alone', () => {
+    expect(hasImportableData(validateBackup({ accounts: [validAccount] }).report)).toBe(true);
+    expect(hasImportableData(validateBackup({ settings: { theme: 'dark' } }).report)).toBe(true);
   });
 });
