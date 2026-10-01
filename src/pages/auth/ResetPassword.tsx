@@ -125,6 +125,7 @@ export default function ResetPassword() {
                 variant="ghost"
                 size="icon"
                 onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
                 className="text-muted-foreground absolute top-1/2 right-1 -translate-y-1/2 hover:bg-transparent"
               >
                 {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}

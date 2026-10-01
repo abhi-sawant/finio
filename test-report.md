@@ -14,7 +14,7 @@
 | -------- | ----- | --------------------------------------------------------- |
 | High     | 9     | Wrong data, data loss, blocked flows, or unusable UI      |
 | Medium   | 17    | Incorrect/misleading behaviour, missing validation, UX gaps |
-| Low      | 22    | Polish, copy, accessibility, inconsistencies              |
+| Low ✅   | 22    | Polish, copy, accessibility, inconsistencies              |
 
 **Top 5 to fix first**
 
@@ -129,7 +129,7 @@ Everything reachable was exercised, including conditional UI and empty states:
 
 ---
 
-### 3.3 Low — UI polish, copy, consistency
+### 3.3 Low — UI polish, copy, consistency ✅ all fixed (code; manual retest pending)
 
 **Formatting & copy**
 - L1 Inconsistent decimals: `₹450.5`, `₹1,306.5`, `-₹96,85,388.5`, `₹43,523.7` (hero number, list rows, forecast) vs `₹1,290.32` elsewhere — `maximumFractionDigits: 2` with `minimumFractionDigits: 0` ([`formatters.ts:41`](src/utils/formatters.ts:41)). Currency should pad to 2 when fractional.

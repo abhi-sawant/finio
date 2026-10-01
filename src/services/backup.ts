@@ -20,6 +20,7 @@ import {
   packEnvelope,
 } from '@/utils/backupCrypto';
 import type { FinanceStore } from '@/types';
+import { withBackupMeta } from '@/utils/backupMeta';
 
 /** Thrown when a cloud restore hits an encrypted backup and no usable key is cached — the
  *  caller (Settings UI) catches this specifically to prompt for the passphrase and retry,
@@ -124,7 +125,7 @@ export async function saveLocalBackup(
  *  used both by the Data section's "Export Data" button and the app-lock PIN setup dialog's
  *  "export a backup first" safety net. */
 export async function exportLocalBackup(): Promise<void> {
-  const data = collectBackupPayload();
+  const data = withBackupMeta(collectBackupPayload());
   const filename = `finio-backup-${todayKey()}.json`;
   await saveLocalBackup(filename, JSON.stringify(data, null, 2), { allowPrompt: true });
 }
@@ -273,7 +274,7 @@ export async function autoLocalBackupIfNeeded(): Promise<void> {
   if (lastLocalBackupAt === today) return;
 
   try {
-    const data = collectBackupPayload();
+    const data = withBackupMeta(collectBackupPayload());
     // No user gesture here (runs from a mount effect), so never prompt for folder permission.
     await saveLocalBackup(`finio-backup-${today}.json`, JSON.stringify(data, null, 2), {
       allowPrompt: false,

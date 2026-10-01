@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   buildTransactionsFromCsv,
   detectDateFormat,
+  detectDateFormatInfo,
   findDuplicateRows,
   parseAmount,
   parseCsvText,
@@ -349,5 +350,53 @@ describe('findDuplicateRows', () => {
   it('flags duplicates within the same batch', () => {
     const duplicates = findDuplicateRows([candidate(0), candidate(1)], []);
     expect(duplicates).toEqual(new Set([1]));
+  });
+});
+
+describe('parseAmount edge cases (L17)', () => {
+  it('accepts scientific notation', () => {
+    expect(parseAmount('1e3')).toBe(1000);
+    expect(parseAmount('1.5E2')).toBe(150);
+  });
+  it('handles trailing currency and signs around symbols', () => {
+    expect(parseAmount('450 USD')).toBe(450);
+    expect(parseAmount('-$5.50')).toBe(-5.5);
+    expect(parseAmount('.5')).toBe(0.5);
+  });
+  it('rejects junk instead of stripping mid-string letters', () => {
+    expect(parseAmount('12abc34')).toBeNull();
+    expect(parseAmount('1.2.3')).toBeNull();
+  });
+});
+
+describe('detectDateFormatInfo', () => {
+  it('is unambiguous when some row has day > 12', () => {
+    const r = detectDateFormatInfo(['05/01/2026', '27/01/2026']);
+    expect(r).toEqual({ format: 'DD/MM/YYYY', ambiguous: false });
+  });
+  it('flags ambiguity when every row fits both orders', () => {
+    const r = detectDateFormatInfo(['05/01/2026', '03/02/2026']);
+    expect(r.format).toBe('DD/MM/YYYY');
+    expect(r.ambiguous).toBe(true);
+  });
+  it('picks month-first when a second part exceeds 12', () => {
+    expect(detectDateFormatInfo(['01/27/2026', '02/03/2026']).format).toBe('MM/DD/YYYY');
+  });
+  it('tolerates a few junk rows (>= 90% match)', () => {
+    const rows = Array.from({ length: 19 }, () => '2026-07-27').concat('Total');
+    expect(detectDateFormatInfo(rows).format).toBe('YYYY-MM-DD');
+  });
+});
+
+describe('debit/credit columns use absolute values', () => {
+  it('treats a negative debit as an expense of that size', () => {
+    const res = buildTransactionsFromCsv([['2026-07-27', '-250', '']], {
+      mapping: { dateCol: 0, amountMode: 'debitCredit', debitCol: 1, creditCol: 2 },
+      dateFormat: 'YYYY-MM-DD',
+      accountId: 'a1',
+      categories: [],
+      fallbackCategoryId: 'c1',
+    });
+    expect(res.accepted[0].transaction).toMatchObject({ type: 'expense', amount: 250 });
   });
 });

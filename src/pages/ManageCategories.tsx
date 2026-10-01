@@ -13,6 +13,7 @@ import { useConfirm } from '@/components/ui/use-confirm';
 import type { CategoryType } from '@/types';
 import Header from '@/components/ui/header';
 import Main from '@/components/ui/main';
+import { MAX_NAME_LENGTH, cleanText, stripLeading } from '@/utils/validation';
 
 const categoryColors = COLOR_PALETTE;
 
@@ -50,24 +51,25 @@ export default function ManageCategories() {
   };
 
   const handleSubmit = () => {
-    if (!name.trim()) {
+    const cleanName = cleanText(name, MAX_NAME_LENGTH);
+    if (!cleanName) {
       toast.error('Enter a name');
       return;
     }
-    const key = name.trim().toLowerCase();
+    const key = cleanName.toLowerCase();
     if (
       categories.some(
         (c) => c.id !== editId && c.type === type && c.name.trim().toLowerCase() === key,
       )
     ) {
-      toast.error(`A ${type} category named "${name.trim()}" already exists`);
+      toast.error(`A ${type} category named "${cleanName}" already exists`);
       return;
     }
     if (editId) {
-      updateCategory(editId, { name: name.trim(), type, color, icon });
+      updateCategory(editId, { name: cleanName, type, color, icon });
       toast.success('Category updated');
     } else {
-      addCategory({ name: name.trim(), type, color, icon });
+      addCategory({ name: cleanName, type, color, icon });
       toast.success('Category added');
     }
     resetForm();
@@ -137,7 +139,8 @@ export default function ManageCategories() {
                 type="text"
                 placeholder="Category name"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                maxLength={MAX_NAME_LENGTH}
+                onChange={(e) => setName(stripLeading(e.target.value))}
                 className="bg-muted h-auto rounded-sm px-3 py-2"
               />
               <div className="flex gap-2">

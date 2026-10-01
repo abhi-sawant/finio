@@ -139,7 +139,7 @@ export function CloudAccountSection() {
               </div>
               <div className="text-left">
                 <p className="text-sm font-medium">Sign In</p>
-                <p className="text-muted-foreground text-xs">Sync your data across devices</p>
+                <p className="text-muted-foreground text-xs">Back up and restore your data</p>
               </div>
             </div>
             <ChevronRight size={16} className="text-muted-foreground" />

@@ -5,9 +5,11 @@ import { toast } from 'sonner';
 import { useFinanceStore } from '@/store/useFinanceStore';
 import { MISC_CATEGORY_ID } from '@/data/defaultData';
 import { calculateEmi } from '@/utils/loan';
-import { activeAccounts } from '@/utils/calculations';
-import { formatCurrency } from '@/utils/formatters';
+import { activeAccounts, isCategoryValidForType } from '@/utils/calculations';
+import { MAX_NAME_LENGTH, cleanText, stripLeading } from '@/utils/validation';
+import { formatCurrency, localDayKey } from '@/utils/formatters';
 import { CategoryIcon } from '@/components/categories/CategoryIcon';
+import { CategoryGrid } from '@/components/categories/CategoryGrid';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -26,6 +28,7 @@ import Main from '@/components/ui/main';
 
 /** Loan/EMI in the default set — the sane default for a new loan's category. */
 const DEFAULT_LOAN_CATEGORY_ID = 'cat-27';
+const DEFAULT_LOAN_CATEGORY_NAME = 'Loan / EMI';
 
 export default function AddLoan() {
   const navigate = useNavigate();
@@ -41,7 +44,7 @@ export default function AddLoan() {
   const existing = id ? loans.find((l) => l.id === id) : null;
   const openAccounts = useMemo(() => activeAccounts(accounts), [accounts]);
   const expenseCategories = useMemo(
-    () => categories.filter((c) => c.type === 'expense' || c.type === 'both'),
+    () => categories.filter((c) => isCategoryValidForType(c, 'expense')),
     [categories],
   );
 
@@ -50,14 +53,14 @@ export default function AddLoan() {
   const [interestRate, setInterestRate] = useState(existing?.interestRate.toString() ?? '');
   const [tenureMonths, setTenureMonths] = useState(existing?.tenureMonths.toString() ?? '');
   const [startDate, setStartDate] = useState(
-    existing?.startDate ? existing.startDate.slice(0, 10) : '',
+    existing?.startDate ? localDayKey(existing.startDate) : '',
   );
   const [accountId, setAccountId] = useState(existing?.accountId ?? openAccounts[0]?.id ?? '');
   const [categoryId, setCategoryId] = useState(
     existing?.categoryId ??
-      (categories.some((c) => c.id === DEFAULT_LOAN_CATEGORY_ID)
-        ? DEFAULT_LOAN_CATEGORY_ID
-        : MISC_CATEGORY_ID),
+      categories.find((c) => c.id === DEFAULT_LOAN_CATEGORY_ID)?.id ??
+      categories.find((c) => c.name === DEFAULT_LOAN_CATEGORY_NAME)?.id ??
+      MISC_CATEGORY_ID,
   );
 
   const parsedPrincipal = parseFloat(principal) || 0;
@@ -78,7 +81,7 @@ export default function AddLoan() {
     submitting.current = true;
 
     const data = {
-      name: name.trim(),
+      name: cleanText(name, MAX_NAME_LENGTH),
       principal: parsedPrincipal,
       interestRate: parsedRate,
       tenureMonths: parsedTenure,
@@ -89,8 +92,10 @@ export default function AddLoan() {
 
     if (existing) {
       updateLoan(existing.id, data);
+      toast.success('Loan updated');
     } else {
       addLoan(data);
+      toast.success('Loan added');
     }
     navigate(-1);
   };
@@ -143,7 +148,8 @@ export default function AddLoan() {
             type="text"
             placeholder="e.g., Home Loan — HDFC"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            maxLength={MAX_NAME_LENGTH}
+            onChange={(e) => setName(stripLeading(e.target.value))}
             className="bg-card h-auto rounded-sm px-4 py-3"
           />
         </div>
@@ -237,31 +243,24 @@ export default function AddLoan() {
 
         <div>
           <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">Category</Label>
-          <div className="scrollbar-hide grid max-h-40 grid-cols-4 gap-2 overflow-y-auto">
+          <CategoryGrid className="max-h-40">
             {expenseCategories.map((cat) => {
               const selected = categoryId === cat.id;
               return (
                 <button
                   key={cat.id}
+                  data-selected={selected}
                   onClick={() => setCategoryId(cat.id)}
                   className={`flex flex-col items-center gap-1 rounded-sm border p-2 text-center transition-all ${
                     selected
                       ? 'ring-grad-primary border-transparent'
                       : 'border-border bg-card hover:bg-muted'
                   }`}
-                  style={
-                    selected
-                      ? {
-                          backgroundImage: `linear-gradient(135deg, ${cat.color}22, ${cat.color}11)`,
-                        }
-                      : undefined
-                  }
+                  style={selected ? { backgroundColor: `${cat.color}22` } : undefined}
                 >
                   <div
                     className="flex h-7 w-7 items-center justify-center rounded-full"
-                    style={{
-                      backgroundImage: `linear-gradient(135deg, ${cat.color}, ${cat.color}cc)`,
-                    }}
+                    style={{ backgroundColor: cat.color }}
                   >
                     <CategoryIcon icon={cat.icon} size={14} color="white" />
                   </div>
@@ -269,7 +268,7 @@ export default function AddLoan() {
                 </button>
               );
             })}
-          </div>
+          </CategoryGrid>
         </div>
 
         <Button

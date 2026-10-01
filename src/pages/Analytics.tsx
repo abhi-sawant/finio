@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Target, ChevronRight, Repeat, CalendarIcon } from 'lucide-react';
 import { useFinanceStore } from '@/store/useFinanceStore';
-import { formatCurrency, shouldCompactGroup } from '@/utils/formatters';
+import { formatCurrency, formatShortDate, shouldCompactGroup } from '@/utils/formatters';
 import { getTotalIncome, getTotalExpenses } from '@/utils/calculations';
 import { isRulePaused } from '@/store/recurring';
 import { SpendingDonut } from '@/components/charts/SpendingDonut';
@@ -23,7 +23,7 @@ import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import type { DateRange } from 'react-day-picker';
-import { format, parseISO, startOfDay, endOfDay, subMonths } from 'date-fns';
+import { parseISO, startOfDay, endOfDay, subMonths } from 'date-fns';
 import { monthPeriodStart, normalizeMonthStartDay, yearPeriodStart } from '@/utils/period';
 
 type FilterType = 'all' | 'month' | '3months' | '6months' | 'year' | 'custom';
@@ -148,10 +148,10 @@ export default function Analytics() {
                       {date?.from ? (
                         date.to ? (
                           <>
-                            {format(date.from, 'LLL dd, y')} - {format(date.to, 'LLL dd, y')}
+                            {formatShortDate(date.from)} - {formatShortDate(date.to)}
                           </>
                         ) : (
-                          format(date.from, 'LLL dd, y')
+                          formatShortDate(date.from)
                         )
                       ) : (
                         <span>Pick a date</span>

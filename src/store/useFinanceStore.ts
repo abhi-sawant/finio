@@ -29,6 +29,7 @@ import {
 import { calculateEmi, maxPrepayment } from '@/utils/loan';
 import { planNetWorthSnapshots } from '@/utils/netWorth';
 import { normalizeMonthStartDay } from '@/utils/period';
+import { MAX_NAME_LENGTH, MAX_NOTE_LENGTH, cleanText } from '@/utils/validation';
 import type {
   Account,
   Budget,
@@ -175,6 +176,7 @@ export const useFinanceStore = create<FinanceStore>()(
       addAccount: (accountData) => {
         const account: Account = {
           ...accountData,
+          name: cleanText(accountData.name, MAX_NAME_LENGTH),
           // A brand-new account has no transactions, so the balance the user typed *is*
           // the opening balance.
           openingBalance: accountData.balance,
@@ -469,6 +471,7 @@ export const useFinanceStore = create<FinanceStore>()(
       addTransaction: (txData) => {
         const transaction: Transaction = {
           ...txData,
+          note: cleanText(txData.note ?? '', MAX_NOTE_LENGTH),
           id: generateUUID(),
           createdAt: new Date().toISOString(),
         };
@@ -876,6 +879,7 @@ export const useFinanceStore = create<FinanceStore>()(
       addGoal: (goalData) => {
         const goal: Goal = {
           ...goalData,
+          name: cleanText(goalData.name, MAX_NAME_LENGTH),
           id: generateUUID(),
           createdAt: new Date().toISOString(),
         };

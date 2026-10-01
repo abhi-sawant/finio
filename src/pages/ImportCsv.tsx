@@ -8,7 +8,7 @@ import { activeAccounts as getActiveAccounts } from '@/utils/calculations';
 import {
   DATE_FORMATS,
   buildTransactionsFromCsv,
-  detectDateFormat,
+  detectDateFormatInfo,
   findDuplicateRows,
   parseCsvText,
   type AmountMode,
@@ -61,6 +61,7 @@ export default function ImportCsv() {
   const [accountId, setAccountId] = useState(activeAccounts[0]?.id ?? '');
   const [dateCol, setDateCol] = useState(NONE);
   const [dateFormat, setDateFormat] = useState<DateFormatCode>('YYYY-MM-DD');
+  const [detectedFormat, setDetectedFormat] = useState<DateFormatCode | null>(null);
   const [amountMode, setAmountMode] = useState<AmountMode>('signed');
   const [amountCol, setAmountCol] = useState(NONE);
   const [negativeIsExpense, setNegativeIsExpense] = useState(true);
@@ -102,9 +103,10 @@ export default function ImportCsv() {
           const noteGuess = csv.headers.findIndex((h) => /note|desc|narration|particular/i.test(h));
           if (dateGuess >= 0) {
             setDateCol(String(dateGuess));
-            const samples = csv.rows.slice(0, 20).map((r) => r[dateGuess] ?? '');
-            const detected = detectDateFormat(samples);
+            const samples = csv.rows.map((r) => r[dateGuess] ?? '');
+            const { format: detected } = detectDateFormatInfo(samples);
             if (detected) setDateFormat(detected);
+            setDetectedFormat(detected ?? null);
           }
           if (amountGuess >= 0) setAmountCol(String(amountGuess));
           if (noteGuess >= 0) setNoteCol(String(noteGuess));
@@ -124,9 +126,10 @@ export default function ImportCsv() {
     if (!parsed) return;
     const col = strToCol(value);
     if (col === undefined) return;
-    const samples = parsed.rows.slice(0, 20).map((r) => r[col] ?? '');
-    const detected = detectDateFormat(samples);
+    const samples = parsed.rows.map((r) => r[col] ?? '');
+    const { format: detected } = detectDateFormatInfo(samples);
     if (detected) setDateFormat(detected);
+    setDetectedFormat(detected ?? null);
   };
 
   const canPreview =
@@ -311,6 +314,11 @@ export default function ImportCsv() {
                       ))}
                     </SelectContent>
                   </Select>
+                  {detectedFormat && detectedFormat === dateFormat && (
+                    <p className="text-muted-foreground mt-1.5 text-xs">
+                      Detected {detectedFormat} — check the preview
+                    </p>
+                  )}
                 </div>
               </div>
 

@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { format } from 'date-fns';
 import { ArrowLeft, Pause, Pencil, Play, PiggyBank, Plus, Repeat, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useFinanceStore } from '@/store/useFinanceStore';
@@ -11,7 +10,13 @@ import {
   previewBackfill,
   type BackfillPreview,
 } from '@/store/recurring';
-import { formatCurrency, toLocalDateTimeInputValue } from '@/utils/formatters';
+import {
+  formatCurrency,
+  formatShortDate,
+  localDayKey,
+  toLocalDateTimeInputValue,
+} from '@/utils/formatters';
+import { MAX_NOTE_LENGTH, cleanText, stripLeading } from '@/utils/validation';
 import { HideAmountsToggle } from '@/components/HideAmountsToggle';
 import { Button } from '@/components/ui/button';
 import { DatePicker } from '@/components/ui/date-picker';
@@ -34,7 +39,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { activeAccounts } from '@/utils/calculations';
+import { activeAccounts, findTransferCategory, isCategoryValidForType } from '@/utils/calculations';
 import type { RecurrenceFrequency, RecurringTransaction, TransactionType } from '@/types';
 import Header from '@/components/ui/header';
 import Main from '@/components/ui/main';
@@ -99,7 +104,7 @@ export default function Recurring() {
     () =>
       type === 'transfer'
         ? categories.filter((c) => c.type === 'both')
-        : categories.filter((c) => c.type === type || c.type === 'both'),
+        : categories.filter((c) => isCategoryValidForType(c, type)),
     [categories, type],
   );
 
@@ -136,7 +141,7 @@ export default function Recurring() {
     setFrequency(rule.frequency);
     setStartDate(toLocalDateTimeInputValue(rule.startDate));
     setEndMode(rule.endDate ? 'on' : rule.maxOccurrences !== undefined ? 'after' : 'never');
-    setEndDate(rule.endDate ? rule.endDate.slice(0, 10) : '');
+    setEndDate(rule.endDate ? localDayKey(rule.endDate) : '');
     setMaxOccurrences(rule.maxOccurrences !== undefined ? String(rule.maxOccurrences) : '');
     setGoalId(rule.goalId ?? '');
     setShowForm(true);
@@ -174,7 +179,7 @@ export default function Recurring() {
     }
 
     const existing = editingId ? recurring.find((r) => r.id === editingId) : undefined;
-    const transferCategory = categories.find((c) => c.type === 'both');
+    const transferCategory = findTransferCategory(categories);
 
     return {
       id: existing?.id ?? 'draft',
@@ -182,7 +187,7 @@ export default function Recurring() {
       amount: parsed,
       accountId,
       categoryId: type === 'transfer' ? (transferCategory?.id ?? categoryId ?? '') : categoryId,
-      note,
+      note: cleanText(note, MAX_NOTE_LENGTH),
       labels: existing?.labels ?? [],
       frequency,
       startDate: start.toISOString(),
@@ -402,7 +407,8 @@ export default function Recurring() {
               type="text"
               placeholder="Note (e.g., Netflix)"
               value={note}
-              onChange={(e) => setNote(e.target.value)}
+              maxLength={MAX_NOTE_LENGTH}
+              onChange={(e) => setNote(stripLeading(e.target.value))}
               className="bg-muted h-auto rounded-sm px-3 py-2"
             />
 
@@ -541,13 +547,13 @@ export default function Recurring() {
             const schedule = paused
               ? 'Paused'
               : nextDue
-                ? `Next ${format(nextDue, 'd MMM yyyy')}`
+                ? `Next ${formatShortDate(nextDue)}`
                 : 'Ended';
             const limit =
               r.maxOccurrences !== undefined
                 ? `${r.occurrenceCount} of ${r.maxOccurrences}`
                 : r.endDate
-                  ? `until ${format(new Date(r.endDate), 'd MMM yyyy')}`
+                  ? `until ${formatShortDate(r.endDate)}`
                   : null;
 
             return (
@@ -664,8 +670,8 @@ export default function Recurring() {
                 {pending && (
                   <>
                     This rule started{' '}
-                    {pending.preview.firstDate && format(pending.preview.firstDate, 'd MMM yyyy')},
-                    so saving it will create{' '}
+                    {pending.preview.firstDate && formatShortDate(pending.preview.firstDate)}, so
+                    saving it will create{' '}
                     <strong className="text-foreground">
                       {pending.preview.count} transaction
                       {pending.preview.count === 1 ? '' : 's'}

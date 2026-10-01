@@ -19,6 +19,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { NumberPad } from '@/components/ui/number-pad';
 import type { AccountType } from '@/types';
+import { MAX_NAME_LENGTH, cleanText, stripLeading } from '@/utils/validation';
 
 const ACCOUNT_TYPES: { value: AccountType; label: string; icon: string; Icon: LucideIcon }[] = [
   { value: 'checking', label: 'Checking', icon: 'landmark', Icon: Landmark },
@@ -62,8 +63,8 @@ export function Onboarding() {
   const [color, setColor] = useState(COLORS[0]);
   const [balance, setBalance] = useState('');
 
-  const trimmedName = name.trim();
-  const trimmedAccountName = accountName.trim();
+  const trimmedName = cleanText(name, MAX_NAME_LENGTH);
+  const trimmedAccountName = cleanText(accountName, MAX_NAME_LENGTH);
   const stepIndex = STEPS.indexOf(step);
 
   const finish = (withAccount: boolean) => {
@@ -130,7 +131,8 @@ export function Onboarding() {
                 id="onboarding-name"
                 autoFocus
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                maxLength={MAX_NAME_LENGTH}
+                onChange={(e) => setName(stripLeading(e.target.value))}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && trimmedName) setStep('account');
                 }}
@@ -166,7 +168,8 @@ export function Onboarding() {
                 id="onboarding-account"
                 autoFocus
                 value={accountName}
-                onChange={(e) => setAccountName(e.target.value)}
+                maxLength={MAX_NAME_LENGTH}
+                onChange={(e) => setAccountName(stripLeading(e.target.value))}
                 placeholder="e.g. HDFC Savings"
                 className="bg-card h-auto w-full rounded-sm px-4 py-3"
               />

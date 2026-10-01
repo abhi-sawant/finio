@@ -7,6 +7,7 @@ import { useFinanceStore } from '@/store/useFinanceStore';
 import { cn } from '@/lib/utils';
 import { downloadBlob } from '@/services/download';
 import { formatCurrency, formatDate, todayKey } from '@/utils/formatters';
+import { MAX_NAME_LENGTH, cleanText, isRangeInverted, stripLeading } from '@/utils/validation';
 import {
   activeAccounts,
   buildSearchIndex,
@@ -260,7 +261,10 @@ export default function Transactions() {
   const handleSaveTemplate = () => {
     if (!templateTx) return;
     addTemplate({
-      name: templateName.trim() || templateTx.note || 'Template',
+      name:
+        cleanText(templateName, MAX_NAME_LENGTH) ||
+        cleanText(templateTx.note, MAX_NAME_LENGTH) ||
+        'Template',
       type: templateTx.type,
       amount: templateTx.amount,
       accountId: templateTx.accountId,
@@ -454,13 +458,28 @@ export default function Transactions() {
                 <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">
                   From
                 </Label>
-                <DatePicker value={fromDate} onChange={setFromDate} placeholder="Start date" />
+                <DatePicker
+                  value={fromDate}
+                  onChange={setFromDate}
+                  placeholder="Start date"
+                  maxDate={toDate || undefined}
+                />
               </div>
               <div>
                 <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">To</Label>
-                <DatePicker value={toDate} onChange={setToDate} placeholder="End date" />
+                <DatePicker
+                  value={toDate}
+                  onChange={setToDate}
+                  placeholder="End date"
+                  minDate={fromDate || undefined}
+                />
               </div>
             </div>
+            {isRangeInverted(fromDate, toDate) && (
+              <p role="alert" className="text-destructive text-xs">
+                From date is after To date — no transactions can match.
+              </p>
+            )}
             {hasActiveFilters && (
               <Button
                 variant="ghost"
@@ -593,7 +612,8 @@ export default function Transactions() {
             autoFocus
             placeholder="Template name"
             value={templateName}
-            onChange={(e) => setTemplateName(e.target.value)}
+            maxLength={MAX_NAME_LENGTH}
+            onChange={(e) => setTemplateName(stripLeading(e.target.value))}
             className="bg-card h-auto rounded-sm px-4 py-3"
           />
           <DialogFooter>

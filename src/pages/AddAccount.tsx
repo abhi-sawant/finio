@@ -16,10 +16,12 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useFinanceStore } from '@/store/useFinanceStore';
+import { formatInputAmount } from '@/utils/formatters';
 import { COLOR_PALETTE } from '@/data/colorPalette';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { MAX_NAME_LENGTH, cleanText, stripLeading } from '@/utils/validation';
 import { NumberPad } from '@/components/ui/number-pad';
 import { useConfirm } from '@/components/ui/use-confirm';
 import { ReconcileAccountDialog } from '@/components/accounts/ReconcileAccountDialog';
@@ -102,6 +104,7 @@ export default function AddAccount() {
     existing?.minimumDuePercent?.toString() ?? '',
   );
   const [showReconcile, setShowReconcile] = useState(false);
+  const [creditField, setCreditField] = useState<'due' | 'limit'>('due');
 
   // Spendable accounts only — a deposit can't fund another, and a card can't be redeemed into.
   // An existing deposit keeps showing its linked account even if that one has since closed.
@@ -141,7 +144,7 @@ export default function AddAccount() {
     submitting.current = true;
     if (existing) {
       updateDeposit(existing.id, {
-        name: name.trim(),
+        name: cleanText(name, MAX_NAME_LENGTH),
         color,
         interestRate: depositTerms.interestRate,
         compounding: depositTerms.compounding,
@@ -153,7 +156,7 @@ export default function AddAccount() {
     }
     addDeposit({
       type: type as 'fd' | 'rd',
-      name: name.trim(),
+      name: cleanText(name, MAX_NAME_LENGTH),
       color,
       terms: depositTerms,
       deductPast: depositForm.deductPast,
@@ -197,7 +200,7 @@ export default function AddAccount() {
 
     const isCredit = type === 'credit';
     const data = {
-      name: name.trim(),
+      name: cleanText(name, MAX_NAME_LENGTH),
       type,
       balance: isCredit ? -(parseFloat(shownDue) || 0) : parseFloat(shownBalance) || 0,
       color,
@@ -283,7 +286,8 @@ export default function AddAccount() {
             type="text"
             placeholder="e.g., HDFC Savings"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            maxLength={MAX_NAME_LENGTH}
+            onChange={(e) => setName(stripLeading(e.target.value))}
             className="bg-card h-auto rounded-sm px-4 py-3"
           />
         </div>
@@ -330,17 +334,43 @@ export default function AddAccount() {
             hideAmounts={hideAmounts}
           />
         ) : type === 'credit' ? (
-          <div>
-            <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">
-              Current Due
-            </Label>
-            <NumberPad
-              value={shownDue}
-              onChange={(v) => {
-                setBalanceDirty(true);
-                setDue(v);
-              }}
-            />
+          <div className="space-y-2">
+            <div className="bg-muted grid grid-cols-2 gap-1 rounded-sm p-1">
+              {(
+                [
+                  { key: 'due', label: 'Current Due', value: shownDue },
+                  { key: 'limit', label: 'Credit Limit', value: creditLimit },
+                ] as const
+              ).map((f) => (
+                <button
+                  key={f.key}
+                  type="button"
+                  onClick={() => setCreditField(f.key)}
+                  aria-pressed={creditField === f.key}
+                  className={`rounded-sm px-2 py-1.5 text-center transition-all ${
+                    creditField === f.key
+                      ? 'bg-primary text-primary-foreground shadow'
+                      : 'text-muted-foreground'
+                  }`}
+                >
+                  <span className="block text-[10px] font-medium">{f.label}</span>
+                  <span className="block text-sm font-semibold">
+                    {formatInputAmount(f.value) || '0'}
+                  </span>
+                </button>
+              ))}
+            </div>
+            {creditField === 'due' ? (
+              <NumberPad
+                value={shownDue}
+                onChange={(v) => {
+                  setBalanceDirty(true);
+                  setDue(v);
+                }}
+              />
+            ) : (
+              <NumberPad value={creditLimit} onChange={setCreditLimit} />
+            )}
           </div>
         ) : (
           <div>
@@ -354,16 +384,6 @@ export default function AddAccount() {
                 setBalance(v);
               }}
             />
-          </div>
-        )}
-
-        {/* Credit Limit */}
-        {type === 'credit' && (
-          <div>
-            <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">
-              Credit Limit
-            </Label>
-            <NumberPad value={creditLimit} onChange={setCreditLimit} />
           </div>
         )}
 

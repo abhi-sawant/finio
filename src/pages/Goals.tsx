@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { format, parseISO } from 'date-fns';
 import {
   ArrowLeft,
   ChevronDown,
@@ -14,7 +13,20 @@ import {
 import { toast } from 'sonner';
 import { useFinanceStore } from '@/store/useFinanceStore';
 import { COLOR_PALETTE } from '@/data/colorPalette';
-import { formatCurrency, formatFullDate } from '@/utils/formatters';
+import {
+  formatCurrency,
+  formatDayMonth,
+  formatShortDate,
+  localDayKey,
+  todayKey,
+} from '@/utils/formatters';
+import {
+  MAX_NAME_LENGTH,
+  MAX_NOTE_LENGTH,
+  cleanText,
+  isPastDay,
+  stripLeading,
+} from '@/utils/validation';
 import { HideAmountsToggle } from '@/components/HideAmountsToggle';
 import { GoalIcon } from '@/components/goals/GoalIcon';
 import { GOAL_ICONS } from '@/components/goals/goalIcons';
@@ -110,14 +122,15 @@ export default function Goals() {
     setIcon(goal.icon);
     setColor(goal.color);
     setTargetAmount(String(goal.targetAmount));
-    setTargetDate(goal.targetDate ? goal.targetDate.slice(0, 10) : '');
+    setTargetDate(goal.targetDate ? localDayKey(goal.targetDate) : '');
     setLinkedAccountId(goal.linkedAccountId ?? NO_ACCOUNT);
     setShowForm(true);
   };
 
   const handleSubmit = () => {
     const parsed = parseFloat(targetAmount);
-    if (!name.trim()) {
+    const cleanName = cleanText(name, MAX_NAME_LENGTH);
+    if (!cleanName) {
       toast.error('Enter a goal name');
       return;
     }
@@ -125,9 +138,18 @@ export default function Goals() {
       toast.error('Enter a valid target amount');
       return;
     }
+    // A deadline in the past is meaningless — but don't block saving an old goal whose date is
+    // simply unchanged.
+    const existingGoal = editingId ? goals.find((g) => g.id === editingId) : undefined;
+    const unchangedDate =
+      !!existingGoal?.targetDate && localDayKey(existingGoal.targetDate) === targetDate;
+    if (targetDate && !unchangedDate && isPastDay(targetDate, todayKey())) {
+      toast.error('Target date must be today or later');
+      return;
+    }
 
     const data = {
-      name: name.trim(),
+      name: cleanName,
       icon,
       color,
       targetAmount: parsed,
@@ -176,7 +198,7 @@ export default function Goals() {
       goalId: contributionGoal.goal.id,
       amount: contributionGoal.mode === 'withdraw' ? -parsed : parsed,
       date: new Date().toISOString(),
-      note: contributionNote.trim(),
+      note: cleanText(contributionNote, MAX_NOTE_LENGTH),
     });
     toast.success(
       contributionGoal.mode === 'withdraw' ? 'Withdrawal logged' : 'Contribution added',
@@ -221,7 +243,8 @@ export default function Goals() {
                 type="text"
                 placeholder="e.g., Emergency Fund"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                maxLength={MAX_NAME_LENGTH}
+                onChange={(e) => setName(stripLeading(e.target.value))}
                 className="bg-muted h-auto rounded-sm px-3 py-2"
               />
             </div>
@@ -277,6 +300,7 @@ export default function Goals() {
                 <DatePicker
                   value={targetDate}
                   onChange={setTargetDate}
+                  minDate={todayKey()}
                   placeholder="No deadline"
                   className="flex-1"
                 />
@@ -421,7 +445,8 @@ export default function Goals() {
               type="text"
               placeholder="Note (optional)"
               value={contributionNote}
-              onChange={(e) => setContributionNote(e.target.value)}
+              maxLength={MAX_NOTE_LENGTH}
+              onChange={(e) => setContributionNote(stripLeading(e.target.value))}
               className="bg-muted h-auto rounded-sm px-3 py-2"
             />
             <div className="flex gap-2">
@@ -481,7 +506,7 @@ function GoalCard({
           <p className="truncate text-sm font-medium">{goal.name}</p>
           <p className="text-muted-foreground truncate text-[11px]">
             {linkedAccountName ? `Linked · ${linkedAccountName}` : 'No linked account'}
-            {goal.targetDate ? ` · by ${formatFullDate(goal.targetDate)}` : ''}
+            {goal.targetDate ? ` · by ${formatShortDate(goal.targetDate)}` : ''}
           </p>
         </div>
         <div className="flex shrink-0 items-center">
@@ -533,7 +558,7 @@ function GoalCard({
           ? 'Goal reached! 🎉'
           : `${formatCurrency(status.remaining, false, hideAmounts)} to go`}
         {!status.isComplete && status.projectedDate && (
-          <> · at this pace, by {formatFullDate(status.projectedDate.toISOString())}</>
+          <> · at this pace, by {formatShortDate(status.projectedDate.toISOString())}</>
         )}
       </p>
 
@@ -574,7 +599,7 @@ function GoalCard({
             contributions.map((c) => (
               <div key={c.id} className="flex items-center gap-2 text-[11px]">
                 <span className="text-muted-foreground w-14 shrink-0">
-                  {format(parseISO(c.date), 'd MMM')}
+                  {formatDayMonth(c.date)}
                 </span>
                 <span className="min-w-0 flex-1 truncate">
                   {c.note || (c.amount < 0 ? 'Withdrawal' : 'Contribution')}

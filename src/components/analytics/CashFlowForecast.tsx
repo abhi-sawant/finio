@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react';
-import { format } from 'date-fns';
 import {
   Area,
   AreaChart,
@@ -12,7 +11,7 @@ import {
 } from 'recharts';
 import { AlertTriangle, TrendingDown, Wallet } from 'lucide-react';
 import { useFinanceStore } from '@/store/useFinanceStore';
-import { formatCurrency } from '@/utils/formatters';
+import { formatCurrency, formatDayMonth, formatShortDate } from '@/utils/formatters';
 import { buildCashFlowForecast } from '@/utils/forecast';
 import { Button } from '@/components/ui/button';
 import { ChartDataTable } from '@/components/charts/ChartDataTable';
@@ -39,7 +38,7 @@ export function CashFlowForecast() {
   );
 
   const chartData = useMemo(
-    () => forecast.points.map((p) => ({ date: format(p.date, 'd MMM'), balance: p.balance })),
+    () => forecast.points.map((p) => ({ date: formatDayMonth(p.date), balance: p.balance })),
     [forecast],
   );
 
@@ -81,12 +80,6 @@ export function CashFlowForecast() {
       >
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={chartData} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
-            <defs>
-              <linearGradient id="forecastFill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#146b54" stopOpacity={0.35} />
-                <stop offset="100%" stopColor="#146b54" stopOpacity={0} />
-              </linearGradient>
-            </defs>
             <CartesianGrid strokeDasharray="3 3" opacity={0.12} />
             <XAxis
               dataKey="date"
@@ -100,11 +93,12 @@ export function CashFlowForecast() {
               fontSize={10}
               tickLine={false}
               axisLine={false}
-              width={50}
+              width={56}
+              tickMargin={4}
               tickFormatter={money}
             />
             <Tooltip
-              cursor={{ stroke: 'rgba(124,92,255,0.25)', strokeWidth: 1 }}
+              cursor={{ stroke: 'var(--muted-foreground)', strokeOpacity: 0.4, strokeWidth: 1 }}
               contentStyle={{
                 background: 'var(--card)',
                 border: '1px solid var(--border)',
@@ -119,9 +113,10 @@ export function CashFlowForecast() {
             <Area
               type="monotone"
               dataKey="balance"
-              stroke="#146b54"
+              stroke="var(--primary)"
               strokeWidth={2.5}
-              fill="url(#forecastFill)"
+              fill="var(--primary)"
+              fillOpacity={0.12}
             />
           </AreaChart>
         </ResponsiveContainer>
@@ -137,7 +132,7 @@ export function CashFlowForecast() {
         }
         rows={projectedTable.rows.map((point) => ({
           key: point.date.toISOString(),
-          cells: [format(point.date, 'd MMM'), money(point.balance)],
+          cells: [formatDayMonth(point.date), money(point.balance)],
         }))}
       />
 
@@ -168,7 +163,7 @@ export function CashFlowForecast() {
             {forecast.low ? money(forecast.low.balance) : '—'}
             {forecast.low && (
               <span className="text-muted-foreground ml-1 font-normal">
-                {format(forecast.low.date, 'd MMM')}
+                {formatDayMonth(forecast.low.date)}
               </span>
             )}
           </dd>
@@ -180,10 +175,7 @@ export function CashFlowForecast() {
           <AlertTriangle size={13} className="mt-0.5 shrink-0" />
           <span>
             At this rate your liquid balance runs out around{' '}
-            <strong className="font-semibold">
-              {format(forecast.shortfallDate, 'd MMM yyyy')}
-            </strong>
-            .
+            <strong className="font-semibold">{formatShortDate(forecast.shortfallDate)}</strong>.
           </span>
         </p>
       )}
@@ -201,7 +193,7 @@ export function CashFlowForecast() {
                 className="flex items-center gap-2 text-xs"
               >
                 <span className="text-muted-foreground w-14 shrink-0">
-                  {format(flow.date, 'd MMM')}
+                  {formatDayMonth(flow.date)}
                 </span>
                 <span className="min-w-0 flex-1 truncate">
                   {flow.note || categoryName(flow.categoryId)}

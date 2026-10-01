@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
+  AUTO_LOCK_OPTIONS,
+  DEFAULT_AUTO_LOCK_MINUTES,
   autoLockLabel,
   formatLockoutCountdown,
   nextLockoutUntil,
@@ -125,5 +127,12 @@ describe('autoLockLabel', () => {
     expect(autoLockLabel(1)).toBe('After 1 minute');
     expect(autoLockLabel(5)).toBe('After 5 minutes');
     expect(autoLockLabel(60)).toBe('After 1 hour');
+  });
+});
+
+describe('DEFAULT_AUTO_LOCK_MINUTES', () => {
+  it('is a real, positive option offered in Settings', () => {
+    expect(DEFAULT_AUTO_LOCK_MINUTES).toBeGreaterThan(0);
+    expect(AUTO_LOCK_OPTIONS).toContain(DEFAULT_AUTO_LOCK_MINUTES);
   });
 });

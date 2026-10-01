@@ -7,6 +7,7 @@ import { getErrorMessage } from '@/utils/errors';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { isValidEmail } from '@/utils/validation';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -23,10 +24,14 @@ export default function Login() {
       toast.error('Please fill in all fields');
       return;
     }
+    if (!isValidEmail(email)) {
+      toast.error('Enter a valid email');
+      return;
+    }
 
     setLoading(true);
     try {
-      const result = await api.login(email, password);
+      const result = await api.login(email.trim(), password);
       setAuth(result.token, result.user);
       toast.success('Logged in successfully');
       navigate('/', { replace: true });
@@ -45,7 +50,7 @@ export default function Login() {
           <p className="text-muted-foreground mt-2">Sign in to your account</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} noValidate className="space-y-4">
           <div className="relative">
             <Mail className="text-muted-foreground absolute top-1/2 left-3 z-10 h-5 w-5 -translate-y-1/2" />
             <Input
@@ -55,6 +60,9 @@ export default function Login() {
               onChange={(e) => setEmail(e.target.value)}
               className="bg-card h-auto w-full rounded-sm py-3 pr-4 pl-11"
               autoComplete="email"
+              inputMode="email"
+              autoCapitalize="none"
+              spellCheck={false}
             />
           </div>
 
@@ -73,6 +81,7 @@ export default function Login() {
               variant="ghost"
               size="icon"
               onClick={() => setShowPassword(!showPassword)}
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
               className="text-muted-foreground absolute top-1/2 right-1 -translate-y-1/2 hover:bg-transparent"
             >
               {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}

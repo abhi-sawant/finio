@@ -7,7 +7,7 @@
 /** Auto-lock delays offered in Settings, in minutes. 0 means the moment the app is hidden. */
 export const AUTO_LOCK_OPTIONS = [0, 1, 5, 15, 60] as const;
 
-export const DEFAULT_AUTO_LOCK_MINUTES = 1;
+export const DEFAULT_AUTO_LOCK_MINUTES = 5;
 
 /** Wrong PINs tolerated before any cooldown starts. */
 export const FREE_ATTEMPTS = 4;

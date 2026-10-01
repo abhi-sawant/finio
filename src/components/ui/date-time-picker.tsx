@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { formatShortDate } from '@/utils/formatters';
 import { formatDateTimeLocal, parseDateTimeLocal } from './date-time-picker-utils';
 
 export interface DateTimePickerProps {
@@ -75,7 +76,7 @@ export function DateTimePicker({
               )}
             >
               <CalendarIcon className="mr-2 size-4 shrink-0" />
-              {date ? format(date, 'PPP') : <span>{placeholder}</span>}
+              {date ? formatShortDate(date) : <span>{placeholder}</span>}
             </Button>
           }
         />

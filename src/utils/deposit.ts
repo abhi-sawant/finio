@@ -2,11 +2,11 @@ import {
   addMonths,
   differenceInCalendarDays,
   differenceInMonths,
-  format,
   isAfter,
   parseISO,
 } from 'date-fns';
 import { roundMoney } from '@/store/balance';
+import { formatShortDate } from '@/utils/formatters';
 import type { Account, DepositCompounding, DepositTerms } from '@/types';
 
 /**
@@ -181,5 +181,5 @@ export function depositCaption(account: Pick<Account, 'type' | 'deposit'>): stri
   if (!terms) return kind;
   if (terms.maturedAt) return `${kind} · ${terms.interestRate}% · matured`;
   const maturity = depositMaturityDate(account);
-  return `${kind} · ${terms.interestRate}%${maturity ? ` · matures ${format(maturity, 'd MMM yyyy')}` : ''}`;
+  return `${kind} · ${terms.interestRate}%${maturity ? ` · matures ${formatShortDate(maturity)}` : ''}`;
 }

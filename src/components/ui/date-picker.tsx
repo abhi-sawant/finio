@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { formatShortDate } from '@/utils/formatters';
 
 export interface DatePickerProps {
   /** Value in "YYYY-MM-DD" format. */
@@ -14,6 +15,10 @@ export interface DatePickerProps {
   placeholder?: string;
   className?: string;
   disabled?: boolean;
+  /** Earliest selectable day, "YYYY-MM-DD". */
+  minDate?: string;
+  /** Latest selectable day, "YYYY-MM-DD". */
+  maxDate?: string;
 }
 
 function parseDateOnly(value: string): Date | null {
@@ -28,9 +33,14 @@ export function DatePicker({
   placeholder = 'Pick a date',
   className,
   disabled,
+  minDate,
+  maxDate,
 }: DatePickerProps) {
   const [open, setOpen] = React.useState(false);
   const date = parseDateOnly(value);
+  const min = minDate ? parseDateOnly(minDate) : null;
+  const max = maxDate ? parseDateOnly(maxDate) : null;
+  const disabledDays = [...(min ? [{ before: min }] : []), ...(max ? [{ after: max }] : [])];
 
   const handleSelect = (selected: Date | undefined) => {
     if (!selected) return;
@@ -52,12 +62,17 @@ export function DatePicker({
             )}
           >
             <CalendarIcon className="mr-2 size-4 shrink-0" />
-            {date ? format(date, 'MMM d, yyyy') : <span>{placeholder}</span>}
+            {date ? formatShortDate(date) : <span>{placeholder}</span>}
           </Button>
         }
       />
       <PopoverContent align="start" className="w-auto p-0">
-        <Calendar mode="single" selected={date ?? undefined} onSelect={handleSelect} />
+        <Calendar
+          mode="single"
+          selected={date ?? undefined}
+          onSelect={handleSelect}
+          disabled={disabledDays.length ? disabledDays : undefined}
+        />
       </PopoverContent>
     </Popover>
   );

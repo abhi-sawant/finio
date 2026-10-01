@@ -171,7 +171,13 @@ export default function App() {
           <Suspense fallback={<PageLoader />}>
             <AppRoutes />
           </Suspense>
-          <Toaster position="top-center" richColors closeButton />
+          <Toaster
+            position="top-center"
+            richColors
+            closeButton
+            offset={{ top: 'calc(env(safe-area-inset-top, 0px) + 12px)' }}
+            mobileOffset={{ top: 'calc(env(safe-area-inset-top, 0px) + 12px)' }}
+          />
         </ConfirmProvider>
       </BrowserRouter>
     </ErrorBoundary>

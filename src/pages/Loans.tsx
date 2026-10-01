@@ -1,11 +1,11 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { format, parseISO } from 'date-fns';
 import { ArrowLeft, ChevronDown, Pencil, Plus, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useFinanceStore } from '@/store/useFinanceStore';
 import { loanStatus, maxPrepayment, simulatePrepaymentImpact } from '@/utils/loan';
-import { formatCurrency, formatFullDate, todayKey } from '@/utils/formatters';
+import { formatCurrency, formatShortDate, todayKey } from '@/utils/formatters';
+import { MAX_NOTE_LENGTH, cleanText, stripLeading } from '@/utils/validation';
 import { HideAmountsToggle } from '@/components/HideAmountsToggle';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -66,7 +66,7 @@ function LoanCard({
               : status.isPaidOff
                 ? 'All installments due'
                 : `EMI ${formatCurrency(status.emi, true, hideAmounts)}/mo · Next ${
-                    status.nextDueDate ? format(parseISO(status.nextDueDate), 'd MMM yyyy') : '—'
+                    status.nextDueDate ? formatShortDate(status.nextDueDate) : '—'
                   }`}
           </p>
         </div>
@@ -156,7 +156,7 @@ function LoanCard({
             <div>
               <p className="text-muted-foreground">Payoff date</p>
               <p className="font-medium">
-                {status.payoffDate ? formatFullDate(status.payoffDate) : '—'}
+                {status.payoffDate ? formatShortDate(status.payoffDate) : '—'}
               </p>
             </div>
           </div>
@@ -168,7 +168,7 @@ function LoanCard({
             prepayments.map((p) => (
               <div key={p.id} className="flex items-center gap-2">
                 <span className="text-muted-foreground w-16 shrink-0">
-                  {format(parseISO(p.date), 'd MMM yyyy')}
+                  {formatShortDate(p.date)}
                 </span>
                 <span className="min-w-0 flex-1 truncate">{p.note}</span>
                 <span className="text-primary shrink-0 font-medium">
@@ -296,7 +296,7 @@ export default function Loans() {
       loanId: prepayLoan.id,
       amount,
       date: new Date(`${prepayDate}T00:00:00`).toISOString(),
-      note: prepayNote.trim(),
+      note: cleanText(prepayNote, MAX_NOTE_LENGTH),
     });
     toast.success(`Prepayment recorded on "${prepayLoan.name}"`);
     setPrepayLoan(null);
@@ -427,7 +427,8 @@ export default function Loans() {
               type="text"
               placeholder="Note (optional)"
               value={prepayNote}
-              onChange={(e) => setPrepayNote(e.target.value)}
+              maxLength={MAX_NOTE_LENGTH}
+              onChange={(e) => setPrepayNote(stripLeading(e.target.value))}
               className="bg-muted h-auto rounded-sm px-3 py-2"
             />
             <p

@@ -139,6 +139,8 @@ src/
 │   ├── appLock.ts            # shouldLockOnResume + failed-attempt backoff ladder
 │   ├── backupCrypto.ts       # AES-GCM envelope + PBKDF2 key derivation for cloud backups
 │   ├── chartTable.ts         # sampleForTable() — thins a long series for the data table
+│   ├── validation.ts         # Input caps (MAX_NAME/NOTE/PATTERN_LENGTH), cleanText, isValidEmail, date-range/scope helpers
+│   ├── backupMeta.ts         # BACKUP_SCHEMA_VERSION + withBackupMeta() — version/exportedAt on file exports only
 │   ├── errors.ts             # getErrorMessage() — narrows a catch block's `unknown` to a message
 │   └── formatters.ts         # Currency (INR), date, number formatting
 ├── lib/utils.ts              # shadcn cn() helper
@@ -389,6 +391,7 @@ All page components are lazy-loaded. This keeps the initial bundle small.
   is meant — the second one changes history, the first one never does.
   See [`reconciliationAdjustment`](src/store/balance.ts).
 - **Imports are validated, never trusted:** route every backup (file _or_ cloud) through `validateBackup()` before `importData()`. It drops malformed rows, dedupes ids, strips unknown settings keys, and produces the report the Settings preview dialog renders.
+- **`formatCurrency` pads to 2 decimals whenever the amount has paise** (₹450.50, never ₹450.5); whole rupees stay bare. Canonical date is `formatShortDate` (`5 Oct 2026`); use it rather than ad-hoc `format()` patterns. "Transfer" (`TRANSFER_CATEGORY_ID`) is excluded from expense/income category pickers by `isCategoryValidForType`.
 - **INR only:** Multi-currency was removed in persisted-schema v4. `formatCurrency(amount, compact?)` hardcodes INR/`en-IN`; there is no per-account or per-setting currency field. Old persisted state and old backup JSON are stripped of the legacy `currency` key on load and on import.
 - **"This month" is a financial month:** every month window comes from `src/utils/period.ts` and starts on `Settings.monthStartDay` (1–28, default 1), so a 25th-of-the-month salary cycle runs 25 Jun–24 Jul. Never call `startOfMonth`/`endOfMonth` directly in feature code — use `periodRange`/`monthPeriodStart` (or `getCurrentMonthTransactions(txns, monthStartDay)`) or the app will disagree with itself. `Year in Review` walks financial _years_ the same way — see `buildYearInReview()` in `analytics.ts`.
 - **Budget scope and period:** a `Budget` is scoped by `labelId` if set, otherwise by `categoryId` (`''` = overall across all expenses) — `budgetScopeKey()` is the identity, and `addBudget` replaces any budget sharing it. Each budget carries its own `period`, so `computeBudgetStatuses(budgets, transactions, { monthStartDay })` takes the _full_ transaction list and slices per budget. With `rollover`, `status.limit` is `amount + carryover` (carryover is signed — an overspend carries forward as a debt) and the chain never reaches back past the budget's `createdAt` period, capped at `MAX_ROLLOVER_LOOKBACK`.

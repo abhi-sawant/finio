@@ -24,6 +24,7 @@ import type {
   TransactionSplit,
   TransactionTemplate,
 } from '@/types';
+import { BACKUP_SCHEMA_VERSION, readBackupMeta, type BackupMeta } from './backupMeta';
 
 /**
  * Backup files are user-supplied and completely replace (or merge into) every row of a money
@@ -109,6 +110,8 @@ export function hasImportableData(report: ImportReport): boolean {
 export interface ValidatedBackup {
   data: ImportPayload;
   report: ImportReport;
+  /** Provenance stamp, when the file carries one (absent on legacy exports). */
+  meta: Partial<BackupMeta>;
 }
 
 const MAX_REPORTED_ISSUES = 8;
@@ -943,7 +946,15 @@ export function validateBackup(raw: unknown): ValidatedBackup {
     }
   }
 
+  const meta = readBackupMeta(raw);
+  if (meta.version !== undefined && meta.version > BACKUP_SCHEMA_VERSION) {
+    warnings.push(
+      `This backup was made by a newer version of Finio (format v${meta.version}; this app understands v${BACKUP_SCHEMA_VERSION}). It will import, but some data may be missed`,
+    );
+  }
+
   return {
+    meta,
     data: {
       ...(accounts.rows ? { accounts: accounts.rows } : {}),
       ...(transactions.rows ? { transactions: transactions.rows } : {}),

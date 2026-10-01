@@ -55,27 +55,18 @@ export function IncomeExpenseBar({ transactions }: Props) {
       >
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} barGap={4} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
-            <defs>
-              <linearGradient id="barIncome" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#146b54" />
-                <stop offset="100%" stopColor="#4a6b5c" />
-              </linearGradient>
-              <linearGradient id="barExpense" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#c48b7a" />
-                <stop offset="100%" stopColor="#b3421f" />
-              </linearGradient>
-            </defs>
             <CartesianGrid strokeDasharray="3 3" opacity={0.12} />
             <XAxis dataKey="month" fontSize={11} tickLine={false} axisLine={false} />
             <YAxis
               fontSize={10}
               tickLine={false}
               axisLine={false}
-              width={40}
+              width={56}
+              tickMargin={4}
               tickFormatter={money}
             />
             <Tooltip
-              cursor={{ fill: 'rgba(124,92,255,0.06)' }}
+              cursor={{ fill: 'var(--muted)', fillOpacity: 0.5 }}
               contentStyle={{
                 background: 'var(--card)',
                 border: '1px solid var(--border)',
@@ -84,18 +75,18 @@ export function IncomeExpenseBar({ transactions }: Props) {
               }}
               formatter={(v) => formatCurrency(Number(v) || 0, false, hideAmounts)}
             />
-            <Bar dataKey="income" fill="url(#barIncome)" radius={[6, 6, 0, 0]} />
-            <Bar dataKey="expenses" fill="url(#barExpense)" radius={[6, 6, 0, 0]} />
+            <Bar dataKey="income" fill="var(--primary)" radius={[6, 6, 0, 0]} />
+            <Bar dataKey="expenses" fill="var(--destructive)" radius={[6, 6, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
       <div className="mt-2 flex justify-center gap-4">
         <div className="flex items-center gap-1.5 text-xs">
-          <div className="bg-grad-success h-2.5 w-2.5 rounded-full" aria-hidden />
+          <div className="bg-primary h-2.5 w-2.5 rounded-full" aria-hidden />
           <span className="text-muted-foreground">Income</span>
         </div>
         <div className="flex items-center gap-1.5 text-xs">
-          <div className="bg-grad-danger h-2.5 w-2.5 rounded-full" aria-hidden />
+          <div className="bg-destructive h-2.5 w-2.5 rounded-full" aria-hidden />
           <span className="text-muted-foreground">Expenses</span>
         </div>
       </div>

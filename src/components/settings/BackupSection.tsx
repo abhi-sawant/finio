@@ -65,7 +65,13 @@ import {
   hasImportableData,
   type ValidatedBackup,
 } from '@/utils/importValidation';
-import { formatCurrency, formatFileSize, formatFullDate } from '@/utils/formatters';
+import {
+  formatCurrency,
+  formatFileSize,
+  formatFullDate,
+  formatShortDate,
+  formatTime,
+} from '@/utils/formatters';
 import type { ImportMode } from '@/types';
 
 type CryptoDialogKind = 'set' | 'change' | 'disable' | 'unlock' | 'restore';
@@ -461,7 +467,7 @@ export function BackupSection() {
               </span>
               {lastBackupAt && (
                 <span className="text-muted-foreground text-xs">
-                  Last: {new Date(lastBackupAt).toLocaleString()}
+                  Last: {`${formatShortDate(lastBackupAt)}, ${formatTime(lastBackupAt)}`}
                 </span>
               )}
             </div>
@@ -714,7 +720,11 @@ export function BackupSection() {
         <DialogContent className="bg-card mx-auto max-h-[70vh] w-11/12 overflow-y-auto rounded-md sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Review Import</DialogTitle>
-            <DialogDescription className="truncate">{preview?.file.name}</DialogDescription>
+            <DialogDescription className="truncate">
+              {preview?.file.name}
+              {preview?.meta.exportedAt &&
+                ` · Exported on ${formatShortDate(preview.meta.exportedAt)}`}
+            </DialogDescription>
           </DialogHeader>
 
           {preview && (

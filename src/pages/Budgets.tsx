@@ -15,6 +15,7 @@ import { BudgetHealthBadge, BudgetProgressBar } from '@/components/budgets/Budge
 import { toast } from 'sonner';
 import { useFinanceStore } from '@/store/useFinanceStore';
 import { formatCurrency } from '@/utils/formatters';
+import { firstFreeScope } from '@/utils/validation';
 import { HideAmountsToggle } from '@/components/HideAmountsToggle';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -32,6 +33,7 @@ import {
   budgetScopeKey,
   computeBudgetHistory,
   computeBudgetStatuses,
+  isCategoryValidForType,
   type BudgetStatus,
 } from '@/utils/calculations';
 import {
@@ -87,9 +89,21 @@ export default function Budgets() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const expenseCategories = useMemo(
-    () => categories.filter((c) => c.type === 'expense' || c.type === 'both'),
+    () => categories.filter((c) => isCategoryValidForType(c, 'expense')),
     [categories],
   );
+
+  // Every scope value, in the order the picker lists them (Overall, categories, labels).
+  const scopeCandidates = useMemo(
+    () => [
+      OVERALL_SCOPE,
+      ...expenseCategories.map((c) => `cat:${c.id}`),
+      ...labels.map((l) => `lbl:${l.id}`),
+    ],
+    [expenseCategories, labels],
+  );
+  const takenScopes = useMemo(() => new Set(budgets.map((b) => encodeScope(b))), [budgets]);
+  const allScopesTaken = firstFreeScope(scopeCandidates, takenScopes) === null;
 
   const statuses = useMemo(
     () => computeBudgetStatuses(budgets, transactions, { monthStartDay }),
@@ -114,7 +128,7 @@ export default function Budgets() {
       return { name: label?.name ?? 'Unknown label', color: label?.color ?? '#94a3b8' };
     }
     if (budget.categoryId === '') return { name: 'Overall Expenses', color: '#146b54' };
-    const cat = expenseCategories.find((c) => c.id === budget.categoryId);
+    const cat = categories.find((c) => c.id === budget.categoryId);
     return { name: cat?.name ?? 'Unknown', color: cat?.color ?? '#94a3b8' };
   };
 
@@ -129,6 +143,12 @@ export default function Budgets() {
 
   const startCreate = () => {
     resetForm();
+    const free = firstFreeScope(scopeCandidates, takenScopes);
+    if (free === null) {
+      toast.error('Every category and label already has a budget');
+      return;
+    }
+    setScope(free);
     setShowForm(true);
   };
 
@@ -140,6 +160,13 @@ export default function Budgets() {
     setAmount(String(budget.amount));
     setShowForm(true);
   };
+
+  // A scope already budgeted elsewhere can't be picked — except the budget being edited's own.
+  const editingScope = editingId
+    ? encodeScope(budgets.find((b) => b.id === editingId) ?? { categoryId: '' })
+    : null;
+  const isTaken = (value: string) => takenScopes.has(value) && value !== editingScope;
+  const takenSuffix = (value: string) => (isTaken(value) ? ' · already budgeted' : '');
 
   const handleSubmit = () => {
     const parsed = parseFloat(amount);
@@ -194,6 +221,7 @@ export default function Budgets() {
             onClick={() => (showForm ? resetForm() : startCreate())}
             className="text-primary hover:bg-primary/10 h-9 w-9 rounded-full"
             aria-label="Add budget"
+            disabled={allScopesTaken && !showForm}
           >
             <Plus size={20} />
           </Button>
@@ -212,15 +240,19 @@ export default function Budgets() {
                   <SelectValue>{describe(decodeScope(scope)).name}</SelectValue>
                 </SelectTrigger>
                 <SelectContent className="max-h-72 overflow-y-auto">
-                  <SelectItem value={OVERALL_SCOPE}>Overall (all expenses)</SelectItem>
+                  <SelectItem value={OVERALL_SCOPE} disabled={isTaken(OVERALL_SCOPE)}>
+                    Overall (all expenses){takenSuffix(OVERALL_SCOPE)}
+                  </SelectItem>
                   {expenseCategories.map((c) => (
-                    <SelectItem key={c.id} value={`cat:${c.id}`}>
+                    <SelectItem key={c.id} value={`cat:${c.id}`} disabled={isTaken(`cat:${c.id}`)}>
                       {c.name}
+                      {takenSuffix(`cat:${c.id}`)}
                     </SelectItem>
                   ))}
                   {labels.map((l) => (
-                    <SelectItem key={l.id} value={`lbl:${l.id}`}>
+                    <SelectItem key={l.id} value={`lbl:${l.id}`} disabled={isTaken(`lbl:${l.id}`)}>
                       Label · {l.name}
+                      {takenSuffix(`lbl:${l.id}`)}
                     </SelectItem>
                   ))}
                 </SelectContent>
