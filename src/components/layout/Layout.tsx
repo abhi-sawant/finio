@@ -18,6 +18,7 @@ export function Layout() {
   const navigate = useNavigate();
   const isHydrated = useFinanceStore((s) => s.isHydrated);
   const processRecurring = useFinanceStore((s) => s.processRecurring);
+  const processMaturities = useFinanceStore((s) => s.processMaturities);
   const captureNetWorthSnapshots = useFinanceStore((s) => s.captureNetWorthSnapshots);
   const isAuthLoaded = useAuthStore((s) => s.isLoaded);
   const templates = useFinanceStore((s) => s.templates);
@@ -74,6 +75,24 @@ export function Layout() {
       );
     }
   }, [isHydrated, processRecurring, bulkDeleteTransactions]);
+
+  // Pay out any fixed/recurring deposit that has reached maturity. After recurring processing,
+  // so an RD's final installment is in before its payout, and before snapshots, so the month it
+  // matured in counts the money where it landed. No Undo: maturity is a fact, not a guess.
+  useEffect(() => {
+    if (!isHydrated) return;
+    const posted = processMaturities();
+    if (posted.length === 0) return;
+    const { accounts, settings } = useFinanceStore.getState();
+    for (const tx of posted) {
+      if (tx.type !== 'transfer') continue;
+      const deposit = accounts.find((a) => a.id === tx.accountId);
+      const target = accounts.find((a) => a.id === tx.toAccountId);
+      toast.success(
+        `${deposit?.type === 'rd' ? 'RD' : 'FD'} "${deposit?.name ?? ''}" matured — ${formatCurrency(tx.amount, false, settings.hideAmounts)} credited to ${target?.name ?? 'its account'}`,
+      );
+    }
+  }, [isHydrated, processMaturities]);
 
   // Freeze the net worth of any financial month that has closed since the last visit. Silent
   // by design — it records history rather than changing anything the user did. It runs after

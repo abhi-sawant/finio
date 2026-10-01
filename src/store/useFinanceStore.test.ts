@@ -1549,3 +1549,143 @@ describe('v13 migration', () => {
     expect(settings.monthStartDay).toBe(25);
   });
 });
+
+describe('deposits', () => {
+  const day = (d: string) => new Date(`${d}T00:00:00`).toISOString();
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('funds an FD from its source account', () => {
+    seed([account('bank', 100000)]);
+    const id = useFinanceStore.getState().addDeposit({
+      type: 'fd',
+      name: 'FD',
+      color: '#000',
+      terms: {
+        amount: 50000,
+        interestRate: 6.65,
+        startDate: day('2026-10-01'),
+        maturityDate: day('2029-09-01'),
+        linkedAccountId: 'bank',
+      },
+    });
+    const { accounts, transactions } = useFinanceStore.getState();
+    expect(accounts.find((a) => a.id === 'bank')?.balance).toBe(50000);
+    const fd = accounts.find((a) => a.id === id);
+    expect(fd?.balance).toBe(50000);
+    expect(fd?.openingBalance).toBe(0);
+    expect(fd?.deposit?.compounding).toBe('quarterly');
+    expect(transactions).toHaveLength(1);
+    expect(transactions[0]).toMatchObject({ type: 'transfer', accountId: 'bank', toAccountId: id });
+  });
+
+  it('folds past RD installments into the opening balance when not deducting them', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(day('2026-10-15')));
+    seed([account('bank', 100000)]);
+    const id = useFinanceStore.getState().addDeposit({
+      type: 'rd',
+      name: 'RD',
+      color: '#000',
+      terms: {
+        amount: 5000,
+        interestRate: 7,
+        startDate: day('2026-07-05'),
+        tenureMonths: 12,
+        linkedAccountId: 'bank',
+      },
+      deductPast: false,
+    });
+    const state = useFinanceStore.getState();
+    const rd = state.accounts.find((a) => a.id === id)!;
+    // Jul, Aug, Sep, Oct 5 — four installments already paid.
+    expect(rd.openingBalance).toBe(20000);
+    const rule = state.recurring.find((r) => r.id === rd.deposit?.recurringId)!;
+    expect(rule.occurrenceCount).toBe(4);
+    expect(rule.lastRunDate).toBe(day('2026-10-05'));
+    // Nothing is backfilled, and the bank is untouched.
+    expect(useFinanceStore.getState().processRecurring()).toHaveLength(0);
+    expect(useFinanceStore.getState().accounts.find((a) => a.id === 'bank')?.balance).toBe(100000);
+  });
+
+  it('posts past RD installments from the linked account when deducting them', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(day('2026-10-15')));
+    seed([account('bank', 100000)]);
+    const id = useFinanceStore.getState().addDeposit({
+      type: 'rd',
+      name: 'RD',
+      color: '#000',
+      terms: {
+        amount: 5000,
+        interestRate: 7,
+        startDate: day('2026-07-05'),
+        tenureMonths: 12,
+        linkedAccountId: 'bank',
+      },
+      deductPast: true,
+    });
+    expect(useFinanceStore.getState().processRecurring()).toHaveLength(4);
+    const { accounts } = useFinanceStore.getState();
+    expect(accounts.find((a) => a.id === 'bank')?.balance).toBe(80000);
+    expect(accounts.find((a) => a.id === id)?.balance).toBe(20000);
+  });
+
+  it('pays out a matured FD exactly once and archives it', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(day('2026-10-01')));
+    seed([account('bank', 100000)]);
+    const id = useFinanceStore.getState().addDeposit({
+      type: 'fd',
+      name: 'FD',
+      color: '#000',
+      terms: {
+        amount: 50000,
+        interestRate: 6.65,
+        startDate: day('2026-10-01'),
+        maturityDate: day('2029-09-01'),
+        linkedAccountId: 'bank',
+      },
+    });
+    expect(useFinanceStore.getState().processMaturities()).toHaveLength(0);
+
+    vi.setSystemTime(new Date(day('2029-09-02')));
+    const posted = useFinanceStore.getState().processMaturities();
+    expect(posted.map((t) => t.type)).toEqual(['income', 'transfer']);
+    expect(posted[0]).toMatchObject({ amount: 10621.08, categoryId: 'cat-23' });
+
+    const { accounts } = useFinanceStore.getState();
+    const fd = accounts.find((a) => a.id === id)!;
+    expect(fd.balance).toBe(0);
+    expect(fd.archivedAt).toBeDefined();
+    expect(fd.deposit?.maturedAt).toBe(day('2029-09-01'));
+    expect(accounts.find((a) => a.id === 'bank')?.balance).toBe(110621.08);
+
+    expect(useFinanceStore.getState().processMaturities()).toHaveLength(0);
+  });
+
+  it('refuses to delete an account an open deposit pays out to', () => {
+    seed([account('bank', 100000)]);
+    const id = useFinanceStore.getState().addDeposit({
+      type: 'fd',
+      name: 'FD',
+      color: '#000',
+      terms: {
+        amount: 50000,
+        interestRate: 6.65,
+        startDate: day('2026-10-01'),
+        maturityDate: day('2029-09-01'),
+        linkedAccountId: 'bank',
+      },
+    });
+    expect(useFinanceStore.getState().deleteAccount('bank')).toBe(false);
+    expect(useFinanceStore.getState().accounts).toHaveLength(2);
+
+    // Deleting the deposit itself unwinds its funding and frees the bank account.
+    expect(useFinanceStore.getState().deleteAccount(id)).toBe(true);
+    expect(useFinanceStore.getState().accounts[0].balance).toBe(100000);
+    expect(useFinanceStore.getState().deleteAccount('bank')).toBe(true);
+  });
+});

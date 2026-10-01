@@ -1,4 +1,12 @@
-export type AccountType = 'checking' | 'savings' | 'cash' | 'credit' | 'investment' | 'wallet';
+export type AccountType =
+  | 'checking'
+  | 'savings'
+  | 'cash'
+  | 'credit'
+  | 'investment'
+  | 'wallet'
+  | 'fd'
+  | 'rd';
 export type TransactionType = 'expense' | 'income' | 'transfer';
 export type CategoryType = 'expense' | 'income' | 'both';
 export type Theme = 'dark' | 'light' | 'system';
@@ -37,6 +45,46 @@ export interface Account {
    * every transaction — it only removes the account from pickers and running totals.
    */
   archivedAt?: string;
+  /** Present exactly when `type` is `'fd'` or `'rd'` — the deposit's contract terms. */
+  deposit?: DepositTerms;
+}
+
+/** How a fixed deposit compounds. `simple` pays flat interest at maturity. RDs are always quarterly. */
+export type DepositCompounding = 'monthly' | 'quarterly' | 'half-yearly' | 'yearly' | 'simple';
+
+/**
+ * The terms of a fixed or recurring deposit. Only the inputs are stored — the maturity amount
+ * and current value are derived in `utils/deposit.ts`, the same way a loan's EMI is.
+ */
+export interface DepositTerms {
+  /** FD principal, or RD monthly installment. */
+  amount: number;
+  /** Annual rate, percent. */
+  interestRate: number;
+  /** FD investment date, or RD first installment date (ISO). */
+  startDate: string;
+  /** FD only. An RD matures `tenureMonths` after its first installment. */
+  maturityDate?: string;
+  /** RD only — number of monthly installments. */
+  tenureMonths?: number;
+  /** FD only, default `'quarterly'`. */
+  compounding?: DepositCompounding;
+  /** FD: funding and redemption account. RD: the account installments come from and maturity returns to. */
+  linkedAccountId: string;
+  /** RD only — the monthly transfer rule that posts installments. */
+  recurringId?: string;
+  /** Set once, when the maturity payout is posted. The idempotency marker for `processMaturities`. */
+  maturedAt?: string;
+}
+
+/** Input for `addDeposit` — creates the account, its funding transfer (FD) or rule (RD). */
+export interface NewDeposit {
+  type: 'fd' | 'rd';
+  name: string;
+  color: string;
+  terms: Omit<DepositTerms, 'recurringId' | 'maturedAt'>;
+  /** RD only, start date in the past: post past installments from the linked account (true) or fold them into the opening balance (false). */
+  deductPast?: boolean;
 }
 
 /** An account from a backup file or pre-v5 storage, where `openingBalance` may be absent. */
@@ -435,7 +483,32 @@ export interface FinanceStore {
    * balances and recurring rules survive, so it is the right default for a closed bank account.
    */
   setAccountArchived: (id: string, archived: boolean) => void;
-  deleteAccount: (id: string) => void;
+  /**
+   * Refuses (returns false) while an open deposit uses the account as its linked account —
+   * the deposit has to pay out somewhere.
+   */
+  deleteAccount: (id: string) => boolean;
+  /** Creates a deposit account plus its funding transfer (FD) or installment rule (RD). Returns the account id. */
+  addDeposit: (input: NewDeposit) => string;
+  /**
+   * Only the fields that don't rewrite posted history: name, color, rate, compounding and an
+   * FD's maturity date. Amount, start date, tenure and linked account are fixed at creation.
+   */
+  updateDeposit: (
+    id: string,
+    updates: {
+      name?: string;
+      color?: string;
+      interestRate?: number;
+      compounding?: DepositCompounding;
+      maturityDate?: string;
+    },
+  ) => void;
+  /**
+   * Pay out every deposit that has reached maturity: interest income into the deposit, a
+   * transfer of the maturity amount to the linked account, then archive. Runs once per deposit.
+   */
+  processMaturities: () => Transaction[];
   /**
    * Rebuild every account balance from its opening balance plus its transactions.
    * Returns how many accounts moved and the net drift that was corrected.

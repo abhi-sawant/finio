@@ -2,6 +2,7 @@ import { memo } from 'react';
 import { useFinanceStore } from '@/store/useFinanceStore';
 import { formatCurrency } from '@/utils/formatters';
 import { getCreditCardDueInfo, getCreditUtilization } from '@/utils/calculations';
+import { accountDisplayValue, depositCaption, isDepositAccount } from '@/utils/deposit';
 import { cn } from '@/lib/utils';
 import type { Account } from '@/types';
 import { Trash2, Archive } from 'lucide-react';
@@ -45,6 +46,8 @@ export const AccountCard = memo(function AccountCard({
   const isArchived = !!account.archivedAt;
   const utilization = getCreditUtilization(account);
   const dueInfo = getCreditCardDueInfo(account);
+  const isDeposit = isDepositAccount(account);
+  const shownBalance = accountDisplayValue(account);
 
   return (
     <div className="group flex w-full items-center gap-2 py-3">
@@ -54,7 +57,9 @@ export const AccountCard = memo(function AccountCard({
           <p className="text-muted-foreground truncate text-xs">
             {isArchived
               ? `Closed · ${transactionCount} transaction${transactionCount === 1 ? '' : 's'}`
-              : account.type}
+              : isDeposit
+                ? depositCaption(account)
+                : account.type}
           </p>
           {dueInfo && (
             <p
@@ -69,9 +74,12 @@ export const AccountCard = memo(function AccountCard({
           )}
         </div>
         <div className="shrink-0 text-right">
-          <p className={cn('text-sm font-semibold', account.balance < 0 && 'text-destructive')}>
-            {formatCurrency(account.balance, true, hideAmounts, { forceCompact })}
+          <p className={cn('text-sm font-semibold', shownBalance < 0 && 'text-destructive')}>
+            {formatCurrency(shownBalance, true, hideAmounts, { forceCompact })}
           </p>
+          {isDeposit && !isArchived && (
+            <p className="text-muted-foreground mt-0.5 text-[11px]">Current value</p>
+          )}
           {isCredit && account.creditLimit && (
             <p className="text-muted-foreground mt-0.5 text-[11px]">
               {Math.round(utilization * 100)}% used

@@ -8,7 +8,9 @@ import {
   activeAccounts,
   getTotalAccountBalance,
   getTotalCreditOutstanding,
+  getTotalDepositValue,
 } from '@/utils/calculations';
+import { accountDeleteBlockers, isDepositAccount } from '@/utils/deposit';
 import type { Account } from '@/types';
 import { AccountCard } from '@/components/accounts/AccountCard';
 import { HideAmountsToggle } from '@/components/HideAmountsToggle';
@@ -29,9 +31,14 @@ export default function Accounts() {
 
   const totalBalance = useMemo(() => getTotalAccountBalance(accounts), [accounts]);
   const creditDue = useMemo(() => getTotalCreditOutstanding(accounts), [accounts]);
+  const depositValue = useMemo(() => getTotalDepositValue(accounts), [accounts]);
 
   const open = useMemo(() => activeAccounts(accounts), [accounts]);
-  const regularAccounts = useMemo(() => open.filter((a) => a.type !== 'credit'), [open]);
+  const regularAccounts = useMemo(
+    () => open.filter((a) => a.type !== 'credit' && !isDepositAccount(a)),
+    [open],
+  );
+  const depositAccounts = useMemo(() => open.filter(isDepositAccount), [open]);
   const creditAccounts = useMemo(() => open.filter((a) => a.type === 'credit'), [open]);
   const archivedAccounts = useMemo(() => accounts.filter((a) => a.archivedAt), [accounts]);
   // Open accounts are all visible on this page together, so their balances compact as one
@@ -51,6 +58,13 @@ export default function Accounts() {
   }, [transactions]);
 
   const handleDelete = async (account: Account) => {
+    const blockers = accountDeleteBlockers(accounts, account.id);
+    if (blockers.length > 0) {
+      toast.error(`Can't delete "${account.name}"`, {
+        description: `${blockers.map((b) => `"${b}"`).join(', ')} pay${blockers.length === 1 ? 's' : ''} out to this account. Delete ${blockers.length === 1 ? 'that deposit' : 'those deposits'} first.`,
+      });
+      return;
+    }
     const txCount = transactions.filter(
       (t) => t.accountId === account.id || t.toAccountId === account.id,
     ).length;
@@ -118,6 +132,12 @@ export default function Accounts() {
               {formatCurrency(totalBalance - creditDue, true, hideAmounts)} after dues
             </p>
           )}
+          {depositAccounts.length > 0 && (
+            <p className="text-muted-foreground mt-1 text-xs">
+              + {formatCurrency(depositValue, true, hideAmounts)} locked in {depositAccounts.length}{' '}
+              deposit{depositAccounts.length === 1 ? '' : 's'}
+            </p>
+          )}
         </div>
 
         {/* Regular Accounts */}
@@ -128,6 +148,27 @@ export default function Accounts() {
             </h2>
             <div className="card-elevated divide-border divide-y rounded-md px-4">
               {regularAccounts.map((account) => (
+                <AccountCard
+                  key={account.id}
+                  account={account}
+                  forceCompact={openCompact}
+                  onClick={() => navigate(`/edit-account/${account.id}`)}
+                  onDelete={() => handleDelete(account)}
+                  onToggleArchive={() => handleToggleArchive(account)}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Fixed & recurring deposits — valued at what they're worth today */}
+        {depositAccounts.length > 0 && (
+          <div>
+            <h2 className="text-muted-foreground mb-2 text-[11px] font-medium tracking-wide uppercase">
+              Deposits
+            </h2>
+            <div className="card-elevated divide-border divide-y rounded-md px-4">
+              {depositAccounts.map((account) => (
                 <AccountCard
                   key={account.id}
                   account={account}
