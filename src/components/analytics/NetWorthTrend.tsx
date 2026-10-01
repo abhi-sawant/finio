@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react';
-import { format } from 'date-fns';
 import {
   Bar,
   CartesianGrid,
@@ -41,7 +40,7 @@ export function NetWorthTrend() {
   const chartData = useMemo(
     () =>
       series.map((point) => ({
-        month: format(point.date, 'MMM yy'),
+        month: point.shortLabel,
         'Net worth': point.netWorth,
         Assets: point.assets,
         Liabilities: point.liabilities === 0 ? 0 : -point.liabilities,
@@ -147,7 +146,7 @@ export function NetWorthTrend() {
         rows={series.map((point) => ({
           key: point.key,
           cells: [
-            format(point.date, 'MMM yy'),
+            point.shortLabel,
             money(point.netWorth),
             money(point.assets),
             money(point.liabilities),

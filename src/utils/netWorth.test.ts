@@ -231,4 +231,21 @@ describe('buildNetWorthSeries', () => {
     expect(series[0].source).toBe('reconstructed');
     expect(series[0].netWorth).toBe(10000);
   });
+
+  it('labels each month by its own period, even when snapshot dates are irregular', () => {
+    const series = buildNetWorthSeries({
+      accounts,
+      transactions,
+      snapshots: [
+        snapshot({ periodKey: '2026-04', date: '2026-05-31T00:00:00.000Z' }),
+        snapshot({ periodKey: '2026-05', date: '2026-05-31T00:00:00.000Z' }),
+      ],
+      now: NOW,
+      months: 3,
+    });
+
+    const labels = series.map((p) => p.shortLabel);
+    expect(new Set(labels).size).toBe(labels.length);
+    expect(labels).toEqual(['Apr 26', 'May 26', 'Jun 26']);
+  });
 });

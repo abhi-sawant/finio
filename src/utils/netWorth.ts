@@ -97,6 +97,8 @@ export interface NetWorthPoint extends NetWorthComponents {
   /** `yyyy-MM` of the financial month's start. */
   key: string;
   label: string;
+  /** Axis/table label (`MMM yy`) of the financial month's start — unique per point, unlike `date`. */
+  shortLabel: string;
   /** The instant the figures are as of — the period's end, or now for the live period. */
   date: Date;
   /** Where the numbers came from. Reconstructed points move if history is edited. */
@@ -131,6 +133,7 @@ export function buildNetWorthSeries(input: NetWorthSeriesInput): NetWorthPoint[]
     const range = i === 0 ? current : shiftPeriod(current, -i);
     const key = format(range.start, 'yyyy-MM');
     const label = periodLabel(range, monthStartDay);
+    const shortLabel = format(range.start, 'MMM yy');
     const isCurrent = i === 0;
 
     const snapshot = isCurrent ? undefined : byKey.get(key);
@@ -138,6 +141,7 @@ export function buildNetWorthSeries(input: NetWorthSeriesInput): NetWorthPoint[]
       points.push({
         key,
         label,
+        shortLabel,
         date: parseISO(snapshot.date),
         assets: snapshot.assets,
         liabilities: snapshot.liabilities,
@@ -153,6 +157,7 @@ export function buildNetWorthSeries(input: NetWorthSeriesInput): NetWorthPoint[]
     points.push({
       key,
       label,
+      shortLabel,
       date: asOf,
       ...netWorthAt(input.accounts, input.transactions, asOf),
       source: 'reconstructed',
