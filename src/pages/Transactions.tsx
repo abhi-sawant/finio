@@ -12,6 +12,7 @@ import {
   activeAccounts,
   buildSearchIndex,
   groupTransactionsByDate,
+  miscLast,
   transactionMatchesQuery,
   transactionsToCsv,
 } from '@/utils/calculations';
@@ -350,7 +351,7 @@ export default function Transactions() {
             placeholder="Search notes, categories, accounts, labels, amounts..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="bg-card h-auto w-full rounded-sm py-2.5 pr-4 pl-9"
+            className="w-full pr-4 pl-9"
           />
         </div>
 
@@ -396,7 +397,7 @@ export default function Transactions() {
                 Account
               </Label>
               <Select value={accountFilter} onValueChange={(v) => setAccountFilter(v ?? 'all')}>
-                <SelectTrigger className="bg-muted h-auto w-full rounded-sm px-3 py-2">
+                <SelectTrigger className="w-full">
                   <SelectValue>
                     {accounts.find((a) => a.id === accountFilter)?.name || 'All Accounts'}
                   </SelectValue>
@@ -417,14 +418,14 @@ export default function Transactions() {
                   Category
                 </Label>
                 <Select value={categoryFilter} onValueChange={(v) => setCategoryFilter(v ?? 'all')}>
-                  <SelectTrigger className="bg-muted h-auto w-full rounded-sm px-3 py-2">
+                  <SelectTrigger className="w-full">
                     <SelectValue>
                       {categories.find((c) => c.id === categoryFilter)?.name || 'All Categories'}
                     </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Categories</SelectItem>
-                    {categories.map((c) => (
+                    {miscLast(categories).map((c) => (
                       <SelectItem key={c.id} value={c.id}>
                         {c.name}
                       </SelectItem>
@@ -437,7 +438,7 @@ export default function Transactions() {
                   Label
                 </Label>
                 <Select value={labelFilter} onValueChange={(v) => setLabelFilter(v ?? 'all')}>
-                  <SelectTrigger className="bg-muted h-auto w-full rounded-sm px-3 py-2">
+                  <SelectTrigger className="w-full">
                     <SelectValue>
                       {labels.find((l) => l.id === labelFilter)?.name || 'All Labels'}
                     </SelectValue>
@@ -614,7 +615,6 @@ export default function Transactions() {
             value={templateName}
             maxLength={MAX_NAME_LENGTH}
             onChange={(e) => setTemplateName(stripLeading(e.target.value))}
-            className="bg-card h-auto rounded-sm px-4 py-3"
           />
           <DialogFooter>
             <Button variant="outline" onClick={() => setTemplateTx(null)}>
@@ -640,13 +640,13 @@ export default function Transactions() {
             value={recategorizeCategoryId}
             onValueChange={(v) => setRecategorizeCategoryId(v ?? '')}
           >
-            <SelectTrigger className="bg-muted h-auto w-full rounded-sm px-3 py-2">
+            <SelectTrigger className="w-full">
               <SelectValue placeholder="Select category">
                 {categories.find((c) => c.id === recategorizeCategoryId)?.name}
               </SelectValue>
             </SelectTrigger>
             <SelectContent>
-              {categories.map((c) => (
+              {miscLast(categories).map((c) => (
                 <SelectItem key={c.id} value={c.id}>
                   {c.name}
                 </SelectItem>
@@ -678,7 +678,7 @@ export default function Transactions() {
             </DialogDescription>
           </DialogHeader>
           <Select value={addLabelId} onValueChange={(v) => setAddLabelId(v ?? '')}>
-            <SelectTrigger className="bg-muted h-auto w-full rounded-sm px-3 py-2">
+            <SelectTrigger className="w-full">
               <SelectValue placeholder="Select label">
                 {labels.find((l) => l.id === addLabelId)?.name}
               </SelectValue>

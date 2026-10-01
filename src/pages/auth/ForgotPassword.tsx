@@ -55,7 +55,7 @@ export default function ForgotPassword() {
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="bg-card h-auto w-full rounded-sm py-3 pr-4 pl-11"
+              className="w-full pr-4 pl-11"
               autoComplete="email"
               inputMode="email"
               autoCapitalize="none"

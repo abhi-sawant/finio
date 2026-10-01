@@ -26,7 +26,7 @@ export interface DateTimePickerProps {
   disabled?: boolean;
 }
 
-const DEFAULT_INPUT_CLASS = 'h-auto px-4 py-3 bg-card rounded-sm';
+const DEFAULT_INPUT_CLASS = '';
 
 export function DateTimePicker({
   value,
@@ -70,7 +70,7 @@ export function DateTimePicker({
               variant="outline"
               disabled={disabled}
               className={cn(
-                'flex-1 justify-start text-left font-normal',
+                'border-input bg-card hover:bg-card h-10 flex-1 justify-start rounded-sm px-3 py-1 text-left text-base font-normal md:text-sm',
                 inputClassName,
                 !date && 'text-muted-foreground',
               )}

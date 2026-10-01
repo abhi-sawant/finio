@@ -73,7 +73,7 @@ export default function Register() {
               value={name}
               maxLength={MAX_NAME_LENGTH}
               onChange={(e) => setName(stripLeading(e.target.value))}
-              className="bg-card h-auto w-full rounded-sm py-3 pr-4 pl-11"
+              className="w-full pr-4 pl-11"
               autoComplete="name"
             />
           </div>
@@ -85,7 +85,7 @@ export default function Register() {
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="bg-card h-auto w-full rounded-sm py-3 pr-4 pl-11"
+              className="w-full pr-4 pl-11"
               autoComplete="email"
               inputMode="email"
               autoCapitalize="none"
@@ -100,7 +100,7 @@ export default function Register() {
               placeholder="Password (min 8 characters)"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="bg-card h-auto w-full rounded-sm py-3 pr-11 pl-11"
+              className="w-full pr-11 pl-11"
               autoComplete="new-password"
             />
             <Button
@@ -122,7 +122,7 @@ export default function Register() {
               placeholder="Confirm password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="bg-card h-auto w-full rounded-sm py-3 pr-4 pl-11"
+              className="w-full pr-4 pl-11"
               autoComplete="new-password"
               aria-invalid={confirmPassword !== '' && confirmPassword !== password}
             />

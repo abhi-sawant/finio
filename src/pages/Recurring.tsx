@@ -39,7 +39,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { activeAccounts, findTransferCategory, isCategoryValidForType } from '@/utils/calculations';
+import {
+  activeAccounts,
+  findTransferCategory,
+  isCategoryValidForType,
+  miscLast,
+} from '@/utils/calculations';
 import type { RecurrenceFrequency, RecurringTransaction, TransactionType } from '@/types';
 import Header from '@/components/ui/header';
 import Main from '@/components/ui/main';
@@ -102,9 +107,11 @@ export default function Recurring() {
 
   const filteredCategories = useMemo(
     () =>
-      type === 'transfer'
-        ? categories.filter((c) => c.type === 'both')
-        : categories.filter((c) => isCategoryValidForType(c, type)),
+      miscLast(
+        type === 'transfer'
+          ? categories.filter((c) => c.type === 'both')
+          : categories.filter((c) => isCategoryValidForType(c, type)),
+      ),
     [categories, type],
   );
 
@@ -349,7 +356,7 @@ export default function Recurring() {
                 {type === 'transfer' ? 'From Account' : 'Account'}
               </Label>
               <Select value={accountId} onValueChange={(v) => setAccountId(v ?? '')}>
-                <SelectTrigger className="bg-muted h-auto w-full rounded-sm px-3 py-2">
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder="Account">
                     {accounts.find((a) => a.id === accountId)?.name}
                   </SelectValue>
@@ -370,7 +377,7 @@ export default function Recurring() {
                   To Account
                 </Label>
                 <Select value={toAccountId} onValueChange={(v) => setToAccountId(v ?? '')}>
-                  <SelectTrigger className="bg-muted h-auto w-full rounded-sm px-3 py-2">
+                  <SelectTrigger className="w-full">
                     <SelectValue placeholder="Destination">
                       {accounts.find((a) => a.id === toAccountId)?.name}
                     </SelectValue>
@@ -388,7 +395,7 @@ export default function Recurring() {
               </div>
             ) : (
               <Select value={categoryId} onValueChange={(v) => setCategoryId(v ?? '')}>
-                <SelectTrigger className="bg-muted h-auto w-full rounded-sm px-3 py-2">
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder="Category">
                     {filteredCategories.find((c) => c.id === categoryId)?.name}
                   </SelectValue>
@@ -409,11 +416,10 @@ export default function Recurring() {
               value={note}
               maxLength={MAX_NOTE_LENGTH}
               onChange={(e) => setNote(stripLeading(e.target.value))}
-              className="bg-muted h-auto rounded-sm px-3 py-2"
             />
 
             <Select value={frequency} onValueChange={(v) => setFrequency(v as RecurrenceFrequency)}>
-              <SelectTrigger className="bg-muted h-auto w-full rounded-sm px-3 py-2">
+              <SelectTrigger className="w-full">
                 <SelectValue placeholder="Frequency">{FREQ_LABEL[frequency]}</SelectValue>
               </SelectTrigger>
               <SelectContent>
@@ -439,7 +445,7 @@ export default function Recurring() {
             <div>
               <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">Ends</Label>
               <Select value={endMode} onValueChange={(v) => setEndMode((v as EndMode) ?? 'never')}>
-                <SelectTrigger className="bg-muted h-auto w-full rounded-sm px-3 py-2">
+                <SelectTrigger className="w-full">
                   <SelectValue>
                     {endMode === 'never'
                       ? 'Never'
@@ -470,7 +476,7 @@ export default function Recurring() {
                   placeholder="Number of occurrences"
                   value={maxOccurrences}
                   onChange={(e) => setMaxOccurrences(e.target.value)}
-                  className="bg-muted mt-2 h-auto rounded-sm px-3 py-2"
+                  className="mt-2"
                 />
               )}
             </div>
@@ -484,7 +490,7 @@ export default function Recurring() {
                   value={goalId || 'none'}
                   onValueChange={(v) => setGoalId(v === 'none' ? '' : (v ?? ''))}
                 >
-                  <SelectTrigger className="bg-muted h-auto w-full rounded-sm px-3 py-2">
+                  <SelectTrigger className="w-full">
                     <SelectValue>
                       {goalId ? goals.find((g) => g.id === goalId)?.name : 'None'}
                     </SelectValue>

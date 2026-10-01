@@ -83,7 +83,7 @@ export interface NewDeposit {
   name: string;
   color: string;
   terms: Omit<DepositTerms, 'recurringId' | 'maturedAt'>;
-  /** RD only, start date in the past: post past installments from the linked account (true) or fold them into the opening balance (false). */
+  /** Start date in the past: post the FD funding transfer / RD past installments from the linked account (true) or treat them as already in the deposit's opening balance (false). */
   deductPast?: boolean;
 }
 

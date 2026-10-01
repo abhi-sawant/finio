@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import { useFinanceStore } from '@/store/useFinanceStore';
 import { MISC_CATEGORY_ID } from '@/data/defaultData';
 import { calculateEmi } from '@/utils/loan';
-import { activeAccounts, isCategoryValidForType } from '@/utils/calculations';
+import { activeAccounts, isCategoryValidForType, miscLast } from '@/utils/calculations';
 import { MAX_NAME_LENGTH, cleanText, stripLeading } from '@/utils/validation';
 import { formatCurrency, localDayKey } from '@/utils/formatters';
 import { CategoryIcon } from '@/components/categories/CategoryIcon';
@@ -44,7 +44,7 @@ export default function AddLoan() {
   const existing = id ? loans.find((l) => l.id === id) : null;
   const openAccounts = useMemo(() => activeAccounts(accounts), [accounts]);
   const expenseCategories = useMemo(
-    () => categories.filter((c) => isCategoryValidForType(c, 'expense')),
+    () => miscLast(categories.filter((c) => isCategoryValidForType(c, 'expense'))),
     [categories],
   );
 
@@ -150,7 +150,6 @@ export default function AddLoan() {
             value={name}
             maxLength={MAX_NAME_LENGTH}
             onChange={(e) => setName(stripLeading(e.target.value))}
-            className="bg-card h-auto rounded-sm px-4 py-3"
           />
         </div>
 
@@ -178,7 +177,6 @@ export default function AddLoan() {
               placeholder="e.g. 8.5"
               value={interestRate}
               onChange={(e) => setInterestRate(e.target.value)}
-              className="bg-card h-auto rounded-sm px-4 py-3"
             />
           </div>
           <div>
@@ -196,7 +194,6 @@ export default function AddLoan() {
               placeholder="e.g. 240"
               value={tenureMonths}
               onChange={(e) => setTenureMonths(e.target.value)}
-              className="bg-card h-auto rounded-sm px-4 py-3"
             />
           </div>
         </div>
@@ -225,7 +222,7 @@ export default function AddLoan() {
             <p className="text-destructive text-xs">Add an account first.</p>
           ) : (
             <Select value={accountId} onValueChange={(v) => setAccountId(v ?? '')}>
-              <SelectTrigger className="bg-card h-auto w-full rounded-sm px-4 py-3">
+              <SelectTrigger className="w-full">
                 <SelectValue>
                   {openAccounts.find((a) => a.id === accountId)?.name ?? 'Choose account'}
                 </SelectValue>

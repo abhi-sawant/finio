@@ -137,7 +137,7 @@ export function Onboarding() {
                   if (e.key === 'Enter' && trimmedName) setStep('account');
                 }}
                 placeholder="Your name"
-                className="bg-card h-auto w-full rounded-sm px-4 py-3"
+                className="w-full"
               />
             </div>
             <Button
@@ -171,7 +171,7 @@ export function Onboarding() {
                 maxLength={MAX_NAME_LENGTH}
                 onChange={(e) => setAccountName(stripLeading(e.target.value))}
                 placeholder="e.g. HDFC Savings"
-                className="bg-card h-auto w-full rounded-sm px-4 py-3"
+                className="w-full"
               />
             </div>
 

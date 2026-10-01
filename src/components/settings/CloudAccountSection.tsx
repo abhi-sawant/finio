@@ -172,7 +172,6 @@ export function CloudAccountSection() {
                 autoComplete="current-password"
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
-                className="bg-muted h-auto rounded-sm border-0 px-3 py-2"
               />
             </div>
             <div>
@@ -183,7 +182,6 @@ export function CloudAccountSection() {
                 placeholder="Min 8 characters"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                className="bg-muted h-auto rounded-sm border-0 px-3 py-2"
               />
             </div>
             <div>
@@ -193,7 +191,6 @@ export function CloudAccountSection() {
                 autoComplete="new-password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="bg-muted h-auto rounded-sm border-0 px-3 py-2"
               />
             </div>
             <Button
@@ -231,7 +228,6 @@ export function CloudAccountSection() {
                 autoComplete="current-password"
                 value={deleteAccountPassword}
                 onChange={(e) => setDeleteAccountPassword(e.target.value)}
-                className="bg-muted h-auto rounded-sm border-0 px-3 py-2"
               />
             </div>
             <Button

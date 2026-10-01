@@ -10,6 +10,7 @@ import {
   shiftPeriod,
   type PeriodRange,
 } from './period';
+import { MISC_CATEGORY_ID } from '@/data/defaultData';
 import { localDayKey } from './formatters';
 import { depositCurrentValue, isDepositAccount } from './deposit';
 import type {
@@ -24,6 +25,14 @@ import type {
   Person,
   DebtEntry,
 } from '@/types';
+
+/** Stable reorder that keeps "Miscellaneous" at the bottom of any category listing. */
+export function miscLast<T extends { id: string }>(categories: T[]): T[] {
+  return [
+    ...categories.filter((c) => c.id !== MISC_CATEGORY_ID),
+    ...categories.filter((c) => c.id === MISC_CATEGORY_ID),
+  ];
+}
 
 /**
  * Whether a category may be filed under a transaction of `type`. Transfers only take the

@@ -34,6 +34,7 @@ import {
   computeBudgetHistory,
   computeBudgetStatuses,
   isCategoryValidForType,
+  miscLast,
   type BudgetStatus,
 } from '@/utils/calculations';
 import {
@@ -89,7 +90,7 @@ export default function Budgets() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const expenseCategories = useMemo(
-    () => categories.filter((c) => isCategoryValidForType(c, 'expense')),
+    () => miscLast(categories.filter((c) => isCategoryValidForType(c, 'expense'))),
     [categories],
   );
 
@@ -236,7 +237,7 @@ export default function Budgets() {
                 Scope
               </Label>
               <Select value={scope} onValueChange={(v) => setScope(v ?? OVERALL_SCOPE)}>
-                <SelectTrigger className="bg-muted h-auto w-full rounded-sm px-3 py-2">
+                <SelectTrigger className="w-full">
                   <SelectValue>{describe(decodeScope(scope)).name}</SelectValue>
                 </SelectTrigger>
                 <SelectContent className="max-h-72 overflow-y-auto">

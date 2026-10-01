@@ -93,7 +93,6 @@ export default function ManageLabels() {
                 value={name}
                 maxLength={MAX_NAME_LENGTH}
                 onChange={(e) => setName(stripLeading(e.target.value))}
-                className="bg-muted h-auto rounded-sm px-3 py-2"
               />
               <div className="flex flex-wrap gap-2">
                 {labelColors.map((c) => (

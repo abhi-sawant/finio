@@ -429,7 +429,6 @@ export default function Loans() {
               value={prepayNote}
               maxLength={MAX_NOTE_LENGTH}
               onChange={(e) => setPrepayNote(stripLeading(e.target.value))}
-              className="bg-muted h-auto rounded-sm px-3 py-2"
             />
             <p
               className={

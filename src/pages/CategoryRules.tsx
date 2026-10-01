@@ -4,7 +4,7 @@ import { ArrowLeft, ChevronDown, ChevronUp, Pencil, Plus, Trash2, Wand2 } from '
 import { toast } from 'sonner';
 import { CategoryIcon } from '@/components/categories/CategoryIcon';
 import { CategoryGrid } from '@/components/categories/CategoryGrid';
-import { isCategoryValidForType } from '@/utils/calculations';
+import { isCategoryValidForType, miscLast } from '@/utils/calculations';
 import { MAX_PATTERN_LENGTH } from '@/utils/validation';
 import { useFinanceStore } from '@/store/useFinanceStore';
 import { MISC_CATEGORY_ID } from '@/data/defaultData';
@@ -77,10 +77,12 @@ export default function CategoryRules() {
   // A rule can file into an expense or income category, so the picker offers both.
   const selectableCategories = useMemo(
     () =>
-      categories.filter((c) =>
-        scope === 'any'
-          ? isCategoryValidForType(c, 'expense') || isCategoryValidForType(c, 'income')
-          : isCategoryValidForType(c, scope),
+      miscLast(
+        categories.filter((c) =>
+          scope === 'any'
+            ? isCategoryValidForType(c, 'expense') || isCategoryValidForType(c, 'income')
+            : isCategoryValidForType(c, scope),
+        ),
       ),
     [categories, scope],
   );
@@ -333,7 +335,7 @@ export default function CategoryRules() {
                     value={matchType}
                     onValueChange={(v) => setMatchType((v as RuleMatchType) ?? matchType)}
                   >
-                    <SelectTrigger className="bg-muted h-auto w-full rounded-sm px-3 py-2 text-sm">
+                    <SelectTrigger className="w-full">
                       <SelectValue>{MATCH_TYPE_LABELS[matchType]}</SelectValue>
                     </SelectTrigger>
                     <SelectContent>
@@ -350,7 +352,7 @@ export default function CategoryRules() {
                     Applies to
                   </Label>
                   <Select value={scope} onValueChange={(v) => setScope((v as RuleScope) ?? scope)}>
-                    <SelectTrigger className="bg-muted h-auto w-full rounded-sm px-3 py-2 text-sm">
+                    <SelectTrigger className="w-full">
                       <SelectValue>{SCOPES.find((s) => s.value === scope)?.label}</SelectValue>
                     </SelectTrigger>
                     <SelectContent>
@@ -371,7 +373,6 @@ export default function CategoryRules() {
                   value={pattern}
                   maxLength={MAX_PATTERN_LENGTH}
                   onChange={(e) => setPattern(e.target.value)}
-                  className="bg-muted h-auto rounded-sm px-3 py-2"
                 />
                 {matchType === 'regex' && pattern.trim() !== '' && !patternValid && (
                   <p className="text-destructive mt-1 text-xs">Not a valid regular expression</p>

@@ -256,7 +256,6 @@ export default function Debts() {
                 value={name}
                 maxLength={MAX_NAME_LENGTH}
                 onChange={(e) => setName(stripLeading(e.target.value))}
-                className="bg-muted h-auto rounded-sm px-3 py-2"
               />
             </div>
 
@@ -386,7 +385,6 @@ export default function Debts() {
               value={entryNote}
               maxLength={MAX_NOTE_LENGTH}
               onChange={(e) => setEntryNote(stripLeading(e.target.value))}
-              className="bg-muted h-auto rounded-sm px-3 py-2"
             />
             <div className="flex gap-2">
               <Button
@@ -437,7 +435,7 @@ export default function Debts() {
               </p>
             ) : (
               <Select value={settleAccountId} onValueChange={(v) => setSettleAccountId(v ?? '')}>
-                <SelectTrigger className="bg-muted h-auto w-full rounded-sm px-3 py-2">
+                <SelectTrigger className="w-full">
                   <SelectValue>
                     {openAccounts.find((a) => a.id === settleAccountId)?.name ?? 'Choose account'}
                   </SelectValue>
@@ -458,7 +456,6 @@ export default function Debts() {
               value={settleNote}
               maxLength={MAX_NOTE_LENGTH}
               onChange={(e) => setSettleNote(stripLeading(e.target.value))}
-              className="bg-muted h-auto rounded-sm px-3 py-2"
             />
             <div className="flex gap-2">
               <Button

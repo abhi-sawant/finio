@@ -121,7 +121,6 @@ export function ReconcileAccountDialog({
                   value={note}
                   maxLength={MAX_NOTE_LENGTH}
                   onChange={(e) => setNote(stripLeading(e.target.value))}
-                  className="bg-muted h-auto rounded-sm px-3 py-2"
                 />
               </>
             )}

@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import { formatCurrency, formatShortDate } from '@/utils/formatters';
 import {
   DEPOSIT_COMPOUNDING_OPTIONS,
@@ -33,7 +34,6 @@ interface DepositFieldsProps {
 }
 
 const fieldLabel = 'text-muted-foreground mb-1.5 block text-xs font-medium';
-const inputClass = 'bg-card h-auto rounded-sm px-4 py-3';
 
 export function DepositFields({
   type,
@@ -55,6 +55,10 @@ export function DepositFields({
   const pastInstallments =
     !isFd && !locked && terms ? rdInstallmentsOnOrBefore({ ...terms }, new Date()) : 0;
 
+  // A new FD dated before today — the funding transfer is optional for those.
+  const fdStartedInPast =
+    isFd && !locked && !!values.startDate && values.startDate < format(new Date(), 'yyyy-MM-dd');
+
   const money = (n: number) => formatCurrency(n, false, hideAmounts);
 
   return (
@@ -62,7 +66,7 @@ export function DepositFields({
       <div>
         <Label className={fieldLabel}>{isFd ? 'Amount' : 'Monthly Installment'}</Label>
         {locked ? (
-          <p className="bg-card border-border rounded-sm border px-4 py-3 text-sm">
+          <p className="bg-muted border-border flex h-10 items-center rounded-sm border px-3 text-base md:text-sm">
             {money(parseFloat(values.amount) || 0)}
           </p>
         ) : (
@@ -84,7 +88,6 @@ export function DepositFields({
             placeholder="e.g. 6.65"
             value={values.interestRate}
             onChange={(e) => onChange({ interestRate: e.target.value })}
-            className={inputClass}
           />
         </div>
         {isFd ? (
@@ -94,7 +97,7 @@ export function DepositFields({
               value={values.compounding}
               onValueChange={(v) => v && onChange({ compounding: v as DepositCompounding })}
             >
-              <SelectTrigger className="bg-card h-auto w-full rounded-sm px-4 py-3">
+              <SelectTrigger className="w-full">
                 <SelectValue>
                   {DEPOSIT_COMPOUNDING_OPTIONS.find((o) => o.value === values.compounding)?.label}
                 </SelectValue>
@@ -122,7 +125,6 @@ export function DepositFields({
               value={values.tenureMonths}
               disabled={locked}
               onChange={(e) => onChange({ tenureMonths: e.target.value })}
-              className={inputClass}
             />
           </div>
         )}
@@ -158,7 +160,7 @@ export function DepositFields({
           {isFd ? 'Funded From & Redeemed To' : 'Deduct From & Pay Out To'}
         </Label>
         {locked ? (
-          <p className="bg-card border-border rounded-sm border px-4 py-3 text-sm">
+          <p className="bg-muted border-border flex h-10 items-center rounded-sm border px-3 text-base md:text-sm">
             {linkedName ?? 'Unknown account'}
           </p>
         ) : linkableAccounts.length === 0 ? (
@@ -170,7 +172,7 @@ export function DepositFields({
             value={values.linkedAccountId}
             onValueChange={(v) => onChange({ linkedAccountId: v ?? '' })}
           >
-            <SelectTrigger className="bg-card h-auto w-full rounded-sm px-4 py-3">
+            <SelectTrigger className="w-full">
               <SelectValue>{linkedName ?? 'Choose account'}</SelectValue>
             </SelectTrigger>
             <SelectContent>
@@ -192,6 +194,21 @@ export function DepositFields({
               values.deductPast
                 ? `${pastInstallments} installment${pastInstallments === 1 ? '' : 's'} (${money(pastInstallments * (terms?.amount ?? 0))}) will be posted from ${linkedName ?? 'the account'} and show in its history.`
                 : `${pastInstallments} installment${pastInstallments === 1 ? '' : 's'} (${money(pastInstallments * (terms?.amount ?? 0))}) already paid become the RD's opening balance.`
+            }
+            checked={values.deductPast}
+            onCheckedChange={(deductPast) => onChange({ deductPast })}
+          />
+        </div>
+      )}
+
+      {isFd && fdStartedInPast && (
+        <div className="card-elevated rounded-md p-4">
+          <SwitchField
+            title="Deduct amount from account"
+            description={
+              values.deductPast
+                ? `${money(terms?.amount ?? 0)} will be transferred from ${linkedName ?? 'the account'} on the start date and show in its history.`
+                : `${money(terms?.amount ?? 0)} was already invested; it becomes the FD's opening balance and ${linkedName ?? 'the account'} is left untouched.`
             }
             checked={values.deductPast}
             onCheckedChange={(deductPast) => onChange({ deductPast })}

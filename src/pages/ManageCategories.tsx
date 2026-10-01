@@ -13,6 +13,7 @@ import { useConfirm } from '@/components/ui/use-confirm';
 import type { CategoryType } from '@/types';
 import Header from '@/components/ui/header';
 import Main from '@/components/ui/main';
+import { miscLast } from '@/utils/calculations';
 import { MAX_NAME_LENGTH, cleanText, stripLeading } from '@/utils/validation';
 
 const categoryColors = COLOR_PALETTE;
@@ -36,8 +37,8 @@ export default function ManageCategories() {
 
   const filtered =
     filter === 'all'
-      ? categories
-      : categories.filter((c) => c.type === filter || c.type === 'both');
+      ? miscLast(categories)
+      : miscLast(categories.filter((c) => c.type === filter || c.type === 'both'));
 
   const handleEdit = (id: string) => {
     const cat = categories.find((c) => c.id === id);
@@ -141,7 +142,6 @@ export default function ManageCategories() {
                 value={name}
                 maxLength={MAX_NAME_LENGTH}
                 onChange={(e) => setName(stripLeading(e.target.value))}
-                className="bg-muted h-auto rounded-sm px-3 py-2"
               />
               <div className="flex gap-2">
                 {(['expense', 'income', 'both'] as const).map((t) => (

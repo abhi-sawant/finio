@@ -88,7 +88,7 @@ export function ProfileSection() {
               onKeyDown={(e) => {
                 if (e.key === 'Enter') handleNameSave(nameValue);
               }}
-              className="bg-muted h-auto flex-1 rounded-sm border-0 px-3 py-1.5"
+              className="flex-1"
             />
           ) : (
             <button onClick={() => setEditingName(true)} className="flex-1 text-left">
@@ -110,7 +110,7 @@ export function ProfileSection() {
             value={settings.theme}
             onValueChange={(v) => updateSettings({ theme: v as Theme })}
           >
-            <SelectTrigger className="bg-muted h-auto rounded-sm border-0 px-3 py-1.5">
+            <SelectTrigger>
               <SelectValue>{themes.find((t) => t.value === settings.theme)?.label}</SelectValue>
             </SelectTrigger>
             <SelectContent>

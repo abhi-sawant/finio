@@ -44,6 +44,8 @@ export const defaultCategories: Category[] = [
   { id: 'cat-32', name: 'Home Maintenance', icon: 'wrench', color: '#6b7280', type: 'expense' },
   { id: 'cat-33', name: 'Bonus', icon: 'sparkles', color: '#fbbf24', type: 'income' },
   { id: 'cat-34', name: 'Dividends', icon: 'piggy-bank', color: '#10b981', type: 'income' },
+  { id: 'cat-35', name: 'Lending', icon: 'hand-coins', color: '#ec4899', type: 'expense' },
+  { id: 'cat-36', name: 'Lending', icon: 'hand-coins', color: '#ec4899', type: 'income' },
 ];
 
 /** Ids added after the original v1 category set — appended to existing installs by migration
@@ -59,6 +61,8 @@ export const NEW_DEFAULT_CATEGORY_IDS = [
   'cat-32',
   'cat-33',
   'cat-34',
+  'cat-35',
+  'cat-36',
 ];
 
 export const defaultLabels: Label[] = [

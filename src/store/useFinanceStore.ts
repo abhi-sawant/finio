@@ -1,3 +1,4 @@
+import { startOfDay } from 'date-fns';
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import {
@@ -273,19 +274,27 @@ export const useFinanceStore = create<FinanceStore>()(
         const state = get();
 
         if (type === 'fd') {
+          // An FD that started before today was funded in the past: either post the funding
+          // transfer from the linked account, or treat the money as already sitting in the FD.
+          const startedInPast = new Date(terms.startDate) < startOfDay(now);
+          const alreadyFunded = startedInPast && !deductPast;
           const account: Account = {
             id: accountId,
             name,
             type,
             color,
             icon: 'vault',
-            balance: 0,
-            // The money arrives through the funding transfer below, so the deposit itself
+            balance: alreadyFunded ? terms.amount : 0,
+            // Otherwise the money arrives through the funding transfer below, so the deposit
             // starts empty and its balance stays derivable.
-            openingBalance: 0,
+            openingBalance: alreadyFunded ? terms.amount : 0,
             createdAt,
             deposit: { ...terms, compounding: terms.compounding ?? 'quarterly' },
           };
+          if (alreadyFunded) {
+            set((s) => ({ accounts: [...s.accounts, account] }));
+            return accountId;
+          }
           const funding: Transaction = {
             id: generateUUID(),
             type: 'transfer',
@@ -1276,7 +1285,7 @@ export const useFinanceStore = create<FinanceStore>()(
     }),
     {
       name: 'finio-storage',
-      version: 15,
+      version: 16,
       storage: createJSONStorage(() => localStorage),
       // Steps are cumulative: a v1 state falls through every branch in order.
       migrate: (persistedState, version) => {
@@ -1462,6 +1471,20 @@ export const useFinanceStore = create<FinanceStore>()(
             ...s,
             loans: Array.isArray(s.loans) ? s.loans : [],
             loanPrepayments: Array.isArray(s.loanPrepayments) ? s.loanPrepayments : [],
+          };
+        }
+
+        if (version < 16) {
+          // Lending categories (expense + income) were added; append only the missing ones.
+          const existingIds = new Set(
+            Array.isArray(s.categories) ? s.categories.map((c) => c.id) : [],
+          );
+          const missing = defaultCategories.filter(
+            (c) => ['cat-35', 'cat-36'].includes(c.id) && !existingIds.has(c.id),
+          );
+          s = {
+            ...s,
+            categories: Array.isArray(s.categories) ? [...s.categories, ...missing] : s.categories,
           };
         }
 

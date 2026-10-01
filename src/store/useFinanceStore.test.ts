@@ -1591,6 +1591,43 @@ describe('deposits', () => {
     expect(transactions[0]).toMatchObject({ type: 'transfer', accountId: 'bank', toAccountId: id });
   });
 
+  const pastFd = (deductPast: boolean) => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(day('2026-10-15')));
+    seed([account('bank', 100000)]);
+    const id = useFinanceStore.getState().addDeposit({
+      type: 'fd',
+      name: 'FD',
+      color: '#000',
+      terms: {
+        amount: 50000,
+        interestRate: 6.5,
+        startDate: day('2026-07-05'),
+        maturityDate: day('2029-07-05'),
+        linkedAccountId: 'bank',
+      },
+      deductPast,
+    });
+    return { id, ...useFinanceStore.getState() };
+  };
+
+  it('treats a past-dated FD as an opening balance when not deducting it', () => {
+    const { id, accounts, transactions } = pastFd(false);
+    const fd = accounts.find((a) => a.id === id);
+    expect(fd?.balance).toBe(50000);
+    expect(fd?.openingBalance).toBe(50000);
+    expect(transactions).toHaveLength(0);
+    expect(accounts.find((a) => a.id === 'bank')?.balance).toBe(100000);
+  });
+
+  it('posts a past-dated FD funding transfer from the linked account when deducting it', () => {
+    const { id, accounts, transactions } = pastFd(true);
+    expect(accounts.find((a) => a.id === 'bank')?.balance).toBe(50000);
+    expect(accounts.find((a) => a.id === id)?.balance).toBe(50000);
+    expect(accounts.find((a) => a.id === id)?.openingBalance).toBe(0);
+    expect(transactions).toHaveLength(1);
+  });
+
   it('folds past RD installments into the opening balance when not deducting them', () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date(day('2026-10-15')));

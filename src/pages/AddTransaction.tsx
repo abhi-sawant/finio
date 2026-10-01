@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 import { useFinanceStore } from '@/store/useFinanceStore';
 import { roundMoney } from '@/store/balance';
 import { findMatchingRule, mergeLabels } from '@/utils/autoCategorize';
-import { findTransferCategory, isCategoryValidForType } from '@/utils/calculations';
+import { findTransferCategory, isCategoryValidForType, miscLast } from '@/utils/calculations';
 import { MAX_NOTE_LENGTH, cleanText } from '@/utils/validation';
 import { parseSharePayload } from '@/utils/shareTarget';
 import { formatCurrency, toLocalDateTimeInputValue } from '@/utils/formatters';
@@ -227,7 +227,7 @@ export default function AddTransaction() {
   }, [accounts, existing?.accountId, existing?.toAccountId]);
 
   const filteredCategories = useMemo(
-    () => categories.filter((c) => isCategoryValidForType(c, type)),
+    () => miscLast(categories.filter((c) => isCategoryValidForType(c, type))),
     [categories, type],
   );
 
@@ -445,7 +445,7 @@ export default function AddTransaction() {
             {type === 'transfer' ? 'From Account' : 'Account'}
           </Label>
           <Select value={accountId} onValueChange={(v) => setAccountId(v ?? '')}>
-            <SelectTrigger className="bg-card h-auto w-full rounded-sm px-4 py-3">
+            <SelectTrigger className="w-full">
               <SelectValue placeholder="Select account">
                 {accounts.find((a) => a.id === accountId) && (
                   <span>
@@ -497,7 +497,7 @@ export default function AddTransaction() {
               To Account
             </Label>
             <Select value={toAccountId} onValueChange={(v) => setToAccountId(v ?? '')}>
-              <SelectTrigger className="bg-card h-auto w-full rounded-sm px-4 py-3">
+              <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select account">
                   {accounts.find((a) => a.id === toAccountId) && (
                     <span>
@@ -559,7 +559,7 @@ export default function AddTransaction() {
                       value={row.categoryId}
                       onValueChange={(v) => updateSplitRow(idx, { categoryId: v ?? '' })}
                     >
-                      <SelectTrigger className="bg-card h-auto min-w-0 flex-1 rounded-sm px-3 py-2.5 text-sm">
+                      <SelectTrigger className="min-w-0 flex-1">
                         <SelectValue placeholder="Category">
                           {filteredCategories.find((c) => c.id === row.categoryId)?.name}
                         </SelectValue>
@@ -580,7 +580,7 @@ export default function AddTransaction() {
                       step="0.01"
                       value={row.amount}
                       onChange={(e) => updateSplitRow(idx, { amount: e.target.value })}
-                      className="bg-card h-auto w-24 shrink-0 rounded-sm px-3 py-2.5 text-sm"
+                      className="w-24 shrink-0"
                     />
                     <button
                       type="button"
@@ -663,7 +663,6 @@ export default function AddTransaction() {
             value={note}
             maxLength={MAX_NOTE_LENGTH}
             onChange={(e) => handleNoteChange(e.target.value)}
-            className="bg-card h-auto rounded-sm px-4 py-3"
             list="note-suggestions"
           />
           <datalist id="note-suggestions">

@@ -288,7 +288,6 @@ export default function AddAccount() {
             value={name}
             maxLength={MAX_NAME_LENGTH}
             onChange={(e) => setName(stripLeading(e.target.value))}
-            className="bg-card h-auto rounded-sm px-4 py-3"
           />
         </div>
 
@@ -410,7 +409,6 @@ export default function AddAccount() {
                   placeholder="e.g. 5"
                   value={statementCloseDay}
                   onChange={(e) => setStatementCloseDay(e.target.value)}
-                  className="bg-card h-auto rounded-sm px-3 py-2.5"
                 />
               </div>
               <div>
@@ -428,7 +426,6 @@ export default function AddAccount() {
                   placeholder="e.g. 20"
                   value={paymentDueDays}
                   onChange={(e) => setPaymentDueDays(e.target.value)}
-                  className="bg-card h-auto rounded-sm px-3 py-2.5"
                 />
               </div>
               <div>
@@ -447,7 +444,6 @@ export default function AddAccount() {
                   placeholder="5"
                   value={minimumDuePercent}
                   onChange={(e) => setMinimumDuePercent(e.target.value)}
-                  className="bg-card h-auto rounded-sm px-3 py-2.5"
                 />
               </div>
             </div>

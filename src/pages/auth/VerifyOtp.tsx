@@ -106,7 +106,7 @@ export default function VerifyOtp() {
                 value={digit}
                 onChange={(e) => handleChange(i, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(i, e)}
-                className="bg-card h-14 w-12 rounded-sm text-center text-xl font-bold"
+                className="h-14 w-12 text-center text-xl font-bold"
               />
             ))}
           </div>

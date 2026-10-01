@@ -239,7 +239,7 @@ export default function ImportCsv() {
                       inputMode="numeric"
                       value={skipRows}
                       onChange={(e) => setSkipRows(e.target.value)}
-                      className="bg-card h-auto w-24 rounded-sm px-3 py-2"
+                      className="w-24"
                     />
                     <p className="text-muted-foreground mt-1 text-xs">
                       Some statements have a few title lines before the real column headers.
@@ -267,7 +267,7 @@ export default function ImportCsv() {
                   Account
                 </Label>
                 <Select value={accountId} onValueChange={(v) => setAccountId(v ?? '')}>
-                  <SelectTrigger className="bg-card h-auto w-full rounded-sm px-4 py-3">
+                  <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select account">
                       {activeAccounts.find((a) => a.id === accountId)?.name}
                     </SelectValue>
@@ -301,7 +301,7 @@ export default function ImportCsv() {
                     value={dateFormat}
                     onValueChange={(v) => setDateFormat((v as DateFormatCode) ?? dateFormat)}
                   >
-                    <SelectTrigger className="bg-card h-auto w-full rounded-sm px-3 py-3 text-xs">
+                    <SelectTrigger className="w-full">
                       <SelectValue>
                         {DATE_FORMATS.find((f) => f.value === dateFormat)?.value}
                       </SelectValue>
@@ -353,7 +353,7 @@ export default function ImportCsv() {
                       value={negativeIsExpense ? 'expense' : 'income'}
                       onValueChange={(v) => setNegativeIsExpense((v ?? 'expense') === 'expense')}
                     >
-                      <SelectTrigger className="bg-card h-auto w-full rounded-sm px-3 py-3 text-xs">
+                      <SelectTrigger className="w-full">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -559,7 +559,7 @@ function ColumnSelect({
 }) {
   return (
     <Select value={value} onValueChange={(v) => onChange(v ?? NONE)}>
-      <SelectTrigger className="bg-card h-auto w-full rounded-sm px-3 py-3 text-xs">
+      <SelectTrigger className="w-full">
         <SelectValue placeholder="Select column">
           {value === NONE ? 'None' : headers[Number(value)]}
         </SelectValue>
