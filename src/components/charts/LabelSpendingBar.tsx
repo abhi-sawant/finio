@@ -23,7 +23,11 @@ export function LabelSpendingBar({ transactions }: Props) {
     return Array.from(byLabel.entries())
       .map(([labelId, amount]) => {
         const label = labels.find((l) => l.id === labelId);
-        return { name: label?.name ?? 'Unknown', amount, color: label?.color ?? '#94a3b8' };
+        return {
+          name: label?.name ?? 'Unknown',
+          amount,
+          color: label?.color ?? 'var(--muted-foreground)',
+        };
       })
       .sort((a, b) => b.amount - a.amount)
       .slice(0, 6);
@@ -52,7 +56,7 @@ export function LabelSpendingBar({ transactions }: Props) {
                   className="h-full rounded-full transition-all"
                   style={{
                     width: `${width}%`,
-                    backgroundImage: `linear-gradient(90deg, ${item.color}99, ${item.color})`,
+                    backgroundColor: item.color,
                   }}
                 />
               </div>

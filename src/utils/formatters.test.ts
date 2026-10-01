@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { formatCurrency, localDayKey, shouldCompactGroup, todayKey } from './formatters';
+import {
+  formatCurrency,
+  formatDayMonth,
+  formatFullDate,
+  formatShortDate,
+  localDayKey,
+  shouldCompactGroup,
+  todayKey,
+} from './formatters';
 
 describe('formatCurrency hidden masking', () => {
   it('masks the amount behind dots but keeps the currency symbol', () => {
@@ -30,6 +38,27 @@ describe('formatCurrency precision', () => {
 
   it('rounds a negative amount to whole rupees too', () => {
     expect(formatCurrency(-1867.25, false, false, { precise: false })).toBe('-₹1,867');
+  });
+});
+
+describe('formatCurrency paise padding', () => {
+  it('pads a single fractional digit to two', () => {
+    expect(formatCurrency(450.5)).toBe('₹450.50');
+    expect(formatCurrency(1306.5)).toBe('₹1,306.50');
+    expect(formatCurrency(-450.5)).toBe('-₹450.50');
+  });
+
+  it('leaves whole amounts bare, including ones that round to whole', () => {
+    expect(formatCurrency(450)).toBe('₹450');
+    expect(formatCurrency(450.999)).toBe('₹451');
+  });
+});
+
+describe('date formats', () => {
+  it('formatShortDate / formatFullDate / formatDayMonth', () => {
+    expect(formatShortDate('2026-10-05T12:00:00')).toBe('5 Oct 2026');
+    expect(formatFullDate('2026-10-05T12:00:00')).toBe('5 October 2026');
+    expect(formatDayMonth('2026-10-05T12:00:00')).toBe('5 Oct');
   });
 });
 

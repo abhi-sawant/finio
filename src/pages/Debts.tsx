@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { format, parseISO } from 'date-fns';
 import {
   ArrowLeft,
   ChevronDown,
@@ -15,7 +14,8 @@ import { toast } from 'sonner';
 import { useFinanceStore } from '@/store/useFinanceStore';
 import { MISC_CATEGORY_ID } from '@/data/defaultData';
 import { COLOR_PALETTE } from '@/data/colorPalette';
-import { formatCurrency, formatFullDate } from '@/utils/formatters';
+import { formatCurrency, formatDayMonth, formatShortDate } from '@/utils/formatters';
+import { MAX_NAME_LENGTH, MAX_NOTE_LENGTH, cleanText, stripLeading } from '@/utils/validation';
 import { HideAmountsToggle } from '@/components/HideAmountsToggle';
 import { PersonIcon } from '@/components/people/PersonIcon';
 import { PERSON_ICONS } from '@/components/people/personIcons';
@@ -114,12 +114,12 @@ export default function Debts() {
   };
 
   const handleSubmit = () => {
-    if (!name.trim()) {
+    if (!cleanText(name, MAX_NAME_LENGTH)) {
       toast.error('Enter a name');
       return;
     }
 
-    const data = { name: name.trim(), icon, color };
+    const data = { name: cleanText(name, MAX_NAME_LENGTH), icon, color };
 
     if (editingId) {
       updatePerson(editingId, data);
@@ -150,7 +150,7 @@ export default function Debts() {
       // borrowing from them increases what you owe them.
       amount: entryPerson.mode === 'borrow' ? -parsed : parsed,
       date: new Date().toISOString(),
-      note: entryNote.trim(),
+      note: cleanText(entryNote, MAX_NOTE_LENGTH),
     });
     toast.success(entryPerson.mode === 'borrow' ? 'Borrowing logged' : 'Lending logged');
     setEntryPerson(null);
@@ -187,7 +187,7 @@ export default function Debts() {
     // They owe you → settling means they pay you back, an income into the chosen account.
     // You owe them → settling means you pay them, an expense out of the chosen account.
     const type = balance > 0 ? 'income' : 'expense';
-    const note = settleNote.trim() || `Settled up with ${person.name}`;
+    const note = cleanText(settleNote, MAX_NOTE_LENGTH) || `Settled up with ${person.name}`;
     const date = new Date().toISOString();
 
     const transactionId = addTransaction({
@@ -254,7 +254,8 @@ export default function Debts() {
                 type="text"
                 placeholder="e.g., Rahul"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                maxLength={MAX_NAME_LENGTH}
+                onChange={(e) => setName(stripLeading(e.target.value))}
                 className="bg-muted h-auto rounded-sm px-3 py-2"
               />
             </div>
@@ -383,7 +384,8 @@ export default function Debts() {
               type="text"
               placeholder="Note (optional)"
               value={entryNote}
-              onChange={(e) => setEntryNote(e.target.value)}
+              maxLength={MAX_NOTE_LENGTH}
+              onChange={(e) => setEntryNote(stripLeading(e.target.value))}
               className="bg-muted h-auto rounded-sm px-3 py-2"
             />
             <div className="flex gap-2">
@@ -454,7 +456,8 @@ export default function Debts() {
               type="text"
               placeholder="Note (optional)"
               value={settleNote}
-              onChange={(e) => setSettleNote(e.target.value)}
+              maxLength={MAX_NOTE_LENGTH}
+              onChange={(e) => setSettleNote(stripLeading(e.target.value))}
               className="bg-muted h-auto rounded-sm px-3 py-2"
             />
             <div className="flex gap-2">
@@ -516,7 +519,7 @@ function PersonCard({
         <div className="min-w-0">
           <p className="truncate text-sm font-medium">{person.name}</p>
           <p className="text-muted-foreground truncate text-[11px]">
-            {lastActivity ? `Last activity ${formatFullDate(lastActivity)}` : 'No activity yet'}
+            {lastActivity ? `Last activity ${formatShortDate(lastActivity)}` : 'No activity yet'}
           </p>
         </div>
         <div className="flex shrink-0 items-center">
@@ -599,7 +602,7 @@ function PersonCard({
             entries.map((e) => (
               <div key={e.id} className="flex items-center gap-2 text-[11px]">
                 <span className="text-muted-foreground w-14 shrink-0">
-                  {format(parseISO(e.date), 'd MMM')}
+                  {formatDayMonth(e.date)}
                 </span>
                 <span className="min-w-0 flex-1 truncate">
                   {e.note ||

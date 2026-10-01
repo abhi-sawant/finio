@@ -4,7 +4,7 @@ import { useAppLockStore } from '@/store/useAppLockStore';
 import { useAuthStore } from '@/store/useAuthStore';
 import { isWebAuthnSupported, verifyBiometric } from '@/services/appLockBiometric';
 import { clearBackgroundedAt } from '@/services/appLockSession';
-import { formatLockoutCountdown, remainingLockoutMs } from '@/utils/appLock';
+import { FREE_ATTEMPTS, formatLockoutCountdown, remainingLockoutMs } from '@/utils/appLock';
 import { verifyPin } from '@/utils/pinCrypto';
 import { Button } from '@/components/ui/button';
 import {
@@ -56,13 +56,20 @@ export function LockScreen() {
   // lockout, which is what re-enables the pad — so the two can never disagree.
   useEffect(() => {
     if (!lockedOutUntil) return;
-    const id = setInterval(() => {
+    // Returns true once the cooldown is served and the store's lockout has been cleared.
+    const tick = () => {
       const remaining = remainingLockoutMs(lockedOutUntil, Date.now());
       setCooldownMs(remaining);
-      if (remaining <= 0) {
-        clearInterval(id);
-        expireLockout();
-      }
+      if (remaining > 0) return false;
+      // The "Incorrect PIN" that earned this cooldown is stale once it is served.
+      setError(null);
+      expireLockout();
+      return true;
+    };
+    // Run once now so a lockout that already lapsed (or a fresh mount) never flashes 0:00.
+    if (tick()) return;
+    const id = setInterval(() => {
+      if (tick()) clearInterval(id);
     }, 250);
     return () => clearInterval(id);
   }, [lockedOutUntil, expireLockout]);
@@ -150,7 +157,9 @@ export function LockScreen() {
             >
               <AlertTriangle size={15} aria-hidden="true" />
               {error}
-              {failedAttempts > 0 && failedAttempts < 5 ? ` · ${5 - failedAttempts} left` : ''}
+              {failedAttempts > 0 && failedAttempts <= FREE_ATTEMPTS
+                ? ` · ${FREE_ATTEMPTS + 1 - failedAttempts} left`
+                : ''}
             </p>
           ) : checking ? (
             <p className="text-muted-foreground text-sm">Checking…</p>

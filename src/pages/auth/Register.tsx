@@ -6,6 +6,7 @@ import { getErrorMessage } from '@/utils/errors';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { MAX_NAME_LENGTH, cleanText, isValidEmail, stripLeading } from '@/utils/validation';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 
@@ -15,18 +16,27 @@ export default function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [agreed, setAgreed] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !email || !password) {
+    if (!name.trim() || !email || !password) {
       toast.error('Please fill in all fields');
+      return;
+    }
+    if (!isValidEmail(email)) {
+      toast.error('Enter a valid email');
       return;
     }
     if (password.length < 8) {
       toast.error('Password must be at least 8 characters');
+      return;
+    }
+    if (password !== confirmPassword) {
+      toast.error('Passwords do not match');
       return;
     }
     if (!agreed) {
@@ -36,9 +46,9 @@ export default function Register() {
 
     setLoading(true);
     try {
-      await api.register(name, email, password);
+      await api.register(cleanText(name, MAX_NAME_LENGTH), email.trim(), password);
       toast.success('Account created! Check your email for the OTP.');
-      navigate('/verify-otp', { state: { email } });
+      navigate('/verify-otp', { state: { email: email.trim() } });
     } catch (err) {
       toast.error(getErrorMessage(err, 'Registration failed'));
     } finally {
@@ -54,14 +64,15 @@ export default function Register() {
           <p className="text-muted-foreground mt-2">Create your account</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} noValidate className="space-y-4">
           <div className="relative">
             <User className="text-muted-foreground absolute top-1/2 left-3 z-10 h-5 w-5 -translate-y-1/2" />
             <Input
               type="text"
               placeholder="Name"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              maxLength={MAX_NAME_LENGTH}
+              onChange={(e) => setName(stripLeading(e.target.value))}
               className="bg-card h-auto w-full rounded-sm py-3 pr-4 pl-11"
               autoComplete="name"
             />
@@ -76,6 +87,9 @@ export default function Register() {
               onChange={(e) => setEmail(e.target.value)}
               className="bg-card h-auto w-full rounded-sm py-3 pr-4 pl-11"
               autoComplete="email"
+              inputMode="email"
+              autoCapitalize="none"
+              spellCheck={false}
             />
           </div>
 
@@ -94,10 +108,27 @@ export default function Register() {
               variant="ghost"
               size="icon"
               onClick={() => setShowPassword(!showPassword)}
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
               className="text-muted-foreground absolute top-1/2 right-1 -translate-y-1/2 hover:bg-transparent"
             >
               {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
             </Button>
+          </div>
+
+          <div className="relative">
+            <Lock className="text-muted-foreground absolute top-1/2 left-3 z-10 h-5 w-5 -translate-y-1/2" />
+            <Input
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Confirm password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="bg-card h-auto w-full rounded-sm py-3 pr-4 pl-11"
+              autoComplete="new-password"
+              aria-invalid={confirmPassword !== '' && confirmPassword !== password}
+            />
+            {confirmPassword !== '' && confirmPassword !== password && (
+              <p className="text-destructive mt-1 text-xs">Passwords do not match</p>
+            )}
           </div>
 
           <Label htmlFor="agree-terms" className="items-start gap-2 font-normal">

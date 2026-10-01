@@ -78,18 +78,65 @@ export function parseDateWithFormat(raw: string, format: DateFormatCode): string
   }
 }
 
-/** Tries formats most-unambiguous-first; returns the first one every sample agrees on. */
-export function detectDateFormat(samples: string[]): DateFormatCode | undefined {
-  const nonEmpty = samples.map((s) => s.trim()).filter(Boolean);
-  if (nonEmpty.length === 0) return undefined;
-  return DATE_FORMATS.find(({ value }) =>
-    nonEmpty.every((s) => parseDateWithFormat(s, value) !== null),
-  )?.value;
+export interface DateFormatDetection {
+  format: DateFormatCode | undefined;
+  /** True when every sample has day and month both <= 12, so DD/MM vs MM/DD was a guess. */
+  ambiguous: boolean;
+}
+
+/** Share of non-empty samples a format must parse to be accepted (tolerates a few junk rows). */
+const DATE_MATCH_THRESHOLD = 0.9;
+
+const SWAPPED_TWIN: Partial<Record<DateFormatCode, DateFormatCode>> = {
+  'DD/MM/YYYY': 'MM/DD/YYYY',
+  'MM/DD/YYYY': 'DD/MM/YYYY',
+  'DD-MM-YYYY': 'MM-DD-YYYY',
+  'MM-DD-YYYY': 'DD-MM-YYYY',
+};
+
+function matchRatio(samples: string[], format: DateFormatCode): number {
+  const hits = samples.filter((s) => parseDateWithFormat(s, format) !== null).length;
+  return hits / samples.length;
 }
 
 /**
- * Strips currency symbols, thousand separators and whitespace. Accounting-style parentheses
- * (e.g. "(500.00)") are treated as negative, matching how many bank/card exports mark debits.
+ * Tries formats most-unambiguous-first and picks the first that parses at least 90% of the
+ * samples. Pass every row, not just the first few — one row with day > 12 is what settles
+ * DD/MM vs MM/DD. `ambiguous` is set when the swapped twin fits equally well (every row has
+ * both parts <= 12), in which case the day-first default was a guess.
+ */
+export function detectDateFormatInfo(samples: string[]): DateFormatDetection {
+  const nonEmpty = samples.map((s) => s.trim()).filter(Boolean);
+  if (nonEmpty.length === 0) return { format: undefined, ambiguous: false };
+  const found = DATE_FORMATS.find(
+    ({ value }) => matchRatio(nonEmpty, value) >= DATE_MATCH_THRESHOLD,
+  );
+  if (!found) return { format: undefined, ambiguous: false };
+  const twin = SWAPPED_TWIN[found.value];
+  const ambiguous =
+    !!twin &&
+    nonEmpty.every((s) => {
+      const m = s.match(/^(\d{1,2})[/-](\d{1,2})/);
+      return !!m && +m[1] <= 12 && +m[2] <= 12;
+    });
+  return { format: found.value, ambiguous };
+}
+
+export function detectDateFormat(samples: string[]): DateFormatCode | undefined {
+  return detectDateFormatInfo(samples).format;
+}
+
+const CURRENCY_TOKEN = '(?:[A-Za-z]+\\.?|[$\u20B9\u20AC\u00A3\u00A5]|\\s)+';
+const LEADING_CURRENCY = new RegExp(`^${CURRENCY_TOKEN}`);
+const TRAILING_CURRENCY = new RegExp(`${CURRENCY_TOKEN}$`);
+const PLAIN_NUMBER = /^(?:\d+\.?\d*|\.\d+)(?:e[-+]?\d+)?$/i;
+
+/**
+ * Parses a bank-export amount. Only currency symbols/words at the very start or end are
+ * dropped ("Rs. 2,000", "450 USD", "$1,000.00"), along with thousand separators. Anything else
+ * left over ("12abc34") is junk and returns null rather than being silently mangled. Scientific
+ * notation ("1e3") is accepted, since spreadsheet exports produce it. Accounting-style
+ * parentheses ("(500.00)") are negative.
  */
 export function parseAmount(raw: string): number | null {
   if (raw == null) return null;
@@ -99,16 +146,27 @@ export function parseAmount(raw: string): number | null {
   let negative = false;
   if (/^\(.*\)$/.test(s)) {
     negative = true;
-    s = s.slice(1, -1);
+    s = s.slice(1, -1).trim();
   }
 
-  // Drop currency words/abbreviations first — "Rs." would otherwise leave a stray decimal
-  // point behind if only non-numeric characters were stripped in one pass.
-  s = s.replace(/[A-Za-z]+\.?/g, '');
-  s = s.replace(/[^\d.,-]/g, '').replace(/,/g, '');
-  if (!s || s === '-' || s === '.') return null;
+  let sign = 1;
+  const signMatch = s.match(/^([-+])\s*/);
+  if (signMatch) {
+    if (signMatch[1] === '-') sign = -1;
+    s = s.slice(signMatch[0].length);
+  }
 
-  const n = Number(s);
+  s = s.replace(LEADING_CURRENCY, '');
+  // A sign may also follow the currency symbol ("$-5").
+  const innerSign = s.match(/^([-+])\s*/);
+  if (innerSign) {
+    if (innerSign[1] === '-') sign = -sign;
+    s = s.slice(innerSign[0].length);
+  }
+  s = s.replace(TRAILING_CURRENCY, '').replace(/,/g, '').replace(/\s+/g, '');
+  if (!PLAIN_NUMBER.test(s)) return null;
+
+  const n = Number(s) * sign;
   if (!Number.isFinite(n)) return null;
   return negative ? -Math.abs(n) : n;
 }
@@ -197,8 +255,8 @@ export function buildTransactionsFromCsv(
     } else {
       const rawDebit = mapping.debitCol !== undefined ? (row[mapping.debitCol] ?? '') : '';
       const rawCredit = mapping.creditCol !== undefined ? (row[mapping.creditCol] ?? '') : '';
-      const debit = parseAmount(rawDebit) ?? 0;
-      const credit = parseAmount(rawCredit) ?? 0;
+      const debit = Math.abs(parseAmount(rawDebit) ?? 0);
+      const credit = Math.abs(parseAmount(rawCredit) ?? 0);
       if (debit > 0 && credit > 0) {
         allIssues.push(`${rowLabel}: both debit and credit are filled`);
         return;

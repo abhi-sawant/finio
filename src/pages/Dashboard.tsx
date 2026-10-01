@@ -11,6 +11,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { useFinanceStore } from '@/store/useFinanceStore';
+import { cn } from '@/lib/utils';
 import { formatCurrency, formatPercentChange, shouldCompactGroup } from '@/utils/formatters';
 import {
   activeAccounts,
@@ -314,7 +315,12 @@ export default function Dashboard() {
         {/* Total balance + IN/OUT/DAILY AVG/SAVED/TOP — one plain card, no tinted tiles */}
         <div className="card-elevated rounded-md p-4">
           {overallBudget && (
-            <div className="border-border mb-3 flex items-center justify-between border-b pb-3">
+            <div
+              className={cn(
+                'flex items-center justify-between',
+                monthTxns.length > 0 && 'border-border mb-3 border-b pb-3',
+              )}
+            >
               <span className="text-muted-foreground text-xs">Total balance</span>
               <div className="text-right">
                 <p className="text-base font-bold">
@@ -398,8 +404,9 @@ export default function Dashboard() {
                 </p>
                 {attentionItems.length > 1 && (
                   <p className="text-warning-band-foreground mt-0.5 text-xs opacity-80">
-                    {attentionItems.length - 1} more thing
-                    {attentionItems.length - 1 === 1 ? '' : 's'} need attention this week
+                    {attentionItems.length - 1}{' '}
+                    {attentionItems.length - 1 === 1 ? 'more thing needs' : 'more things need'}{' '}
+                    attention this week
                   </p>
                 )}
               </div>
@@ -459,8 +466,8 @@ export default function Dashboard() {
                       <span className="truncate">{s.goal.name}</span>
                     </span>
                     <span className="text-muted-foreground shrink-0 text-xs font-semibold">
-                      {formatCurrency(s.current, true, hideAmounts)} /{' '}
-                      {formatCurrency(s.goal.targetAmount, true, hideAmounts)}
+                      {formatCurrency(s.current, false, hideAmounts)} /{' '}
+                      {formatCurrency(s.goal.targetAmount, false, hideAmounts)}
                     </span>
                   </div>
                   <div className="bg-muted h-1.5 overflow-hidden rounded-full">

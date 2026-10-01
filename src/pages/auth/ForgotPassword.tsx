@@ -6,6 +6,7 @@ import { getErrorMessage } from '@/utils/errors';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { isValidEmail } from '@/utils/validation';
 
 export default function ForgotPassword() {
   const navigate = useNavigate();
@@ -19,12 +20,16 @@ export default function ForgotPassword() {
       toast.error('Please enter your email');
       return;
     }
+    if (!isValidEmail(email)) {
+      toast.error('Enter a valid email');
+      return;
+    }
 
     setLoading(true);
     try {
-      await api.forgotPassword(email);
+      await api.forgotPassword(email.trim());
       toast.success('If an account exists, an OTP has been sent.');
-      navigate('/reset-password', { state: { email } });
+      navigate('/reset-password', { state: { email: email.trim() } });
     } catch (err) {
       toast.error(getErrorMessage(err, 'Something went wrong'));
     } finally {
@@ -42,7 +47,7 @@ export default function ForgotPassword() {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} noValidate className="space-y-4">
           <div className="relative">
             <Mail className="text-muted-foreground absolute top-1/2 left-3 z-10 h-5 w-5 -translate-y-1/2" />
             <Input
@@ -52,6 +57,9 @@ export default function ForgotPassword() {
               onChange={(e) => setEmail(e.target.value)}
               className="bg-card h-auto w-full rounded-sm py-3 pr-4 pl-11"
               autoComplete="email"
+              inputMode="email"
+              autoCapitalize="none"
+              spellCheck={false}
             />
           </div>
 

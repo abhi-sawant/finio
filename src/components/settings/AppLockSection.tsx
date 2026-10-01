@@ -26,7 +26,7 @@ import {
   verifyPin,
 } from '@/utils/pinCrypto';
 import { PinDots, PinPad } from '@/components/applock/PinPad';
-import { AUTO_LOCK_OPTIONS, autoLockLabel } from '@/utils/appLock';
+import { AUTO_LOCK_OPTIONS, DEFAULT_AUTO_LOCK_MINUTES, autoLockLabel } from '@/utils/appLock';
 
 type LockDialogKind = 'set' | 'change' | 'disable';
 type PinPhase = 'length' | 'current' | 'enter' | 'confirm';
@@ -106,7 +106,7 @@ export function AppLockSection() {
       hash,
       iterations: PIN_HASH_ITERATIONS,
       pinLength: pin.length,
-      autoLockMinutes: lockConfig?.autoLockMinutes ?? 1,
+      autoLockMinutes: lockConfig?.autoLockMinutes ?? DEFAULT_AUTO_LOCK_MINUTES,
       // A new PIN invalidates nothing about the passkey, but a fresh setup starts without one.
       webauthnCredentialId: lockConfig?.webauthnCredentialId ?? null,
       createdAt: lockConfig?.createdAt ?? new Date().toISOString(),

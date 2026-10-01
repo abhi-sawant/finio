@@ -693,3 +693,39 @@ describe('hasImportableData', () => {
     expect(hasImportableData(validateBackup({ settings: { theme: 'dark' } }).report)).toBe(true);
   });
 });
+
+describe('validateBackup metadata', () => {
+  const base = { accounts: [validAccount] };
+
+  it('reads version and exportedAt from a stamped file', () => {
+    const { meta, report } = validateBackup({
+      ...base,
+      version: 1,
+      exportedAt: '2026-10-01T10:00:00.000Z',
+    });
+    expect(meta).toEqual({ version: 1, exportedAt: '2026-10-01T10:00:00.000Z' });
+    expect(report.warnings).toEqual([]);
+  });
+
+  it('leaves legacy files unchanged: empty meta, no warning', () => {
+    const { meta, report } = validateBackup(base);
+    expect(meta).toEqual({});
+    expect(report.warnings).toEqual([]);
+  });
+
+  it('warns about a newer format but still imports the data', () => {
+    const { data, report } = validateBackup({ ...base, version: 99 });
+    expect(report.warnings.some((w) => /newer version/i.test(w))).toBe(true);
+    expect(data.accounts).toHaveLength(1);
+  });
+
+  it('does not leak meta into the import payload', () => {
+    const { data } = validateBackup({
+      ...base,
+      version: 1,
+      exportedAt: '2026-10-01T10:00:00.000Z',
+    });
+    expect(data).not.toHaveProperty('version');
+    expect(data).not.toHaveProperty('exportedAt');
+  });
+});

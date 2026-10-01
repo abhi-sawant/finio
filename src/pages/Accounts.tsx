@@ -125,19 +125,19 @@ export default function Accounts() {
             Net balance
           </p>
           <p className="mt-1 text-3xl font-bold tracking-tight">
-            {formatCurrency(totalBalance, true, hideAmounts)}
+            {formatCurrency(totalBalance, false, hideAmounts)}
           </p>
           {creditAccounts.length > 0 && (
             <p className="text-muted-foreground mt-1.5 text-xs">
-              {formatCurrency(creditDue, true, hideAmounts)} owed on {creditAccounts.length} card
+              {formatCurrency(creditDue, false, hideAmounts)} owed on {creditAccounts.length} card
               {creditAccounts.length === 1 ? '' : 's'} ·{' '}
-              {formatCurrency(totalBalance - creditDue, true, hideAmounts)} after dues
+              {formatCurrency(totalBalance - creditDue, false, hideAmounts)} after dues
             </p>
           )}
           {depositAccounts.length > 0 && (
             <p className="text-muted-foreground mt-1 text-xs">
-              + {formatCurrency(depositValue, true, hideAmounts)} locked in {depositAccounts.length}{' '}
-              deposit{depositAccounts.length === 1 ? '' : 's'}
+              + {formatCurrency(depositValue, false, hideAmounts)} locked in{' '}
+              {depositAccounts.length} deposit{depositAccounts.length === 1 ? '' : 's'}
             </p>
           )}
         </div>

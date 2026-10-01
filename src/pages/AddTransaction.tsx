@@ -2,11 +2,13 @@ import { useState, useMemo, useRef, useCallback } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router';
 import { ArrowLeft, Trash2, Split, Plus, X, Wand2 } from 'lucide-react';
 import { CategoryIcon } from '@/components/categories/CategoryIcon';
+import { CategoryGrid } from '@/components/categories/CategoryGrid';
 import { toast } from 'sonner';
 import { useFinanceStore } from '@/store/useFinanceStore';
 import { roundMoney } from '@/store/balance';
 import { findMatchingRule, mergeLabels } from '@/utils/autoCategorize';
-import { isCategoryValidForType } from '@/utils/calculations';
+import { findTransferCategory, isCategoryValidForType } from '@/utils/calculations';
+import { MAX_NOTE_LENGTH, cleanText } from '@/utils/validation';
 import { parseSharePayload } from '@/utils/shareTarget';
 import { formatCurrency, toLocalDateTimeInputValue } from '@/utils/formatters';
 import { Button } from '@/components/ui/button';
@@ -233,6 +235,18 @@ export default function AddTransaction() {
   const splitTotal = splitRows.reduce((sum, r) => sum + (parseFloat(r.amount) || 0), 0);
   const splitRemaining = roundMoney((parseFloat(amount) || 0) - splitTotal);
 
+  const splitRowIssue = (): string | null => {
+    if (splitRows.some((r) => !r.categoryId)) return 'Pick a category for every split row';
+    if (splitRows.some((r) => !r.amount.trim() || Number.isNaN(parseFloat(r.amount))))
+      return 'Enter an amount for every split row';
+    if (splitRows.some((r) => parseFloat(r.amount) <= 0))
+      return 'Split amounts must be greater than zero';
+    return null;
+  };
+  const hasNonPositiveSplit = splitRows.some(
+    (r) => r.amount.trim() !== '' && parseFloat(r.amount) <= 0,
+  );
+
   const updateSplitRow = (idx: number, patch: Partial<{ categoryId: string; amount: string }>) => {
     setSplitRows((prev) => prev.map((r, i) => (i === idx ? { ...r, ...patch } : r)));
   };
@@ -301,8 +315,9 @@ export default function AddTransaction() {
         return;
       }
     } else if (useSplits) {
-      if (splitRows.some((r) => !r.categoryId || !r.amount.trim() || parseFloat(r.amount) <= 0)) {
-        toast.error('Fill in every split row');
+      const issue = splitRowIssue();
+      if (issue) {
+        toast.error(issue);
         return;
       }
       if (Math.abs(splitRemaining) > 0.01) {
@@ -319,7 +334,7 @@ export default function AddTransaction() {
     }
 
     submitting.current = true;
-    const transferCategory = categories.find((c) => c.type === 'both');
+    const transferCategory = findTransferCategory(categories);
     const txData = {
       type,
       amount: parsedAmount,
@@ -332,7 +347,7 @@ export default function AddTransaction() {
             ? ''
             : categoryId,
       date: new Date(date).toISOString(),
-      note,
+      note: cleanText(note, MAX_NOTE_LENGTH),
       labels: selectedLabels,
       splits: useSplits
         ? splitRows.map((r) => ({
@@ -561,6 +576,8 @@ export default function AddTransaction() {
                       type="number"
                       inputMode="decimal"
                       placeholder="Amount"
+                      min="0.01"
+                      step="0.01"
                       value={row.amount}
                       onChange={(e) => updateSplitRow(idx, { amount: e.target.value })}
                       className="bg-card h-auto w-24 shrink-0 rounded-sm px-3 py-2.5 text-sm"
@@ -584,42 +601,39 @@ export default function AddTransaction() {
                 </button>
                 <p
                   className={`text-xs ${
-                    Math.abs(splitRemaining) < 0.01 ? 'text-muted-foreground' : 'text-destructive'
+                    Math.abs(splitRemaining) < 0.01 && !hasNonPositiveSplit
+                      ? 'text-muted-foreground'
+                      : 'text-destructive'
                   }`}
                 >
-                  {Math.abs(splitRemaining) < 0.01
-                    ? 'Fully allocated'
-                    : splitRemaining > 0
-                      ? `${formatCurrency(splitRemaining)} left to allocate`
-                      : `${formatCurrency(-splitRemaining)} over the total`}
+                  {hasNonPositiveSplit
+                    ? 'Split amounts must be greater than zero'
+                    : Math.abs(splitRemaining) < 0.01
+                      ? 'Fully allocated'
+                      : splitRemaining > 0
+                        ? `${formatCurrency(splitRemaining)} left to allocate`
+                        : `${formatCurrency(-splitRemaining)} over the total`}
                 </p>
               </div>
             ) : (
-              <div className="scrollbar-hide grid max-h-54 grid-cols-4 gap-2 overflow-y-auto">
+              <CategoryGrid>
                 {filteredCategories.map((cat) => {
                   const selected = categoryId === cat.id;
                   return (
                     <button
                       key={cat.id}
+                      data-selected={selected}
                       onClick={() => chooseCategory(cat.id)}
                       className={`flex flex-col items-center gap-1 rounded-sm border p-2 text-center transition-all ${
                         selected
                           ? 'ring-grad-primary border-transparent'
                           : 'border-border bg-card hover:bg-muted'
                       }`}
-                      style={
-                        selected
-                          ? {
-                              backgroundImage: `linear-gradient(135deg, ${cat.color}22, ${cat.color}11)`,
-                            }
-                          : undefined
-                      }
+                      style={selected ? { backgroundColor: `${cat.color}22` } : undefined}
                     >
                       <div
                         className="flex h-8 w-8 items-center justify-center rounded-full"
-                        style={{
-                          backgroundImage: `linear-gradient(135deg, ${cat.color}, ${cat.color}cc)`,
-                        }}
+                        style={{ backgroundColor: cat.color }}
                       >
                         <CategoryIcon icon={cat.icon} size={16} color="white" />
                       </div>
@@ -627,7 +641,7 @@ export default function AddTransaction() {
                     </button>
                   );
                 })}
-              </div>
+              </CategoryGrid>
             )}
           </div>
         )}
@@ -647,6 +661,7 @@ export default function AddTransaction() {
             type="text"
             placeholder="Add a note..."
             value={note}
+            maxLength={MAX_NOTE_LENGTH}
             onChange={(e) => handleNoteChange(e.target.value)}
             className="bg-card h-auto rounded-sm px-4 py-3"
             list="note-suggestions"

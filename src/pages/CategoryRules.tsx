@@ -3,6 +3,9 @@ import { useLocation, useNavigate } from 'react-router';
 import { ArrowLeft, ChevronDown, ChevronUp, Pencil, Plus, Trash2, Wand2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { CategoryIcon } from '@/components/categories/CategoryIcon';
+import { CategoryGrid } from '@/components/categories/CategoryGrid';
+import { isCategoryValidForType } from '@/utils/calculations';
+import { MAX_PATTERN_LENGTH } from '@/utils/validation';
 import { useFinanceStore } from '@/store/useFinanceStore';
 import { MISC_CATEGORY_ID } from '@/data/defaultData';
 import {
@@ -74,7 +77,11 @@ export default function CategoryRules() {
   // A rule can file into an expense or income category, so the picker offers both.
   const selectableCategories = useMemo(
     () =>
-      categories.filter((c) => (scope === 'any' ? true : c.type === scope || c.type === 'both')),
+      categories.filter((c) =>
+        scope === 'any'
+          ? isCategoryValidForType(c, 'expense') || isCategoryValidForType(c, 'income')
+          : isCategoryValidForType(c, scope),
+      ),
     [categories, scope],
   );
 
@@ -238,9 +245,7 @@ export default function CategoryRules() {
                           {category && (
                             <span
                               className="flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium text-white"
-                              style={{
-                                backgroundImage: `linear-gradient(135deg, ${category.color}, ${category.color}cc)`,
-                              }}
+                              style={{ backgroundColor: category.color }}
                             >
                               <CategoryIcon icon={category.icon} size={10} color="white" />
                               {category.name}
@@ -364,6 +369,7 @@ export default function CategoryRules() {
                   type="text"
                   placeholder={matchType === 'regex' ? 'e\\.g\\. uber|ola' : 'e.g. Uber'}
                   value={pattern}
+                  maxLength={MAX_PATTERN_LENGTH}
                   onChange={(e) => setPattern(e.target.value)}
                   className="bg-muted h-auto rounded-sm px-3 py-2"
                 />
@@ -380,39 +386,37 @@ export default function CategoryRules() {
                 <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">
                   File into
                 </Label>
-                <div className="scrollbar-hide grid max-h-40 grid-cols-4 gap-2 overflow-y-auto">
+                <CategoryGrid className="max-h-40">
                   {selectableCategories.map((cat) => {
                     const selected = categoryId === cat.id;
                     return (
                       <button
                         key={cat.id}
+                        data-selected={selected}
                         onClick={() => setCategoryId(cat.id)}
                         className={`flex flex-col items-center gap-1 rounded-sm border p-2 text-center transition-all ${
                           selected
                             ? 'ring-grad-primary border-transparent'
                             : 'border-border bg-card hover:bg-muted'
                         }`}
-                        style={
-                          selected
-                            ? {
-                                backgroundImage: `linear-gradient(135deg, ${cat.color}22, ${cat.color}11)`,
-                              }
-                            : undefined
-                        }
+                        style={selected ? { backgroundColor: `${cat.color}22` } : undefined}
                       >
                         <div
                           className="flex h-7 w-7 items-center justify-center rounded-full"
-                          style={{
-                            backgroundImage: `linear-gradient(135deg, ${cat.color}, ${cat.color}cc)`,
-                          }}
+                          style={{ backgroundColor: cat.color }}
                         >
                           <CategoryIcon icon={cat.icon} size={14} color="white" />
                         </div>
                         <span className="line-clamp-2 text-[10px] leading-tight">{cat.name}</span>
+                        {scope === 'any' && cat.type !== 'both' && (
+                          <span className="text-muted-foreground text-[9px] leading-none capitalize">
+                            {cat.type}
+                          </span>
+                        )}
                       </button>
                     );
                   })}
-                </div>
+                </CategoryGrid>
               </div>
 
               {labels.length > 0 && (

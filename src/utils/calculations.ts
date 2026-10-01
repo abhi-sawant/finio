@@ -32,7 +32,21 @@ import type {
  */
 export function isCategoryValidForType(category: Category, type: TransactionType): boolean {
   if (type === 'transfer') return category.type === 'both';
+  // "Transfer" is a neutral category for transfers only; it must never be offered for an
+  // expense or income.
+  if (category.id === TRANSFER_CATEGORY_ID) return false;
   return category.type === type || category.type === 'both';
+}
+
+/** The default "Transfer" category (`defaultData.ts`). Transfers file under it. */
+export const TRANSFER_CATEGORY_ID = 'cat-13';
+
+/** The category a transfer is filed under: the Transfer category, else the first neutral one. */
+export function findTransferCategory(categories: Category[]): Category | undefined {
+  return (
+    categories.find((c) => c.id === TRANSFER_CATEGORY_ID) ??
+    categories.find((c) => c.type === 'both')
+  );
 }
 
 /**

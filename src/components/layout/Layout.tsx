@@ -30,6 +30,8 @@ export function Layout() {
   const fabRef = useRef<HTMLButtonElement>(null);
   const moreRef = useRef<HTMLButtonElement>(null);
   const [moreOpen, setMoreOpen] = useState(false);
+  // The FAB would cover the primary action on these screens (Accounts has its own add button).
+  const hideFab = location.pathname === '/accounts' || location.pathname === '/settings';
   const moreActive = moreNavItems.some((i) => location.pathname.startsWith(i.path));
   const [templatesOpen, setTemplatesOpen] = useState(false);
   const { firedRef: fabLongPressFiredRef, handlers: fabLongPressHandlers } = useLongPress(() =>
@@ -152,7 +154,7 @@ export function Layout() {
       </div>
 
       {/* FAB — mobile only. Long-press for one-tap add from a saved template. */}
-      <Popover open={templatesOpen} onOpenChange={setTemplatesOpen}>
+      <Popover open={templatesOpen && !hideFab} onOpenChange={setTemplatesOpen}>
         <button
           ref={fabRef}
           onClick={handleFabClick}
@@ -161,7 +163,10 @@ export function Layout() {
             e.preventDefault();
             setTemplatesOpen(true);
           }}
-          className="bg-primary text-primary-foreground fixed right-4 z-50 flex h-14 w-14 items-center justify-center rounded-full shadow-[var(--shadow-float)] transition-transform active:scale-95 lg:hidden"
+          className={cn(
+            'bg-primary text-primary-foreground fixed right-4 z-50 flex h-14 w-14 items-center justify-center rounded-full shadow-[var(--shadow-float)] transition-transform active:scale-95 lg:hidden',
+            hideFab && 'hidden',
+          )}
           style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 5.5rem)' }}
           aria-label="Add transaction. Long-press for templates."
         >

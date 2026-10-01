@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { useConfirm } from '@/components/ui/use-confirm';
 import Header from '@/components/ui/header';
 import Main from '@/components/ui/main';
+import { MAX_NAME_LENGTH, cleanText, stripLeading } from '@/utils/validation';
 
 const labelColors = COLOR_PALETTE;
 
@@ -35,11 +36,12 @@ export default function ManageLabels() {
   };
 
   const handleSubmit = () => {
-    if (!name.trim()) return;
+    const cleanName = cleanText(name, MAX_NAME_LENGTH);
+    if (!cleanName) return;
     if (editId) {
-      updateLabel(editId, { name: name.trim(), color });
+      updateLabel(editId, { name: cleanName, color });
     } else {
-      addLabel({ name: name.trim(), color });
+      addLabel({ name: cleanName, color });
     }
     resetForm();
   };
@@ -89,7 +91,8 @@ export default function ManageLabels() {
                 type="text"
                 placeholder="Label name"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                maxLength={MAX_NAME_LENGTH}
+                onChange={(e) => setName(stripLeading(e.target.value))}
                 className="bg-muted h-auto rounded-sm px-3 py-2"
               />
               <div className="flex flex-wrap gap-2">

@@ -34,11 +34,15 @@ export function formatCurrency(
   // the rupee anyway, so paise there just add noise — pass { precise: false } to round them.
   const precise = options.precise ?? true;
 
+  // Pad to 2 decimals whenever the amount really has paise, so ₹450.5 reads ₹450.50 — judged on
+  // the value rounded to paise, so 450.999 renders ₹451 rather than ₹451.00.
+  const hasPaise = !useCompact && precise && Math.round(Math.abs(amount) * 100) % 100 !== 0;
+
   return new Intl.NumberFormat(LOCALE, {
     style: 'currency',
     currency: CURRENCY,
     notation: useCompact ? 'compact' : 'standard',
-    minimumFractionDigits: 0,
+    minimumFractionDigits: hasPaise ? 2 : 0,
     maximumFractionDigits: useCompact ? 1 : precise ? 2 : 0,
   }).format(amount);
 }
@@ -60,8 +64,19 @@ export function formatDate(dateStr: string): string {
   return format(date, 'EEE, d MMM');
 }
 
+/** "5 October 2026" — dialog titles and long-form copy. */
 export function formatFullDate(dateStr: string): string {
-  return format(parseISO(dateStr), 'dd MMMM yyyy');
+  return format(parseISO(dateStr), 'd MMMM yyyy');
+}
+
+/** "5 Oct 2026" — the canonical date format everywhere a year is shown. */
+export function formatShortDate(date: Date | string): string {
+  return format(typeof date === 'string' ? parseISO(date) : date, 'd MMM yyyy');
+}
+
+/** "5 Oct" — compact day + month where the year is obvious from context. */
+export function formatDayMonth(date: Date | string): string {
+  return format(typeof date === 'string' ? parseISO(date) : date, 'd MMM');
 }
 
 export function formatTime(dateStr: string): string {

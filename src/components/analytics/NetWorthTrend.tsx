@@ -16,6 +16,7 @@ import { buildNetWorthSeries } from '@/utils/netWorth';
 import { normalizeMonthStartDay } from '@/utils/period';
 import { Button } from '@/components/ui/button';
 import { ChartDataTable } from '@/components/charts/ChartDataTable';
+import { EmptyChart } from '@/components/charts/EmptyChart';
 
 const RANGES = [
   { months: 6, label: '6m' },
@@ -97,47 +98,57 @@ export function NetWorthTrend() {
         role="img"
         aria-label={`Net worth by month${latest ? `, currently ${money(latest.netWorth)}` : ''}.`}
       >
-        <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart data={chartData} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" opacity={0.12} />
-            <XAxis
-              dataKey="month"
-              fontSize={10}
-              tickLine={false}
-              axisLine={false}
-              interval="preserveStartEnd"
-              minTickGap={24}
-            />
-            <YAxis
-              fontSize={10}
-              tickLine={false}
-              axisLine={false}
-              width={50}
-              tickFormatter={money}
-            />
-            <Tooltip
-              cursor={{ fill: 'rgba(124,92,255,0.08)' }}
-              contentStyle={{
-                background: 'var(--card)',
-                border: '1px solid var(--border)',
-                borderRadius: 12,
-                fontSize: 12,
-              }}
-              formatter={(v) => formatCurrency(Math.abs(Number(v) || 0), false, hideAmounts)}
-              labelStyle={{ color: 'var(--muted-foreground)' }}
-            />
-            {/* Assets up, liabilities down, net worth as the line that sums them. */}
-            <Bar dataKey="Assets" fill="#146b54" opacity={0.55} radius={[4, 4, 0, 0]} />
-            <Bar dataKey="Liabilities" fill="#c48b7a" opacity={0.55} radius={[0, 0, 4, 4]} />
-            <Line
-              type="monotone"
-              dataKey="Net worth"
-              stroke="#146b54"
-              strokeWidth={2.5}
-              dot={false}
-            />
-          </ComposedChart>
-        </ResponsiveContainer>
+        {series.length < 2 ? (
+          <EmptyChart message="Net worth needs at least two months of history to chart." />
+        ) : (
+          <ResponsiveContainer width="100%" height="100%">
+            <ComposedChart data={chartData} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" opacity={0.12} />
+              <XAxis
+                dataKey="month"
+                fontSize={10}
+                tickLine={false}
+                axisLine={false}
+                interval="preserveStartEnd"
+                minTickGap={24}
+              />
+              <YAxis
+                fontSize={10}
+                tickLine={false}
+                axisLine={false}
+                width={56}
+                tickMargin={4}
+                tickFormatter={money}
+              />
+              <Tooltip
+                cursor={{ fill: 'var(--muted)', fillOpacity: 0.5 }}
+                contentStyle={{
+                  background: 'var(--card)',
+                  border: '1px solid var(--border)',
+                  borderRadius: 12,
+                  fontSize: 12,
+                }}
+                formatter={(v) => formatCurrency(Math.abs(Number(v) || 0), false, hideAmounts)}
+                labelStyle={{ color: 'var(--muted-foreground)' }}
+              />
+              {/* Assets up, liabilities down, net worth as the line that sums them. */}
+              <Bar dataKey="Assets" fill="var(--primary)" opacity={0.55} radius={[4, 4, 0, 0]} />
+              <Bar
+                dataKey="Liabilities"
+                fill="var(--destructive)"
+                opacity={0.55}
+                radius={[0, 0, 4, 4]}
+              />
+              <Line
+                type="monotone"
+                dataKey="Net worth"
+                stroke="var(--primary)"
+                strokeWidth={2.5}
+                dot={false}
+              />
+            </ComposedChart>
+          </ResponsiveContainer>
+        )}
       </div>
 
       <ChartDataTable

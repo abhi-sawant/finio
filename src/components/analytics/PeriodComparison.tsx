@@ -172,7 +172,7 @@ export function PeriodComparison() {
                   <div
                     className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full"
                     style={{
-                      backgroundImage: `linear-gradient(135deg, ${category?.color ?? '#94a3b8'}, ${category?.color ?? '#94a3b8'}cc)`,
+                      backgroundColor: category?.color ?? 'var(--muted-foreground)',
                     }}
                   >
                     <CategoryIcon

@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { NumberPad } from '@/components/ui/number-pad';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import type { Account } from '@/types';
+import { MAX_NOTE_LENGTH, cleanText, stripLeading } from '@/utils/validation';
 
 interface ReconcileAccountDialogProps {
   account: Account;
@@ -62,7 +63,7 @@ export function ReconcileAccountDialog({
       accountId: account.id,
       categoryId: MISC_CATEGORY_ID,
       date: new Date().toISOString(),
-      note: note.trim() || `Balance adjustment for ${account.name}`,
+      note: cleanText(note, MAX_NOTE_LENGTH) || `Balance adjustment for ${account.name}`,
       labels: [],
     });
     toast.success(`Adjustment posted to "${account.name}"`, {
@@ -118,7 +119,8 @@ export function ReconcileAccountDialog({
                   type="text"
                   placeholder="Note (optional)"
                   value={note}
-                  onChange={(e) => setNote(e.target.value)}
+                  maxLength={MAX_NOTE_LENGTH}
+                  onChange={(e) => setNote(stripLeading(e.target.value))}
                   className="bg-muted h-auto rounded-sm px-3 py-2"
                 />
               </>

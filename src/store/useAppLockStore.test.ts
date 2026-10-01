@@ -87,6 +87,19 @@ describe('registerFailure', () => {
   });
 });
 
+describe('expireLockout', () => {
+  it('clears the deadline but keeps the failure count so the ladder keeps escalating', () => {
+    const { registerFailure, expireLockout } = useAppLockStore.getState();
+    for (let i = 0; i < 5; i += 1) registerFailure(NOW);
+    expect(useAppLockStore.getState().lockedOutUntil).not.toBeNull();
+
+    expireLockout();
+
+    expect(useAppLockStore.getState().lockedOutUntil).toBeNull();
+    expect(useAppLockStore.getState().failedAttempts).toBe(5);
+  });
+});
+
 describe('persistence', () => {
   it('stores the config but never the transient flags', () => {
     // Regression guard for `partialize`: persisting `isLocked` would let a reload decide the

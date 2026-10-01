@@ -15,6 +15,7 @@ import { formatCurrency, localDayKey } from '@/utils/formatters';
 import { getNetWorth } from '@/utils/calculations';
 import { sampleForTable } from '@/utils/chartTable';
 import { ChartDataTable } from './ChartDataTable';
+import { EmptyChart } from './EmptyChart';
 
 interface Props {
   from: Date;
@@ -97,7 +98,7 @@ export function BalanceTrend({ from, to }: Props) {
     for (let i = 0; i <= daysFromToday; i++) {
       const day = subDays(today, i);
       const dayKey = format(day, 'yyyy-MM-dd');
-      points.unshift({ dateKey: dayKey, date: format(day, 'dd MMM'), balance });
+      points.unshift({ dateKey: dayKey, date: format(day, 'd MMM'), balance });
       balance -= dayDelta.get(dayKey) ?? 0;
     }
 
@@ -132,51 +133,50 @@ export function BalanceTrend({ from, to }: Props) {
             : 'Balance over time.'
         }
       >
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
-            <defs>
-              <linearGradient id="balanceStroke" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#146b54" />
-                <stop offset="100%" stopColor="#6e8fb0" />
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" opacity={0.12} />
-            <XAxis
-              dataKey="dateKey"
-              tickFormatter={(k) => labelByKey.get(String(k)) ?? String(k)}
-              fontSize={10}
-              tickLine={false}
-              axisLine={false}
-              interval={xAxisInterval}
-            />
-            <YAxis
-              fontSize={10}
-              tickLine={false}
-              axisLine={false}
-              width={50}
-              tickFormatter={money}
-            />
-            <Tooltip
-              cursor={{ stroke: 'rgba(124,92,255,0.25)', strokeWidth: 1 }}
-              contentStyle={{
-                background: 'var(--card)',
-                border: '1px solid var(--border)',
-                borderRadius: 12,
-                fontSize: 12,
-              }}
-              formatter={(v) => formatCurrency(Number(v) || 0, false, hideAmounts)}
-              labelFormatter={(k) => labelByKey.get(String(k)) ?? String(k)}
-              labelStyle={{ color: 'var(--muted-foreground)' }}
-            />
-            <Line
-              type="monotone"
-              dataKey="balance"
-              stroke="url(#balanceStroke)"
-              strokeWidth={3}
-              dot={false}
-            />
-          </LineChart>
-        </ResponsiveContainer>
+        {data.length < 2 ? (
+          <EmptyChart message="Not enough history in this range to draw a trend." />
+        ) : (
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" opacity={0.12} />
+              <XAxis
+                dataKey="dateKey"
+                tickFormatter={(k) => labelByKey.get(String(k)) ?? String(k)}
+                fontSize={10}
+                tickLine={false}
+                axisLine={false}
+                interval={xAxisInterval}
+              />
+              <YAxis
+                fontSize={10}
+                tickLine={false}
+                axisLine={false}
+                width={56}
+                tickMargin={4}
+                tickFormatter={money}
+              />
+              <Tooltip
+                cursor={{ stroke: 'var(--muted-foreground)', strokeOpacity: 0.4, strokeWidth: 1 }}
+                contentStyle={{
+                  background: 'var(--card)',
+                  border: '1px solid var(--border)',
+                  borderRadius: 12,
+                  fontSize: 12,
+                }}
+                formatter={(v) => formatCurrency(Number(v) || 0, false, hideAmounts)}
+                labelFormatter={(k) => labelByKey.get(String(k)) ?? String(k)}
+                labelStyle={{ color: 'var(--muted-foreground)' }}
+              />
+              <Line
+                type="monotone"
+                dataKey="balance"
+                stroke="var(--primary)"
+                strokeWidth={3}
+                dot={false}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        )}
       </div>
       <ChartDataTable
         caption="Balance over time"

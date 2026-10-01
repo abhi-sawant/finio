@@ -1,5 +1,4 @@
-import { format } from 'date-fns';
-import { formatCurrency } from '@/utils/formatters';
+import { formatCurrency, formatShortDate } from '@/utils/formatters';
 import {
   DEPOSIT_COMPOUNDING_OPTIONS,
   depositInvested,
@@ -219,7 +218,7 @@ export function DepositFields({
             </div>
           </div>
           <p className="text-muted-foreground mt-3 text-center text-xs">
-            Matures {format(maturity, 'd MMM yyyy')} — paid into {linkedName ?? 'the account'}{' '}
+            Matures {formatShortDate(maturity)} — paid into {linkedName ?? 'the account'}{' '}
             automatically. Any TDS on the interest can be logged as an expense.
           </p>
         </div>

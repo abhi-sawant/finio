@@ -27,6 +27,7 @@ import {
   periodRange,
 } from '@/utils/period';
 import type { Theme } from '@/types';
+import { MAX_NAME_LENGTH, cleanText, stripLeading } from '@/utils/validation';
 
 const themes: { value: Theme; label: string }[] = [
   { value: 'system', label: 'System' },
@@ -56,7 +57,7 @@ export function ProfileSection() {
   );
 
   const handleNameSave = async (newName: string) => {
-    const trimmed = newName.trim() || 'User';
+    const trimmed = cleanText(newName, MAX_NAME_LENGTH) || 'User';
     updateSettings({ userName: trimmed });
     setEditingName(false);
     if (token) {
@@ -81,7 +82,8 @@ export function ProfileSection() {
             <Input
               autoFocus
               value={nameValue}
-              onChange={(e) => setNameValue(e.target.value)}
+              maxLength={MAX_NAME_LENGTH}
+              onChange={(e) => setNameValue(stripLeading(e.target.value))}
               onBlur={() => handleNameSave(nameValue)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') handleNameSave(nameValue);
