@@ -43,6 +43,7 @@ import { TransactionItem } from '@/components/transactions/TransactionItem';
 import { HideAmountsToggle } from '@/components/HideAmountsToggle';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import Header from '@/components/ui/header';
+import { HeaderIconButton } from '@/components/ui/header-icon-button';
 import Main from '@/components/ui/main';
 import type { Account, RecurringTransaction } from '@/types';
 
@@ -271,13 +272,9 @@ export default function Dashboard() {
         </div>
         <div className="flex gap-2">
           <HideAmountsToggle />
-          <button
-            onClick={() => navigate('/settings')}
-            className="bg-card border-border hover:bg-muted flex h-11 w-11 items-center justify-center rounded-full border transition-colors"
-            aria-label="Settings"
-          >
-            <Settings size={16} />
-          </button>
+          <HeaderIconButton onClick={() => navigate('/settings')} aria-label="Settings">
+            <Settings />
+          </HeaderIconButton>
         </div>
       </Header>
 

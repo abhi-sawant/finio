@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-01T00:00:00Z",
+  "title": "Design System: Finio",
+  "extensions": {
+    "colorMeta": {
+      "primary": { "role": "primary", "displayName": "Ledger Green", "canonical": "#146b54", "tonalRamp": ["#082b22", "#0d4535", "#146b54", "#2a8a70", "#52a891", "#86c4b3", "#bcdfd4", "#e9f1ec"] },
+      "destructive": { "role": "secondary", "displayName": "Rust", "canonical": "#b3421f", "tonalRamp": ["#3a1608", "#5c230f", "#7a2e13", "#b3421f", "#d2693f", "#e49a7b", "#f0c5b3", "#fbede6"] },
+      "paper": { "role": "neutral", "displayName": "Cream Paper", "canonical": "#f7f5f1", "tonalRamp": ["#1b1a17", "#3a3732", "#6e695f", "#9a9488", "#c9c3b6", "#eae5db", "#f0ece3", "#f7f5f1"] },
+      "card": { "role": "neutral", "displayName": "Card Stock", "canonical": "#fffdf9", "tonalRamp": ["#211e1a", "#2a2521", "#35302a", "#6e695f", "#b0a99c", "#eae5db", "#f7f5f1", "#fffdf9"] }
+    },
+    "typographyMeta": {
+      "title": { "displayName": "Title", "purpose": "Dialog and section titles." },
+      "body": { "displayName": "Body", "purpose": "Rows, forms, paragraphs." },
+      "value": { "displayName": "Value", "purpose": "Right-aligned amounts; destructive color when negative." },
+      "label": { "displayName": "Label", "purpose": "Muted captions and form labels." }
+    },
+    "shadows": [
+      { "name": "card", "value": "0 1px 2px rgba(27,26,23,0.05)", "purpose": "Resting elevation of every card." },
+      { "name": "float", "value": "0 18px 40px -20px rgba(27,26,23,0.35)", "purpose": "Dialogs, popovers, menus." }
+    ],
+    "motion": [
+      { "name": "overlay", "value": "100ms fade + zoom-95", "purpose": "Dialogs, popovers, selects." },
+      { "name": "press", "value": "translateY(1px) on :active", "purpose": "Buttons." },
+      { "name": "shake", "value": "320ms ease-in-out, +/-6px", "purpose": "Wrong PIN; disabled under reduced motion." }
+    ],
+    "breakpoints": [
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button", "kind": "button", "refersTo": "button-primary",
+      "description": "The one primary action on a screen.",
+      "html": "<button class=\"ds-btn-primary\">Save</button>",
+      "css": ".ds-btn-primary{height:36px;padding:0 16px;border:1px solid transparent;border-radius:9999px;background:#146b54;color:#fffdf9;font:500 14px 'Geist Variable',sans-serif;cursor:pointer;transition:all .15s}.ds-btn-primary:hover{background:#146b54d9}.ds-btn-primary:active{transform:translateY(1px)}.ds-btn-primary:focus-visible{outline:none;box-shadow:0 0 0 3px #146b5480}"
+    },
+    {
+      "name": "Outline Button", "kind": "button", "refersTo": "button-outline",
+      "description": "Secondary action that needs a visible boundary.",
+      "html": "<button class=\"ds-btn-outline\">Cancel</button>",
+      "css": ".ds-btn-outline{height:36px;padding:0 16px;border:1px solid #eae5db;border-radius:9999px;background:#fffdf9;color:#1b1a17;font:500 14px 'Geist Variable',sans-serif;cursor:pointer;transition:all .15s}.ds-btn-outline:hover{background:#f0ece3}.ds-btn-outline:active{transform:translateY(1px)}.ds-btn-outline:focus-visible{outline:none;border-color:#146b54;box-shadow:0 0 0 3px #146b5480}"
+    },
+    {
+      "name": "Destructive Button", "kind": "button", "refersTo": "button-destructive",
+      "description": "Tinted danger action; solid only for the final confirm.",
+      "html": "<button class=\"ds-btn-danger\">Delete</button>",
+      "css": ".ds-btn-danger{height:36px;padding:0 16px;border:1px solid transparent;border-radius:9999px;background:#b3421f1a;color:#b3421f;font:500 14px 'Geist Variable',sans-serif;cursor:pointer;transition:all .15s}.ds-btn-danger:hover{background:#b3421f33}.ds-btn-danger:active{transform:translateY(1px)}"
+    },
+    {
+      "name": "Text Input", "kind": "input", "refersTo": "input",
+      "description": "Card-filled field with hairline border and green focus ring.",
+      "html": "<input class=\"ds-input\" placeholder=\"Note\" />",
+      "css": ".ds-input{height:40px;width:100%;box-sizing:border-box;padding:4px 12px;border:1px solid #eae5db;border-radius:9.6px;background:#fffdf9;color:#1b1a17;font:400 16px 'Geist Variable',sans-serif;outline:none;transition:border-color .15s}.ds-input::placeholder{color:#6e695f}.ds-input:focus-visible{border-color:#146b54;box-shadow:0 0 0 3px #146b5480}"
+    },
+    {
+      "name": "List Card", "kind": "card", "refersTo": "card",
+      "description": "One bordered container; rows divided by hairlines; value on the right.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-row\"><div class=\"ds-row-main\"><div class=\"ds-title\">HDFC Savings</div><div class=\"ds-sub\">Bank account</div></div><div class=\"ds-val\">₹42,150</div></div><div class=\"ds-row\"><div class=\"ds-row-main\"><div class=\"ds-title\">Credit Card</div><div class=\"ds-sub\">Due 5 Oct</div></div><div class=\"ds-val neg\">-₹8,420</div></div></div>",
+      "css": ".ds-card{background:#fffdf9;border:1px solid #eae5db;border-radius:12.8px;box-shadow:0 1px 2px rgba(27,26,23,.05);font-family:'Geist Variable',sans-serif;color:#1b1a17}.ds-row{display:flex;align-items:center;gap:12px;padding:12px 16px}.ds-row+.ds-row{border-top:1px solid #eae5db}.ds-row-main{flex:1;min-width:0}.ds-title{font-size:14px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ds-sub{font-size:12px;color:#6e695f}.ds-val{font-size:14px;font-weight:600}.ds-val.neg{color:#b3421f}"
+    },
+    {
+      "name": "Switch", "kind": "custom", "refersTo": "switch",
+      "description": "Green track when on, Oat when off, white thumb.",
+      "html": "<button class=\"ds-switch\" role=\"switch\" aria-checked=\"true\"><span></span></button>",
+      "css": ".ds-switch{position:relative;width:40px;height:22px;border:0;border-radius:9999px;background:#146b54;cursor:pointer}.ds-switch span{position:absolute;top:2px;left:20px;width:18px;height:18px;border-radius:9999px;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25)}.ds-switch:focus-visible{outline:none;box-shadow:0 0 0 3px #146b5480}"
+    },
+    {
+      "name": "Tab Bar Item", "kind": "nav", "refersTo": "nav",
+      "description": "Icon, 12px label and a green dot marking the active tab.",
+      "html": "<a class=\"ds-tab\" href=\"#\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 10.5 12 3l9 7.5V21H3z\"/></svg><span>Home</span><i></i></a>",
+      "css": ".ds-tab{display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 12px;color:#146b54;font:500 12px 'Geist Variable',sans-serif;text-decoration:none}.ds-tab i{width:4px;height:4px;border-radius:9999px;background:#146b54}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Household Ledger",
+    "overview": "Finio looks like a ledger kept at home: warm cream paper, ink-dark text, ruled hairlines between entries and a single green mark where attention is needed. It is calm, flat and paper-like.",
+    "keyCharacteristics": [
+      "One accent (deep green), used for the primary action, active state, focus ring and links only.",
+      "Opaque cards with hairline borders; no gradients, glows or backdrop blur on surfaces.",
+      "Warm neutrals (cream, charcoal) instead of clinical white, black or blue-gray.",
+      "Semantic tokens only; components never hold raw hex.",
+      "Pill buttons, softly rounded cards, small rounded inputs.",
+      "One typeface (Geist Variable) for everything."
+    ],
+    "rules": [
+      { "name": "The One Voice Rule", "body": "The green accent marks the single most important action or number on a screen.", "section": "colors" },
+      { "name": "The Hairline-Not-Shadow Rule", "body": "Separation comes from a 1px hairline border or divide-y, never a heavier shadow or tint.", "section": "colors" },
+      { "name": "The Semantic Token Rule", "body": "Components use semantic tokens. No raw hex, no ad-hoc Tailwind palette colors.", "section": "colors" },
+      { "name": "The Loud Number Rule", "body": "A monetary value is semibold at a larger size than its muted caption.", "section": "typography" },
+      { "name": "The Flat-By-Default Rule", "body": "Surfaces are flat at rest. Only floating layers get the float shadow.", "section": "elevation" }
+    ],
+    "dos": ["Do use the accent only for the primary action, active states, focus ring and links.", "Do render a list as one card-elevated divide-y container of plain rows."],
+    "donts": ["Don't add gradients, glows or backdrop-blur to surfaces.", "Don't put raw hex or ad-hoc palette colors in components."]
+  }
+}

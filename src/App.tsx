@@ -22,6 +22,8 @@ const Accounts = lazy(() => import('@/pages/Accounts'));
 const Transactions = lazy(() => import('@/pages/Transactions'));
 const Analytics = lazy(() => import('@/pages/Analytics'));
 const Settings = lazy(() => import('@/pages/Settings'));
+const Tools = lazy(() => import('@/pages/Tools'));
+const SettingsCategory = lazy(() => import('@/pages/SettingsCategory'));
 const AddTransaction = lazy(() => import('@/pages/AddTransaction'));
 const AddAccount = lazy(() => import('@/pages/AddAccount'));
 const ManageCategories = lazy(() => import('@/pages/ManageCategories'));
@@ -104,7 +106,9 @@ function AppRoutes() {
         <Route path="accounts" element={<Accounts />} />
         <Route path="transactions" element={<Transactions />} />
         <Route path="analytics" element={<Analytics />} />
+        <Route path="tools" element={<Tools />} />
         <Route path="settings" element={<Settings />} />
+        <Route path="settings/:category" element={<SettingsCategory />} />
       </Route>
       <Route path="add-transaction" element={<AddTransaction />} />
       <Route

@@ -47,6 +47,7 @@ import {
 } from '@/utils/calculations';
 import type { RecurrenceFrequency, RecurringTransaction, TransactionType } from '@/types';
 import Header from '@/components/ui/header';
+import { HeaderIconButton } from '@/components/ui/header-icon-button';
 import Main from '@/components/ui/main';
 
 const FREQ_LABEL: Record<RecurrenceFrequency, string> = {
@@ -288,27 +289,20 @@ export default function Recurring() {
     <>
       {/* Header */}
       <Header innerClassName="lg:max-w-xl">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => navigate(-1)}
-          className="h-9 w-9 rounded-full"
-        >
-          <ArrowLeft size={20} />
-        </Button>
+        <HeaderIconButton onClick={() => navigate(-1)} aria-label="Back">
+          <ArrowLeft />
+        </HeaderIconButton>
         <h1 className="text-base font-semibold">Recurring</h1>
-        <div className="flex gap-1">
+        <div className="flex gap-2">
           <HideAmountsToggle />
-          <Button
-            variant="ghost"
-            size="icon"
+          <HeaderIconButton
             onClick={() => (showForm ? resetForm() : startCreate())}
-            disabled={accounts.length === 0}
-            className="text-primary hover:bg-primary/10 h-9 w-9 rounded-full disabled:opacity-30"
             aria-label="Add recurring"
+            tone="primary"
+            disabled={accounts.length === 0}
           >
-            <Plus size={20} />
-          </Button>
+            <Plus />
+          </HeaderIconButton>
         </div>
       </Header>
 

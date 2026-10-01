@@ -1,419 +1,245 @@
-# Design Philosophy
-
-A portable design system spec. Everything here is stack-agnostic in principle (it happens to be
-implemented with Tailwind CSS v4 + shadcn/ui + Base UI + CVA in the source project), and every rule
-is written so it can be copy-pasted into a new project's design doc and followed without access to
-the original codebase. Where concrete values are given (hex codes, spacing, radii) they are a
-**reference starting palette** — swap the color values for a new brand, but keep the *structure*
-(the token names, the light/dark pairing, the one-accent-color rule) unchanged.
-
+---
+name: Finio
+description: A calm, paper-like personal finance PWA with one deep-green accent, flat hairline-bordered surfaces and loud numbers.
+colors:
+  primary: "#146b54"
+  primary-foreground: "#fffdf9"
+  primary-dark-mode: "#34a582"
+  accent-tint: "#e9f1ec"
+  accent-ink: "#0f4c3d"
+  destructive: "#b3421f"
+  destructive-dark-mode: "#e0714a"
+  warning-band: "#fbede6"
+  warning-band-ink: "#7a2e13"
+  paper: "#f7f5f1"
+  card: "#fffdf9"
+  ink: "#1b1a17"
+  secondary-fill: "#f0ece3"
+  muted-ink: "#6e695f"
+  hairline: "#eae5db"
+  night-paper: "#211e1a"
+  night-card: "#2a2521"
+  night-ink: "#f3efe7"
+  night-muted-ink: "#b0a99c"
+  chart-gold: "#c79b4f"
+  chart-sage: "#6ba292"
+  chart-slate: "#6e8fb0"
+typography:
+  title:
+    fontFamily: "Geist Variable, sans-serif"
+    fontSize: "1rem"
+    fontWeight: 500
+  body:
+    fontFamily: "Geist Variable, sans-serif"
+    fontSize: "0.875rem"
+    fontWeight: 400
+  value:
+    fontFamily: "Geist Variable, sans-serif"
+    fontSize: "0.875rem"
+    fontWeight: 600
+  label:
+    fontFamily: "Geist Variable, sans-serif"
+    fontSize: "0.75rem"
+    fontWeight: 500
+rounded:
+  sm: "9.6px"
+  md: "12.8px"
+  lg: "16px"
+  xl: "22.4px"
+  full: "9999px"
+spacing:
+  page-gutter: "12px"
+  card-padding: "16px"
+  row-y: "12px"
+  section-gap: "16px"
+components:
+  button-primary:
+    backgroundColor: "{colors.primary}"
+    textColor: "{colors.primary-foreground}"
+    rounded: "{rounded.full}"
+    height: "36px"
+    padding: "0 16px"
+  button-outline:
+    backgroundColor: "{colors.card}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.full}"
+    height: "36px"
+    padding: "0 16px"
+  button-destructive:
+    textColor: "{colors.destructive}"
+    rounded: "{rounded.full}"
+    height: "36px"
+    padding: "0 16px"
+  input:
+    backgroundColor: "{colors.card}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.sm}"
+    height: "40px"
+    padding: "4px 12px"
+  card:
+    backgroundColor: "{colors.card}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.md}"
+    padding: "16px"
 ---
 
-## 1. Core Principles
-
-1. **One accent color, used sparingly.** The palette has exactly one brand/primary hue. It marks
-   the single most important action or number on a screen (primary buttons, active states, the
-   focus ring, links). Everything else is neutral. A screen with three "important" colors has zero
-   important colors.
-2. **Flat, not glossy.** No gradients, no colored glows, no frosted/blurred glass panels. Elevation
-   comes from a hairline border plus a soft neutral shadow, never from a saturated drop-shadow or a
-   `backdrop-blur` on a colored surface. If a codebase inherits gradient/glow utility classes from
-   an earlier design pass, keep the class names (so call sites don't churn) but resolve them to
-   flat colors — see §2.4.
-3. **Warm neutrals over cold grays.** Backgrounds and borders lean slightly warm (cream/paper in
-   light mode, warm charcoal in dark mode) rather than clinical `#fff`/`#000`/blue-gray. This is a
-   deliberate emotional register — calm and paper-like — not a technical constraint; a project
-   choosing a colder register should still keep the *rest* of this document's structure.
-4. **Semantic tokens, never raw hex in components.** Components reference `background`,
-   `foreground`, `primary`, `muted`, `destructive`, etc. Nothing in a component file hardcodes a
-   color. This is what makes dark mode, theming, and future rebrands a token edit instead of a
-   grep-and-replace.
-5. **Every interactive surface has an explicit focus, hover, active, and disabled state**, defined
-   once in the primitive (button, switch, input), never re-implemented per screen.
-6. **Confirmations and toggles are real components, never native browser primitives.** No
-   `window.confirm()`, no hand-rolled `<span role="switch">`. One `Switch` component, one
-   `confirm()` dialog, used everywhere — consistent look, consistent keyboard/focus behavior.
-7. **Density with breathing room.** Compact row heights (list rows, form rows) paired with generous
-   outer page padding and consistent vertical rhythm between sections. Rows are tight; sections
-   are spacious.
-8. **Numbers are typographically loud, labels are quiet.** A monetary/statistic value is
-   `font-semibold` (or bolder) at a larger size; its caption/label is `text-muted-foreground` at a
-   smaller size directly below or beside it. This pairing repeats everywhere a number appears.
-
----
-
-## 2. Design Tokens
-
-### 2.1 Token architecture
-
-Define color as CSS custom properties on `:root` (light) and a `.dark` class (dark), then map them
-into the CSS-framework's theme layer by reference — never inline a literal color a second time.
-
-```css
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  /* chart-1..5, sidebar-*, and one bespoke semantic band (see 2.3) follow the same pattern */
-}
-```
-
-Required token set for any new project (names are the contract; keep them even if values change):
-
-| Token | Role |
-|---|---|
-| `background` / `foreground` | Page canvas and default text |
-| `card` / `card-foreground` | Elevated surfaces (cards, list containers) |
-| `popover` / `popover-foreground` | Dialogs, dropdowns, tooltips |
-| `primary` / `primary-foreground` | The one brand accent, and text/icons placed on it |
-| `secondary` / `secondary-foreground` | A quiet, non-brand fill (secondary buttons, chips) |
-| `muted` / `muted-foreground` | Subdued backgrounds and de-emphasized text/captions |
-| `accent` / `accent-foreground` | A soft tint of `primary` for hover/active backgrounds |
-| `destructive` / `destructive-foreground` | Danger actions and negative values |
-| `border` / `input` | Hairlines and form-control borders |
-| `ring` | Focus ring color — should equal `primary` |
-| `chart-1..chart-5` | A 5-step categorical palette for data viz, derived from the same hues as primary/destructive/warning |
-
-### 2.2 Reference palette (swap values, keep structure)
-
-**Light**
-```
---background: #f7f5f1;   --foreground: #1b1a17;
---card: #fffdf9;         --card-foreground: #1b1a17;
---primary: #146b54;      --primary-foreground: #fffdf9;
---secondary: #f0ece3;    --secondary-foreground: #1b1a17;
---muted: #f0ece3;        --muted-foreground: #79746a;
---accent: #e9f1ec;       --accent-foreground: #0f4c3d;
---destructive: #b3421f;  --destructive-foreground: #fffdf9;
---border: #eae5db;       --input: #eae5db;
---ring: #146b54;
-```
-
-**Dark** — do not just invert lightness; re-tune each color so contrast and saturation feel
-intentional, not auto-generated:
-```
---background: #211e1a;   --foreground: #f3efe7;
---card: #2a2521;         --card-foreground: #f3efe7;
---primary: #34a582;      --primary-foreground: #0b1f19;   /* brighter/more saturated than light-mode primary */
---secondary: #35302a;    --secondary-foreground: #f3efe7;
---muted: #35302a;        --muted-foreground: #b0a99c;
---accent: #24352e;       --accent-foreground: #8fcbb3;
---destructive: #e0714a;  --destructive-foreground: #241008;
---border: rgba(243,239,231,0.10);   --input: rgba(243,239,231,0.14);  /* alpha-over-bg, not a solid hex */
---ring: #34a582;
-```
-
-Rules encoded in the palette above, keep these when swapping values:
-- **Dark-mode `primary` is a brighter/more saturated shade of the same hue**, not the same hex
-  reused — a dim accent reads as disabled on a dark background.
-- **Dark-mode `border`/`input` are semi-transparent white (`rgba(foreground, 0.1–0.14)`)**, not a
-  solid gray — this lets the border read correctly against both `background` and `card`, which are
-  two different dark values.
-- **`accent-foreground` is a saturated version of `primary`'s hue**, used for icon/text tinting on
-  top of the soft `accent` fill (e.g. a category icon on its accent-tinted circle).
-
-### 2.3 One bespoke semantic token beyond the standard set
-
-If the product needs a severity/status color that is neither "success" (`primary`) nor
-"destructive," add exactly one more named pair rather than reaching for raw Tailwind color
-utilities (`bg-amber-100` etc.) in components:
-
-```css
---warning-band: #fbede6;            /* light */
---warning-band-foreground: #7a2e13;
---warning-band-accent: #b3421f;
-```
-Add more only when a real recurring UI need shows up — resist growing this list speculatively.
-
-### 2.4 Flat-fill utility classes (legacy-gradient compatibility shim)
-
-If migrating a codebase off gradients/glows, keep the old class names as an escape hatch so call
-sites are untouched, but make every one resolve to a **flat color**:
-
-```css
-@layer utilities {
-  .bg-grad-primary { background-color: var(--primary); }
-  .bg-grad-primary-soft { background-color: var(--accent); }
-  .shadow-glow-primary { box-shadow: var(--shadow-float); } /* a plain elevation shadow, not a glow */
-}
-```
-In a project starting fresh, skip this section entirely and just use the semantic tokens directly.
-
-### 2.5 Elevation
-
-Two shadow tokens only — a resting one and a floating one. Both are neutral (black/foreground at
-low opacity), never tinted with the brand color:
-
-```css
---shadow-card:  0 1px 2px rgba(0,0,0,0.05);          /* light mode resting elevation */
---shadow-float: 0 18px 40px -20px rgba(0,0,0,0.35);  /* light mode dialogs/popovers */
-/* dark mode: same shape, opacity raised (0.4 / 0.6) since the surface itself is already dark */
-```
-
-A "card" surface (`.card-elevated` or equivalent) is always: opaque `card` background + `1px solid
-border` + `shadow-card`. Never a translucent/blurred background — that's reserved for modal
-backdrops only (see §5.3).
-
-### 2.6 Radius scale
-
-One base variable, everything else derived by multiplication, so a single number controls the
-whole product's "roundness":
-
-```css
---radius: 1rem;
---radius-sm:  calc(var(--radius) * 0.6);
---radius-md:  calc(var(--radius) * 0.8);
---radius-lg:  var(--radius);
---radius-xl:  calc(var(--radius) * 1.4);
---radius-2xl: calc(var(--radius) * 1.8);
-```
-Buttons and pill-shaped controls use `rounded-full`. Cards and dialogs use `rounded-md`/`rounded-lg`.
-Never mix an arbitrary one-off radius (`rounded-[7px]`) into a component — pick the nearest step.
-
-### 2.7 Typography
-
-- One variable/webfont for both body and headings (e.g. a single Geist/Inter-class sans), mapped
-  to both `--font-sans` and `--font-heading` — a second display face is a common but usually
-  unnecessary complexity for a utilitarian product.
-- Font sizes stay inside the framework's default type scale (`text-xs` through `text-2xl`-ish).
-  Introduce a bespoke size only for one hero number per page (e.g. a dashboard's total balance).
-- Body/label text: `text-sm`. Captions/secondary metadata: `text-xs`, always paired with
-  `text-muted-foreground`. Section/dialog titles: `text-base font-medium` using the heading font
-  variable.
-
----
-
-## 3. Layout & Page Shell
-
-### 3.1 Header / Main convention
-
-Every screen is built from exactly two shared primitives, never a bespoke per-page wrapper:
-
-- **`Header`** — `sticky top-0`, transparent-to-background, centers a `max-w-5xl` row with
-  `px-3 py-3` (`lg:px-8`), holding a title/back-button on the left and 0–2 icon actions on the
-  right.
-- **`Main`** — `mx-auto max-w-5xl space-y-4 px-3 pt-2` and, critically, **large bottom padding**
-  (`pb-40` on mobile, `pb-8` on desktop) so content never sits under a fixed bottom nav / FAB.
-
-```tsx
-<Header><h1>Page Title</h1><IconButton /></Header>
-<Main>
-  <section className="card-elevated rounded-md p-4">...</section>
-</Main>
-```
-
-Same `max-w-5xl` container width in both, so header and content always align. `lg:space-y-6` widens
-vertical rhythm between sections on desktop.
-
-### 3.2 List rows vs. cards
-
-Two distinct patterns, don't blur them:
-
-- **A single self-contained item** (a stat, a form section) → its own `card-elevated rounded-md
-  p-4`.
-- **A homogeneous list of items** (accounts, transactions) → one `card-elevated divide-y` container,
-  each row a plain flex row with `py-3` and *no* border/shadow of its own — the divider lines come
-  from `divide-y`, not from n individual card shadows stacked on top of each other.
-
-### 3.3 Row anatomy
-
-The recurring two-column row layout, used for almost every list item in the product:
-
-```
-[ icon/avatar ]  [ title (truncate, text-sm font-medium)      ]  [ value (text-sm font-semibold, right-aligned) ]
-                 [ subtitle (truncate, text-xs, muted)          ]  [ secondary caption (text-[11px], muted)       ]
-```
-- Title truncates (`truncate`) inside a `min-w-0 flex-1` wrapper — never let a long name push the
-  value column off-screen.
-- The trailing value flips to `text-destructive` when negative; nothing else about the row changes
-  color.
-- Row-level actions (archive/delete) are icon-only circular buttons, `h-7 w-7 rounded-full border`,
-  revealed via `group` hover on desktop but always visible on touch.
-
-### 3.4 Safe areas (PWA / mobile web)
-
-```css
-@supports (padding-top: env(safe-area-inset-top)) {
-  .safe-top    { padding-top: env(safe-area-inset-top); }
-  .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
-}
-```
-Apply `safe-top` to the outermost app shell and `pb-safe`/`bottom-safe-nav` to any fixed bottom
-bar. Set `overscroll-behavior: none` on `html` so pull-to-refresh/bounce never fights a fixed
-header on iOS.
-
----
-
-## 4. Component Conventions
-
-### 4.1 Buttons
-
-A single `buttonVariants` (CVA) function is the *only* place button styling is defined. Every
-button in the product — regardless of feature — imports this, never hand-rolls `className="..."`.
-
-Variants and their semantic meaning (keep this exact list; resist adding more):
-| Variant | Use for |
-|---|---|
-| `default` | The one primary action on a screen/dialog |
-| `outline` | Secondary action, needs visible boundary |
-| `secondary` | Secondary action, filled but non-brand |
-| `ghost` | Tertiary / icon-only / toolbar actions |
-| `destructive` | Delete/remove — tinted (`bg-destructive/10`), not a solid red fill; a solid fill is reserved for the rare *confirmed* destructive click inside an `AlertDialog` |
-| `link` | Inline text-styled action |
-
-Sizes: `xs, sm, default, lg` for text buttons, `icon-xs, icon-sm, icon, icon-lg` for icon-only —
-square, never a text button squeezed down. Baseline interaction rules baked into the variant
-function itself, not per-usage:
-- `active:translate-y-px` — a 1px press-down on click, the tactile "physical button" cue.
-- `focus-visible:ring-3 ring-ring/50` + `border-ring` — identical focus treatment across every
-  variant.
-- `disabled:opacity-50 pointer-events-none`.
-- `aria-invalid:` styling built in, so a button used as a form-submit auto-reflects validation
-  state.
-
-### 4.2 Dialogs
-
-- Centered, not a drawer, on both mobile and desktop (`max-w-[calc(100%-2rem)] sm:max-w-sm`) —
-  reserve bottom sheets for a deliberate, separate "sheet" pattern if the product needs one; don't
-  mix the two idioms for the same kind of content.
-- Backdrop: `bg-foreground/15` + light blur (`backdrop-blur-xs`) — never opaque, never heavy blur.
-- Content surface is fully opaque (`bg-popover`), `ring-1 ring-border`, `shadow-[var(--shadow-float)]`
-  — the *backdrop* is translucent, the *dialog itself* never is.
-- `DialogFooter` gets its own subtle `bg-muted/50` band, full-bleed to the dialog's rounded corners
-  (negative margin trick), separated by a `border-t` — this visually demotes the action row below
-  the content without a heavy divider line.
-- Footer buttons: `flex-col-reverse` on mobile (primary action on top, thumb-reachable),
-  `sm:flex-row sm:justify-end` on desktop (primary action rightmost, conventional).
-- A close (`X`) icon button is present by default in the top-right corner, `size="icon-sm"
-  variant="ghost"`, absolutely positioned — opt out per-dialog, don't opt in.
-
-### 4.3 Confirmations — one shared imperative API, not `window.confirm`
-
-Expose a single `useConfirm()` hook returning a promise-based `confirm({ title, description,
-confirmLabel?, destructive? })` that resolves `true`/`false`, backed by one shared `AlertDialog`
-instance mounted at the app root. Consequences of this shape, keep all of them:
-- Escape / backdrop click always resolves `false` (a cancel), never leaves the caller hanging.
-- A second `confirm()` call while one is pending resolves the *first* call `false` before opening
-  the new one — a stray promise is a memory/UX leak.
-- `destructive` (default `true`) controls whether the confirm button renders as `destructive` or
-  `default` — so the same primitive serves "Delete this?" and "Are you sure you want to send this?"
-  without two components.
-
-### 4.4 Toggles
-
-One `Switch` primitive (`role="switch"`, real `<button>`, not a styled checkbox) plus one
-`SwitchField` wrapper that lays out icon + title + description + switch as a settings row and wires
-`aria-labelledby`/`aria-describedby` automatically. Rules:
-- The switch is always the *only* focusable element in the row — even when the whole row is
-  clickable (`interactiveRow`), the row's own `onClick` explicitly bails if the click originated
-  inside the switch, to avoid a double-toggle.
-- Checked state: solid `bg-primary` track; unchecked: `bg-muted`. Thumb is always plain white with a
-  small shadow, in both themes — it's the track that carries the semantic color, not the thumb.
-- Two sizes only (`sm` inline-in-a-row, `md` settings-row) — don't proliferate sizes.
-
-### 4.5 Icon avatars
-
-A small (16–20px) `lucide` icon rendered directly (no wrapping circle) inside list rows, but wrapped
-in a `h-9 w-9 rounded-full` colored circle when it represents a **user-chosen entity** (a category,
-a goal, a person) whose color is part of the data model. The circle's background is that entity's
-own stored color at reduced opacity or the shared `accent` token; the icon color is the full-opacity
-entity color. A picker for this (see the goal-icon-picker pattern) is a `grid grid-cols-6 gap-2` of
-`h-9` square buttons, each `rounded-sm border`, with the selected one getting
-`border-primary bg-primary/10`.
-
-### 4.6 Forms
-
-- Every field: a `text-muted-foreground text-xs font-medium` label above a full-width input, `mb-1.5`
-  gap.
-- Inputs default to a filled, borderless look — `bg-muted rounded-sm px-3 py-2` — reserving a
-  visible `border` for states that need to stand out (validation error, selected option).
-- A numeric-amount field gets its own custom keypad component rather than the OS numeric keyboard,
-  when the amount is the primary object of the screen (e.g. "add transaction") — this keeps layout
-  stable and avoids OS-keyboard quirks across platforms.
-- Color/preset pickers are a `flex flex-wrap gap-3` of plain colored circles/squares; the selected
-  one gets a `ring-2 ring-primary ring-offset-2 scale-110`.
-
-### 4.7 Toasts
-
-One toast library, mounted once at the root (`position="top-center" richColors closeButton`).
-Every mutating action that can be trivially reversed shows a success toast with an inline **Undo**
-action button rather than a confirmation dialog beforehand — confirm *before* for destructive/
-irreversible actions (§4.3), undo *after* for cheap/reversible ones. Don't use both for the same
-action.
-
----
-
-## 5. Motion & Feedback
-
-- Default transition timing across the whole system: fast and subtle — dialogs/popovers use a
-  ~100ms fade+scale (`animate-in fade-in-0 zoom-in-95`), never a slow (>200ms) or bouncy easing.
-- Reserve a distinct, purpose-built animation for a genuine error signal (e.g. a shake on wrong-PIN
-  entry), and always gate it behind `@media (prefers-reduced-motion: reduce) { animation: none; }`.
-- No animation exists purely for decoration — every motion in the system maps to a specific state
-  change (open/close, error, drag) a user needs to notice.
-
----
-
-## 6. Accessibility Baseline
-
-- Every icon-only control has an explicit `aria-label`.
-- A toggle whose visual label sits in a sibling element (not a native `<label>`) is wired with
-  `aria-labelledby`/`aria-describedby` pointing at that sibling's `id` — never left unlabeled just
-  because it's "obviously" next to text.
-- Focus-visible ring is identical across every interactive primitive (`ring-ring/50`, `ring-3`,
-  `border-ring`) — a user tabbing through the app sees one consistent focus language, not a
-  different ring per component library default.
-- Respect `prefers-reduced-motion` for any non-essential animation.
-- Any chart/graph that is the sole carrier of information ships a real `<table>` fallback behind a
-  disclosure ("View data table") — a canvas/SVG chart alone is not an accessible data
-  presentation.
-
----
-
-## 7. Dark Mode Implementation
-
-- A single class (`.dark`) toggled on the document root — not a `data-theme` attribute, not a
-  separate stylesheet — driven by a small provider that supports `light` / `dark` / `system`
-  (the `system` branch subscribes to `prefers-color-scheme` via `matchMedia` and updates live).
-- **Every token gets a hand-tuned dark value** in a `.dark { --token: ... }` block — never rely on
-  `filter: invert()` or automatic darkening. A few values are legitimately *more* saturated in dark
-  mode than light (the primary accent, see §2.2) because raw contrast math would otherwise wash it
-  out against a dark background.
-- Border/input tokens in dark mode use alpha-over-background (`rgba(foreground, 0.1)`) rather than a
-  flat gray hex, so hairlines read consistently against both `background` and the slightly-lighter
-  `card` surface.
-
----
-
-## 8. Porting This to a New Project — Checklist
-
-1. Pick **one** brand hue. Derive `primary` (light) and a brighter/more-saturated sibling for
-   `primary-foreground`/dark-mode `primary`. Everything else in the palette is neutral warm-or-cool
-   grays — pick one temperature and stay consistent.
-2. Write out the full token table in §2.1 for both `:root` and `.dark`, using §2.2 as a template to
-   fill in, not to copy verbatim.
-3. Set one `--radius` base value and derive the rest by multiplication (§2.6). Decide once whether
-   the product is "soft" (large radius, ~1rem) or "sharp" (small radius, ~0.375rem).
-4. Build the primitives in this order, each depending only on tokens (never on each other's
-   internals): Button → Switch → Dialog/AlertDialog+useConfirm → Input/Label → Header/Main shell.
-5. Establish the row anatomy (§3.3) and the card-vs-list-row distinction (§3.2) before building any
-   real feature screen — retrofitting it later means touching every screen twice.
-6. Add the accessibility baseline (§6) into the primitives themselves, not as a later audit pass.
-7. Only after all of the above, start building feature screens — they should need zero bespoke
-   color values or one-off shadow/radius declarations.
+# Design System: Finio
+
+## Overview
+
+**Creative North Star: "The Household Ledger"**
+
+Finio looks like a ledger kept at home: warm cream paper, ink-dark text, ruled hairlines between entries and a single green mark where attention is needed. It is calm, flat and paper-like. Nothing glows, blurs or gradients; depth is a hairline border and a barely-there neutral shadow. The mood is private and trustworthy rather than exciting, which fits an app whose data never leaves the device by default.
+
+Density is "tight rows, spacious sections." List rows are compact and share one container; sections breathe with generous page padding and a large bottom inset that keeps content clear of the tab bar and FAB. Numbers are the loudest thing on any screen (semibold, larger), captions are quiet (muted, smaller). Tactility is reserved for press: a 1px press-down on buttons and a slight scale on the main add action.
+
+Dark mode is a warm charcoal "night paper," not an inversion. The accent is re-tuned brighter, borders become alpha-over-background, and every token has a hand-picked dark value.
+
+**Key Characteristics:**
+- One accent (deep green), used for the primary action, active state, focus ring and links only.
+- Opaque cards with hairline borders; no gradients, glows or backdrop blur on surfaces.
+- Warm neutrals (cream, charcoal) instead of clinical white, black or blue-gray.
+- Semantic tokens only; components never hold raw hex.
+- Pill buttons, softly rounded cards (roughly 13px), small rounded inputs (roughly 10px).
+- One typeface (Geist Variable) for everything; hierarchy via size and weight.
+
+## Colors
+
+A warm paper-and-ink neutral field with a single forest-green accent and a rust red for danger. Hues are declared as CSS custom properties on `:root` and `.dark`, mapped into Tailwind's theme by reference.
+
+### Primary
+- **Ledger Green** (#146b54): primary buttons, active nav indicator, focus ring (`ring`), links, the FAB and the logo mark. In dark mode it becomes **Lamp Green** (#34a582) with near-black text (#0b1f19) on it, brighter and more saturated so it does not read as disabled.
+- **Sage Tint** (#e9f1ec) with **Deep Ink Green** (#0f4c3d): the soft `accent` pair for hover and selected backgrounds and tinted icons. Dark: #24352e with #8fcbb3.
+
+### Secondary
+- **Rust** (#b3421f, dark #e0714a): `destructive`, negative balances and overspend. The destructive button is a 10% tint of this, not a solid red fill.
+- **Warm Band** (#fbede6, text #7a2e13, accent #b3421f): the one bespoke token pair, for collapsed alert bands that are neither success nor destructive. Dark: #3a2a20, #e8c9b8, #e57a55.
+
+### Neutral
+- **Cream Paper** (#f7f5f1): page background. Dark: **Night Paper** (#211e1a).
+- **Card Stock** (#fffdf9): cards, popovers, sidebar, tab bar. Dark: #2a2521.
+- **Ledger Ink** (#1b1a17): foreground text. Dark: #f3efe7.
+- **Oat** (#f0ece3): `secondary` and `muted` fills (chips, disabled inputs). Dark: #35302a.
+- **Pencil Gray** (#6e695f): muted captions and secondary labels. Dark: #b0a99c.
+- **Hairline** (#eae5db): borders and input outlines. Dark: `rgba(243,239,231,0.10)` borders, `0.14` inputs.
+- **Chart set:** green #146b54, rust #b3421f, gold #c79b4f, sage #6ba292, slate #6e8fb0 (dark variants brighten each).
+
+### Named Rules
+**The One Voice Rule.** The green accent marks the single most important action or number on a screen. Three "important" colors means none are.
+
+**The Hairline-Not-Shadow Rule.** Separation comes from a 1px hairline border or `divide-y`. Never from a heavier shadow or a tint.
+
+**The Semantic Token Rule.** Components use `bg-card`, `text-muted-foreground`, `bg-warning-band` and the like. No raw hex, no ad-hoc Tailwind palette colors such as `bg-amber-100`.
+
+## Typography
+
+**Display Font:** Geist Variable (with sans-serif fallback), used for headings too (`--font-heading` maps to `--font-sans`)
+**Body Font:** Geist Variable
+**Label/Mono Font:** none; Geist throughout
+
+**Character:** A single clean, slightly technical grotesque that stays out of the way of the numbers. Hierarchy is made with size and weight, never with a second face.
+
+### Hierarchy
+- **Hero value** (semibold or bolder, one bespoke larger size per page): the one total, e.g. total balance on the Dashboard.
+- **Title** (500, 1rem): dialog and section titles, in the heading font.
+- **Body** (400, 0.875rem): rows, form text, paragraphs.
+- **Value** (600, 0.875rem, right-aligned): amounts in a row; flips to the destructive color when negative.
+- **Label** (500, 0.75rem, muted): captions and form labels. Small section eyebrows may use uppercase with wide tracking.
+- **Micro** (0.6875rem muted): secondary row caption under a value.
+
+Stay inside Tailwind's default scale (`text-xs` to `text-2xl`). Inputs render at base size on mobile (to avoid iOS zoom) and `md:text-sm` on larger screens.
+
+### Named Rules
+**The Loud Number Rule.** A monetary value is semibold at a larger size than its muted caption. This pairing repeats everywhere a number appears.
+
+## Layout
+
+Every screen is a `Header` plus a `Main` from `src/components/ui/`, both in a centered `max-w-5xl` column so header and content align. Header is sticky with a 12px gutter (`px-3`, `lg:px-8`) and holds a title or back button plus zero to two icon actions. Main has `space-y-4` (`lg:space-y-6`) and very large bottom padding (`pb-40` mobile, `pb-8` desktop) so nothing sits under the fixed bottom nav or FAB.
+
+Below `lg`, navigation is a fixed bottom tab bar (five items with a small active dot, plus "More") and a floating add button. From `lg` up, a 240px `Sidebar` carries the logo, a full-width pill "add" action and nav groups, and the tab bar disappears. Safe-area insets are respected (`safe-top`, `pb-safe`, `bottom-safe-nav`) and `overscroll-behavior: none` prevents bounce against fixed bars.
+
+A single standalone item (a stat, a form section) is its own card with 16px padding. A homogeneous list is **one** card with `divide-y` and plain rows (`py-3`), never a stack of individually shadowed cards. Row anatomy: icon or avatar, a `min-w-0 flex-1` title (truncating) over a muted subtitle, and a right-aligned value over a micro caption.
+
+### Named Rules
+**The One Container Rule.** A list of similar things is one bordered container with dividers, not n cards.
+
+## Elevation & Depth
+
+Flat and tonal. At rest, surfaces are Card Stock on Cream Paper separated by a 1px hairline and `--shadow-card` (`0 1px 2px rgba(27,26,23,0.05)`). Only floating layers (dialogs, popovers, menus, selects) lift, using `--shadow-float` (`0 18px 40px -20px rgba(27,26,23,0.35)`) plus a `ring-1` in the border color. Dark mode uses the same shapes at higher opacity (0.4 and 0.6). Shadows are always neutral, never tinted with the accent.
+
+Modal backdrops are translucent (`bg-foreground/15`) with a light `backdrop-blur-xs`; the dialog surface itself is fully opaque (`bg-popover`). Blur is reserved for backdrops only.
+
+Legacy `bg-grad-*` and `shadow-glow-*` class names survive as a shim that resolves to flat fills and the float shadow. Do not use them in new work.
+
+### Shadow Vocabulary
+- **Card rest** (`box-shadow: 0 1px 2px rgba(27,26,23,0.05)`): every `card-elevated` surface.
+- **Float** (`box-shadow: 0 18px 40px -20px rgba(27,26,23,0.35)`): dialogs, popovers, dropdowns, selects.
+
+### Named Rules
+**The Flat-By-Default Rule.** Surfaces are flat at rest. Only layers that float above the page get the float shadow.
+
+## Shapes
+
+One base `--radius: 1rem`; all steps derive from it: sm 9.6px, md 12.8px, lg 16px, xl 22.4px, 2xl 28.8px. Buttons and pill controls are fully round. Cards and dialogs use `rounded-md`; inputs, menu items and picker tiles use `rounded-sm`. User-chosen entities (category, goal, person) get a 36px circle tinted with the entity's own color. Never use arbitrary one-off radii; pick the nearest step.
+
+## Components
+
+### Buttons
+- **Shape:** fully round pills (9999px); default height 36px (`h-9`), sizes xs 24, sm 28, default 36, lg 44; icon-only sizes are square (24/28/32/36).
+- **Primary (`default`):** Ledger Green fill with Card Stock text; hover at 85% for link-style anchors.
+- **Outline:** Card Stock fill, hairline border, Oat on hover.
+- **Secondary / Ghost:** Oat fill, or transparent with Oat hover.
+- **Destructive:** 10% rust tint with rust text (20% on hover); solid red only for the final confirm inside an alert dialog.
+- **Interaction:** 1px press-down on active, a 3px 50%-opacity focus ring in the border-ring color identical across variants, disabled at half opacity with no pointer events, built-in invalid styling.
+
+### Inputs / Fields
+- **Style:** Card Stock fill, 1px hairline border, 10px radius, 40px tall, 12px horizontal padding. Label above in muted 12px medium, 6px gap.
+- **Focus:** border shifts to the accent and a 3px 50% accent ring appears.
+- **Error / Disabled:** destructive border with a 20% destructive ring; disabled turns Oat and loses pointer events at half opacity.
+- **Amount entry:** the primary amount field uses a custom on-screen number pad rather than the OS keyboard, keeping layout stable.
+
+### Cards / Containers
+- **Corner Style:** about 13px (`rounded-md`).
+- **Background:** Card Stock, opaque.
+- **Shadow Strategy:** card rest only; see Elevation.
+- **Border:** 1px hairline (`card-elevated`).
+- **Internal Padding:** 16px; list rows 12px vertical.
+
+### Navigation
+- **Mobile:** fixed tab bar on Card Stock with a top hairline, icon plus 12px medium label, and a 4px green dot marking the active tab (transparent otherwise). A floating add button sits above it; long-press opens a template popover. Some pages hide the FAB where it would cover a primary action.
+- **Desktop:** 240px sidebar on Card Stock with a right hairline, green circular "F" mark, full-width pill add action and grouped nav.
+
+### Dialogs and Popovers
+Centered, never a drawer, on mobile and desktop (`max-w-[calc(100%-2rem)]`, `sm:max-w-sm`). Fully opaque `bg-popover`, `ring-1` border color, float shadow, 100ms fade and zoom. Footer buttons stack with the primary on top on mobile and sit right-aligned on desktop. Confirmation uses one shared promise-based `useConfirm()`, never `window.confirm`.
+
+### Switches
+One `Switch` primitive (a real `button` with `role="switch"`): green track when on, Oat when off, a white thumb with a small shadow in both themes. A `SwitchField` lays out icon, title, description and switch as a settings row.
+
+### Toasts
+One Sonner instance at the top center, rich colors and a close button. Reversible actions get a toast with an inline **Undo**; irreversible ones get a confirm dialog beforehand, never both.
+
+### Charts
+Recharts using the five-step chart palette. Any chart that is the sole carrier of data is paired with a real table behind a "View data table" disclosure.
+
+## Do's and Don'ts
+
+### Do:
+- **Do** use the accent only for the primary action, active states, focus ring and links (The One Voice Rule).
+- **Do** reference semantic tokens (`bg-card`, `text-muted-foreground`, `bg-warning-band`) for every color.
+- **Do** build every page from `Header` + `Main` and keep `Main`'s large bottom padding.
+- **Do** render a list as one `card-elevated divide-y` container of plain rows.
+- **Do** make amounts semibold and larger than their muted captions, and flip negatives to the destructive color.
+- **Do** truncate titles inside a `min-w-0 flex-1` wrapper so the value column never gets pushed off screen.
+- **Do** give every icon-only control an `aria-label`, and gate any non-essential animation behind `prefers-reduced-motion`.
+- **Do** pick every color-picker swatch from the shared 18-swatch `COLOR_PALETTE`.
+- **Do** keep transitions fast (about 100ms fade and scale); reserve a distinct animation (the wrong-PIN shake) for real error signals.
+
+### Don't:
+- **Don't** add gradients, glows or `backdrop-blur` to surfaces; blur belongs to modal backdrops only.
+- **Don't** put raw hex or ad-hoc palette colors (`bg-amber-100`) in components.
+- **Don't** stack individually shadowed cards for a homogeneous list, and don't add per-row icon medallions.
+- **Don't** use native `window.confirm()` or a hand-rolled `role="switch"` span.
+- **Don't** introduce one-off radii, a second typeface, or a second accent color.
+- **Don't** use new `bg-grad-*` or `shadow-glow-*` classes; they exist only as a flat-fill shim.
+- **Don't** invert colors for dark mode; hand-tune each token.
+- **Don't** let a chart be the only carrier of its data.

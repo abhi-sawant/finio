@@ -16,6 +16,7 @@ import { AccountCard } from '@/components/accounts/AccountCard';
 import { HideAmountsToggle } from '@/components/HideAmountsToggle';
 import { useConfirm } from '@/components/ui/use-confirm';
 import Header from '@/components/ui/header';
+import { HeaderIconButton } from '@/components/ui/header-icon-button';
 import Main from '@/components/ui/main';
 
 export default function Accounts() {
@@ -109,13 +110,13 @@ export default function Accounts() {
         <h1 className="text-2xl font-bold tracking-tight">Accounts</h1>
         <div className="flex gap-2">
           <HideAmountsToggle />
-          <button
+          <HeaderIconButton
             onClick={() => navigate('/add-account')}
-            className="bg-primary text-primary-foreground flex h-9 w-9 items-center justify-center rounded-full"
             aria-label="Add account"
+            tone="primary"
           >
-            <Plus size={16} />
-          </button>
+            <Plus />
+          </HeaderIconButton>
         </div>
       </Header>
       <Main>

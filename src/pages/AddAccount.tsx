@@ -35,6 +35,7 @@ import { activeAccounts, isLiquidAccount } from '@/utils/calculations';
 import { accountDeleteBlockers, isDepositAccount } from '@/utils/deposit';
 import type { AccountType } from '@/types';
 import Header from '@/components/ui/header';
+import { HeaderIconButton, HeaderIconSpacer } from '@/components/ui/header-icon-button';
 import Main from '@/components/ui/main';
 
 const TYPE_ICONS: Record<string, LucideIcon> = {
@@ -254,21 +255,16 @@ export default function AddAccount() {
     <>
       {/* Header */}
       <Header innerClassName="lg:max-w-xl">
-        <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="h-9 w-9">
-          <ArrowLeft size={20} />
-        </Button>
+        <HeaderIconButton onClick={() => navigate(-1)} aria-label="Back">
+          <ArrowLeft />
+        </HeaderIconButton>
         <h1 className="text-base font-semibold">{existing ? 'Edit Account' : 'Add Account'}</h1>
         {existing ? (
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleDelete}
-            className="text-destructive h-9 w-9"
-          >
-            <Trash2 size={18} />
-          </Button>
+          <HeaderIconButton onClick={handleDelete} aria-label="Delete" tone="destructive">
+            <Trash2 />
+          </HeaderIconButton>
         ) : (
-          <div className="w-9" />
+          <HeaderIconSpacer />
         )}
       </Header>
 

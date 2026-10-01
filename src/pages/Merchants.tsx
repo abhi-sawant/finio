@@ -10,8 +10,8 @@ import {
 import { formatCurrency, formatDate, shouldCompactGroup } from '@/utils/formatters';
 import { HideAmountsToggle } from '@/components/HideAmountsToggle';
 import { TransactionItem } from '@/components/transactions/TransactionItem';
-import { Button } from '@/components/ui/button';
 import Header from '@/components/ui/header';
+import { HeaderIconButton } from '@/components/ui/header-icon-button';
 import Main from '@/components/ui/main';
 
 const TYPE_CHIPS: { value: MerchantTransactionType; label: string }[] = [
@@ -111,9 +111,9 @@ export default function Merchants() {
   return (
     <>
       <Header innerClassName="lg:max-w-2xl">
-        <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="h-9 w-9">
-          <ArrowLeft size={20} />
-        </Button>
+        <HeaderIconButton onClick={() => navigate(-1)} aria-label="Back">
+          <ArrowLeft />
+        </HeaderIconButton>
         <h1 className="text-base font-semibold">Merchants</h1>
         <HideAmountsToggle />
       </Header>

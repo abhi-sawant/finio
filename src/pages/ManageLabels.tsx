@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useConfirm } from '@/components/ui/use-confirm';
 import Header from '@/components/ui/header';
+import { HeaderIconButton } from '@/components/ui/header-icon-button';
 import Main from '@/components/ui/main';
 import { MAX_NAME_LENGTH, cleanText, stripLeading } from '@/utils/validation';
 
@@ -57,21 +58,20 @@ export default function ManageLabels() {
     <>
       {/* Header */}
       <Header innerClassName="lg:max-w-xl">
-        <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="h-9 w-9">
-          <ArrowLeft size={20} />
-        </Button>
+        <HeaderIconButton onClick={() => navigate(-1)} aria-label="Back">
+          <ArrowLeft />
+        </HeaderIconButton>
         <h1 className="text-base font-semibold">Labels</h1>
-        <Button
-          variant="ghost"
-          size="icon"
+        <HeaderIconButton
           onClick={() => {
             resetForm();
             setOpen(true);
           }}
-          className="text-primary h-9 w-9"
+          aria-label="Add label"
+          tone="primary"
         >
-          <Plus size={20} />
-        </Button>
+          <Plus />
+        </HeaderIconButton>
       </Header>
 
       <Main className="lg:max-w-xl">

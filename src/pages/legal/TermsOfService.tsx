@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router';
 import { ArrowLeft } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import Header from '@/components/ui/header';
+import { HeaderIconButton, HeaderIconSpacer } from '@/components/ui/header-icon-button';
 import Main from '@/components/ui/main';
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
@@ -19,11 +19,11 @@ export default function TermsOfService() {
   return (
     <>
       <Header innerClassName="lg:max-w-2xl">
-        <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="h-9 w-9">
-          <ArrowLeft size={20} />
-        </Button>
+        <HeaderIconButton onClick={() => navigate(-1)} aria-label="Back">
+          <ArrowLeft />
+        </HeaderIconButton>
         <h1 className="text-base font-semibold">Terms of Service</h1>
-        <div className="h-9 w-9" />
+        <HeaderIconSpacer />
       </Header>
 
       <Main className="lg:max-w-2xl">

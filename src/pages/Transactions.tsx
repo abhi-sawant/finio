@@ -42,6 +42,7 @@ import {
 } from '@/components/ui/select';
 import type { Transaction, TransactionType } from '@/types';
 import Header from '@/components/ui/header';
+import { HeaderIconButton } from '@/components/ui/header-icon-button';
 import Main from '@/components/ui/main';
 
 type VirtualRow =
@@ -319,24 +320,16 @@ export default function Transactions() {
         <h1 className="text-2xl font-bold tracking-tight">Transactions</h1>
         <div className="flex gap-2">
           <HideAmountsToggle />
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={handleExportCsv}
-            className="bg-card hover:bg-muted h-9 w-9 rounded-full"
-            aria-label="Export CSV"
-          >
-            <Download size={16} />
-          </Button>
-          <Button
-            variant={hasActiveFilters ? 'default' : 'outline'}
-            size="icon"
+          <HeaderIconButton onClick={handleExportCsv} aria-label="Export CSV">
+            <Download />
+          </HeaderIconButton>
+          <HeaderIconButton
             onClick={() => setShowFilters(!showFilters)}
-            className={cn('h-9 w-9 rounded-full', !hasActiveFilters && 'bg-card')}
             aria-label="Toggle filters"
+            pressed={hasActiveFilters}
           >
-            <Filter size={16} />
-          </Button>
+            <Filter />
+          </HeaderIconButton>
         </div>
       </Header>
       <Main ref={scrollRef}>

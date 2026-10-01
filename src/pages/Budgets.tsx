@@ -46,6 +46,7 @@ import {
 } from '@/utils/period';
 import type { Budget, BudgetPeriod } from '@/types';
 import Header from '@/components/ui/header';
+import { HeaderIconButton } from '@/components/ui/header-icon-button';
 import Main from '@/components/ui/main';
 
 const OVERALL_SCOPE = '__overall__';
@@ -205,27 +206,20 @@ export default function Budgets() {
     <>
       {/* Header */}
       <Header innerClassName="lg:max-w-xl">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => navigate(-1)}
-          className="h-9 w-9 rounded-full"
-        >
-          <ArrowLeft size={20} />
-        </Button>
+        <HeaderIconButton onClick={() => navigate(-1)} aria-label="Back">
+          <ArrowLeft />
+        </HeaderIconButton>
         <h1 className="text-base font-semibold">Budgets</h1>
-        <div className="flex gap-1">
+        <div className="flex gap-2">
           <HideAmountsToggle />
-          <Button
-            variant="ghost"
-            size="icon"
+          <HeaderIconButton
             onClick={() => (showForm ? resetForm() : startCreate())}
-            className="text-primary hover:bg-primary/10 h-9 w-9 rounded-full"
             aria-label="Add budget"
+            tone="primary"
             disabled={allScopesTaken && !showForm}
           >
-            <Plus size={20} />
-          </Button>
+            <Plus />
+          </HeaderIconButton>
         </div>
       </Header>
 
