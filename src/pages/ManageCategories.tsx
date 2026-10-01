@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { ArrowLeft, Plus, Trash2, Pencil } from 'lucide-react';
+import { toast } from 'sonner';
 import { CategoryIcon, CATEGORY_ICONS } from '@/components/categories/CategoryIcon';
 import { useFinanceStore } from '@/store/useFinanceStore';
 import { COLOR_PALETTE } from '@/data/colorPalette';
@@ -49,11 +50,25 @@ export default function ManageCategories() {
   };
 
   const handleSubmit = () => {
-    if (!name.trim()) return;
+    if (!name.trim()) {
+      toast.error('Enter a name');
+      return;
+    }
+    const key = name.trim().toLowerCase();
+    if (
+      categories.some(
+        (c) => c.id !== editId && c.type === type && c.name.trim().toLowerCase() === key,
+      )
+    ) {
+      toast.error(`A ${type} category named "${name.trim()}" already exists`);
+      return;
+    }
     if (editId) {
       updateCategory(editId, { name: name.trim(), type, color, icon });
+      toast.success('Category updated');
     } else {
       addCategory({ name: name.trim(), type, color, icon });
+      toast.success('Category added');
     }
     resetForm();
   };

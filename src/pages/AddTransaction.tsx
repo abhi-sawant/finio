@@ -278,10 +278,13 @@ export default function AddTransaction() {
     }
   };
 
+  const submitting = useRef(false);
+
   const handleSubmit = () => {
+    if (submitting.current) return;
     const parsedAmount = parseFloat(amount);
     if (!parsedAmount || parsedAmount <= 0) {
-      toast.error('Enter a valid amount');
+      toast.error('Enter an amount');
       return;
     }
     if (!accountId) {
@@ -315,6 +318,7 @@ export default function AddTransaction() {
       return;
     }
 
+    submitting.current = true;
     const transferCategory = categories.find((c) => c.type === 'both');
     const txData = {
       type,
@@ -702,12 +706,7 @@ export default function AddTransaction() {
 
         {/* Submit */}
         <div className="bg-background fixed bottom-0 left-0 z-50 w-full p-3 shadow">
-          <Button
-            onClick={handleSubmit}
-            disabled={!amount || !accountId}
-            className="w-full rounded-md"
-            size="lg"
-          >
+          <Button onClick={handleSubmit} className="w-full rounded-md" size="lg">
             {existing ? 'Update Transaction' : 'Add Transaction'}
           </Button>
         </div>

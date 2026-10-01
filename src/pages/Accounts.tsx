@@ -96,7 +96,9 @@ export default function Accounts() {
     });
     if (confirmed) {
       setAccountArchived(account.id, true);
-      toast.success(`"${account.name}" archived`);
+      toast.success(`"${account.name}" archived`, {
+        action: { label: 'Undo', onClick: () => setAccountArchived(account.id, false) },
+      });
     }
   };
 

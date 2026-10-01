@@ -108,6 +108,24 @@ export const TransactionItem = memo(function TransactionItem({
         onClick={handleClick}
         aria-pressed={selectionMode ? selected : undefined}
         {...(longPressEnabled ? longPressHandlers : undefined)}
+        onContextMenu={
+          longPressEnabled
+            ? (e) => {
+                e.preventDefault();
+                setMenuOpen(true);
+              }
+            : undefined
+        }
+        onKeyDown={
+          longPressEnabled
+            ? (e) => {
+                if (e.key === 'ContextMenu' || (e.shiftKey && e.key === 'F10')) {
+                  e.preventDefault();
+                  setMenuOpen(true);
+                }
+              }
+            : undefined
+        }
         className="hover:bg-muted/40 active:bg-muted/60 flex w-full items-center gap-3 px-3 py-3 text-left transition-colors"
       >
         {selectionMode && (

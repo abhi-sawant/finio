@@ -177,6 +177,26 @@ describe('buildInsights', () => {
     expect(insights.some((i) => i.kind === 'category-drop')).toBe(false);
   });
 
+  it('holds back pace-based insights in the first week of the period', () => {
+    const history = [
+      tx({ type: 'expense', amount: 4000, date: '2026-03-10T00:00:00.000Z' }),
+      tx({ type: 'expense', amount: 4000, date: '2026-04-10T00:00:00.000Z' }),
+      tx({ type: 'expense', amount: 4000, date: '2026-05-10T00:00:00.000Z' }),
+      tx({ type: 'expense', amount: 3000, date: '2026-06-01T00:00:00.000Z' }),
+      tx({ type: 'expense', amount: 3000, date: '2026-06-02T00:00:00.000Z' }),
+      tx({ type: 'expense', amount: 3000, date: '2026-06-03T00:00:00.000Z' }),
+    ];
+    const kinds = (now: Date) =>
+      buildInsights({ ...baseInput(history), now }, { formatAmount: money }).map((i) => i.kind);
+
+    const early = kinds(new Date('2026-06-03T12:00:00.000Z'));
+    expect(early).not.toContain('category-spike');
+    expect(early).not.toContain('category-share');
+
+    const later = kinds(new Date('2026-06-10T12:00:00.000Z'));
+    expect(later).toContain('category-spike');
+  });
+
   it('needs enough history before comparing against an average', () => {
     const insights = buildInsights(
       baseInput([

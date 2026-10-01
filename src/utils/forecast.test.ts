@@ -109,6 +109,31 @@ describe('categoryDailyAverages', () => {
     expect(dailyEstimate).toBe(100);
   });
 
+  it('leaves out untagged expenses that match an active recurring rule', () => {
+    const rent = rule({ id: 'rule-rent', amount: 5000, note: 'Rent' });
+    const rows = [
+      tx({ type: 'expense', amount: 100, date: '2026-06-15T00:00:00.000Z' }),
+      tx({
+        type: 'expense',
+        amount: 5000,
+        date: '2026-06-10T00:00:00.000Z',
+        note: 'Rent',
+        categoryId: 'cat-bills',
+      }),
+    ];
+
+    const without = categoryDailyAverages(rows, ACCOUNTS, { now: NOW });
+    const withRule = categoryDailyAverages(rows, ACCOUNTS, { now: NOW, recurring: [rent] });
+    const paused = categoryDailyAverages(rows, ACCOUNTS, {
+      now: NOW,
+      recurring: [{ ...rent, pausedAt: '2026-06-01T00:00:00.000Z' }],
+    });
+
+    expect(without.averages.some((a) => a.categoryId === 'cat-bills')).toBe(true);
+    expect(withRule.averages.some((a) => a.categoryId === 'cat-bills')).toBe(false);
+    expect(paused.averages.some((a) => a.categoryId === 'cat-bills')).toBe(true);
+  });
+
   it('leaves out recurring-generated rows, so subscriptions are not billed twice', () => {
     const { dailyEstimate } = categoryDailyAverages(
       [

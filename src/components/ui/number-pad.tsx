@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { Delete } from 'lucide-react';
 import { formatInputAmount } from '@/utils/formatters';
 
@@ -32,6 +33,32 @@ export function NumberPad({ value, onChange }: NumberPadProps) {
       onChange(value + key);
     }
   };
+
+  // Hardware keyboard support. The ref keeps the listener bound once while always seeing the
+  // latest `value`/`onChange`.
+  const pressRef = useRef(handlePress);
+  useEffect(() => {
+    pressRef.current = handlePress;
+  });
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      const t = e.target as HTMLElement | null;
+      if (t && (t.closest('input, textarea, select') || t.isContentEditable)) return;
+      if (e.key >= '0' && e.key <= '9' && e.key.length === 1) {
+        e.preventDefault();
+        pressRef.current(e.key);
+      } else if (e.key === '.' || e.key === ',') {
+        e.preventDefault();
+        pressRef.current('.');
+      } else if (e.key === 'Backspace') {
+        e.preventDefault();
+        pressRef.current('⌫');
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, []);
 
   const display = formatInputAmount(value);
 

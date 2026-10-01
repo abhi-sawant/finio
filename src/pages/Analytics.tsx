@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Target, ChevronRight, Repeat, CalendarIcon } from 'lucide-react';
 import { useFinanceStore } from '@/store/useFinanceStore';
@@ -44,6 +44,15 @@ export default function Analytics() {
   const monthStartDay = normalizeMonthStartDay(useFinanceStore((s) => s.settings.monthStartDay));
   const hideAmounts = useFinanceStore((s) => s.settings.hideAmounts);
 
+  const [twoMonths, setTwoMonths] = useState(
+    () => typeof window === 'undefined' || window.matchMedia('(min-width: 768px)').matches,
+  );
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 768px)');
+    const onChange = () => setTwoMonths(mq.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
   const [selectedFilter, setSelectedFilter] = useState<FilterType>('month');
   const [date, setDate] = React.useState<DateRange | undefined>(undefined);
 
@@ -150,13 +159,16 @@ export default function Analytics() {
                     </Button>
                   }
                 />
-                <PopoverContent className="w-auto p-0" align="start">
+                <PopoverContent
+                  className="w-auto max-w-[calc(100vw-1rem)] overflow-auto p-0"
+                  align="start"
+                >
                   <Calendar
                     mode="range"
                     defaultMonth={date?.from}
                     selected={date}
                     onSelect={handleDateSelect}
-                    numberOfMonths={2}
+                    numberOfMonths={twoMonths ? 2 : 1}
                   />
                 </PopoverContent>
               </Popover>

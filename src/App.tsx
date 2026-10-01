@@ -1,5 +1,5 @@
-import { lazy, Suspense } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router';
+import { lazy, Suspense, useState } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useParams } from 'react-router';
 import { Toaster } from 'sonner';
 import { Layout } from '@/components/layout/Layout';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
@@ -52,6 +52,31 @@ function PageLoader() {
   );
 }
 
+/**
+ * Edit routes: a stale or mistyped id redirects to the list instead of rendering a blank "add"
+ * form. The check is made once, at mount — an entity deleted from inside its own edit screen
+ * must not trigger a redirect that fights that screen's own navigate(-1).
+ */
+function EditGuard({
+  exists,
+  fallback,
+  children,
+}: {
+  exists: (id: string) => boolean;
+  fallback: string;
+  children: React.ReactNode;
+}) {
+  const { id } = useParams();
+  const [found] = useState(() => (id ? exists(id) : false));
+  if (!found) return <Navigate to={fallback} replace />;
+  return <>{children}</>;
+}
+
+const hasAccount = (id: string) => useFinanceStore.getState().accounts.some((a) => a.id === id);
+const hasTransaction = (id: string) =>
+  useFinanceStore.getState().transactions.some((t) => t.id === id);
+const hasLoan = (id: string) => useFinanceStore.getState().loans.some((l) => l.id === id);
+
 function AppRoutes() {
   const isHydrated = useFinanceStore((s) => s.isHydrated);
   const onboardedAt = useFinanceStore((s) => s.settings.onboardedAt);
@@ -82,12 +107,26 @@ function AppRoutes() {
         <Route path="settings" element={<Settings />} />
       </Route>
       <Route path="add-transaction" element={<AddTransaction />} />
-      <Route path="edit-transaction/:id" element={<AddTransaction />} />
+      <Route
+        path="edit-transaction/:id"
+        element={
+          <EditGuard exists={hasTransaction} fallback="/transactions">
+            <AddTransaction />
+          </EditGuard>
+        }
+      />
       {/* Web Share Target. Must be an explicit route — the "*" catch-all below redirects to
           "/" and would drop the shared payload's query params on the way. */}
       <Route path="share-target" element={<AddTransaction />} />
       <Route path="add-account" element={<AddAccount />} />
-      <Route path="edit-account/:id" element={<AddAccount />} />
+      <Route
+        path="edit-account/:id"
+        element={
+          <EditGuard exists={hasAccount} fallback="/accounts">
+            <AddAccount />
+          </EditGuard>
+        }
+      />
       <Route path="manage-categories" element={<ManageCategories />} />
       <Route path="manage-labels" element={<ManageLabels />} />
       <Route path="budgets" element={<Budgets />} />
@@ -96,7 +135,14 @@ function AppRoutes() {
       <Route path="debts" element={<Debts />} />
       <Route path="loans" element={<Loans />} />
       <Route path="add-loan" element={<AddLoan />} />
-      <Route path="edit-loan/:id" element={<AddLoan />} />
+      <Route
+        path="edit-loan/:id"
+        element={
+          <EditGuard exists={hasLoan} fallback="/loans">
+            <AddLoan />
+          </EditGuard>
+        }
+      />
       <Route path="import-csv" element={<ImportCsv />} />
       <Route path="category-rules" element={<CategoryRules />} />
       <Route path="merchants" element={<Merchants />} />

@@ -70,23 +70,28 @@ export default function YearInReview() {
   );
   const busiestExpenses = review.busiestMonth?.expenses ?? 0;
 
-  if (review.current.transactionCount === 0 && review.previous.transactionCount === 0) {
-    return (
-      <>
-        <Header innerClassName="lg:max-w-2xl">
-          <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="h-9 w-9">
-            <ArrowLeft size={20} />
-          </Button>
-          <h1 className="text-base font-semibold">Year in Review</h1>
-        </Header>
-        <Main className="lg:max-w-2xl">
-          <p className="text-muted-foreground py-12 text-center text-sm">
-            Add some transactions to see a year in review.
-          </p>
-        </Main>
-      </>
-    );
-  }
+  const isEmpty = review.current.transactionCount === 0 && review.previous.transactionCount === 0;
+
+  const yearNav = (
+    <div className="flex items-center justify-center gap-3">
+      <button
+        onClick={() => setYearOffset((o) => o - 1)}
+        className="hover:bg-muted text-muted-foreground flex h-8 w-8 items-center justify-center rounded-full transition-colors"
+        aria-label="Previous year"
+      >
+        <ChevronLeft size={16} />
+      </button>
+      <span className="min-w-20 text-center text-lg font-bold">{review.label}</span>
+      <button
+        onClick={() => setYearOffset((o) => Math.min(0, o + 1))}
+        disabled={yearOffset >= 0}
+        className="hover:bg-muted text-muted-foreground flex h-8 w-8 items-center justify-center rounded-full transition-colors disabled:opacity-30"
+        aria-label="Next year"
+      >
+        <ChevronRight size={16} />
+      </button>
+    </div>
+  );
 
   return (
     <>
@@ -99,190 +104,190 @@ export default function YearInReview() {
       </Header>
 
       <Main className="lg:max-w-2xl">
-        <div className="flex items-center justify-center gap-3">
-          <button
-            onClick={() => setYearOffset((o) => o - 1)}
-            className="hover:bg-muted text-muted-foreground flex h-8 w-8 items-center justify-center rounded-full transition-colors"
-            aria-label="Previous year"
-          >
-            <ChevronLeft size={16} />
-          </button>
-          <span className="min-w-20 text-center text-lg font-bold">{review.label}</span>
-          <button
-            onClick={() => setYearOffset((o) => Math.min(0, o + 1))}
-            disabled={yearOffset >= 0}
-            className="hover:bg-muted text-muted-foreground flex h-8 w-8 items-center justify-center rounded-full transition-colors disabled:opacity-30"
-            aria-label="Next year"
-          >
-            <ChevronRight size={16} />
-          </button>
-        </div>
+        {yearNav}
 
-        {/* Hero */}
-        <div className="card-elevated bg-grad-surface rounded-md p-4">
-          <div className="grid grid-cols-3 gap-3 text-center">
-            <div>
-              <p className="text-muted-foreground text-[10px] tracking-wide uppercase">Income</p>
-              <p className="text-primary text-sm font-semibold">
-                {formatCurrency(review.current.income, true, hideAmounts, {
-                  forceCompact: heroCompact,
-                })}
-              </p>
-            </div>
-            <div>
-              <p className="text-muted-foreground text-[10px] tracking-wide uppercase">Expenses</p>
-              <p className="text-destructive text-sm font-semibold">
-                {formatCurrency(review.current.expenses, true, hideAmounts, {
-                  forceCompact: heroCompact,
-                })}
-              </p>
-            </div>
-            <div>
-              <p className="text-muted-foreground text-[10px] tracking-wide uppercase">Net</p>
-              <p
-                className={`text-sm font-semibold ${review.current.net >= 0 ? 'text-primary' : 'text-destructive'}`}
-              >
-                {formatCurrency(review.current.net, true, hideAmounts, {
-                  forceCompact: heroCompact,
-                })}
-              </p>
-            </div>
-          </div>
-          <div className="border-border mt-3 grid grid-cols-3 gap-3 border-t pt-2 text-center">
-            <ChangeBadge value={ratio(review.current.income, review.previous.income)} />
-            <ChangeBadge value={ratio(review.current.expenses, review.previous.expenses)} invert />
-            <ChangeBadge value={ratio(review.current.net, review.previous.net)} />
-          </div>
-        </div>
-
-        {/* Net worth */}
-        <div className="card-elevated rounded-md p-4">
-          <h3 className="mb-3 text-sm font-semibold">Net Worth</h3>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-muted-foreground text-[10px] tracking-wide uppercase">
-                Start of year
-              </p>
-              <p className="text-sm font-semibold">{money(review.netWorthStart)}</p>
-            </div>
-            <ArrowRight size={16} className="text-muted-foreground shrink-0" />
-            <div className="text-right">
-              <p className="text-muted-foreground text-[10px] tracking-wide uppercase">
-                {yearOffset === 0 ? 'Now' : 'End of year'}
-              </p>
-              <p className="text-sm font-semibold">{money(review.netWorthEnd)}</p>
-            </div>
-          </div>
-          <p
-            className={`mt-2 text-center text-xs font-medium ${review.netWorthChange >= 0 ? 'text-primary' : 'text-destructive'}`}
-          >
-            {review.netWorthChange >= 0 ? '+' : ''}
-            {money(review.netWorthChange)} this year
+        {isEmpty ? (
+          <p className="text-muted-foreground py-12 text-center text-sm">
+            {transactions.length > 0
+              ? `No activity in ${review.label}`
+              : 'Add some transactions to see a year in review.'}
           </p>
-        </div>
-
-        {/* Monthly breakdown */}
-        <div className="card-elevated rounded-md p-4">
-          <h3 className="mb-3 text-sm font-semibold">Spending by Month</h3>
-          <div className="flex items-end gap-1.5" style={{ height: 90 }}>
-            {review.monthlyBreakdown.map((month) => (
-              <div key={month.key} className="flex flex-1 flex-col items-center gap-1">
-                <div
-                  title={`${month.label}: ${money(month.expenses)}`}
-                  className={`w-full rounded-t-sm ${
-                    month.key === review.busiestMonth?.key ? 'bg-primary' : 'bg-primary/25'
-                  }`}
-                  style={{
-                    height:
-                      busiestExpenses > 0
-                        ? `${Math.max(4, (month.expenses / busiestExpenses) * 72)}px`
-                        : 4,
-                  }}
+        ) : (
+          <>
+            {/* Hero */}
+            <div className="card-elevated bg-grad-surface rounded-md p-4">
+              <div className="grid grid-cols-3 gap-3 text-center">
+                <div>
+                  <p className="text-muted-foreground text-[10px] tracking-wide uppercase">
+                    Income
+                  </p>
+                  <p className="text-primary text-sm font-semibold">
+                    {formatCurrency(review.current.income, true, hideAmounts, {
+                      forceCompact: heroCompact,
+                    })}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground text-[10px] tracking-wide uppercase">
+                    Expenses
+                  </p>
+                  <p className="text-destructive text-sm font-semibold">
+                    {formatCurrency(review.current.expenses, true, hideAmounts, {
+                      forceCompact: heroCompact,
+                    })}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground text-[10px] tracking-wide uppercase">Net</p>
+                  <p
+                    className={`text-sm font-semibold ${review.current.net >= 0 ? 'text-primary' : 'text-destructive'}`}
+                  >
+                    {formatCurrency(review.current.net, true, hideAmounts, {
+                      forceCompact: heroCompact,
+                    })}
+                  </p>
+                </div>
+              </div>
+              <div className="border-border mt-3 grid grid-cols-3 gap-3 border-t pt-2 text-center">
+                <ChangeBadge value={ratio(review.current.income, review.previous.income)} />
+                <ChangeBadge
+                  value={ratio(review.current.expenses, review.previous.expenses)}
+                  invert
                 />
-                <span className="text-muted-foreground text-[9px]">{month.label}</span>
+                <ChangeBadge value={ratio(review.current.net, review.previous.net)} />
               </div>
-            ))}
-          </div>
-          {review.busiestMonth && (
-            <p className="text-muted-foreground mt-3 flex items-center justify-center gap-1 text-xs">
-              <Trophy size={12} className="text-[#c79b4f]" />
-              Biggest spend: {review.busiestMonth.label} · {money(review.busiestMonth.expenses)}
-            </p>
-          )}
-        </div>
+            </div>
 
-        {/* Top categories */}
-        {review.topCategories.length > 0 && (
-          <div className="card-elevated rounded-md p-4">
-            <h3 className="mb-3 text-sm font-semibold">Top Categories</h3>
-            <ul className="space-y-2.5">
-              {review.topCategories.map((c) => {
-                const category = categoryFor(c.categoryId);
-                return (
-                  <li key={c.categoryId} className="flex items-center gap-2.5">
-                    <span className="min-w-0 flex-1 truncate text-xs font-medium">
-                      {category?.name ?? 'Uncategorized'}
-                    </span>
-                    <span className="shrink-0 text-xs font-semibold">{money(c.amount)}</span>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        )}
-
-        {/* Biggest movers */}
-        {review.movers.length > 0 && (
-          <div className="card-elevated rounded-md p-4">
-            <h3 className="mb-3 text-sm font-semibold">Biggest Movers vs Last Year</h3>
-            <ul className="space-y-2.5">
-              {review.movers.map((mover) => {
-                const category = categoryFor(mover.categoryId);
-                const isUp = mover.change > 0;
-                return (
-                  <li key={mover.categoryId} className="flex items-center gap-2.5">
-                    <span className="min-w-0 flex-1 truncate text-xs font-medium">
-                      {category?.name ?? 'Uncategorized'}
-                    </span>
-                    <span
-                      className={`shrink-0 text-xs font-semibold ${isUp ? 'text-destructive' : 'text-primary'}`}
-                    >
-                      {isUp ? '+' : '−'}
-                      {money(Math.abs(mover.change))}
-                    </span>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        )}
-
-        {/* Biggest single expense */}
-        {review.biggestExpense && (
-          <div className="card-elevated rounded-md p-4">
-            <h3 className="mb-2 text-sm font-semibold">Biggest Single Expense</h3>
-            <div className="flex items-center justify-between gap-2">
-              <div className="min-w-0">
-                <p className="truncate text-sm font-medium">
-                  {review.biggestExpense.note ||
-                    categoryFor(review.biggestExpense.categoryId)?.name ||
-                    'Expense'}
-                </p>
-                <p className="text-muted-foreground text-xs">
-                  {formatDate(review.biggestExpense.date)}
-                </p>
+            {/* Net worth */}
+            <div className="card-elevated rounded-md p-4">
+              <h3 className="mb-3 text-sm font-semibold">Net Worth</h3>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-muted-foreground text-[10px] tracking-wide uppercase">
+                    Start of year
+                  </p>
+                  <p className="text-sm font-semibold">{money(review.netWorthStart)}</p>
+                </div>
+                <ArrowRight size={16} className="text-muted-foreground shrink-0" />
+                <div className="text-right">
+                  <p className="text-muted-foreground text-[10px] tracking-wide uppercase">
+                    {yearOffset === 0 ? 'Now' : 'End of year'}
+                  </p>
+                  <p className="text-sm font-semibold">{money(review.netWorthEnd)}</p>
+                </div>
               </div>
-              <p className="text-destructive shrink-0 text-sm font-semibold">
-                {money(review.biggestExpense.amount)}
+              <p
+                className={`mt-2 text-center text-xs font-medium ${review.netWorthChange >= 0 ? 'text-primary' : 'text-destructive'}`}
+              >
+                {review.netWorthChange >= 0 ? '+' : ''}
+                {money(review.netWorthChange)} this year
               </p>
             </div>
-          </div>
-        )}
 
-        <p className="text-muted-foreground pb-2 text-center text-xs">
-          {review.current.transactionCount} transaction
-          {review.current.transactionCount === 1 ? '' : 's'} this year
-        </p>
+            {/* Monthly breakdown */}
+            <div className="card-elevated rounded-md p-4">
+              <h3 className="mb-3 text-sm font-semibold">Spending by Month</h3>
+              <div className="flex items-end gap-1.5" style={{ height: 90 }}>
+                {review.monthlyBreakdown.map((month) => (
+                  <div key={month.key} className="flex flex-1 flex-col items-center gap-1">
+                    <div
+                      title={`${month.label}: ${money(month.expenses)}`}
+                      className={`w-full rounded-t-sm ${
+                        month.key === review.busiestMonth?.key ? 'bg-primary' : 'bg-primary/25'
+                      }`}
+                      style={{
+                        height:
+                          busiestExpenses > 0
+                            ? `${Math.max(4, (month.expenses / busiestExpenses) * 72)}px`
+                            : 4,
+                      }}
+                    />
+                    <span className="text-muted-foreground text-[9px]">{month.label}</span>
+                  </div>
+                ))}
+              </div>
+              {review.busiestMonth && (
+                <p className="text-muted-foreground mt-3 flex items-center justify-center gap-1 text-xs">
+                  <Trophy size={12} className="text-[#c79b4f]" />
+                  Biggest spend: {review.busiestMonth.label} · {money(review.busiestMonth.expenses)}
+                </p>
+              )}
+            </div>
+
+            {/* Top categories */}
+            {review.topCategories.length > 0 && (
+              <div className="card-elevated rounded-md p-4">
+                <h3 className="mb-3 text-sm font-semibold">Top Categories</h3>
+                <ul className="space-y-2.5">
+                  {review.topCategories.map((c) => {
+                    const category = categoryFor(c.categoryId);
+                    return (
+                      <li key={c.categoryId} className="flex items-center gap-2.5">
+                        <span className="min-w-0 flex-1 truncate text-xs font-medium">
+                          {category?.name ?? 'Uncategorized'}
+                        </span>
+                        <span className="shrink-0 text-xs font-semibold">{money(c.amount)}</span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            )}
+
+            {/* Biggest movers */}
+            {review.movers.length > 0 && (
+              <div className="card-elevated rounded-md p-4">
+                <h3 className="mb-3 text-sm font-semibold">Biggest Movers vs Last Year</h3>
+                <ul className="space-y-2.5">
+                  {review.movers.map((mover) => {
+                    const category = categoryFor(mover.categoryId);
+                    const isUp = mover.change > 0;
+                    return (
+                      <li key={mover.categoryId} className="flex items-center gap-2.5">
+                        <span className="min-w-0 flex-1 truncate text-xs font-medium">
+                          {category?.name ?? 'Uncategorized'}
+                        </span>
+                        <span
+                          className={`shrink-0 text-xs font-semibold ${isUp ? 'text-destructive' : 'text-primary'}`}
+                        >
+                          {isUp ? '+' : '−'}
+                          {money(Math.abs(mover.change))}
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            )}
+
+            {/* Biggest single expense */}
+            {review.biggestExpense && (
+              <div className="card-elevated rounded-md p-4">
+                <h3 className="mb-2 text-sm font-semibold">Biggest Single Expense</h3>
+                <div className="flex items-center justify-between gap-2">
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-medium">
+                      {review.biggestExpense.note ||
+                        categoryFor(review.biggestExpense.categoryId)?.name ||
+                        'Expense'}
+                    </p>
+                    <p className="text-muted-foreground text-xs">
+                      {formatDate(review.biggestExpense.date)}
+                    </p>
+                  </div>
+                  <p className="text-destructive shrink-0 text-sm font-semibold">
+                    {money(review.biggestExpense.amount)}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            <p className="text-muted-foreground pb-2 text-center text-xs">
+              {review.current.transactionCount} transaction
+              {review.current.transactionCount === 1 ? '' : 's'} this year
+            </p>
+          </>
+        )}
       </Main>
     </>
   );

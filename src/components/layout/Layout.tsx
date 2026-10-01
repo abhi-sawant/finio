@@ -1,6 +1,6 @@
 import { Outlet, useLocation, useNavigate } from 'react-router';
 import { useEffect, useRef, useState } from 'react';
-import { Plus, Repeat } from 'lucide-react';
+import { Plus, Repeat, Ellipsis } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { useFinanceStore } from '@/store/useFinanceStore';
@@ -11,7 +11,7 @@ import { autoBackupIfNeeded, autoLocalBackupIfNeeded } from '@/services/backup';
 import { refreshNotificationSchedule, runDueNotifications } from '@/services/notifications';
 import { Popover, PopoverContent } from '@/components/ui/popover';
 import { Sidebar } from './Sidebar';
-import { navTabs } from './navItems';
+import { navTabs, moreNavItems } from './navItems';
 
 export function Layout() {
   const location = useLocation();
@@ -28,6 +28,9 @@ export function Layout() {
   const bulkDeleteTransactions = useFinanceStore((s) => s.bulkDeleteTransactions);
 
   const fabRef = useRef<HTMLButtonElement>(null);
+  const moreRef = useRef<HTMLButtonElement>(null);
+  const [moreOpen, setMoreOpen] = useState(false);
+  const moreActive = moreNavItems.some((i) => location.pathname.startsWith(i.path));
   const [templatesOpen, setTemplatesOpen] = useState(false);
   const { firedRef: fabLongPressFiredRef, handlers: fabLongPressHandlers } = useLongPress(() =>
     setTemplatesOpen(true),
@@ -154,6 +157,10 @@ export function Layout() {
           ref={fabRef}
           onClick={handleFabClick}
           {...fabLongPressHandlers}
+          onContextMenu={(e) => {
+            e.preventDefault();
+            setTemplatesOpen(true);
+          }}
           className="bg-primary text-primary-foreground fixed right-4 z-50 flex h-14 w-14 items-center justify-center rounded-full shadow-[var(--shadow-float)] transition-transform active:scale-95 lg:hidden"
           style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 5.5rem)' }}
           aria-label="Add transaction. Long-press for templates."
@@ -190,7 +197,7 @@ export function Layout() {
 
       {/* Bottom Nav — mobile only */}
       <nav
-        className="pb-safe border-border bg-card fixed right-0 left-0 z-40 flex w-full items-center justify-around border-t px-2 pt-2 lg:hidden"
+        className="pb-safe border-border bg-card fixed right-0 left-0 z-40 flex w-full items-center border-t px-2 pt-2 lg:hidden"
         style={{ bottom: 0 }}
       >
         {navTabs.map((tab) => {
@@ -201,7 +208,7 @@ export function Layout() {
               key={tab.path}
               onClick={() => navigate(tab.path)}
               className={cn(
-                'relative flex flex-col items-center gap-1 rounded-sm px-3 py-1.5 transition-colors',
+                'relative flex flex-1 flex-col items-center gap-1 rounded-sm px-1 py-1.5 transition-colors',
                 isActive ? 'text-primary' : 'text-muted-foreground',
               )}
             >
@@ -214,6 +221,48 @@ export function Layout() {
             </button>
           );
         })}
+        <Popover open={moreOpen} onOpenChange={setMoreOpen}>
+          <button
+            ref={moreRef}
+            onClick={() => setMoreOpen((o) => !o)}
+            aria-label="More"
+            className={cn(
+              'relative flex flex-1 flex-col items-center gap-1 rounded-sm px-1 py-1.5 transition-colors',
+              moreActive ? 'text-primary' : 'text-muted-foreground',
+            )}
+          >
+            <Ellipsis size={20} strokeWidth={moreActive ? 2.4 : 2} />
+            <span
+              className={cn('bg-primary h-1 w-1 rounded-full', !moreActive && 'opacity-0')}
+              aria-hidden="true"
+            />
+            <span className="text-[10px] font-medium">More</span>
+          </button>
+          <PopoverContent anchor={moreRef} side="top" align="end" className="w-56">
+            <div className="flex flex-col gap-0.5">
+              {moreNavItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = location.pathname.startsWith(item.path);
+                return (
+                  <button
+                    key={item.path}
+                    onClick={() => {
+                      setMoreOpen(false);
+                      navigate(item.path);
+                    }}
+                    className={cn(
+                      'hover:bg-accent flex items-center gap-2.5 rounded-md px-2 py-2 text-left text-sm',
+                      isActive && 'text-primary font-medium',
+                    )}
+                  >
+                    <Icon size={16} className="shrink-0" />
+                    {item.label}
+                  </button>
+                );
+              })}
+            </div>
+          </PopoverContent>
+        </Popover>
       </nav>
     </>
   );

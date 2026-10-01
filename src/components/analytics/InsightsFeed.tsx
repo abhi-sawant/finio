@@ -13,7 +13,7 @@ import {
 import { useFinanceStore } from '@/store/useFinanceStore';
 import { formatCurrency, formatFullDate } from '@/utils/formatters';
 import { buildInsights, type Insight, type SubscriptionCandidate } from '@/utils/insights';
-import { normalizeMonthStartDay } from '@/utils/period';
+import { normalizeMonthStartDay, periodLabel, periodRange } from '@/utils/period';
 import { Button } from '@/components/ui/button';
 
 const KIND_ICON = {
@@ -96,7 +96,7 @@ export function InsightsFeed() {
         </div>
         <h3 className="text-sm font-semibold">Insights</h3>
         <span className="text-muted-foreground ml-auto text-[10px] tracking-wide uppercase">
-          this month
+          {periodLabel(periodRange('monthly', new Date(), monthStartDay), monthStartDay)}
         </span>
       </div>
 

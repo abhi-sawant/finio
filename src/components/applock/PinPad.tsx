@@ -81,8 +81,10 @@ export function PinPad({
   // Desktop convenience. The pad buttons are real <button>s, so Tab + Space already works.
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
-      if (disabled) return;
-      if (e.key >= '0' && e.key <= '9') {
+      if (disabled || e.ctrlKey || e.metaKey || e.altKey) return;
+      const t = e.target as HTMLElement | null;
+      if (t && (t.closest('input, textarea, select') || t.isContentEditable)) return;
+      if (e.key.length === 1 && e.key >= '0' && e.key <= '9') {
         e.preventDefault();
         press(e.key);
       } else if (e.key === 'Backspace') {

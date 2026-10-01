@@ -600,7 +600,12 @@ export function transactionsToCsv(
 ): string {
   const catMap = new Map(categories.map((c) => [c.id, c.name]));
   const accMap = new Map(accounts.map((a) => [a.id, a.name]));
-  const escape = (v: string) => `"${v.replace(/"/g, '""')}"`;
+  // A cell opening with = + - @ tab or CR is run as a formula by Excel/Sheets; a leading `'`
+  // makes it plain text (OWASP CSV-injection guidance).
+  const escape = (v: string) => {
+    const safe = /^[=+\-@\t\r]/.test(v) ? `'${v}` : v;
+    return `"${safe.replace(/"/g, '""')}"`;
+  };
   const header = [
     'Date',
     'Type',

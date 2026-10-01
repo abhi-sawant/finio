@@ -101,6 +101,11 @@ export interface ImportReport {
   warnings: string[];
 }
 
+/** True when the report holds at least one accepted row or a settings block worth importing. */
+export function hasImportableData(report: ImportReport): boolean {
+  return report.hasSettings || Object.values(report.counts).some((entity) => entity.accepted > 0);
+}
+
 export interface ValidatedBackup {
   data: ImportPayload;
   report: ImportReport;

@@ -446,6 +446,30 @@ describe('transactionsToCsv', () => {
     expect(row).toContain('"Food"');
   });
 
+  it('neutralises spreadsheet formulas by prefixing a quote', () => {
+    const csv = transactionsToCsv(
+      [tx({ type: 'expense', amount: 500, note: '=HYPERLINK("http://x")' })],
+      categories,
+      accounts,
+    );
+    const [, row] = csv.split('\n');
+    expect(row).toContain('"\'=HYPERLINK(""http://x"")"');
+    for (const lead of ['+1', '-1', '@sum', '\tx']) {
+      const out = transactionsToCsv(
+        [tx({ type: 'expense', amount: 1, note: lead })],
+        categories,
+        accounts,
+      );
+      expect(out).toContain(`"'${lead}"`);
+    }
+    const plain = transactionsToCsv(
+      [tx({ type: 'expense', amount: 1, note: 'Lunch' })],
+      categories,
+      accounts,
+    );
+    expect(plain).toContain('"Lunch"');
+  });
+
   it('summarizes a split transaction without double-counting the amount', () => {
     const csv = transactionsToCsv(
       [

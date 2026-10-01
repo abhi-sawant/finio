@@ -62,6 +62,7 @@ import {
   ENTITY_LABELS,
   IMPORT_ENTITIES,
   validateBackup,
+  hasImportableData,
   type ValidatedBackup,
 } from '@/utils/importValidation';
 import { formatCurrency, formatFileSize, formatFullDate } from '@/utils/formatters';
@@ -89,6 +90,7 @@ export function BackupSection() {
   const [backupFolderName, setBackupFolderName] = useState<string | null>(null);
   const [showFolderSetupInfo, setShowFolderSetupInfo] = useState(false);
   const [preview, setPreview] = useState<(ValidatedBackup & { file: File }) | null>(null);
+  const importable = preview ? hasImportableData(preview.report) : false;
 
   const [showBackupHistory, setShowBackupHistory] = useState(false);
   const [backupList, setBackupList] = useState<BackupListEntry[] | null>(null);
@@ -154,13 +156,21 @@ export function BackupSection() {
       if (!file) return;
       const reader = new FileReader();
       reader.onload = (event) => {
+        let parsed: unknown;
+        try {
+          parsed = JSON.parse(event.target?.result as string);
+        } catch {
+          toast.error("That file isn't valid JSON");
+          return;
+        }
         try {
           // Validate and preview first — an import rewrites every row in the app.
-          setPreview({ ...validateBackup(JSON.parse(event.target?.result as string)), file });
+          setPreview({ ...validateBackup(parsed), file });
         } catch (err) {
           toast.error(err instanceof Error ? err.message : 'Invalid backup file');
         }
       };
+      reader.onerror = () => toast.error("Couldn't read that file");
       reader.readAsText(file);
     };
     input.click();
@@ -752,6 +762,10 @@ export function BackupSection() {
                 </div>
               )}
 
+              {!importable && (
+                <p className="text-destructive text-xs font-medium">Nothing valid to import</p>
+              )}
+
               <p className="text-muted-foreground text-xs">
                 Balances are recalculated from transactions after either option.
               </p>
@@ -759,6 +773,7 @@ export function BackupSection() {
               <div className="flex flex-col gap-2">
                 <Button
                   onClick={() => runImport('merge')}
+                  disabled={!importable}
                   className="bg-grad-primary shadow-glow-primary h-auto w-full rounded-sm py-2.5 text-sm font-medium text-white"
                 >
                   Merge with existing data
@@ -767,6 +782,7 @@ export function BackupSection() {
                   <Button
                     variant="secondary"
                     onClick={() => runImport('replace')}
+                    disabled={!importable}
                     className="text-destructive bg-muted h-auto flex-1 rounded-sm py-2.5 text-sm font-medium"
                   >
                     Replace everything
