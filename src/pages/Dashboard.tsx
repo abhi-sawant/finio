@@ -18,6 +18,7 @@ import {
   getTotalExpenses,
   getTotalAccountBalance,
   getTotalCreditOutstanding,
+  getTotalDepositValue,
   getCreditCardDueInfo,
   getCurrentMonthTransactions,
   getPreviousMonthTransactions,
@@ -30,6 +31,7 @@ import {
   type BudgetStatus,
   type CreditCardDueInfo,
 } from '@/utils/calculations';
+import { accountDisplayValue, isDepositAccount } from '@/utils/deposit';
 import { BudgetProgressBar } from '@/components/budgets/BudgetHealthBadge';
 import { GoalIcon } from '@/components/goals/GoalIcon';
 import { PersonIcon } from '@/components/people/PersonIcon';
@@ -78,11 +80,12 @@ export default function Dashboard() {
   const openAccounts = useMemo(() => activeAccounts(accounts), [accounts]);
   const totalBalance = useMemo(() => getTotalAccountBalance(accounts), [accounts]);
   const creditOutstanding = useMemo(() => getTotalCreditOutstanding(accounts), [accounts]);
+  const depositValue = useMemo(() => getTotalDepositValue(accounts), [accounts]);
   const afterDues = totalBalance - creditOutstanding;
   const monthIncome = useMemo(() => getTotalIncome(monthTxns), [monthTxns]);
   const monthExpenses = useMemo(() => getTotalExpenses(monthTxns), [monthTxns]);
   const accountsCompact = useMemo(
-    () => shouldCompactGroup(openAccounts.map((a) => a.balance)),
+    () => shouldCompactGroup(openAccounts.map((a) => accountDisplayValue(a))),
     [openAccounts],
   );
   const recentTxns = useMemo(
@@ -291,6 +294,11 @@ export default function Dashboard() {
                   {formatCurrency(afterDues, false, hideAmounts)} after card dues
                 </p>
               )}
+              {depositValue > 0 && (
+                <p className="text-muted-foreground mt-1 text-xs">
+                  + {formatCurrency(depositValue, false, hideAmounts)} locked in deposits
+                </p>
+              )}
               {accounts.length > 0 && (
                 <button
                   onClick={() => navigate('/budgets')}
@@ -315,6 +323,11 @@ export default function Dashboard() {
                 {creditOutstanding > 0 && (
                   <p className="text-muted-foreground text-[11px]">
                     {formatCurrency(afterDues, false, hideAmounts)} after card dues
+                  </p>
+                )}
+                {depositValue > 0 && (
+                  <p className="text-muted-foreground text-[11px]">
+                    + {formatCurrency(depositValue, false, hideAmounts)} locked in deposits
                   </p>
                 )}
               </div>
@@ -520,22 +533,30 @@ export default function Dashboard() {
             </button>
           ) : (
             <div className="scrollbar-hide flex gap-3 overflow-x-auto pb-2 lg:grid lg:grid-cols-4 lg:overflow-x-visible">
-              {openAccounts.map((account) => (
-                <button
-                  key={account.id}
-                  onClick={() => navigate(`/edit-account/${account.id}`)}
-                  className="card-elevated min-w-32.5 shrink-0 rounded-md p-3 text-left lg:min-w-0"
-                >
-                  <p className="text-muted-foreground truncate text-xs">{account.name}</p>
-                  <p
-                    className={`mt-0.5 text-sm font-semibold ${account.balance < 0 ? 'text-destructive' : ''}`}
+              {openAccounts.map((account) => {
+                const value = accountDisplayValue(account);
+                return (
+                  <button
+                    key={account.id}
+                    onClick={() => navigate(`/edit-account/${account.id}`)}
+                    className="card-elevated min-w-32.5 shrink-0 rounded-md p-3 text-left lg:min-w-0"
                   >
-                    {formatCurrency(account.balance, true, hideAmounts, {
-                      forceCompact: accountsCompact,
-                    })}
-                  </p>
-                </button>
-              ))}
+                    <p className="text-muted-foreground truncate text-xs">{account.name}</p>
+                    <p
+                      className={`mt-0.5 text-sm font-semibold ${value < 0 ? 'text-destructive' : ''}`}
+                    >
+                      {formatCurrency(value, true, hideAmounts, {
+                        forceCompact: accountsCompact,
+                      })}
+                    </p>
+                    {isDepositAccount(account) && (
+                      <p className="text-muted-foreground mt-0.5 text-[10px]">
+                        {account.type === 'rd' ? 'RD' : 'FD'} · current value
+                      </p>
+                    )}
+                  </button>
+                );
+              })}
             </div>
           )}
         </>

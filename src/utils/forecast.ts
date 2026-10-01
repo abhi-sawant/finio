@@ -10,7 +10,7 @@ import {
 } from 'date-fns';
 import { roundMoney } from '@/store/balance';
 import { futureOccurrences } from '@/store/recurring';
-import { activeAccounts, transactionCategoryAmounts } from './calculations';
+import { activeAccounts, isLiquidAccount, transactionCategoryAmounts } from './calculations';
 import { WEEK_STARTS_ON, type PeriodRange } from './period';
 import type { Account, RecurringTransaction, Transaction, TransactionType } from '@/types';
 
@@ -30,11 +30,14 @@ export const DEFAULT_FORECAST_DAYS = 90;
 /** How much history the everyday-spend average is drawn from. */
 export const DEFAULT_LOOKBACK_DAYS = 90;
 
-/** Open accounts that hold spendable cash. Credit lines are a liability, not a balance to draw down. */
+/**
+ * Open accounts that hold spendable cash. Credit lines are a liability, not a balance to draw
+ * down, and a deposit is locked until maturity — so an RD installment is a real cash outflow.
+ */
 export function liquidAccountIds(accounts: Account[]): Set<string> {
   return new Set(
     activeAccounts(accounts)
-      .filter((a) => a.type !== 'credit')
+      .filter(isLiquidAccount)
       .map((a) => a.id),
   );
 }
@@ -43,7 +46,7 @@ export function liquidAccountIds(accounts: Account[]): Set<string> {
 export function liquidBalance(accounts: Account[]): number {
   return roundMoney(
     activeAccounts(accounts)
-      .filter((a) => a.type !== 'credit')
+      .filter(isLiquidAccount)
       .reduce((sum, a) => sum + a.balance, 0),
   );
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import {
   ArrowLeft,
@@ -10,8 +10,11 @@ import {
   TrendingUp,
   Wallet,
   Scale,
+  Vault,
+  CalendarClock,
   type LucideIcon,
 } from 'lucide-react';
+import { toast } from 'sonner';
 import { useFinanceStore } from '@/store/useFinanceStore';
 import { COLOR_PALETTE } from '@/data/colorPalette';
 import { Button } from '@/components/ui/button';
@@ -20,6 +23,14 @@ import { Label } from '@/components/ui/label';
 import { NumberPad } from '@/components/ui/number-pad';
 import { useConfirm } from '@/components/ui/use-confirm';
 import { ReconcileAccountDialog } from '@/components/accounts/ReconcileAccountDialog';
+import { DepositFields } from '@/components/accounts/DepositFields';
+import {
+  depositFormFromAccount,
+  depositTermsFromForm,
+  type DepositFormValues,
+} from '@/components/accounts/depositForm';
+import { activeAccounts, isLiquidAccount } from '@/utils/calculations';
+import { accountDeleteBlockers, isDepositAccount } from '@/utils/deposit';
 import type { AccountType } from '@/types';
 import Header from '@/components/ui/header';
 import Main from '@/components/ui/main';
@@ -31,6 +42,8 @@ const TYPE_ICONS: Record<string, LucideIcon> = {
   'credit-card': CreditCard,
   'trending-up': TrendingUp,
   wallet: Wallet,
+  vault: Vault,
+  'calendar-clock': CalendarClock,
 };
 
 const accountTypes: { value: AccountType; label: string; icon: string }[] = [
@@ -40,6 +53,8 @@ const accountTypes: { value: AccountType; label: string; icon: string }[] = [
   { value: 'credit', label: 'Credit Card', icon: 'credit-card' },
   { value: 'investment', label: 'Investment', icon: 'trending-up' },
   { value: 'wallet', label: 'Wallet', icon: 'wallet' },
+  { value: 'fd', label: 'Fixed Deposit', icon: 'vault' },
+  { value: 'rd', label: 'Recurring Deposit', icon: 'calendar-clock' },
 ];
 
 const accountColors = COLOR_PALETTE;
@@ -52,6 +67,11 @@ export default function AddAccount() {
   const addAccount = useFinanceStore((s) => s.addAccount);
   const updateAccount = useFinanceStore((s) => s.updateAccount);
   const deleteAccount = useFinanceStore((s) => s.deleteAccount);
+  const addDeposit = useFinanceStore((s) => s.addDeposit);
+  const updateDeposit = useFinanceStore((s) => s.updateDeposit);
+  const processRecurring = useFinanceStore((s) => s.processRecurring);
+  const bulkDeleteTransactions = useFinanceStore((s) => s.bulkDeleteTransactions);
+  const hideAmounts = useFinanceStore((s) => s.settings.hideAmounts);
 
   const existing = id ? accounts.find((a) => a.id === id) : null;
 
@@ -74,8 +94,71 @@ export default function AddAccount() {
   );
   const [showReconcile, setShowReconcile] = useState(false);
 
+  // Spendable accounts only — a deposit can't fund another, and a card can't be redeemed into.
+  // An existing deposit keeps showing its linked account even if that one has since closed.
+  const linkableAccounts = useMemo(
+    () =>
+      accounts.filter(
+        (a) => isLiquidAccount(a) && (!a.archivedAt || a.id === existing?.deposit?.linkedAccountId),
+      ),
+    [accounts, existing],
+  );
+  const [depositForm, setDepositForm] = useState<DepositFormValues>(() =>
+    depositFormFromAccount(existing, activeAccounts(accounts).filter(isLiquidAccount)[0]?.id ?? ''),
+  );
+  const updateDepositForm = (patch: Partial<DepositFormValues>) =>
+    setDepositForm((prev) => ({ ...prev, ...patch }));
+
+  const isDepositType = type === 'fd' || type === 'rd';
+  const depositTerms = isDepositType
+    ? depositTermsFromForm(type as 'fd' | 'rd', depositForm)
+    : null;
+  const canSubmit = Boolean(name.trim()) && (!isDepositType || depositTerms !== null);
+  // Converting between a deposit and a regular account would orphan its terms or its history.
+  const typeOptions = !existing
+    ? accountTypes
+    : isDepositAccount(existing)
+      ? accountTypes.filter((t) => t.value === existing.type)
+      : accountTypes.filter((t) => !isDepositAccount({ type: t.value }));
+
+  const submitDeposit = () => {
+    if (!depositTerms) return;
+    if (existing) {
+      updateDeposit(existing.id, {
+        name: name.trim(),
+        color,
+        interestRate: depositTerms.interestRate,
+        compounding: depositTerms.compounding,
+        maturityDate: depositTerms.maturityDate,
+      });
+      navigate(-1);
+      return;
+    }
+    addDeposit({
+      type: type as 'fd' | 'rd',
+      name: name.trim(),
+      color,
+      terms: depositTerms,
+      deductPast: depositForm.deductPast,
+    });
+    if (type === 'rd' && depositForm.deductPast) {
+      const posted = processRecurring();
+      if (posted.length > 0) {
+        const ids = posted.map((t) => t.id);
+        toast.success(`Posted ${posted.length} past installment${posted.length === 1 ? '' : 's'}`, {
+          action: { label: 'Undo', onClick: () => bulkDeleteTransactions(ids) },
+        });
+      }
+    }
+    navigate(-1);
+  };
+
   const handleSubmit = () => {
-    if (!name.trim()) return;
+    if (!canSubmit) return;
+    if (isDepositType) {
+      submitDeposit();
+      return;
+    }
 
     const isCredit = type === 'credit';
     const data = {
@@ -107,10 +190,18 @@ export default function AddAccount() {
 
   const handleDelete = async () => {
     if (!existing) return;
+    const blockers = accountDeleteBlockers(accounts, existing.id);
+    if (blockers.length > 0) {
+      toast.error(`Can't delete "${existing.name}"`, {
+        description: `${blockers.map((b) => `"${b}"`).join(', ')} pay${blockers.length === 1 ? 's' : ''} out to this account. Delete ${blockers.length === 1 ? 'that deposit' : 'those deposits'} first.`,
+      });
+      return;
+    }
     const confirmed = await confirm({
       title: `Delete "${existing.name}"?`,
-      description:
-        'Every transaction on this account will be deleted as well. This cannot be undone.',
+      description: isDepositAccount(existing)
+        ? 'Every transaction on this deposit will be deleted, including the money moved into it — that money returns to the linked account. This cannot be undone.'
+        : 'Every transaction on this account will be deleted as well. This cannot be undone.',
       confirmLabel: 'Delete',
     });
     if (confirmed) {
@@ -169,7 +260,7 @@ export default function AddAccount() {
             Account Type
           </Label>
           <div className="grid grid-cols-3 gap-2">
-            {accountTypes.map((t) => (
+            {typeOptions.map((t) => (
               <button
                 key={t.value}
                 onClick={() => setType(t.value)}
@@ -191,8 +282,17 @@ export default function AddAccount() {
           </div>
         </div>
 
-        {/* Balance / Due */}
-        {type === 'credit' ? (
+        {/* Deposit terms replace the balance — the deposit is funded by real transfers */}
+        {isDepositType ? (
+          <DepositFields
+            type={type as 'fd' | 'rd'}
+            values={depositForm}
+            onChange={updateDepositForm}
+            linkableAccounts={linkableAccounts}
+            locked={Boolean(existing)}
+            hideAmounts={hideAmounts}
+          />
+        ) : type === 'credit' ? (
           <div>
             <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">
               Current Due
@@ -313,13 +413,13 @@ export default function AddAccount() {
         {/* Submit */}
         <Button
           onClick={handleSubmit}
-          disabled={!name.trim()}
+          disabled={!canSubmit}
           className="bg-grad-primary shadow-glow-primary h-auto w-full rounded-sm py-3.5 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
         >
           {existing ? 'Update Account' : 'Add Account'}
         </Button>
 
-        {existing && (
+        {existing && !isDepositAccount(existing) && (
           <Button
             variant="secondary"
             onClick={() => setShowReconcile(true)}

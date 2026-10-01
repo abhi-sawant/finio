@@ -10,6 +10,7 @@ import {
   shiftPeriod,
   type PeriodRange,
 } from './period';
+import { depositCurrentValue, isDepositAccount } from './deposit';
 import type {
   Transaction,
   Account,
@@ -51,10 +52,25 @@ export function activeAccounts(accounts: Account[]): Account[] {
   return accounts.filter((a) => !a.archivedAt);
 }
 
+/**
+ * Money that can actually be spent: not a credit line (a liability) and not a fixed or
+ * recurring deposit (locked until maturity).
+ */
+export function isLiquidAccount(account: Pick<Account, 'type'>): boolean {
+  return account.type !== 'credit' && account.type !== 'fd' && account.type !== 'rd';
+}
+
 export function getTotalAccountBalance(accounts: Account[]): number {
   return activeAccounts(accounts)
-    .filter((a) => a.type !== 'credit')
+    .filter(isLiquidAccount)
     .reduce((sum, a) => sum + a.balance, 0);
+}
+
+/** Today's accrued value across every open deposit — not their book balance. */
+export function getTotalDepositValue(accounts: Account[], now: Date = new Date()): number {
+  return activeAccounts(accounts)
+    .filter(isDepositAccount)
+    .reduce((sum, a) => sum + depositCurrentValue(a, now), 0);
 }
 
 export function getNetWorth(accounts: Account[]): number {

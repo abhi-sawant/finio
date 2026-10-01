@@ -39,11 +39,11 @@ npm test             # Vitest (unit suite, run once)
 npm run test:watch   # Vitest watch mode
 ```
 
-Tests live next to their subject as `*.test.ts` — 534 of them across 26 files — and cover the
+Tests live next to their subject as `*.test.ts` — 552 of them across 27 files — and cover the
 pure money logic (`src/store/balance.ts`, `src/store/recurring.ts`, `src/utils/calculations.ts`,
 `src/utils/period.ts`, `src/utils/importValidation.ts`, `src/utils/csvImport.ts`,
 `src/utils/autoCategorize.ts`, `src/utils/analytics.ts`, `src/utils/forecast.ts`,
-`src/utils/netWorth.ts`, `src/utils/insights.ts`, `src/utils/loan.ts`, `src/utils/merchants.ts`,
+`src/utils/netWorth.ts`, `src/utils/insights.ts`, `src/utils/loan.ts`, `src/utils/deposit.ts`, `src/utils/merchants.ts`,
 `src/utils/notifications.ts`, `src/utils/notificationSchedule.ts`, `src/utils/shareTarget.ts`,
 `src/utils/pinCrypto.ts`, `src/utils/appLock.ts`, `src/utils/backupCrypto.ts`,
 `src/utils/chartTable.ts`, `src/utils/formatters.ts`, `src/utils/errors.ts`) plus the finance,
@@ -130,6 +130,7 @@ src/
 │   ├── netWorth.ts           # Net worth series, reconstruction, and monthly snapshots
 │   ├── insights.ts           # Insights feed + subscription detection + normalizeNote() (shared with merchants.ts)
 │   ├── loan.ts                # Pure EMI amortization schedule + prepayment "what if" calculator
+│   ├── deposit.ts             # Pure FD/RD valuation, maturity planner, delete-blocker check
 │   ├── merchants.ts           # Groups transactions by note into merchant summaries (heuristic, not an entity)
 │   ├── notifications.ts      # Reminder types + due-selection (leaf — imported by the SW)
 │   ├── notificationSchedule.ts # Pure builder: bills, budget breaches, card dues, daily-log nudge → schedule
@@ -255,7 +256,7 @@ Defined in [src/types/index.ts](src/types/index.ts):
 
 | Type                    | Key fields                                                                                                                                                                    |
 | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Account`               | id, name, type, color, icon, balance, openingBalance, creditLimit?, statementCloseDay?, paymentDueDays?, minimumDuePercent?, archivedAt?                                      |
+| `Account`               | id, name, type, color, icon, balance, openingBalance, creditLimit?, statementCloseDay?, paymentDueDays?, minimumDuePercent?, archivedAt?, deposit? (FD/RD terms)              |
 | `Transaction`           | id, type, amount, accountId, toAccountId?, categoryId, date, note, labels[], createdAt, recurringId?, splits?                                                                 |
 | `TransactionSplit`      | categoryId, amount — ≥2 entries summing exactly to `Transaction.amount`; `categoryId` on the parent is `''`                                                                   |
 | `Category`              | id, name, icon, color, type                                                                                                                                                   |
@@ -268,6 +269,7 @@ Defined in [src/types/index.ts](src/types/index.ts):
 | `GoalContribution`      | id, goalId, amount (signed), date, note — the goal's own ledger, not a transaction                                                                                            |
 | `Person`                | id, name, icon, color                                                                                                                                                         |
 | `DebtEntry`             | id, personId, amount (+ = they owe you), date, note, settledTransactionId?                                                                                                    |
+| `DepositTerms`          | amount, interestRate, startDate, maturityDate? (FD), tenureMonths? (RD), compounding? (FD), linkedAccountId, recurringId? (RD), maturedAt? — see deposit gotcha               |
 | `Loan`                  | id, name, principal, interestRate, tenureMonths, startDate, accountId, categoryId, recurringId? (auto-generated EMI rule), closedAt? — see loan gotcha                        |
 | `LoanPrepayment`        | id, loanId, amount, date, note, transactionId? (the real expense it created)                                                                                                  |
 | `NetWorthSnapshot`      | id, periodKey (`yyyy-MM`), date, assets, liabilities                                                                                                                          |
@@ -400,6 +402,20 @@ All page components are lazy-loaded. This keeps the initial bundle small.
   invalid one matches nothing rather than throwing. On CSV import, a category the file itself
   supplied always outranks a rule.
 - **Recurring processing:** `processRecurring()` (from `useFinanceStore`) generates any overdue recurring transactions. Today it runs **only** once on hydration inside `Layout` (so only when the first route rendered is a `<Layout>` route) and from the Recurring page — **not** on resume from background, and not when the app is opened straight onto a full-screen route such as `/add-transaction` or `/share-target` (improvements.md §1.4). Generated rows are announced by an Undo toast. `planRecurring` skips paused rules, stops at `endDate` and `maxOccurrences`, and requires both accounts to exist for a transfer rule. Before saving a rule dated in the past, preview it with `previewBackfill()` — "start from today" is expressed as `lastRunDate = lastOccurrenceOnOrBefore(rule, now)`, which keeps the cadence anchored to `startDate` while skipping the history.
+- **Fixed and recurring deposits are accounts (`type: 'fd' | 'rd'`) with `Account.deposit` terms.**
+  Their value is derived in [`src/utils/deposit.ts`](src/utils/deposit.ts) and never stored. An FD
+  compounds at its chosen frequency over actual days / 365. An RD compounds quarterly, and each
+  installment earns interest only from the month it was paid (`Σ P(1+r/4)^(months/3)`). The book
+  `balance` is what was put in. The cards show `accountDisplayValue()` (accrued value). Net worth
+  keeps using the book balance so snapshots stay consistent. `addDeposit` funds an FD with a real
+  transfer from `linkedAccountId`. It gives an RD a linked monthly transfer rule; installments that
+  fell before the RD was entered either fold into `openingBalance` (the rule's count is advanced)
+  or are backfilled by `processRecurring`. `processMaturities()` runs from `Layout` after
+  `processRecurring` and before snapshots. It posts interest income into the deposit, transfers
+  the balance to the linked account, and archives the deposit. `deposit.maturedAt` is its
+  run-once marker. While a deposit is open its linked account can't be deleted: `deleteAccount`
+  returns `false` (`accountDeleteBlockers`). Deposits are not liquid: `isLiquidAccount()` keeps
+  them out of "Total balance" and the forecast, so an RD installment counts as a cash outflow.
 - **A loan's EMI is derived, never stored** — same spirit as `Account.balance`. `principal`,
   `interestRate` and `tenureMonths` are the source of truth in [`src/utils/loan.ts`](src/utils/loan.ts),
   and `calculateEmi()`/`loanStatus()` recompute from them every time, so editing any of those

@@ -15,9 +15,17 @@ import {
   roundMoney,
   sumTransactionDeltas,
 } from './balance';
-import { planRecurring } from './recurring';
+import { lastOccurrenceOnOrBefore, planRecurring } from './recurring';
 import { planRuleApplication } from '@/utils/autoCategorize';
 import { budgetScopeKey } from '@/utils/calculations';
+import {
+  accountDeleteBlockers,
+  depositMaturityAmount,
+  depositMaturityDate,
+  depositInvested,
+  planMaturities,
+  rdInstallmentsOnOrBefore,
+} from '@/utils/deposit';
 import { calculateEmi } from '@/utils/loan';
 import { planNetWorthSnapshots } from '@/utils/netWorth';
 import { normalizeMonthStartDay } from '@/utils/period';
@@ -41,6 +49,19 @@ import type {
   Transaction,
   TransactionTemplate,
 } from '@/types';
+
+/** Default category for interest a deposit pays out — the built-in "Interest". */
+const INTEREST_CATEGORY_ID = 'cat-23';
+
+/** The category a system-posted transfer carries — the same pick `AddTransaction` makes. */
+function transferCategoryId(categories: Category[]): string {
+  return categories.find((c) => c.type === 'both')?.id ?? MISC_CATEGORY_ID;
+}
+
+function interestCategoryId(categories: Category[]): string {
+  if (categories.some((c) => c.id === INTEREST_CATEGORY_ID)) return INTEREST_CATEGORY_ID;
+  return categories.find((c) => c.type === 'income')?.id ?? MISC_CATEGORY_ID;
+}
 
 /**
  * Multi-currency was removed in v4 (the app is INR-only). Persisted state and older
@@ -203,6 +224,8 @@ export const useFinanceStore = create<FinanceStore>()(
       },
 
       deleteAccount: (id) => {
+        // An open deposit has to pay out somewhere — refuse rather than orphan its maturity.
+        if (accountDeleteBlockers(get().accounts, id).length > 0) return false;
         set((state) => {
           const removed = state.transactions.filter(
             (t) => t.accountId === id || t.toAccountId === id,
@@ -238,6 +261,201 @@ export const useFinanceStore = create<FinanceStore>()(
             }),
           };
         });
+        return true;
+      },
+
+      addDeposit: ({ type, name, color, terms, deductPast }) => {
+        const now = new Date();
+        const createdAt = now.toISOString();
+        const accountId = generateUUID();
+        const state = get();
+
+        if (type === 'fd') {
+          const account: Account = {
+            id: accountId,
+            name,
+            type,
+            color,
+            icon: 'vault',
+            balance: 0,
+            // The money arrives through the funding transfer below, so the deposit itself
+            // starts empty and its balance stays derivable.
+            openingBalance: 0,
+            createdAt,
+            deposit: { ...terms, compounding: terms.compounding ?? 'quarterly' },
+          };
+          const funding: Transaction = {
+            id: generateUUID(),
+            type: 'transfer',
+            amount: terms.amount,
+            accountId: terms.linkedAccountId,
+            toAccountId: accountId,
+            categoryId: transferCategoryId(state.categories),
+            date: terms.startDate,
+            note: `Fixed deposit — ${name}`,
+            labels: [],
+            createdAt,
+          };
+          set((s) => ({
+            accounts: applyBalanceDelta([...s.accounts, account], funding, 1),
+            transactions: [funding, ...s.transactions],
+          }));
+          return accountId;
+        }
+
+        const recurring: RecurringTransaction = {
+          id: generateUUID(),
+          type: 'transfer',
+          amount: terms.amount,
+          accountId: terms.linkedAccountId,
+          toAccountId: accountId,
+          categoryId: transferCategoryId(state.categories),
+          note: `RD installment — ${name}`,
+          labels: [],
+          frequency: 'monthly',
+          startDate: terms.startDate,
+          maxOccurrences: terms.tenureMonths,
+          occurrenceCount: 0,
+          lastRunDate: null,
+          createdAt,
+        };
+
+        // Installments already paid before the RD was entered: either let `processRecurring`
+        // post them from the linked account, or treat them as money already sitting in the RD.
+        let openingBalance = 0;
+        if (!deductPast) {
+          const paid = rdInstallmentsOnOrBefore({ ...terms }, now);
+          if (paid > 0) {
+            openingBalance = roundMoney(terms.amount * paid);
+            recurring.occurrenceCount = paid;
+            recurring.lastRunDate = lastOccurrenceOnOrBefore(recurring, now)?.toISOString() ?? null;
+          }
+        }
+
+        const account: Account = {
+          id: accountId,
+          name,
+          type,
+          color,
+          icon: 'calendar-clock',
+          balance: openingBalance,
+          openingBalance,
+          createdAt,
+          deposit: { ...terms, recurringId: recurring.id },
+        };
+        set((s) => ({
+          accounts: [...s.accounts, account],
+          recurring: [...s.recurring, recurring],
+        }));
+        return accountId;
+      },
+
+      updateDeposit: (id, { name, color, ...termUpdates }) => {
+        set((state) => {
+          const target = state.accounts.find((a) => a.id === id);
+          if (!target?.deposit) return state;
+          const next: Account = {
+            ...target,
+            ...(name !== undefined ? { name } : {}),
+            ...(color !== undefined ? { color } : {}),
+            deposit: {
+              ...target.deposit,
+              ...(termUpdates.interestRate !== undefined
+                ? { interestRate: termUpdates.interestRate }
+                : {}),
+              ...(target.type === 'fd' && termUpdates.compounding
+                ? { compounding: termUpdates.compounding }
+                : {}),
+              ...(target.type === 'fd' && termUpdates.maturityDate
+                ? { maturityDate: termUpdates.maturityDate }
+                : {}),
+            },
+          };
+          const ruleId = target.deposit.recurringId;
+          return {
+            accounts: state.accounts.map((a) => (a.id === id ? next : a)),
+            // Keep the installment rule's note in step with a rename.
+            recurring:
+              ruleId && name !== undefined
+                ? state.recurring.map((r) =>
+                    r.id === ruleId ? { ...r, note: `RD installment — ${name}` } : r,
+                  )
+                : state.recurring,
+          };
+        });
+      },
+
+      processMaturities: () => {
+        const state = get();
+        const due = planMaturities(state.accounts, new Date());
+        if (due.length === 0) return [];
+
+        const createdAt = new Date().toISOString();
+        const interestCat = interestCategoryId(state.categories);
+        const transferCat = transferCategoryId(state.categories);
+        const posted: Transaction[] = [];
+        const matured = new Map<string, Account>();
+        const pausedRuleIds = new Set<string>();
+
+        for (const account of due) {
+          const terms = account.deposit!;
+          const maturedAt = depositMaturityDate(account)!.toISOString();
+          const interest = roundMoney(depositMaturityAmount(account) - depositInvested(account));
+          if (interest > 0) {
+            posted.push({
+              id: generateUUID(),
+              type: 'income',
+              amount: interest,
+              accountId: account.id,
+              categoryId: interestCat,
+              date: maturedAt,
+              note: `Interest — ${account.name}`,
+              labels: [],
+              createdAt,
+            });
+          }
+          // Pay out whatever the deposit holds once interest lands — the maturity amount when
+          // every installment was made, and never leaving a stray balance behind if not.
+          const payout = roundMoney(account.balance + Math.max(0, interest));
+          if (payout > 0) {
+            posted.push({
+              id: generateUUID(),
+              type: 'transfer',
+              amount: payout,
+              accountId: account.id,
+              toAccountId: terms.linkedAccountId,
+              categoryId: transferCat,
+              date: maturedAt,
+              note: `Maturity — ${account.name}`,
+              labels: [],
+              createdAt,
+            });
+          }
+          if (terms.recurringId) pausedRuleIds.add(terms.recurringId);
+          matured.set(account.id, {
+            ...account,
+            archivedAt: maturedAt,
+            deposit: { ...terms, maturedAt },
+          });
+        }
+
+        set((s) => {
+          let accounts = s.accounts.map((a) => {
+            const done = matured.get(a.id);
+            // Carry over the live balance — `matured` holds a snapshot from before this set.
+            return done ? { ...done, balance: a.balance } : a;
+          });
+          for (const tx of posted) accounts = applyBalanceDelta(accounts, tx, 1);
+          return {
+            accounts,
+            transactions: [...posted, ...s.transactions],
+            recurring: s.recurring.map((r) =>
+              pausedRuleIds.has(r.id) && !r.pausedAt ? { ...r, pausedAt: createdAt } : r,
+            ),
+          };
+        });
+
+        return posted;
       },
 
       recomputeBalances: () => {

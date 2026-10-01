@@ -7,6 +7,8 @@ import type {
   Category,
   CategoryRule,
   DebtEntry,
+  DepositCompounding,
+  DepositTerms,
   Goal,
   GoalContribution,
   ImportPayload,
@@ -106,7 +108,17 @@ export interface ValidatedBackup {
 
 const MAX_REPORTED_ISSUES = 8;
 
-const ACCOUNT_TYPES = new Set(['checking', 'savings', 'cash', 'credit', 'investment', 'wallet']);
+const ACCOUNT_TYPES = new Set([
+  'checking',
+  'savings',
+  'cash',
+  'credit',
+  'investment',
+  'wallet',
+  'fd',
+  'rd',
+]);
+const DEPOSIT_COMPOUNDINGS = new Set(['monthly', 'quarterly', 'half-yearly', 'yearly', 'simple']);
 const TRANSACTION_TYPES = new Set(['expense', 'income', 'transfer']);
 const CATEGORY_TYPES = new Set(['expense', 'income', 'both']);
 const FREQUENCIES = new Set(['daily', 'weekly', 'monthly', 'yearly']);
@@ -160,6 +172,45 @@ function asSplits(value: unknown, amount: number): TransactionSplit[] | undefine
   return splits;
 }
 
+/**
+ * A deposit's terms, or undefined when they are unusable. Without terms an FD/RD can't be valued
+ * or matured, so `parseAccount` rejects the whole account rather than keep a half-deposit.
+ */
+function asDepositTerms(value: unknown, type: string): DepositTerms | undefined {
+  if (!isRecord(value)) return undefined;
+  const amount = asFiniteNumber(value.amount);
+  const interestRate = asFiniteNumber(value.interestRate);
+  const startDate = asIsoDate(value.startDate);
+  const linkedAccountId = asId(value.linkedAccountId);
+  if (amount === undefined || amount <= 0 || interestRate === undefined || interestRate < 0) {
+    return undefined;
+  }
+  if (!startDate || !linkedAccountId) return undefined;
+
+  const maturityDate = asIsoDate(value.maturityDate);
+  const tenureMonths = asFiniteNumber(value.tenureMonths);
+  if (type === 'fd' && !maturityDate) return undefined;
+  if (type === 'rd' && (tenureMonths === undefined || tenureMonths < 1)) return undefined;
+
+  const compounding =
+    typeof value.compounding === 'string' && DEPOSIT_COMPOUNDINGS.has(value.compounding)
+      ? (value.compounding as DepositCompounding)
+      : undefined;
+  const recurringId = asId(value.recurringId);
+  const maturedAt = asIsoDate(value.maturedAt);
+
+  return {
+    amount,
+    interestRate,
+    startDate,
+    linkedAccountId,
+    ...(type === 'fd' ? { maturityDate, compounding: compounding ?? 'quarterly' } : {}),
+    ...(type === 'rd' ? { tenureMonths: Math.round(tenureMonths as number) } : {}),
+    ...(recurringId ? { recurringId } : {}),
+    ...(maturedAt ? { maturedAt } : {}),
+  };
+}
+
 /** A parser returns the sanitized row, or a string explaining why the row was dropped. */
 type RowParser<T> = (row: Record<string, unknown>) => T | string;
 
@@ -175,7 +226,14 @@ const parseAccount: RowParser<ImportedAccount> = (row) => {
 
   const openingBalance = asFiniteNumber(row.openingBalance);
   const creditLimit = asFiniteNumber(row.creditLimit);
+  const statementCloseDay = asFiniteNumber(row.statementCloseDay);
+  const paymentDueDays = asFiniteNumber(row.paymentDueDays);
+  const minimumDuePercent = asFiniteNumber(row.minimumDuePercent);
   const archivedAt = asIsoDate(row.archivedAt);
+
+  const isDeposit = type === 'fd' || type === 'rd';
+  const deposit = isDeposit ? asDepositTerms(row.deposit, type) : undefined;
+  if (isDeposit && !deposit) return 'deposit terms are missing or invalid';
 
   return {
     id,
@@ -187,6 +245,10 @@ const parseAccount: RowParser<ImportedAccount> = (row) => {
     createdAt: asIsoDate(row.createdAt) ?? new Date().toISOString(),
     ...(openingBalance !== undefined ? { openingBalance } : {}),
     ...(creditLimit !== undefined ? { creditLimit } : {}),
+    ...(statementCloseDay !== undefined ? { statementCloseDay } : {}),
+    ...(paymentDueDays !== undefined ? { paymentDueDays } : {}),
+    ...(minimumDuePercent !== undefined ? { minimumDuePercent } : {}),
+    ...(deposit ? { deposit } : {}),
     // An unparseable value just means "not archived" — never a reason to drop the account.
     ...(archivedAt ? { archivedAt } : {}),
   };
@@ -830,6 +892,18 @@ export function validateBackup(raw: unknown): ValidatedBackup {
     if (orphans > 0) {
       warnings.push(
         `${orphans} debt entr${orphans === 1 ? 'y' : 'ies'} reference a person that is not in this file`,
+      );
+    }
+  }
+
+  if (accounts.rows) {
+    const ids = new Set(accounts.rows.map((a) => a.id));
+    const orphans = accounts.rows.filter(
+      (a) => a.deposit && !ids.has(a.deposit.linkedAccountId),
+    ).length;
+    if (orphans > 0) {
+      warnings.push(
+        `${orphans} deposit${orphans === 1 ? '' : 's'} pay out to an account that is not in this file`,
       );
     }
   }
