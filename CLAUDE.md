@@ -151,7 +151,6 @@ src/
 Outside `src/`:
 
 ```
-.github/workflows/deploy.yml  # CI: build + FTPS deploy of dist/ to MilesWeb on push to main (see Deployment)
 scripts/gen-dummydata.mjs     # Regenerates dummydata.json (seeded PRNG — reruns are reproducible)
 dummydata.json                # ~1000-transaction import fixture for load/QA testing; not used by the app
 public/.htaccess              # SPA rewrite to index.html for Apache/cPanel
@@ -523,18 +522,6 @@ All page components are lazy-loaded. This keeps the initial bundle small.
   body, _and_ again from the actual bytes read — the second check exists because a client can omit
   or lie about `Content-Length`, or chunk-encode around it.
 - **Tailwind v4:** There is no `tailwind.config.js`. All customizations go in CSS files using `@theme`, `@layer`, etc.
-
----
-
-## Deployment
-
-The production frontend (`finio.slowatcoding.com`) deploys itself:
-[`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) runs on every push to `main` —
-`npm ci` → `npm run build` (with `VITE_API_URL` from repo secrets) → uploads `dist/` to MilesWeb over
-FTPS (`FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD`, `FTP_SERVER_DIR` secrets). It does **not** run
-tests or lint, so a red suite still ships — run `npm test` before pushing. Pushes touching only
-`backend/**` or `**/*.md` are skipped; the PHP backend is deployed by hand (see below). A newer push
-cancels an in-flight deploy (`concurrency: deploy-production`).
 
 ---
 

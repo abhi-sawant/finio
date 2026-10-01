@@ -413,7 +413,6 @@ finio-web/
 ├── backend/                 # Optional PHP API (see below)
 ├── public/                  # PWA icons, .htaccess
 ├── scripts/                 # gen-dummydata.mjs → dummydata.json (a large import fixture for QA)
-├── .github/workflows/       # deploy.yml — build + FTPS deploy on push to main
 ├── design.md                # The visual system: tokens, layout shell, component rules
 ├── improvements.md          # Latest review pass: open bugs and feature ideas
 ├── vite.config.ts           # Vite + PWA manifest + chunk splitting
@@ -430,11 +429,6 @@ npm run build
 Deploy `dist/` to any static host. Because it's an SPA, the host must rewrite unknown paths to
 `index.html` — `public/.htaccess` does this for Apache/cPanel; on Netlify, Vercel, or Nginx use
 their equivalent.
-
-The hosted instance deploys automatically: `.github/workflows/deploy.yml` builds on every push to
-`main` and uploads `dist/` over FTPS. It needs five repository secrets — `VITE_API_URL`,
-`FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD`, `FTP_SERVER_DIR` — and skips pushes that only touch
-`backend/` or Markdown files. The workflow doesn't run tests, so run `npm test` before you push.
 
 ---
 
