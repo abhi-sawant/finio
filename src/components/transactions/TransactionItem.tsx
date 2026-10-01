@@ -140,7 +140,7 @@ export const TransactionItem = memo(function TransactionItem({
           </p>
           <p className="text-muted-foreground truncate text-xs">
             {secondaryLine}
-            {showDate && <span className="opacity-60"> · {formatDate(transaction.date)}</span>}
+            {showDate && <span> · {formatDate(transaction.date)}</span>}
           </p>
         </div>
         <p className={`text-sm font-semibold ${amountColor}`}>

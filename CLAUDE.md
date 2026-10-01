@@ -287,7 +287,7 @@ Enums: `AccountType`, `TransactionType` (expense/income/transfer), `RecurrenceFr
 
 - **"Focus" visual system** (introduced in `0e0079c`, replacing the old violet gradient /
   glassmorphism theme) — warm cream "paper" backgrounds, opaque cards with hairline borders, one
-  deep-green accent (`--primary: #146b54`, brighter `#2e9c7a` in dark mode), and a rust-toned
+  deep-green accent (`--primary: #146b54`, brighter `#34a582` in dark mode), and a rust-toned
   `warning-band` token pair for surfaced alerts. The full spec is [design.md](design.md); the tokens
   live in [`src/index.css`](src/index.css). Rules that are easy to break:
   - Components use semantic tokens (`bg-card`, `text-muted-foreground`, `bg-warning-band`…), never

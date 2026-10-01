@@ -212,6 +212,7 @@ export function Layout() {
             <button
               key={tab.path}
               onClick={() => navigate(tab.path)}
+              aria-current={isActive ? 'page' : undefined}
               className={cn(
                 'relative flex flex-1 flex-col items-center gap-1 rounded-sm px-1 py-1.5 transition-colors',
                 isActive ? 'text-primary' : 'text-muted-foreground',
@@ -222,7 +223,7 @@ export function Layout() {
                 className={cn('bg-primary h-1 w-1 rounded-full', !isActive && 'opacity-0')}
                 aria-hidden="true"
               />
-              <span className="text-[10px] font-medium">{tab.label}</span>
+              <span className="text-xs font-medium">{tab.label}</span>
             </button>
           );
         })}
@@ -241,7 +242,7 @@ export function Layout() {
               className={cn('bg-primary h-1 w-1 rounded-full', !moreActive && 'opacity-0')}
               aria-hidden="true"
             />
-            <span className="text-[10px] font-medium">More</span>
+            <span className="text-xs font-medium">More</span>
           </button>
           <PopoverContent anchor={moreRef} side="top" align="end" className="w-56">
             <div className="flex flex-col gap-0.5">

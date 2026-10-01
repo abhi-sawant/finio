@@ -20,7 +20,7 @@ export function Sidebar() {
       {/* Add transaction */}
       <button
         onClick={() => navigate('/add-transaction')}
-        className="bg-primary text-primary-foreground mb-3 flex items-center justify-center gap-2 rounded-full py-2.5 text-sm font-semibold shadow-[var(--shadow-card)] transition-transform active:scale-[0.98]"
+        className="bg-primary text-primary-foreground mb-3 flex items-center justify-center gap-2 rounded-full py-3 text-sm font-semibold shadow-[var(--shadow-card)] transition-transform active:scale-[0.98]"
       >
         <Plus size={18} strokeWidth={2.4} />
         Add Transaction
@@ -35,8 +35,9 @@ export function Sidebar() {
             <button
               key={tab.path}
               onClick={() => navigate(tab.path)}
+              aria-current={isActive ? 'page' : undefined}
               className={cn(
-                'flex items-center gap-3 rounded-full px-3 py-2.5 text-sm font-medium transition-colors',
+                'flex items-center gap-3 rounded-full px-3 py-3 text-sm font-medium transition-colors',
                 isActive
                   ? 'bg-accent text-accent-foreground'
                   : 'text-muted-foreground hover:bg-muted/60 hover:text-foreground',
@@ -61,8 +62,9 @@ export function Sidebar() {
             <button
               key={item.path}
               onClick={() => navigate(item.path)}
+              aria-current={isActive ? 'page' : undefined}
               className={cn(
-                'flex items-center gap-3 rounded-full px-3 py-2.5 text-sm font-medium transition-colors',
+                'flex items-center gap-3 rounded-full px-3 py-3 text-sm font-medium transition-colors',
                 isActive
                   ? 'bg-accent text-accent-foreground'
                   : 'text-muted-foreground hover:bg-muted/60 hover:text-foreground',

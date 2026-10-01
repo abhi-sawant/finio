@@ -12,7 +12,7 @@ export function HideAmountsToggle() {
       variant="outline"
       size="icon"
       onClick={() => updateSettings({ hideAmounts: !hideAmounts })}
-      className="bg-card hover:bg-muted h-9 w-9 rounded-full"
+      className="bg-card hover:bg-muted h-11 w-11 rounded-full"
       aria-label={hideAmounts ? 'Show amounts' : 'Hide amounts'}
       aria-pressed={hideAmounts}
     >

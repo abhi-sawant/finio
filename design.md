@@ -110,13 +110,13 @@ intentional, not auto-generated:
 ```
 --background: #211e1a;   --foreground: #f3efe7;
 --card: #2a2521;         --card-foreground: #f3efe7;
---primary: #2e9c7a;      --primary-foreground: #0b1f19;   /* brighter/more saturated than light-mode primary */
+--primary: #34a582;      --primary-foreground: #0b1f19;   /* brighter/more saturated than light-mode primary */
 --secondary: #35302a;    --secondary-foreground: #f3efe7;
 --muted: #35302a;        --muted-foreground: #b0a99c;
 --accent: #24352e;       --accent-foreground: #8fcbb3;
 --destructive: #e0714a;  --destructive-foreground: #241008;
 --border: rgba(243,239,231,0.10);   --input: rgba(243,239,231,0.14);  /* alpha-over-bg, not a solid hex */
---ring: #2e9c7a;
+--ring: #34a582;
 ```
 
 Rules encoded in the palette above, keep these when swapping values:
