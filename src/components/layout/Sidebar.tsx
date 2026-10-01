@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from 'react-router';
 import { Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { navTabs, moreNavItems } from './navItems';
+import { navTabs, moreNavItems, isTabActive } from './navItems';
 
 export function Sidebar() {
   const location = useLocation();
@@ -29,7 +29,7 @@ export function Sidebar() {
       {/* Nav */}
       <nav className="flex flex-col gap-1">
         {navTabs.map((tab) => {
-          const isActive = location.pathname === tab.path;
+          const isActive = isTabActive(location.pathname, tab.path);
           const Icon = tab.icon;
           return (
             <button
@@ -50,9 +50,9 @@ export function Sidebar() {
         })}
       </nav>
 
-      {/* Manage */}
+      {/* Tools */}
       <p className="text-muted-foreground mt-4 px-3 pb-1 text-xs font-medium tracking-wide uppercase">
-        Manage
+        Tools
       </p>
       <nav className="flex flex-col gap-1">
         {moreNavItems.map((item) => {

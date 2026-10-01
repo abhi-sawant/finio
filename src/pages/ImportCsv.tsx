@@ -29,6 +29,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import Header from '@/components/ui/header';
+import { HeaderIconButton, HeaderIconSpacer } from '@/components/ui/header-icon-button';
 import Main from '@/components/ui/main';
 
 type Step = 'upload' | 'map' | 'preview';
@@ -199,11 +200,11 @@ export default function ImportCsv() {
   return (
     <>
       <Header innerClassName="lg:max-w-2xl">
-        <Button variant="ghost" size="icon" onClick={handleBack} className="h-9 w-9 rounded-full">
-          <ArrowLeft size={20} />
-        </Button>
+        <HeaderIconButton onClick={handleBack} aria-label="Back">
+          <ArrowLeft />
+        </HeaderIconButton>
         <h1 className="text-base font-semibold">{stepTitle}</h1>
-        <div className="w-9" />
+        <HeaderIconSpacer />
       </Header>
 
       <Main className="lg:max-w-2xl">

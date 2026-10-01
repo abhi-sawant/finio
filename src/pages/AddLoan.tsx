@@ -24,6 +24,7 @@ import {
 } from '@/components/ui/select';
 import { useConfirm } from '@/components/ui/use-confirm';
 import Header from '@/components/ui/header';
+import { HeaderIconButton, HeaderIconSpacer } from '@/components/ui/header-icon-button';
 import Main from '@/components/ui/main';
 
 /** Loan/EMI in the default set — the sane default for a new loan's category. */
@@ -117,21 +118,16 @@ export default function AddLoan() {
   return (
     <>
       <Header innerClassName="lg:max-w-xl">
-        <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="h-9 w-9">
-          <ArrowLeft size={20} />
-        </Button>
+        <HeaderIconButton onClick={() => navigate(-1)} aria-label="Back">
+          <ArrowLeft />
+        </HeaderIconButton>
         <h1 className="text-base font-semibold">{existing ? 'Edit Loan' : 'Add Loan'}</h1>
         {existing ? (
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleDelete}
-            className="text-destructive h-9 w-9"
-          >
-            <Trash2 size={18} />
-          </Button>
+          <HeaderIconButton onClick={handleDelete} aria-label="Delete" tone="destructive">
+            <Trash2 />
+          </HeaderIconButton>
         ) : (
-          <div className="w-9" />
+          <HeaderIconSpacer />
         )}
       </Header>
 

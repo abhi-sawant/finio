@@ -26,6 +26,7 @@ import {
 import type { CategoryRule, TransactionType } from '@/types';
 import Main from '@/components/ui/main';
 import Header from '@/components/ui/header';
+import { HeaderIconButton, HeaderIconSpacer } from '@/components/ui/header-icon-button';
 
 export default function AddTransaction() {
   const navigate = useNavigate();
@@ -388,23 +389,18 @@ export default function AddTransaction() {
     <>
       {/* Header */}
       <Header innerClassName="lg:max-w-xl">
-        <Button variant="ghost" size="icon" onClick={goBack} className="h-9 w-9 rounded-full">
-          <ArrowLeft size={20} />
-        </Button>
+        <HeaderIconButton onClick={goBack} aria-label="Back">
+          <ArrowLeft />
+        </HeaderIconButton>
         <h1 className="text-base font-semibold">
           {existing ? 'Edit Transaction' : 'Add Transaction'}
         </h1>
         {existing ? (
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleDelete}
-            className="text-destructive hover:bg-destructive/10 h-9 w-9 rounded-full"
-          >
-            <Trash2 size={18} />
-          </Button>
+          <HeaderIconButton onClick={handleDelete} aria-label="Delete" tone="destructive">
+            <Trash2 />
+          </HeaderIconButton>
         ) : (
-          <div className="w-9" />
+          <HeaderIconSpacer />
         )}
       </Header>
 
