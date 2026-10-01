@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { useNavigate, useLocation } from 'react-router';
+import { Navigate, useNavigate, useLocation } from 'react-router';
 import { Eye, EyeOff, Lock } from 'lucide-react';
 import { api } from '@/services/api';
 import { getErrorMessage } from '@/utils/errors';
@@ -72,10 +72,8 @@ export default function ResetPassword() {
     }
   };
 
-  if (!email) {
-    navigate('/forgot-password', { replace: true });
-    return null;
-  }
+  // A render-time navigate() is a no-op; <Navigate> performs the redirect.
+  if (!email) return <Navigate to="/forgot-password" replace />;
 
   return (
     <div className="flex min-h-screen flex-col justify-center px-6 py-12">

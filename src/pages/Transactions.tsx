@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { useFinanceStore } from '@/store/useFinanceStore';
 import { cn } from '@/lib/utils';
 import { downloadBlob } from '@/services/download';
-import { formatCurrency, formatDate } from '@/utils/formatters';
+import { formatCurrency, formatDate, todayKey } from '@/utils/formatters';
 import {
   activeAccounts,
   buildSearchIndex,
@@ -192,11 +192,7 @@ export default function Transactions() {
       return;
     }
     const csv = transactionsToCsv(filtered, categories, accounts);
-    downloadBlob(
-      `finio-transactions-${new Date().toISOString().slice(0, 10)}.csv`,
-      csv,
-      'text/csv;charset=utf-8',
-    );
+    downloadBlob(`finio-transactions-${todayKey()}.csv`, csv, 'text/csv;charset=utf-8');
     toast.success(`Exported ${filtered.length} transactions`);
   };
 

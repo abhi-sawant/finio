@@ -6,6 +6,7 @@ import {
   transactionCategoryAmounts,
   transactionsInPeriod,
 } from './calculations';
+import { localDayKey } from './formatters';
 import { netWorthAt } from './netWorth';
 import {
   DEFAULT_MONTH_START_DAY,
@@ -213,7 +214,7 @@ export function buildSpendingCalendar(
   const byDay = new Map<string, { total: number; count: number }>();
   for (const t of transactionsInPeriod(transactions, range)) {
     if (t.type !== 'expense') continue;
-    const key = t.date.slice(0, 10);
+    const key = localDayKey(t.date);
     const entry = byDay.get(key) ?? { total: 0, count: 0 };
     entry.total = roundMoney(entry.total + t.amount);
     entry.count += 1;

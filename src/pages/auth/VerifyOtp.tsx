@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { useNavigate, useLocation } from 'react-router';
+import { Navigate, useNavigate, useLocation } from 'react-router';
 import { api } from '@/services/api';
 import { useAuthStore } from '@/store/useAuthStore';
 import { getErrorMessage } from '@/utils/errors';
@@ -80,10 +80,8 @@ export default function VerifyOtp() {
     }
   };
 
-  if (!email) {
-    navigate('/register', { replace: true });
-    return null;
-  }
+  // A render-time navigate() is a no-op; <Navigate> performs the redirect.
+  if (!email) return <Navigate to="/register" replace />;
 
   return (
     <div className="flex min-h-screen flex-col justify-center px-6 py-12">

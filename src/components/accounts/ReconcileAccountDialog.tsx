@@ -73,7 +73,7 @@ export function ReconcileAccountDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="bg-card top-1/4 mx-auto w-11/12 rounded-md">
+      <DialogContent className="bg-card mx-auto w-11/12 rounded-md">
         <DialogHeader>
           <DialogTitle>Reconcile "{account.name}"</DialogTitle>
         </DialogHeader>

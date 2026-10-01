@@ -14,6 +14,8 @@ import {
   getDashboardStats,
   getTotalOwedToYou,
   getTotalYouOwe,
+  groupTransactionsByDate,
+  isCategoryValidForType,
   transactionCategoryAmounts,
   transactionMatchesQuery,
   transactionsToCsv,
@@ -744,6 +746,17 @@ describe('getCreditCardDueInfo', () => {
 });
 
 describe('computeGoalStatus', () => {
+  it('paces the projection from the earliest contribution, not from goal creation', () => {
+    // Created today with a back-dated opening balance: 20,000 over 57 days, not over one day.
+    const now = at(2026, 10, 1);
+    const g = goal({ targetAmount: 100000, createdAt: now.toISOString() });
+    const opening = contribution({ amount: 20000, date: at(2026, 8, 5).toISOString() });
+    const status = computeGoalStatus(g, [opening], now);
+    // 20,000 / 57 days ≈ 351/day → 80,000 more takes ~228 days, not 4.
+    const days = Math.round((status.projectedDate!.getTime() - now.getTime()) / 86_400_000);
+    expect(days).toBeGreaterThan(200);
+  });
+
   it('sums only the contributions logged against this goal', () => {
     const g = goal({ targetAmount: 10000 });
     const contributions = [
@@ -871,5 +884,45 @@ describe('getTotalOwedToYou / getTotalYouOwe', () => {
   it('is zero for both totals with no people or entries', () => {
     expect(getTotalOwedToYou([], [])).toBe(0);
     expect(getTotalYouOwe([], [])).toBe(0);
+  });
+});
+
+describe('isCategoryValidForType', () => {
+  const cat = (type: 'expense' | 'income' | 'both') => ({
+    id: 'c',
+    name: 'C',
+    icon: 'x',
+    color: '#000',
+    type,
+  });
+
+  it('accepts only matching or neutral categories for expense and income', () => {
+    expect(isCategoryValidForType(cat('expense'), 'expense')).toBe(true);
+    expect(isCategoryValidForType(cat('expense'), 'income')).toBe(false);
+    expect(isCategoryValidForType(cat('income'), 'expense')).toBe(false);
+    expect(isCategoryValidForType(cat('income'), 'income')).toBe(true);
+    expect(isCategoryValidForType(cat('both'), 'expense')).toBe(true);
+    expect(isCategoryValidForType(cat('both'), 'income')).toBe(true);
+  });
+
+  it('accepts only neutral categories for a transfer', () => {
+    expect(isCategoryValidForType(cat('both'), 'transfer')).toBe(true);
+    expect(isCategoryValidForType(cat('expense'), 'transfer')).toBe(false);
+    expect(isCategoryValidForType(cat('income'), 'transfer')).toBe(false);
+  });
+});
+
+describe('groupTransactionsByDate', () => {
+  it('groups by local day so a local-midnight entry joins its same-day neighbours', () => {
+    const mk = (id: string, date: string) => ({ id, date }) as Transaction;
+    const groups = groupTransactionsByDate([
+      mk('midnight', '2026-09-30T18:30:00.000Z'), // 1 Oct 00:00 IST
+      mk('afternoon', '2026-10-01T08:00:00.000Z'), // 1 Oct 13:30 IST
+      mk('prev', '2026-09-30T10:00:00.000Z'), // 30 Sep 15:30 IST
+    ]);
+    expect(groups.map((g) => g.transactions.map((t) => t.id))).toEqual([
+      ['afternoon', 'midnight'],
+      ['prev'],
+    ]);
   });
 });

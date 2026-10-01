@@ -163,11 +163,19 @@ export default function Debts() {
     setSettleNote('');
   };
 
+  // Settling more than is owed would flip the relationship (they owed you, now you owe them).
+  const settleLimit = settlePerson ? Math.abs(settlePerson.balance) : 0;
+  const settleOverLimit = (parseFloat(settleAmount) || 0) > settleLimit + 0.005;
+
   const handleSettleSubmit = () => {
     if (!settlePerson) return;
     const parsed = parseFloat(settleAmount);
     if (!parsed || parsed <= 0) {
       toast.error('Enter a valid amount');
+      return;
+    }
+    if (settleOverLimit) {
+      toast.error(`Only ${formatCurrency(settleLimit)} is outstanding`);
       return;
     }
     if (!settleAccountId) {
@@ -362,7 +370,7 @@ export default function Debts() {
           if (!v) setEntryPerson(null);
         }}
       >
-        <DialogContent className="bg-card top-1/4 mx-auto w-11/12 rounded-md">
+        <DialogContent className="bg-card mx-auto w-11/12 rounded-md">
           <DialogHeader>
             <DialogTitle>
               {entryPerson?.mode === 'borrow' ? 'Borrowed from' : 'Lent to'}{' '}
@@ -404,7 +412,7 @@ export default function Debts() {
           if (!v) setSettlePerson(null);
         }}
       >
-        <DialogContent className="bg-card top-1/4 mx-auto w-11/12 rounded-md">
+        <DialogContent className="bg-card mx-auto w-11/12 rounded-md">
           <DialogHeader>
             <DialogTitle>Settle up with {settlePerson?.person.name}</DialogTitle>
           </DialogHeader>
@@ -415,6 +423,11 @@ export default function Debts() {
                 : `You owe ${formatCurrency(Math.abs(settlePerson?.balance ?? 0))}. Record what you paid them.`}
             </p>
             <NumberPad value={settleAmount} onChange={setSettleAmount} />
+            {settleOverLimit && (
+              <p className="text-destructive text-xs">
+                That's more than the {formatCurrency(settleLimit)} outstanding.
+              </p>
+            )}
 
             {openAccounts.length === 0 ? (
               <p className="text-destructive text-xs">
@@ -447,7 +460,7 @@ export default function Debts() {
             <div className="flex gap-2">
               <Button
                 onClick={handleSettleSubmit}
-                disabled={openAccounts.length === 0}
+                disabled={openAccounts.length === 0 || settleOverLimit}
                 className="bg-grad-primary shadow-glow-primary h-auto flex-1 rounded-sm py-2 text-sm font-medium text-white"
               >
                 Settle

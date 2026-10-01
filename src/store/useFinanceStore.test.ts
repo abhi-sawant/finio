@@ -704,6 +704,16 @@ describe('addContribution / deleteContribution / restoreContribution', () => {
     expect(created.createdAt).toEqual(expect.any(String));
   });
 
+  it('clamps a withdrawal to what the goal holds', () => {
+    const { addContribution } = useFinanceStore.getState();
+    addContribution({ goalId: 'goal-1', amount: 300, date: '2026-01-05', note: '' });
+    addContribution({ goalId: 'goal-1', amount: -500, date: '2026-01-06', note: '' });
+    const total = useFinanceStore
+      .getState()
+      .goalContributions.reduce((sum, c) => sum + c.amount, 0);
+    expect(total).toBe(0);
+  });
+
   it('deletes a contribution and returns the removed row for undo', () => {
     const id = useFinanceStore
       .getState()
@@ -1687,5 +1697,51 @@ describe('deposits', () => {
     expect(useFinanceStore.getState().deleteAccount(id)).toBe(true);
     expect(useFinanceStore.getState().accounts[0].balance).toBe(100000);
     expect(useFinanceStore.getState().deleteAccount('bank')).toBe(true);
+  });
+});
+
+describe('addLoanPrepayment', () => {
+  const setup = () => {
+    seed([account('a', 1_000_000, 1_000_000)]);
+    const loanId = useFinanceStore.getState().addLoan({
+      name: 'Car',
+      principal: 500_000,
+      interestRate: 0,
+      tenureMonths: 36,
+      // First EMI is next month, so nothing is paid yet and the full principal is owed.
+      startDate: new Date(Date.now() + 40 * 86_400_000).toISOString(),
+      accountId: 'a',
+      categoryId: 'cat-1',
+    });
+    return loanId;
+  };
+  const today = () => new Date().toISOString();
+
+  it('caps an oversized prepayment at what is owed and closes the loan', () => {
+    const loanId = setup();
+    const id = useFinanceStore
+      .getState()
+      .addLoanPrepayment({ loanId, amount: 9_999_999, date: today(), note: '' });
+    expect(id).not.toBeNull();
+    const state = useFinanceStore.getState();
+    expect(state.loanPrepayments[0].amount).toBe(500_000);
+    expect(state.accounts[0].balance).toBe(500_000);
+    expect(state.loans[0].closedAt).toBeDefined();
+  });
+
+  it('records a partial prepayment as-is and leaves the loan open', () => {
+    const loanId = setup();
+    useFinanceStore
+      .getState()
+      .addLoanPrepayment({ loanId, amount: 100_000, date: today(), note: '' });
+    expect(useFinanceStore.getState().loanPrepayments[0].amount).toBe(100_000);
+    expect(useFinanceStore.getState().loans[0].closedAt).toBeUndefined();
+  });
+
+  it('refuses once nothing is left to prepay', () => {
+    const loanId = setup();
+    const { addLoanPrepayment } = useFinanceStore.getState();
+    addLoanPrepayment({ loanId, amount: 500_000, date: today(), note: '' });
+    expect(addLoanPrepayment({ loanId, amount: 1, date: today(), note: '' })).toBeNull();
   });
 });

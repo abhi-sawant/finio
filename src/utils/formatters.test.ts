@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatCurrency, shouldCompactGroup } from './formatters';
+import { formatCurrency, localDayKey, shouldCompactGroup, todayKey } from './formatters';
 
 describe('formatCurrency hidden masking', () => {
   it('masks the amount behind dots but keeps the currency symbol', () => {
@@ -61,5 +61,17 @@ describe('formatCurrency forceCompact', () => {
   it('leaves the normal per-value gate alone when forceCompact is omitted', () => {
     expect(formatCurrency(230_000, true, false)).toBe('₹2.3L');
     expect(formatCurrency(90_010, true, false)).toBe('₹90,010');
+  });
+});
+
+describe('localDayKey / todayKey', () => {
+  // Local midnight on 1 Oct in IST (UTC+5:30) is still 30 Sep in UTC.
+  it('keys an instant by the local calendar day, not the UTC date', () => {
+    expect(new Date('2026-10-01T00:00:00+05:30').getTimezoneOffset()).toBe(-330);
+    expect(localDayKey('2026-09-30T18:30:00.000Z')).toBe('2026-10-01');
+  });
+
+  it('formats today from local fields', () => {
+    expect(todayKey(new Date(2026, 9, 1, 0, 10))).toBe('2026-10-01');
   });
 });

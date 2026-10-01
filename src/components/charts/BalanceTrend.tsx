@@ -10,7 +10,7 @@ import {
 } from 'recharts';
 import { useFinanceStore } from '@/store/useFinanceStore';
 import { subDays, format, differenceInDays, startOfMonth, addMonths } from 'date-fns';
-import { formatCurrency } from '@/utils/formatters';
+import { formatCurrency, localDayKey } from '@/utils/formatters';
 import { getNetWorth } from '@/utils/calculations';
 import { sampleForTable } from '@/utils/chartTable';
 import { ChartDataTable } from './ChartDataTable';
@@ -34,7 +34,7 @@ export function BalanceTrend({ from, to }: Props) {
     const dayDelta = new Map<string, number>();
     for (const t of transactions) {
       if (t.type === 'transfer') continue;
-      const key = t.date.slice(0, 10);
+      const key = localDayKey(t.date);
       const delta = t.type === 'income' ? t.amount : -t.amount;
       dayDelta.set(key, (dayDelta.get(key) ?? 0) + delta);
     }

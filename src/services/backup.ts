@@ -8,6 +8,7 @@ import {
   isFolderPickerSupported,
   writeBackupAndRotate,
 } from './backupFolder';
+import { todayKey } from '@/utils/formatters';
 import { validateBackup } from '@/utils/importValidation';
 import { downloadBlob } from './download';
 import {
@@ -124,7 +125,7 @@ export async function saveLocalBackup(
  *  "export a backup first" safety net. */
 export async function exportLocalBackup(): Promise<void> {
   const data = collectBackupPayload();
-  const filename = `finio-backup-${new Date().toISOString().slice(0, 10)}.json`;
+  const filename = `finio-backup-${todayKey()}.json`;
   await saveLocalBackup(filename, JSON.stringify(data, null, 2), { allowPrompt: true });
 }
 
@@ -268,7 +269,7 @@ export async function autoLocalBackupIfNeeded(): Promise<void> {
   )
     return;
 
-  const today = new Date().toISOString().slice(0, 10);
+  const today = todayKey();
   if (lastLocalBackupAt === today) return;
 
   try {

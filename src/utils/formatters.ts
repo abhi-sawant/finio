@@ -68,6 +68,19 @@ export function formatTime(dateStr: string): string {
   return format(parseISO(dateStr), 'h:mm a');
 }
 
+/**
+ * The user's local calendar day of an ISO instant, as `yyyy-MM-dd`. Transaction dates are UTC
+ * instants, so `slice(0, 10)` files anything logged 00:00–05:30 IST under the previous day.
+ */
+export function localDayKey(iso: string): string {
+  return format(parseISO(iso), 'yyyy-MM-dd');
+}
+
+/** Today's local calendar day as `yyyy-MM-dd` (unlike `toISOString().slice(0, 10)`, which is UTC). */
+export function todayKey(now: Date = new Date()): string {
+  return format(now, 'yyyy-MM-dd');
+}
+
 /** Convert an ISO datetime string to the value expected by <input type="datetime-local">,
  *  expressed in the user's local timezone. */
 export function toLocalDateTimeInputValue(iso: string | Date): string {

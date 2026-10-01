@@ -55,7 +55,7 @@ Everything reachable was exercised, including conditional UI and empty states:
 
 ### 3.1 High
 
-#### H1 — Changing transaction type keeps the previous type's category
+#### H1 — Changing transaction type keeps the previous type's category ✅ fixed (code; manual retest pending)
 - **Where:** Add and Edit Transaction — [`AddTransaction.tsx:160`](src/pages/AddTransaction.tsx:160)
 - **Steps:** Add → pick **Food** → tap **Income** → enter 77 → Add. Or Edit an income "Salary" → tap **Expense** → Update.
 - **Expected:** category is cleared (or the form refuses) because "Food" is not an income category.
@@ -63,7 +63,7 @@ Everything reachable was exercised, including conditional UI and empty states:
 - **Cause:** `handleTypeChange` calls `setType(next)` but never resets `categoryId`.
 - **Impact:** silently corrupts category analytics, budgets (an income counted against a Food budget) and insights.
 
-#### H2 — 🕐 Day/month bucketing uses the UTC date, not the local date
+#### H2 — 🕐 Day/month bucketing uses the UTC date, not the local date ✅ fixed (code; manual retest pending)
 - **Where:** [`calculations.ts:178`](src/utils/calculations.ts:178) (`t.date.slice(0, 10)`), [`IncomeExpenseBar.tsx:20`](src/components/charts/IncomeExpenseBar.tsx:20) (`t.date.slice(0, 7)`)
 - **Steps:** In an IST browser, add an FD / loan prepayment / any date-picker entry for "Oct 1" (stored as local midnight = `2026-09-30T18:30Z`).
 - **Actual:**
@@ -72,35 +72,35 @@ Everything reachable was exercised, including conditional UI and empty states:
   - The chart also ignores `Settings.monthStartDay`, contradicting the project rule "never bucket months by hand".
 - **Impact:** wrong period totals and day headings for every user east of UTC, for anything logged 00:00–05:30 local.
 
-#### H3 — Dialogs are clipped off the top of the viewport
+#### H3 — Dialogs are clipped off the top of the viewport ✅ fixed (code; manual retest pending)
 - **Where:** `className="bg-card top-1/4 …"` in 7 places — `ReconcileAccountDialog.tsx:76`, `Goals.tsx:392`, `CategoryRules.tsx:470`, `ManageLabels.tsx:83`, `Debts.tsx:365,407`, `Loans.tsx:388`
 - **Cause:** base dialog uses `-translate-y-1/2`, so `top-1/4` centres the dialog at 25 % of the viewport. Any dialog taller than 50 % of the screen overflows the top.
 - **Measured:** Settle-up dialog at 1024×700 → `top: -106px`, its **Close (✕) button at y = -98px** (unreachable; Esc is the only way out). At 411×963 the Reconcile dialog was `top: -20px` with the title half-cut.
 - **Impact:** every number-pad dialog (settle up, prepay, reconcile, withdraw, add funds) hides its title and close button on laptop-height screens.
 
-#### H4 — Edit Account form goes stale after "Reconcile Balance"; saving reverts it
+#### H4 — Edit Account form goes stale after "Reconcile Balance"; saving reverts it ✅ fixed (code; manual retest pending)
 - **Where:** `AddAccount.tsx` (edit mode) + [`ReconcileAccountDialog`](src/components/accounts/ReconcileAccountDialog.tsx)
 - **Steps:** Edit "HDFC Checking" (balance ₹1,25,075) → Reconcile Balance → statement ₹1,20,000 → Add adjustment (balance becomes ₹1,20,000, ‑₹5,075 adjustment posted) → the **Current Balance** field still shows **1,25,075** → tap **Update Account**.
 - **Actual:** balance returns to ₹1,25,075 and `openingBalance` is bumped by +₹5,075 (20,075); the adjustment transaction remains, so history now contains a ‑₹5,075 entry that no longer matches reality.
 - **Expected:** the form re-syncs after reconcile (or Update is disabled until clean).
 
-#### H5 — Loan prepayment has no upper bound and leaves the loan inconsistent
+#### H5 — Loan prepayment has no upper bound and leaves the loan inconsistent ✅ fixed (code; manual retest pending)
 - **Steps:** Add ₹5,00,000 loan (0 %, 36 months) → Add Prepayment → 99,99,999 → Record.
 - **Actual:** accepted; the source account goes to **‑₹97,74,925**. Loan card then reads `0 of 1 installments · ₹5L outstanding`, Details shows `Payoff date 05 October 2026`, `Prepayments ₹1Cr`. The outstanding is unchanged and the tenure collapsed to 1 instalment.
 - **Expected:** reject amounts above the outstanding principal (or cap and auto-close the loan).
 
-#### H6 — Savings goals: negative balances and a nonsensical completion estimate
+#### H6 — Savings goals: negative balances and a nonsensical completion estimate ✅ fixed (code; manual retest pending)
 - **Withdraw past zero:** withdrawing ₹500 from "Vacation Fund" (₹0 saved) is accepted → card shows `-₹500 of ₹60,000 · -1%`.
 - **Projection:** Emergency Fund `₹20,000 of ₹1,00,000 … ₹80,000 to go · at this pace, by 05 October 2026` (4 days away). The only contribution is a "Starting balance" dated 5 Aug, but pace is measured from `goal.createdAt` ([`calculations.ts:536`](src/utils/calculations.ts:536)), which is *today* for any new goal, giving ₹20,000/day. Any goal created with an opening contribution gets this.
 
-#### H7 — Debt "Settle up" accepts any amount and flips the relationship
+#### H7 — Debt "Settle up" accepts any amount and flips the relationship ✅ fixed (code; manual retest pending)
 - Rahul owes ₹1,500. Settle up → ₹99,999 → **Settle**: a real ₹99,999 income transaction is created and the ledger flips to `You owe ₹98,499`. No warning, no cap; dialog copy says "Record what they paid you back".
 
-#### H8 — `/verify-otp` and `/reset-password` are blank dead ends when opened directly
+#### H8 — `/verify-otp` and `/reset-password` are blank dead ends when opened directly ✅ fixed (code; manual retest pending)
 - **Steps:** load `http://localhost:5173/verify-otp` (or `/reset-password`) with no router state (e.g. refresh after being sent there).
 - **Actual:** empty white page, URL unchanged, nothing to tap. Source: `if (!email) { navigate(...); return null; }` — `navigate()` is called **during render**, which does not redirect. Use `<Navigate>` or an effect.
 
-#### H9 — "Reset to Defaults" leaves the app in an unrecoverable half-state
+#### H9 — "Reset to Defaults" leaves the app in an unrecoverable half-state ✅ fixed (code; manual retest pending)
 - After Reset: 0 accounts, `onboardedAt` still set (no onboarding), user name replaced by `User`. Dashboard says "Add your first account", but **Add Transaction gives no feedback at all** (button disabled, no message), and "Explore with sample data" can no longer be reached. The confirm dialog also doesn't say that the name/onboarding state are wiped.
 
 ---

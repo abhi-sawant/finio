@@ -4,8 +4,8 @@ import { format, parseISO } from 'date-fns';
 import { ArrowLeft, ChevronDown, Pencil, Plus, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useFinanceStore } from '@/store/useFinanceStore';
-import { loanStatus, simulatePrepaymentImpact } from '@/utils/loan';
-import { formatCurrency, formatFullDate } from '@/utils/formatters';
+import { loanStatus, maxPrepayment, simulatePrepaymentImpact } from '@/utils/loan';
+import { formatCurrency, formatFullDate, todayKey } from '@/utils/formatters';
 import { HideAmountsToggle } from '@/components/HideAmountsToggle';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -205,7 +205,7 @@ export default function Loans() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [prepayLoan, setPrepayLoan] = useState<Loan | null>(null);
   const [prepayAmount, setPrepayAmount] = useState('0');
-  const [prepayDate, setPrepayDate] = useState(new Date().toISOString().slice(0, 10));
+  const [prepayDate, setPrepayDate] = useState(todayKey());
   const [prepayNote, setPrepayNote] = useState('');
 
   const activeLoans = useMemo(() => loans.filter((l) => !l.closedAt), [loans]);
@@ -243,9 +243,24 @@ export default function Loans() {
   const openPrepay = (loan: Loan) => {
     setPrepayLoan(loan);
     setPrepayAmount('0');
-    setPrepayDate(new Date().toISOString().slice(0, 10));
+    setPrepayDate(todayKey());
     setPrepayNote('');
   };
+
+  const prepayLimit = useMemo(() => {
+    if (!prepayLoan) return 0;
+    return maxPrepayment({
+      principal: prepayLoan.principal,
+      interestRate: prepayLoan.interestRate,
+      tenureMonths: prepayLoan.tenureMonths,
+      startDate: prepayLoan.startDate,
+      prepayments: (prepaymentsByLoan.get(prepayLoan.id) ?? []).map((p) => ({
+        amount: p.amount,
+        date: p.date,
+      })),
+    });
+  }, [prepayLoan, prepaymentsByLoan]);
+  const prepayOverLimit = (parseFloat(prepayAmount) || 0) > prepayLimit + 0.005;
 
   const prepayImpact = useMemo(() => {
     if (!prepayLoan) return null;
@@ -271,6 +286,10 @@ export default function Loans() {
     const amount = parseFloat(prepayAmount) || 0;
     if (amount <= 0) {
       toast.error('Enter a valid amount');
+      return;
+    }
+    if (prepayOverLimit) {
+      toast.error(`Only ${formatCurrency(prepayLimit)} is still owed on this loan`);
       return;
     }
     addLoanPrepayment({
@@ -385,7 +404,7 @@ export default function Loans() {
           if (!v) setPrepayLoan(null);
         }}
       >
-        <DialogContent className="bg-card top-1/4 mx-auto w-11/12 rounded-md">
+        <DialogContent className="bg-card mx-auto w-11/12 rounded-md">
           <DialogHeader>
             <DialogTitle>Prepay "{prepayLoan?.name}"</DialogTitle>
           </DialogHeader>
@@ -399,7 +418,15 @@ export default function Loans() {
               onChange={(e) => setPrepayNote(e.target.value)}
               className="bg-muted h-auto rounded-sm px-3 py-2"
             />
-            {prepayImpact && (
+            <p
+              className={
+                prepayOverLimit ? 'text-destructive text-xs' : 'text-muted-foreground text-xs'
+              }
+            >
+              Outstanding: {formatCurrency(prepayLimit, false, hideAmounts)} — the most you can
+              prepay.
+            </p>
+            {prepayImpact && !prepayOverLimit && (
               <p className="text-muted-foreground text-xs">
                 This would save{' '}
                 <span className="text-primary font-medium">
@@ -415,6 +442,7 @@ export default function Loans() {
             <div className="flex gap-2">
               <Button
                 onClick={handlePrepaySubmit}
+                disabled={prepayOverLimit || prepayLimit <= 0}
                 className="bg-grad-primary shadow-glow-primary h-auto flex-1 rounded-sm py-2 text-sm font-medium text-white"
               >
                 Record Prepayment

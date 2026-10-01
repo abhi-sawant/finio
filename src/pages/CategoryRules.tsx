@@ -467,7 +467,7 @@ export default function CategoryRules() {
 
         {/* Replay over existing history */}
         <Dialog open={replayOpen} onOpenChange={setReplayOpen}>
-          <DialogContent className="bg-card top-1/4 mx-auto w-11/12 rounded-md sm:max-w-md">
+          <DialogContent className="bg-card mx-auto w-11/12 rounded-md sm:max-w-md">
             <DialogHeader>
               <DialogTitle>Apply Rules to Existing Transactions</DialogTitle>
               <DialogDescription>

@@ -601,10 +601,14 @@ export interface FinanceStore {
   /** Removes the loan, every prepayment logged against it, and its linked recurring rule. */
   deleteLoan: (id: string) => void;
 
-  /** Creates both the ledger row and a real expense transaction — a prepayment is real money. */
+  /**
+   * Creates both the ledger row and a real expense transaction — a prepayment is real money.
+   * The amount is capped at what is still owed (see `maxPrepayment`), and a payment that clears
+   * it closes the loan. Returns null when the loan is unknown or nothing is left to prepay.
+   */
   addLoanPrepayment: (
     prepayment: Omit<LoanPrepayment, 'id' | 'createdAt' | 'transactionId'>,
-  ) => string;
+  ) => string | null;
   /**
    * Removes the ledger row only — same convention as a settled debt entry, the transaction it
    * created stays in history. Returns the removed row so callers can undo.

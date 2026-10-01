@@ -10,9 +10,11 @@ import {
   shiftPeriod,
   type PeriodRange,
 } from './period';
+import { localDayKey } from './formatters';
 import { depositCurrentValue, isDepositAccount } from './deposit';
 import type {
   Transaction,
+  TransactionType,
   Account,
   Budget,
   Category,
@@ -22,6 +24,16 @@ import type {
   Person,
   DebtEntry,
 } from '@/types';
+
+/**
+ * Whether a category may be filed under a transaction of `type`. Transfers only take the
+ * neutral `both` categories. The category picker and the save guard must share this rule, or a
+ * category picked before a type switch lingers in state, invisible but still saved.
+ */
+export function isCategoryValidForType(category: Category, type: TransactionType): boolean {
+  if (type === 'transfer') return category.type === 'both';
+  return category.type === type || category.type === 'both';
+}
 
 /**
  * The category/amount pairs a transaction counts against — its `splits` if it has any,
@@ -175,7 +187,7 @@ export function groupTransactionsByDate(
   const map = new Map<string, Transaction[]>();
 
   for (const t of sorted) {
-    const dateKey = t.date.slice(0, 10);
+    const dateKey = localDayKey(t.date);
     const existing = map.get(dateKey);
     if (existing) {
       existing.push(t);
@@ -511,8 +523,8 @@ export interface GoalStatus {
   percent: number;
   isComplete: boolean;
   /**
-   * Projected completion date, paced by the average daily contribution since the goal was
-   * created. Null when already complete, or when there's no positive pace to extrapolate
+   * Projected completion date, paced by the average daily contribution since the goal's
+   * earliest contribution (its creation date if it somehow has none). Null when already complete, or when there's no positive pace to extrapolate
    * from (no contributions yet, or net withdrawals so far).
    */
   projectedDate: Date | null;
@@ -524,17 +536,18 @@ export function computeGoalStatus(
   contributions: GoalContribution[],
   now = new Date(),
 ): GoalStatus {
-  const current = contributions
-    .filter((c) => c.goalId === goal.id)
-    .reduce((sum, c) => sum + c.amount, 0);
+  const own = contributions.filter((c) => c.goalId === goal.id);
+  const current = own.reduce((sum, c) => sum + c.amount, 0);
   const remaining = goal.targetAmount - current;
   const percent = goal.targetAmount > 0 ? (current / goal.targetAmount) * 100 : 0;
   const isComplete = current >= goal.targetAmount;
 
   let projectedDate: Date | null = null;
   if (!isComplete && current > 0) {
-    const created = parseISO(goal.createdAt);
-    const daysElapsed = Math.max(1, differenceInCalendarDays(now, created));
+    // Not `goal.createdAt`: a goal created today with a back-dated opening contribution would
+    // read as "saved all of it in one day" and project completion within days.
+    const start = own.reduce((min, c) => (c.date < min ? c.date : min), goal.createdAt);
+    const daysElapsed = Math.max(1, differenceInCalendarDays(now, parseISO(start)));
     const dailyRate = current / daysElapsed;
     if (dailyRate > 0) {
       projectedDate = addDays(now, Math.ceil(remaining / dailyRate));

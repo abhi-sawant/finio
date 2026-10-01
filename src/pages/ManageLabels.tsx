@@ -80,7 +80,7 @@ export default function ManageLabels() {
             if (!v) resetForm();
           }}
         >
-          <DialogContent className="bg-card top-1/4 mx-auto w-11/12 rounded-md">
+          <DialogContent className="bg-card mx-auto w-11/12 rounded-md">
             <DialogHeader>
               <DialogTitle>{editId ? 'Edit Label' : 'Add Label'}</DialogTitle>
             </DialogHeader>

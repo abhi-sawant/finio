@@ -26,7 +26,7 @@ import {
   planMaturities,
   rdInstallmentsOnOrBefore,
 } from '@/utils/deposit';
-import { calculateEmi } from '@/utils/loan';
+import { calculateEmi, maxPrepayment } from '@/utils/loan';
 import { planNetWorthSnapshots } from '@/utils/netWorth';
 import { normalizeMonthStartDay } from '@/utils/period';
 import type {
@@ -905,8 +905,17 @@ export const useFinanceStore = create<FinanceStore>()(
       },
 
       addContribution: (contributionData) => {
+        // A withdrawal can't take out more than the goal holds — it would leave a negative balance.
+        let amount = contributionData.amount;
+        if (amount < 0) {
+          const saved = get()
+            .goalContributions.filter((c) => c.goalId === contributionData.goalId)
+            .reduce((sum, c) => sum + c.amount, 0);
+          amount = Math.max(amount, -Math.max(0, saved));
+        }
         const contribution: GoalContribution = {
           ...contributionData,
+          amount,
           id: generateUUID(),
           createdAt: new Date().toISOString(),
         };
@@ -1110,14 +1119,24 @@ export const useFinanceStore = create<FinanceStore>()(
       },
 
       addLoanPrepayment: (prepaymentData) => {
-        // The loan is the source of the account, category and name — trusted internal input,
-        // like every other add* action assumes its foreign keys already resolve.
-        const loan = get().loans.find((l) => l.id === prepaymentData.loanId)!;
+        const loan = get().loans.find((l) => l.id === prepaymentData.loanId);
+        if (!loan) return null;
+        const owed = maxPrepayment({
+          principal: loan.principal,
+          interestRate: loan.interestRate,
+          tenureMonths: loan.tenureMonths,
+          startDate: loan.startDate,
+          prepayments: get()
+            .loanPrepayments.filter((p) => p.loanId === loan.id)
+            .map((p) => ({ amount: p.amount, date: p.date })),
+        });
+        const amount = roundMoney(Math.min(prepaymentData.amount, owed));
+        if (amount <= 0) return null;
         const createdAt = new Date().toISOString();
         const transaction: Transaction = {
           id: generateUUID(),
           type: 'expense',
-          amount: prepaymentData.amount,
+          amount,
           accountId: loan.accountId,
           categoryId: loan.categoryId,
           date: prepaymentData.date,
@@ -1127,6 +1146,7 @@ export const useFinanceStore = create<FinanceStore>()(
         };
         const prepayment: LoanPrepayment = {
           ...prepaymentData,
+          amount,
           id: generateUUID(),
           transactionId: transaction.id,
           createdAt,
@@ -1136,6 +1156,8 @@ export const useFinanceStore = create<FinanceStore>()(
           accounts: applyBalanceDelta(state.accounts, transaction, 1),
           loanPrepayments: [prepayment, ...state.loanPrepayments],
         }));
+        // Clearing the whole balance finishes the loan, same as closing it by hand.
+        if (amount >= owed) get().setLoanClosed(loan.id, true);
         return prepayment.id;
       },
 

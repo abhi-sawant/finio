@@ -51,6 +51,7 @@ export default function Goals() {
   const updateGoal = useFinanceStore((s) => s.updateGoal);
   const deleteGoal = useFinanceStore((s) => s.deleteGoal);
   const addContribution = useFinanceStore((s) => s.addContribution);
+  const hideAmounts = useFinanceStore((s) => s.settings.hideAmounts);
   const deleteContribution = useFinanceStore((s) => s.deleteContribution);
   const restoreContribution = useFinanceStore((s) => s.restoreContribution);
 
@@ -152,11 +153,23 @@ export default function Goals() {
     setContributionNote('');
   };
 
+  const withdrawLimit = contributionGoal
+    ? Math.max(0, statuses.find((s) => s.goal.id === contributionGoal.goal.id)?.current ?? 0)
+    : 0;
+
   const handleContributionSubmit = () => {
     if (!contributionGoal) return;
     const parsed = parseFloat(contributionAmount);
     if (!parsed || parsed <= 0) {
       toast.error('Enter a valid amount');
+      return;
+    }
+    if (contributionGoal.mode === 'withdraw' && parsed > withdrawLimit + 0.005) {
+      toast.error(
+        withdrawLimit > 0
+          ? `Only ${formatCurrency(withdrawLimit)} is saved in this goal`
+          : 'Nothing saved in this goal to withdraw',
+      );
       return;
     }
     addContribution({
@@ -389,7 +402,7 @@ export default function Goals() {
           if (!v) setContributionGoal(null);
         }}
       >
-        <DialogContent className="bg-card top-1/4 mx-auto w-11/12 rounded-md">
+        <DialogContent className="bg-card mx-auto w-11/12 rounded-md">
           <DialogHeader>
             <DialogTitle>
               {contributionGoal?.mode === 'withdraw' ? 'Withdraw from' : 'Add funds to'}{' '}
@@ -398,6 +411,12 @@ export default function Goals() {
           </DialogHeader>
           <div className="space-y-3">
             <NumberPad value={contributionAmount} onChange={setContributionAmount} />
+            {contributionGoal?.mode === 'withdraw' && (
+              <p className="text-muted-foreground text-xs">
+                {formatCurrency(withdrawLimit, false, hideAmounts)} saved — the most you can
+                withdraw.
+              </p>
+            )}
             <Input
               type="text"
               placeholder="Note (optional)"

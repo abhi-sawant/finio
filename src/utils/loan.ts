@@ -143,10 +143,19 @@ export function loanStatus(loan: LoanScheduleInput, now = new Date()): LoanStatu
   const paidRows = schedule.filter((row) => parseISO(row.date) <= now);
   const remainingRows = schedule.slice(paidRows.length);
   const totalInterestPaid = roundMoney(paidRows.reduce((sum, row) => sum + row.interest, 0));
-  const outstandingBalance =
+  const afterInstallments =
     paidRows.length > 0
       ? paidRows[paidRows.length - 1].closingBalance
       : (schedule[0]?.openingBalance ?? 0);
+  // A prepayment dated on or before `now` has already left the account, but the schedule files
+  // it under its installment's row — which may not be due yet (one made this month lands on the
+  // next installment). Take it off here, or the balance ignores money that was really paid.
+  const pendingPrepaid = (loan.prepayments ?? []).reduce((sum, p) => {
+    if (p.amount <= 0 || parseISO(p.date) > now) return sum;
+    const month = Math.max(1, monthsBetween(loan.startDate, p.date) + 1);
+    return month > paidRows.length ? sum + p.amount : sum;
+  }, 0);
+  const outstandingBalance = roundMoney(Math.max(0, afterInstallments - pendingPrepaid));
 
   return {
     emi,
@@ -159,6 +168,14 @@ export function loanStatus(loan: LoanScheduleInput, now = new Date()): LoanStatu
     payoffDate: schedule[schedule.length - 1]?.date ?? null,
     isPaidOff: schedule.length > 0 && remainingRows.length === 0,
   };
+}
+
+/**
+ * The most a new prepayment can be: what is still owed right now. Anything above that would
+ * pay the lender more than the loan is worth and drive the source account negative for nothing.
+ */
+export function maxPrepayment(loan: LoanScheduleInput, now = new Date()): number {
+  return loanStatus(loan, now).outstandingBalance;
 }
 
 /**

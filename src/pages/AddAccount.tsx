@@ -83,6 +83,15 @@ export default function AddAccount() {
   const [due, setDue] = useState(
     existing?.type === 'credit' ? Math.abs(existing.balance).toString() : '0',
   );
+  /**
+   * `balance`/`due` only hold what the user typed. Until they type, the form follows the store,
+   * so a reconcile adjustment (or its Undo) posted while this screen is open is reflected —
+   * otherwise Update would write the stale mount-time figure back and shift `openingBalance`.
+   */
+  const [balanceDirty, setBalanceDirty] = useState(false);
+  const followStore = !!existing && !balanceDirty && existing.type === type;
+  const shownBalance = followStore && type !== 'credit' ? existing.balance.toString() : balance;
+  const shownDue = followStore && type === 'credit' ? Math.abs(existing.balance).toString() : due;
   const [color, setColor] = useState(existing?.color ?? accountColors[0]);
   const [creditLimit, setCreditLimit] = useState(existing?.creditLimit?.toString() ?? '0');
   const [statementCloseDay, setStatementCloseDay] = useState(
@@ -164,7 +173,7 @@ export default function AddAccount() {
     const data = {
       name: name.trim(),
       type,
-      balance: isCredit ? -(parseFloat(due) || 0) : parseFloat(balance) || 0,
+      balance: isCredit ? -(parseFloat(shownDue) || 0) : parseFloat(shownBalance) || 0,
       color,
       icon: existing?.icon ?? accountTypes.find((t) => t.value === type)?.icon ?? 'landmark',
       creditLimit: isCredit ? parseFloat(creditLimit) || undefined : undefined,
@@ -297,14 +306,26 @@ export default function AddAccount() {
             <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">
               Current Due
             </Label>
-            <NumberPad value={due} onChange={setDue} />
+            <NumberPad
+              value={shownDue}
+              onChange={(v) => {
+                setBalanceDirty(true);
+                setDue(v);
+              }}
+            />
           </div>
         ) : (
           <div>
             <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">
               Current Balance
             </Label>
-            <NumberPad value={balance} onChange={setBalance} />
+            <NumberPad
+              value={shownBalance}
+              onChange={(v) => {
+                setBalanceDirty(true);
+                setBalance(v);
+              }}
+            />
           </div>
         )}
 

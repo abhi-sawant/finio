@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { useFinanceStore } from '@/store/useFinanceStore';
 import { roundMoney } from '@/store/balance';
 import { findMatchingRule, mergeLabels } from '@/utils/autoCategorize';
+import { isCategoryValidForType } from '@/utils/calculations';
 import { parseSharePayload } from '@/utils/shareTarget';
 import { formatCurrency, toLocalDateTimeInputValue } from '@/utils/formatters';
 import { Button } from '@/components/ui/button';
@@ -126,15 +127,29 @@ export default function AddTransaction() {
     else navigate('/', { replace: true });
   }, [navigate]);
 
-  const applyRulesToNote = (value: string, txType: TransactionType, splitting: boolean) => {
+  /**
+   * `categoryCleared` means the caller has just wiped the category (a type switch made it
+   * invalid), so the closure's `categoryId` is stale: the baseline is blank, and a rule that
+   * matched before must be re-evaluated rather than assumed still in force.
+   */
+  const applyRulesToNote = (
+    value: string,
+    txType: TransactionType,
+    splitting: boolean,
+    categoryCleared = false,
+  ) => {
     if (existing || categoryTouched.current || (txType === 'expense' && splitting)) return;
 
     const rule = findMatchingRule(rules, value, txType);
-    if (rule && appliedRule?.rule.id === rule.id) return;
+    if (!categoryCleared && rule && appliedRule?.rule.id === rule.id) return;
 
     // Baseline is whatever the user had before *any* rule touched the form, so re-matching a
     // different rule (or matching nothing) never compounds an earlier rule's edits.
-    const baseCategoryId = appliedRule ? appliedRule.prevCategoryId : categoryId;
+    const baseCategoryId = categoryCleared
+      ? ''
+      : appliedRule
+        ? appliedRule.prevCategoryId
+        : categoryId;
     const baseLabels = appliedRule ? appliedRule.prevLabels : selectedLabels;
 
     if (!rule) {
@@ -158,9 +173,27 @@ export default function AddTransaction() {
   };
 
   const handleTypeChange = (next: TransactionType) => {
+    if (next === type) return;
     setType(next);
+
+    // The picker hides categories of the other type, but state would still hold the old id and
+    // save it. Clear anything the new type can't take — and settle which rule (if any) still
+    // applies from that clean baseline.
+    const isValid = (id: string) => {
+      const cat = categories.find((c) => c.id === id);
+      return !!cat && isCategoryValidForType(cat, next);
+    };
+    const staleCategory = !!categoryId && !isValid(categoryId);
+    if (staleCategory) setCategoryId('');
+    if (splitRows.some((r) => r.categoryId && !isValid(r.categoryId))) {
+      setSplitRows((prev) =>
+        prev.map((r) => (r.categoryId && !isValid(r.categoryId) ? { ...r, categoryId: '' } : r)),
+      );
+    }
     // A rule is scoped to expense or income, so switching type can change which one wins.
-    applyRulesToNote(note, next, splitMode);
+    applyRulesToNote(note, next, splitMode, staleCategory);
+    // No rule re-filed it: a leftover banner's Undo would restore a category of the old type.
+    if (staleCategory && appliedRule && !findMatchingRule(rules, note, next)) setAppliedRule(null);
   };
 
   const dismissAppliedRule = () => {
@@ -191,10 +224,10 @@ export default function AddTransaction() {
     return accounts.filter((a) => !a.archivedAt || inUse.has(a.id));
   }, [accounts, existing?.accountId, existing?.toAccountId]);
 
-  const filteredCategories = useMemo(() => {
-    if (type === 'transfer') return categories.filter((c) => c.type === 'both');
-    return categories.filter((c) => c.type === type || c.type === 'both');
-  }, [categories, type]);
+  const filteredCategories = useMemo(
+    () => categories.filter((c) => isCategoryValidForType(c, type)),
+    [categories, type],
+  );
 
   const useSplits = type === 'expense' && splitMode;
   const splitTotal = splitRows.reduce((sum, r) => sum + (parseFloat(r.amount) || 0), 0);
@@ -277,7 +310,7 @@ export default function AddTransaction() {
         );
         return;
       }
-    } else if (!categoryId) {
+    } else if (!categoryId || !filteredCategories.some((c) => c.id === categoryId)) {
       toast.error('Select a category');
       return;
     }
@@ -424,6 +457,18 @@ export default function AddTransaction() {
               ))}
             </SelectContent>
           </Select>
+          {selectableAccounts.length === 0 && (
+            <p className="bg-warning-band text-warning-band-foreground mt-2 rounded-md p-3 text-xs">
+              You need an account before you can record a transaction.{' '}
+              <button
+                type="button"
+                onClick={() => navigate('/add-account')}
+                className="font-medium underline"
+              >
+                Add an account
+              </button>
+            </p>
+          )}
         </div>
 
         {/* To Account (Transfer) */}

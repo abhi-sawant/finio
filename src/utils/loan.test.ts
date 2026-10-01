@@ -3,6 +3,7 @@ import {
   buildAmortizationSchedule,
   calculateEmi,
   loanStatus,
+  maxPrepayment,
   simulatePrepaymentImpact,
   type LoanScheduleInput,
 } from './loan';
@@ -109,6 +110,37 @@ describe('loanStatus', () => {
     expect(status.isPaidOff).toBe(true);
     expect(status.outstandingBalance).toBe(0);
     expect(status.nextDueDate).toBeNull();
+  });
+});
+
+describe('prepayments in the balance', () => {
+  const loan: LoanScheduleInput = {
+    principal: 100000,
+    interestRate: 0,
+    tenureMonths: 10,
+    startDate: '2026-01-05T00:00:00.000Z',
+  };
+
+  it('subtracts a prepayment made this month even though its installment is not due yet', () => {
+    // Four installments are behind `now` (Jan–Apr); the prepayment sits on the fifth.
+    const now = new Date('2026-04-20T00:00:00.000Z');
+    const withPrepay = {
+      ...loan,
+      prepayments: [{ amount: 20000, date: '2026-04-19T00:00:00.000Z' }],
+    };
+    expect(loanStatus(withPrepay, now).outstandingBalance).toBe(
+      loanStatus(loan, now).outstandingBalance - 20000,
+    );
+  });
+
+  it('offers no more than what is still owed, and never goes negative', () => {
+    const now = new Date('2026-01-01T00:00:00.000Z');
+    expect(maxPrepayment(loan, now)).toBe(100000);
+    const huge = {
+      ...loan,
+      prepayments: [{ amount: 9_999_999, date: '2025-12-31T00:00:00.000Z' }],
+    };
+    expect(maxPrepayment(huge, now)).toBe(0);
   });
 });
 

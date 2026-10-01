@@ -192,7 +192,7 @@ export function BackupSection() {
     const confirmed = await confirm({
       title: 'Reset all data?',
       description:
-        'Accounts, transactions, budgets, recurring rules, savings goals and people/debts will be erased and categories restored to defaults. This cannot be undone.',
+        'Accounts, transactions, budgets, recurring rules, loans, savings goals, people/debts, categorization rules, templates and net-worth history will be erased, and categories and labels restored to defaults. Your name and settings are kept. This cannot be undone.',
       confirmLabel: 'Reset everything',
     });
     if (confirmed) {

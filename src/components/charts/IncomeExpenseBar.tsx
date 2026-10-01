@@ -1,8 +1,9 @@
 import { useMemo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, CartesianGrid, Tooltip } from 'recharts';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { useFinanceStore } from '@/store/useFinanceStore';
 import { formatCurrency } from '@/utils/formatters';
+import { monthPeriodStart, normalizeMonthStartDay } from '@/utils/period';
 import type { Transaction } from '@/types';
 import { ChartDataTable } from './ChartDataTable';
 
@@ -12,12 +13,14 @@ interface Props {
 
 export function IncomeExpenseBar({ transactions }: Props) {
   const hideAmounts = useFinanceStore((s) => s.settings.hideAmounts);
+  const monthStartDay = normalizeMonthStartDay(useFinanceStore((s) => s.settings.monthStartDay));
   const data = useMemo(() => {
     const monthMap = new Map<string, { income: number; expenses: number }>();
 
     for (const t of transactions) {
       if (t.type !== 'income' && t.type !== 'expense') continue;
-      const key = t.date.slice(0, 7); // 'YYYY-MM'
+      // The financial month this falls in, in local time — not the UTC `YYYY-MM` prefix.
+      const key = format(monthPeriodStart(parseISO(t.date), monthStartDay), 'yyyy-MM-dd');
       const entry = monthMap.get(key) ?? { income: 0, expenses: 0 };
       if (t.type === 'income') entry.income += t.amount;
       else entry.expenses += t.amount;
@@ -27,10 +30,9 @@ export function IncomeExpenseBar({ transactions }: Props) {
     return Array.from(monthMap.entries())
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([key, { income, expenses }]) => {
-        const [year, month] = key.split('-').map(Number);
-        return { key, month: format(new Date(year, month - 1), 'MMM yy'), income, expenses };
+        return { key, month: format(parseISO(key), 'MMM yy'), income, expenses };
       });
-  }, [transactions]);
+  }, [transactions, monthStartDay]);
 
   const hasData = data.some((d) => d.income > 0 || d.expenses > 0);
   if (!hasData) return null;
