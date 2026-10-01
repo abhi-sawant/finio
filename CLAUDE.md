@@ -7,8 +7,14 @@
 - **Frontend:** React 19 + TypeScript + Vite + Tailwind CSS 4 + shadcn/ui
 - **Backend (optional):** PHP 8+ with MySQL, JWT auth, email OTP, and file-based rate limiting. Cloud backups can be end-to-end encrypted client-side, in which case the server holds only an opaque envelope.
 
-[README.md](README.md) is the user- and self-hoster-facing document; this file is the architecture
-guide.
+Related docs:
+
+- [README.md](README.md) — user- and self-hoster-facing; this file is the architecture guide.
+- [design.md](design.md) — the "Focus" visual system (tokens, layout shell, component conventions).
+  Read it before touching styling.
+- [improvements.md](improvements.md) — the latest review pass: open bugs, improvements and feature
+  ideas, as of `a9f1ae0` (2026-08-24). Nothing in it has been fixed yet — check it before assuming a
+  behaviour is intended.
 
 ---
 
@@ -23,8 +29,10 @@ npm run build        # tsc -b && vite build → dist/
 npm run preview      # Serve the dist/ build locally
 
 # Code Quality
-npm run lint         # ESLint
+npm run lint         # ESLint — 4 known pre-existing errors (CategoryIcon.tsx:112, YearInReview.tsx:68).
+                     # If .claude/worktrees/ exists, use `npx eslint src --ignore-pattern ".claude/**"`
 npm run format       # Prettier (with tailwindcss plugin)
+npm run format:check # Prettier, check only
 
 # Tests
 npm test             # Vitest (unit suite, run once)
@@ -46,7 +54,7 @@ running in the `node` environment, so no browser plugins are loaded.
 That `node` environment is a real constraint: `include` matches **`.test.ts` only**, there is no
 jsdom and no setup file, so `window`, `Notification` and IndexedDB do not exist. Anything
 platform-facing has to be split into a pure module that is tested and a thin I/O wrapper that
-isn't (`notificationDb`/`notificationRunner`, `appLockBiometric`, `LockScreen`). Node *does*
+isn't (`notificationDb`/`notificationRunner`, `appLockBiometric`, `LockScreen`). Node _does_
 expose `crypto.subtle`, which is why `pinCrypto.ts` is fully testable.
 
 ---
@@ -77,7 +85,7 @@ src/
 │   ├── legal/                # PrivacyPolicy, TermsOfService — static, linked from Settings' footer
 │   └── auth/                 # Login, Register, VerifyOtp, ForgotPassword, ResetPassword
 ├── components/
-│   ├── ui/                   # shadcn/ui primitives + confirm(), switch, number-pad
+│   ├── ui/                   # shadcn/ui primitives + confirm(), switch, number-pad, Header/Main page shell
 │   ├── charts/                # Recharts wrappers + ChartDataTable (a11y fallback)
 │   ├── analytics/             # Analytics-page cards (forecast, net worth, heatmap, insights, top merchants)
 │   ├── applock/               # LockScreen + PinPad (rendered instead of the app while locked)
@@ -85,6 +93,7 @@ src/
 │   ├── accounts/ budgets/ categories/ goals/ people/ transactions/   # Per-domain cards & icons
 │   │   └── accounts/ReconcileAccountDialog.tsx  # Per-account statement reconciliation (see gotchas)
 │   ├── layout/                # Layout.tsx (bottom tabs + FAB), Sidebar.tsx, navItems.ts
+│   ├── settings/              # Settings-page sections: Profile, Notifications, AppLock, CloudAccount, Backup, SecretDialogShell
 │   ├── ErrorBoundary.tsx      # Top-level crash boundary, above BrowserRouter
 │   ├── HideAmountsToggle.tsx  # Eye/eye-off button in every data-bearing page header
 │   └── ThemeProvider.tsx      # dark/light/system theme context
@@ -134,7 +143,17 @@ src/
 ├── lib/utils.ts              # shadcn cn() helper
 └── data/
     ├── defaultData.ts        # Default categories (32), labels (9), and settings
+    ├── colorPalette.ts       # COLOR_PALETTE — the single 18-swatch list every color picker offers
     └── sampleData.ts         # Deterministic demo dataset offered in onboarding (also a QA fixture)
+```
+
+Outside `src/`:
+
+```
+.github/workflows/deploy.yml  # CI: build + FTPS deploy of dist/ to MilesWeb on push to main (see Deployment)
+scripts/gen-dummydata.mjs     # Regenerates dummydata.json (seeded PRNG — reruns are reproducible)
+dummydata.json                # ~1000-transaction import fixture for load/QA testing; not used by the app
+public/.htaccess              # SPA rewrite to index.html for Apache/cPanel
 ```
 
 ### State Management
@@ -150,7 +169,7 @@ Four Zustand stores, all persisted to localStorage:
 
 React Router v7 (the `react-router` package — `react-router-dom` is not a dependency). All pages
 are lazy-loaded (dynamic `import()`). **There is no auth guard on any route:** the app is
-offline-first and works signed-out, so the old `ProtectedRoute` was deleted. What *does* gate the
+offline-first and works signed-out, so the old `ProtectedRoute` was deleted. What _does_ gate the
 app is rendered above `<Routes>` in `App.tsx` — hydration → app lock → onboarding.
 
 - `/` — Dashboard (index)
@@ -200,20 +219,20 @@ backend/
 
 Endpoints (`backend/public/index.php` is the full list; every route is rate-limited — see below):
 
-| Method + path | Auth | Purpose |
-|---|---|---|
-| `POST /auth/register` | — | Creates the account, emails an OTP |
-| `POST /auth/verify-otp` | — | → `{ token, user }` |
-| `POST /auth/resend-otp` | — | Re-sends the verification OTP |
-| `POST /auth/login` | — | → `{ token, user }` |
-| `POST /auth/forgot-password` / `POST /auth/reset-password` | — | OTP-based reset; a successful reset bumps `token_version`, invalidating every session issued before it |
-| `POST /backup/upload` | JWT | JSON body — one backup per user per day, rejected above `backup_max_size_mb` (413) |
-| `GET /backup/latest` | JWT | Most recent backup payload |
-| `GET /backup/list` | JWT | Every backup's date + size (Backup History dialog) |
-| `GET /backup/{date}` / `DELETE /backup/{date}` | JWT | Restore or delete one version |
-| `GET /user/me` | JWT | Profile |
-| `PUT /user/me` | JWT | Change password (`current_password`/`new_password`) → new JWT; also bumps `token_version` |
-| `DELETE /user/me` | JWT | Delete the cloud account + all its backups |
+| Method + path                                              | Auth | Purpose                                                                                                |
+| ---------------------------------------------------------- | ---- | ------------------------------------------------------------------------------------------------------ |
+| `POST /auth/register`                                      | —    | Creates the account, emails an OTP                                                                     |
+| `POST /auth/verify-otp`                                    | —    | → `{ token, user }`                                                                                    |
+| `POST /auth/resend-otp`                                    | —    | Re-sends the verification OTP                                                                          |
+| `POST /auth/login`                                         | —    | → `{ token, user }`                                                                                    |
+| `POST /auth/forgot-password` / `POST /auth/reset-password` | —    | OTP-based reset; a successful reset bumps `token_version`, invalidating every session issued before it |
+| `POST /backup/upload`                                      | JWT  | JSON body — one backup per user per day, rejected above `backup_max_size_mb` (413)                     |
+| `GET /backup/latest`                                       | JWT  | Most recent backup payload                                                                             |
+| `GET /backup/list`                                         | JWT  | Every backup's date + size (Backup History dialog)                                                     |
+| `GET /backup/{date}` / `DELETE /backup/{date}`             | JWT  | Restore or delete one version                                                                          |
+| `GET /user/me`                                             | JWT  | Profile                                                                                                |
+| `PUT /user/me`                                             | JWT  | Change password (`current_password`/`new_password`) → new JWT; also bumps `token_version`              |
+| `DELETE /user/me`                                          | JWT  | Delete the cloud account + all its backups                                                             |
 
 The backup body is opaque to the server. When cloud encryption is on it is an
 `{v, enc, kdf, iterations, salt, iv, ciphertext}` envelope rather than the finance payload — no
@@ -234,28 +253,28 @@ API down. Exceeding the limit ends the request with `429` and a `Retry-After` he
 
 Defined in [src/types/index.ts](src/types/index.ts):
 
-| Type | Key fields |
-|------|-----------|
-| `Account` | id, name, type, color, icon, balance, openingBalance, creditLimit?, statementCloseDay?, paymentDueDays?, minimumDuePercent?, archivedAt? |
-| `Transaction` | id, type, amount, accountId, toAccountId?, categoryId, date, note, merchant?, labels[], recurringId?, splits? |
-| `TransactionSplit` | categoryId, amount — ≥2 entries summing exactly to `Transaction.amount`; `categoryId` on the parent is `''` |
-| `Category` | id, name, icon, color, type |
-| `Label` | id, name, color |
-| `Budget` | id, categoryId ('' = overall budget), labelId?, amount, period, rollover |
-| `RecurringTransaction` | id, type, amount, accountId, toAccountId?, categoryId, frequency, startDate, endDate?, maxOccurrences?, occurrenceCount, pausedAt?, lastRunDate, goalId? |
-| `TransactionTemplate` | id, name + every `Transaction` field except the date |
-| `CategoryRule` | id, pattern, matchType, scope, categoryId, labelIds[], enabled |
-| `Goal` | id, name, icon, color, targetAmount, targetDate?, linkedAccountId? (informational only) |
-| `GoalContribution` | id, goalId, amount (signed), date, note — the goal's own ledger, not a transaction |
-| `Person` | id, name, icon, color |
-| `DebtEntry` | id, personId, amount (+ = they owe you), date, note, settledTransactionId? |
-| `Loan` | id, name, principal, interestRate, tenureMonths, startDate, accountId, categoryId, recurringId? (auto-generated EMI rule), closedAt? — see loan gotcha |
-| `LoanPrepayment` | id, loanId, amount, date, note, transactionId? (the real expense it created) |
-| `NetWorthSnapshot` | id, periodKey (`yyyy-MM`), date, assets, liabilities |
-| `Settings` | theme, userName, autoLocalBackup, monthStartDay, onboardedAt?, hideAmounts, notificationsEnabled, notifyBills, notifyBudgets, notifyCreditDue, notifyLeadDays, notifyDailyLog |
-| `AppLockConfig` | enabled, salt, hash, iterations, pinLength, autoLockMinutes, webauthnCredentialId — **not** in `Settings`, see gotchas |
-| `BackupCryptoConfig` | enabled, salt, iterations, verifierIv, verifierCiphertext — **not** in `Settings`, same reason |
-| `ScheduledNotification` | id (`kind:subject:occurrence`), kind, fireAt, expiresAt, title, body, url |
+| Type                    | Key fields                                                                                                                                                                    |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Account`               | id, name, type, color, icon, balance, openingBalance, creditLimit?, statementCloseDay?, paymentDueDays?, minimumDuePercent?, archivedAt?                                      |
+| `Transaction`           | id, type, amount, accountId, toAccountId?, categoryId, date, note, labels[], createdAt, recurringId?, splits?                                                                 |
+| `TransactionSplit`      | categoryId, amount — ≥2 entries summing exactly to `Transaction.amount`; `categoryId` on the parent is `''`                                                                   |
+| `Category`              | id, name, icon, color, type                                                                                                                                                   |
+| `Label`                 | id, name, color                                                                                                                                                               |
+| `Budget`                | id, categoryId ('' = overall budget), labelId?, amount, period, rollover                                                                                                      |
+| `RecurringTransaction`  | id, type, amount, accountId, toAccountId?, categoryId, frequency, startDate, endDate?, maxOccurrences?, occurrenceCount, pausedAt?, lastRunDate, goalId?                      |
+| `TransactionTemplate`   | id, name + every `Transaction` field except the date                                                                                                                          |
+| `CategoryRule`          | id, pattern, matchType, scope, categoryId, labelIds[], enabled                                                                                                                |
+| `Goal`                  | id, name, icon, color, targetAmount, targetDate?, linkedAccountId? (informational only)                                                                                       |
+| `GoalContribution`      | id, goalId, amount (signed), date, note — the goal's own ledger, not a transaction                                                                                            |
+| `Person`                | id, name, icon, color                                                                                                                                                         |
+| `DebtEntry`             | id, personId, amount (+ = they owe you), date, note, settledTransactionId?                                                                                                    |
+| `Loan`                  | id, name, principal, interestRate, tenureMonths, startDate, accountId, categoryId, recurringId? (auto-generated EMI rule), closedAt? — see loan gotcha                        |
+| `LoanPrepayment`        | id, loanId, amount, date, note, transactionId? (the real expense it created)                                                                                                  |
+| `NetWorthSnapshot`      | id, periodKey (`yyyy-MM`), date, assets, liabilities                                                                                                                          |
+| `Settings`              | theme, userName, autoLocalBackup, monthStartDay, onboardedAt?, hideAmounts, notificationsEnabled, notifyBills, notifyBudgets, notifyCreditDue, notifyLeadDays, notifyDailyLog |
+| `AppLockConfig`         | enabled, salt, hash, iterations, pinLength, autoLockMinutes, webauthnCredentialId — **not** in `Settings`, see gotchas                                                        |
+| `BackupCryptoConfig`    | enabled, salt, iterations, verifierIv, verifierCiphertext — **not** in `Settings`, same reason                                                                                |
+| `ScheduledNotification` | id (`kind:subject:occurrence`), kind, fireAt, expiresAt, title, body, url                                                                                                     |
 
 Enums: `AccountType`, `TransactionType` (expense/income/transfer), `RecurrenceFrequency` (daily/weekly/monthly/yearly), `BudgetPeriod` (weekly/monthly/yearly), `RuleMatchType` (contains/startsWith/endsWith/equals/regex), `RuleScope` (expense/income/any), `Theme` (dark/light/system).
 
@@ -263,6 +282,22 @@ Enums: `AccountType`, `TransactionType` (expense/income/transfer), `RecurrenceFr
 
 ## UI & Styling
 
+- **"Focus" visual system** (introduced in `0e0079c`, replacing the old violet gradient /
+  glassmorphism theme) — warm cream "paper" backgrounds, opaque cards with hairline borders, one
+  deep-green accent (`--primary: #146b54`, brighter `#2e9c7a` in dark mode), and a rust-toned
+  `warning-band` token pair for surfaced alerts. The full spec is [design.md](design.md); the tokens
+  live in [`src/index.css`](src/index.css). Rules that are easy to break:
+  - Components use semantic tokens (`bg-card`, `text-muted-foreground`, `bg-warning-band`…), never
+    raw hex or ad-hoc Tailwind palette colours (`bg-amber-100`).
+  - No gradients, glows or `backdrop-blur` on surfaces. The legacy `bg-grad-*` / `shadow-glow-*`
+    class names still exist only as a shim that resolves to flat fills — don't add new uses.
+  - A card is `card-elevated rounded-md`; a homogeneous list is **one** `card-elevated divide-y`
+    container of plain rows, not a stack of cards. Per-row icon "medallions" were removed on purpose.
+  - Every page is `<Header>` + `<Main>` from `src/components/ui/` (shared `max-w-5xl` width, and
+    `Main`'s large mobile bottom padding keeps content clear of the tab bar/FAB).
+  - Every colour picker offers `COLOR_PALETTE` from [`src/data/colorPalette.ts`](src/data/colorPalette.ts).
+    Changing it only changes what pickers offer, never colours already saved on entities.
+  - Font is Geist Variable (`@fontsource-variable/geist`), used for both body and headings.
 - **Tailwind CSS v4** — configured via `@tailwindcss/vite` plugin (no `tailwind.config.js`; directives in `index.css`).
 - **shadcn/ui** with `base-nova` style, using `@base-ui/react` under the hood. Add new components with `npx shadcn@latest add <component>`.
 - **Lucide React** for icons.
@@ -295,12 +330,11 @@ Configured in [vite.config.ts](vite.config.ts) via `vite-plugin-pwa`, using **`s
 **The worker is hand-written, so nothing is free.** `workbox.runtimeCaching`, `navigateFallback`,
 `cleanupOutdatedCaches` and `clientsClaim` are all `generateSW`-only options that `injectManifest`
 **ignores silently, with no error**. `sw.ts` writes each of them out; the one that matters most is
-the `NavigationRoute` SPA fallback, without which offline deep-links to `/settings` or `/budgets`
-404. `registerType: 'autoUpdate'` additionally requires `self.skipWaiting()` and `clientsClaim()`
+the `NavigationRoute` SPA fallback, without which offline deep-links to `/settings` or `/budgets` 404. `registerType: 'autoUpdate'` additionally requires `self.skipWaiting()` and `clientsClaim()`
 literally present in the worker source or updates stall behind a waiting worker.
 
 The worker needs the **WebWorker** lib while the app needs **DOM**, so it is its own TS project:
-[`tsconfig.sw.json`](tsconfig.sw.json) is in the root `references` *and* `src/sw` is excluded from
+[`tsconfig.sw.json`](tsconfig.sw.json) is in the root `references` _and_ `src/sw` is excluded from
 `tsconfig.app.json`. Missing either half breaks `npm run build`. The `workbox-*` runtime packages
 are explicit devDependencies — they previously resolved only through npm hoisting `workbox-build`.
 
@@ -314,8 +348,9 @@ are explicit devDependencies — they previously resolved only through npm hoist
 ## Code Splitting
 
 Vite manual chunks defined in [vite.config.ts](vite.config.ts):
+
 - `vendor-react` — react, react-dom, react-router
-- `vendor-charts` — recharts + d3-*
+- `vendor-charts` — recharts + d3-\*
 - `vendor-dates` — date-fns
 - `vendor-icons` — lucide-react
 
@@ -342,7 +377,7 @@ All page components are lazy-loaded. This keeps the initial bundle small.
 ## Common Gotchas
 
 - **Transfers are special:** `TransactionType.transfer` uses both `accountId` (source) and `toAccountId` (destination). Balance calculations must handle this pair atomically.
-- **Balances are derived, not authoritative:** `Account.openingBalance` is the source of truth and `Account.balance` is a cache of `openingBalance + Σ(transaction deltas)`, kept up to date incrementally by `applyBalanceDelta`. Anything that mutates transactions in bulk must either apply deltas or call `recomputeAccountBalances()`. Setting `balance` via `updateAccount` shifts `openingBalance` by the same amount so the invariant survives a reconcile — pass `openingBalance` explicitly to override that.
+- **Balances are derived, not authoritative:** `Account.openingBalance` is the source of truth and `Account.balance` is a cache of `openingBalance + Σ(transaction deltas)`, kept up to date incrementally by `applyBalanceDelta`. Anything that mutates transactions in bulk must either apply deltas or call `recomputeAccountBalances()`. Setting `balance` via `updateAccount` shifts `openingBalance` by the same amount so the invariant survives a reconcile — pass `openingBalance` explicitly to override that. **Known violation:** a self-transfer (`accountId === toAccountId`) is treated differently by `applyBalanceDelta` and `sumTransactionDeltas`, so the incremental cache and a full recompute disagree on it (improvements.md §1.2, unfixed).
 - **There are two unrelated things called "reconcile," and they don't do the same job.** Settings →
   **Reconcile Balances** calls `useFinanceStore().recomputeBalances()` — a global, non-destructive
   recompute of every account's cached `balance` from its `openingBalance` and transactions, for
@@ -352,19 +387,19 @@ All page components are lazy-loaded. This keeps the initial bundle small.
   dialog posts an actual adjustment `Transaction` for the gap. Don't reach for one when the other
   is meant — the second one changes history, the first one never does.
   See [`reconciliationAdjustment`](src/store/balance.ts).
-- **Imports are validated, never trusted:** route every backup (file *or* cloud) through `validateBackup()` before `importData()`. It drops malformed rows, dedupes ids, strips unknown settings keys, and produces the report the Settings preview dialog renders.
+- **Imports are validated, never trusted:** route every backup (file _or_ cloud) through `validateBackup()` before `importData()`. It drops malformed rows, dedupes ids, strips unknown settings keys, and produces the report the Settings preview dialog renders.
 - **INR only:** Multi-currency was removed in persisted-schema v4. `formatCurrency(amount, compact?)` hardcodes INR/`en-IN`; there is no per-account or per-setting currency field. Old persisted state and old backup JSON are stripped of the legacy `currency` key on load and on import.
-- **"This month" is a financial month:** every month window comes from `src/utils/period.ts` and starts on `Settings.monthStartDay` (1–28, default 1), so a 25th-of-the-month salary cycle runs 25 Jun–24 Jul. Never call `startOfMonth`/`endOfMonth` directly in feature code — use `periodRange`/`monthPeriodStart` (or `getCurrentMonthTransactions(txns, monthStartDay)`) or the app will disagree with itself. `Year in Review` walks financial *years* the same way — see `buildYearInReview()` in `analytics.ts`.
-- **Budget scope and period:** a `Budget` is scoped by `labelId` if set, otherwise by `categoryId` (`''` = overall across all expenses) — `budgetScopeKey()` is the identity, and `addBudget` replaces any budget sharing it. Each budget carries its own `period`, so `computeBudgetStatuses(budgets, transactions, { monthStartDay })` takes the *full* transaction list and slices per budget. With `rollover`, `status.limit` is `amount + carryover` (carryover is signed — an overspend carries forward as a debt) and the chain never reaches back past the budget's `createdAt` period, capped at `MAX_ROLLOVER_LOOKBACK`.
+- **"This month" is a financial month:** every month window comes from `src/utils/period.ts` and starts on `Settings.monthStartDay` (1–28, default 1), so a 25th-of-the-month salary cycle runs 25 Jun–24 Jul. Never call `startOfMonth`/`endOfMonth` directly in feature code — use `periodRange`/`monthPeriodStart` (or `getCurrentMonthTransactions(txns, monthStartDay)`) or the app will disagree with itself. `Year in Review` walks financial _years_ the same way — see `buildYearInReview()` in `analytics.ts`.
+- **Budget scope and period:** a `Budget` is scoped by `labelId` if set, otherwise by `categoryId` (`''` = overall across all expenses) — `budgetScopeKey()` is the identity, and `addBudget` replaces any budget sharing it. Each budget carries its own `period`, so `computeBudgetStatuses(budgets, transactions, { monthStartDay })` takes the _full_ transaction list and slices per budget. With `rollover`, `status.limit` is `amount + carryover` (carryover is signed — an overspend carries forward as a debt) and the chain never reaches back past the budget's `createdAt` period, capped at `MAX_ROLLOVER_LOOKBACK`.
 - **Auto-categorization is first-match-wins and never destructive:** the order of `rules` in the
-  store *is* their priority, so anything that rewrites the array (reorder, import merge) changes
+  store _is_ their priority, so anything that rewrites the array (reorder, import merge) changes
   which rule fires. Every consumer goes through [`src/utils/autoCategorize.ts`](src/utils/autoCategorize.ts)
   — never re-implement matching. Two invariants the engine enforces and callers must not work
   around: a rule never fires on a `transfer`, and never touches a transaction with `splits`.
   Rule labels are additive (`mergeLabels`), and a user-typed regex is compiled defensively — an
   invalid one matches nothing rather than throwing. On CSV import, a category the file itself
   supplied always outranks a rule.
-- **Recurring processing:** Call `processRecurring()` (from `useFinanceStore`) when the app mounts or resumes from background to generate any overdue recurring transactions. `planRecurring` skips paused rules, stops at `endDate` and `maxOccurrences`, and requires both accounts to exist for a transfer rule. Before saving a rule dated in the past, preview it with `previewBackfill()` — "start from today" is expressed as `lastRunDate = lastOccurrenceOnOrBefore(rule, now)`, which keeps the cadence anchored to `startDate` while skipping the history.
+- **Recurring processing:** `processRecurring()` (from `useFinanceStore`) generates any overdue recurring transactions. Today it runs **only** once on hydration inside `Layout` (so only when the first route rendered is a `<Layout>` route) and from the Recurring page — **not** on resume from background, and not when the app is opened straight onto a full-screen route such as `/add-transaction` or `/share-target` (improvements.md §1.4). Generated rows are announced by an Undo toast. `planRecurring` skips paused rules, stops at `endDate` and `maxOccurrences`, and requires both accounts to exist for a transfer rule. Before saving a rule dated in the past, preview it with `previewBackfill()` — "start from today" is expressed as `lastRunDate = lastOccurrenceOnOrBefore(rule, now)`, which keeps the cadence anchored to `startDate` while skipping the history.
 - **A loan's EMI is derived, never stored** — same spirit as `Account.balance`. `principal`,
   `interestRate` and `tenureMonths` are the source of truth in [`src/utils/loan.ts`](src/utils/loan.ts),
   and `calculateEmi()`/`loanStatus()` recompute from them every time, so editing any of those
@@ -378,14 +413,14 @@ All page components are lazy-loaded. This keeps the initial bundle small.
   transactions by `normalizeNote()` (the same key `insights.ts` uses for subscription detection),
   which only strips digits and punctuation — "Swiggy/9921" and "Swiggy 449" collapse together,
   but "UPI/Swiggy/9921" and a hand-typed "Swiggy" land in separate buckets. There is no `Merchant`
-  id anywhere in the schema; `Transaction.merchant` is a separate, optional, user-typed field shown
-  alongside the note, and is not what merchant *grouping* keys on.
+  id anywhere in the schema, and no merchant field on `Transaction` either — an optional
+  `Transaction.merchant` existed briefly and was removed in `d4045d4`; the note is the only input.
 - **Net worth history is snapshotted, not recomputed:** balances are derived, so every past
   net-worth value is only as stable as the transaction list behind it — deleting an old row rewrites
   the whole reconstructed trend. `captureNetWorthSnapshots()` (called from `Layout` on hydration,
   after `processRecurring`) freezes each financial month as it closes, and
   [`src/utils/netWorth.ts`](src/utils/netWorth.ts) prefers a snapshot over reconstruction for any
-  closed month. Only *completed* months are ever captured, the month in progress is always live, and
+  closed month. Only _completed_ months are ever captured, the month in progress is always live, and
   `periodKey` — not `id` — is a snapshot's real identity, which is why `importData` dedupes on it.
 - **The forecast models liquid cash only:** [`src/utils/forecast.ts`](src/utils/forecast.ts) projects
   open, non-credit accounts. Card spending contributes nothing until the payment transfer leaves an
@@ -400,7 +435,7 @@ All page components are lazy-loaded. This keeps the initial bundle small.
   recurring rule can never backfill charges that are already in the ledger.
 - **A reminder's id is its dedupe contract:** the schedule is rebuilt from scratch on every app
   open, so `buildNotificationSchedule` must produce byte-identical ids each time or every
-  reminder fires again on the next launch. Ids are keyed on the *occurrence* — the due date, or
+  reminder fires again on the next launch. Ids are keyed on the _occurrence_ — the due date, or
   `range.start` for a budget period, or the calendar day for the daily-log nudge (`daily:log:<date>`)
   — and **never** on `fireAt`, which is why changing the lead time cannot re-send anything. Budget
   ids carry the severity too, so `near` → `over` is a second reminder rather than a swallowed one.
@@ -443,12 +478,12 @@ All page components are lazy-loaded. This keeps the initial bundle small.
   amount.
 - **Goals and debts are manual ledgers, not transactions.** `GoalContribution` and `DebtEntry` sit
   beside accounts, so logging "I lent ₹500" can never corrupt a real balance. The one exception is
-  **Settle up** on the Debts page, which atomically creates a real `Transaction` *and* a balancing
+  **Settle up** on the Debts page, which atomically creates a real `Transaction` _and_ a balancing
   `DebtEntry` stamped with `settledTransactionId`. Deleting a goal or a person cascades its
   entries; deleting an account clears `Goal.linkedAccountId` rather than orphaning it.
 - **Archived is not deleted:** `Account.archivedAt` closes an account while keeping its
   transactions, balance and recurring rules. `activeAccounts()` gates every running total, and the
-  account disappears from pickers — *except* on a transaction already sitting on it, so editing
+  account disappears from pickers — _except_ on a transaction already sitting on it, so editing
   history can't silently reassign it.
 - **The onboarding sample dataset is deliberately deterministic.** [`src/data/sampleData.ts`](src/data/sampleData.ts)
   never calls `Math.random()` — accounts, goals, people, etc. reference each other by a local
@@ -469,9 +504,21 @@ All page components are lazy-loaded. This keeps the initial bundle small.
   "unlimited," not "down."
 - **Backup uploads are size-capped twice, deliberately.** `BackupController::upload()` rejects
   above `backup_max_size_mb` (default 10) both from the `Content-Length` header, before reading the
-  body, *and* again from the actual bytes read — the second check exists because a client can omit
+  body, _and_ again from the actual bytes read — the second check exists because a client can omit
   or lie about `Content-Length`, or chunk-encode around it.
 - **Tailwind v4:** There is no `tailwind.config.js`. All customizations go in CSS files using `@theme`, `@layer`, etc.
+
+---
+
+## Deployment
+
+The production frontend (`finio.slowatcoding.com`) deploys itself:
+[`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) runs on every push to `main` —
+`npm ci` → `npm run build` (with `VITE_API_URL` from repo secrets) → uploads `dist/` to MilesWeb over
+FTPS (`FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD`, `FTP_SERVER_DIR` secrets). It does **not** run
+tests or lint, so a red suite still ships — run `npm test` before pushing. Pushes touching only
+`backend/**` or `**/*.md` are skipped; the PHP backend is deployed by hand (see below). A newer push
+cancels an in-flight deploy (`concurrency: deploy-production`).
 
 ---
 
@@ -484,3 +531,17 @@ See [README.md](README.md#self-hosting-the-backend) (or `backend/SETUP_GUIDE.txt
 3. Import `backend/schema.sql` into your MySQL database.
 4. Point your web server's document root to `backend/public/`.
 5. Set `VITE_API_URL` in the frontend `.env` to your backend URL.
+
+## Gitignored-but-referenceable folders
+
+Some folders are excluded from git (bulky, or reveal internal detail) but still exist on disk and
+must remain readable/referenceable in-session. A `.gitignore` entry only stops **git tracking** —
+it does not block Read/Glob/Grep. When a folder is added to `.gitignore` for this reason, list it
+here with its access pattern so it stays referenceable:
+
+| Folder       | Why ignored                 | How to reference                                                                                                                |
+| ------------ | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `flow-docs/` | Bulky, reveals architecture | Absolute path, or ask to `Read` `flow-docs/INDEX.md`, `flow-docs/diagrams/<slug>-<type>.md` or `flow-docs/<slug>.html` directly |
+
+Do not assume a gitignored path is inaccessible — check this table (or the folder itself) before
+concluding a reference "doesn't work".

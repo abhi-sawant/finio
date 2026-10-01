@@ -23,14 +23,14 @@ This README has two halves:
 Most finance apps ask you to hand over your bank login and then monetize what they learn. Finio
 takes the opposite approach: it is a plain web app that keeps a ledger for you, and that's it.
 
-|  | What it means |
-|---|---|
-| **Offline-first** | All data lives in your browser's local storage. Turn off the internet and the app still works completely. |
-| **No account required** | You can use every feature — accounts, budgets, goals, loans, analytics, reminders — without ever signing up. |
-| **Zero tracking** | No analytics, no telemetry, no third-party scripts. |
-| **Installable** | Add it to your home screen on Android or iOS, or install it on desktop. It opens like a native app, no browser bars. |
+|                               | What it means                                                                                                                    |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| **Offline-first**             | All data lives in your browser's local storage. Turn off the internet and the app still works completely.                        |
+| **No account required**       | You can use every feature — accounts, budgets, goals, loans, analytics, reminders — without ever signing up.                     |
+| **Zero tracking**             | No analytics, no telemetry, no third-party scripts.                                                                              |
+| **Installable**               | Add it to your home screen on Android or iOS, or install it on desktop. It opens like a native app, no browser bars.             |
 | **Optional encrypted backup** | If you want your data on more than one device, turn on cloud backup — and optionally encrypt it with a passphrase only you know. |
-| **Rupee-native** | Amounts are in INR, formatted the Indian way (₹1,22,999, and ₹1.2L / ₹1.2Cr where space is tight). |
+| **Rupee-native**              | Amounts are in INR, formatted the Indian way (₹1,22,999, and ₹1.2L / ₹1.2Cr where space is tight).                               |
 
 ---
 
@@ -45,8 +45,7 @@ transactions, budgets and goals you can explore or delete at any time.
 After that:
 
 1. **Add a transaction** — tap the **+** button. Pick Expense, Income, or Transfer, punch in the
-   amount on the number pad, choose the account and category, add a note (and optionally who it
-   went to or came from), and save.
+   amount on the number pad, choose the account and category, add a note, and save.
 2. **Set a budget** — Settings → Budgets → **+**. Pick a category (or "Overall"), a limit, and
    whether it resets weekly, monthly, or yearly.
 3. **Automate the regulars** — Settings → Recurring → **+** for rent, salary, subscriptions. Finio
@@ -77,17 +76,21 @@ SMS or a note to it and the Add Transaction screen opens with the amount already
 
 ### Dashboard
 
-Your financial state in one screen: total balance across your spending accounts, an "after dues"
-figure that subtracts credit card outstanding, this month's income and expenses with a comparison
-against last month, and a scrollable row of your account cards.
+Your financial state in one calm screen. With an overall budget set, the headline is **Safe to
+spend today** — what's left of the budget divided by the days left in the period — with a progress
+bar underneath. Without one, the headline is your total balance (plus an "after card dues" figure
+when a credit card carries a balance) and a nudge to set a budget.
 
-Below that, only what needs your attention appears:
+Below that:
 
-- **Budget alerts** when a budget passes 85% or goes over.
-- **Card Payments Due** when a credit card statement payment lands within a week.
-- **Upcoming Bills** — recurring transactions due in the next 7 days.
-- **Savings Goals** in progress and **Debts & Lending** balances still open.
-- Your top spending categories this month, and your most recent transactions.
+- **This month at a glance** — money in, money out, daily average, savings rate (with the change
+  versus last month), and your top category.
+- **Needs attention** — a single banner for the most pressing thing this week (a budget past 85% or
+  over, a card payment due, a bill coming up in the next 7 days). Tap **Review** for the full list;
+  if nothing needs you, the banner simply isn't there.
+- Your **Savings Goals** closest to done and your biggest open **Debts & Lending** balances.
+- **Where it sits** — a row of your accounts and their balances.
+- **Latest** — your five most recent transactions.
 
 ### Accounts
 
@@ -111,9 +114,7 @@ available, and the confirmation tells you exactly how many transactions would go
 
 The full ledger, grouped by date and virtualized so it stays fast with tens of thousands of rows.
 
-- **Merchant field** — record who the money went to or came from separately from your note; it
-  shows alongside it as "merchant – note" and feeds the Merchants view below.
-- **Search** across notes, merchants, categories, both sides of a transfer, labels, and amounts —
+- **Search** across notes, categories, both sides of a transfer, labels, and amounts —
   typing `₹1,200` finds `1200`.
 - **Filter** by type, account, and date range.
 - **Split one expense across categories** — a ₹3,000 supermarket run can be ₹2,200 Food and ₹800
@@ -149,7 +150,7 @@ Track who owes you and who you owe, per person. Log entries as **They owe me** o
 and see each person's running balance.
 
 **Settle up** is the one moment real money moves: enter the amount and the account, and Finio
-creates a genuine income or expense transaction *and* balances the person's ledger in one step.
+creates a genuine income or expense transaction _and_ balances the person's ledger in one step.
 
 ### Loans & EMI
 
@@ -185,15 +186,15 @@ total, so you can add them or just start from today.
 
 Filter by this month, last 3 or 6 months, this year, all time, or a custom range, then explore:
 
-| | |
-|---|---|
-| **Insights feed** | Plain-language observations — a category running above its 3-month average, a budget on pace to blow past its limit, a savings rate worth noticing. It also spots **subscriptions** hiding in your history and offers to turn them into recurring rules. |
-| **Cash-flow forecast** | Projects your liquid cash 30 / 60 / 90 days ahead from your recurring bills and your everyday spending, flags the low point, and names the date you'd run dry. |
-| **Net worth over time** | A trend line that freezes each month as it closes, so editing old history doesn't silently rewrite your past. |
-| **Compare periods** | This period vs. the last one vs. the same one a year ago, with the biggest category swings ranked. An in-progress period is labelled as such and shows what it's on pace for. |
-| **Spending heatmap** | A calendar of your spending, month by month, with the busiest day called out. |
-| **Top Merchants** | Your five biggest merchants by spend, linking through to the full Merchants view. |
-| **Charts** | Spending by category, income vs. expenses, balance trend, and spending by label. |
+|                         |                                                                                                                                                                                                                                                          |
+| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Insights feed**       | Plain-language observations — a category running above its 3-month average, a budget on pace to blow past its limit, a savings rate worth noticing. It also spots **subscriptions** hiding in your history and offers to turn them into recurring rules. |
+| **Cash-flow forecast**  | Projects your liquid cash 30 / 60 / 90 days ahead from your recurring bills and your everyday spending, flags the low point, and names the date you'd run dry.                                                                                           |
+| **Net worth over time** | A trend line that freezes each month as it closes, so editing old history doesn't silently rewrite your past.                                                                                                                                            |
+| **Compare periods**     | This period vs. the last one vs. the same one a year ago, with the biggest category swings ranked. An in-progress period is labelled as such and shows what it's on pace for.                                                                            |
+| **Spending heatmap**    | A calendar of your spending, month by month, with the busiest day called out.                                                                                                                                                                            |
+| **Top Merchants**       | Your five biggest merchants by spend, linking through to the full Merchants view.                                                                                                                                                                        |
+| **Charts**              | Spending by category, income vs. expenses, balance trend, and spending by label.                                                                                                                                                                         |
 
 Every chart has a **View data table** toggle — the same numbers as plain text, for screen readers
 or for anyone who'd rather read the figures than the picture.
@@ -210,7 +211,7 @@ through past years or stay on the one in progress, which is labelled and paced a
 delete any of them. Categories have an icon, a colour, and a type (expense, income, or both);
 labels are free-form tags you can stack on any transaction.
 
-**Categorization rules** file transactions for you. "If the note contains *Uber*, make it Transport
+**Categorization rules** file transactions for you. "If the note contains _Uber_, make it Transport
 and tag it Essential." Rules run as you type a note (with an Undo right there in the banner),
 during CSV import, and on demand over your existing history — with a live count of what would
 change before you commit, and a single-tap undo after.
@@ -261,7 +262,7 @@ Finio gives you four ways to not lose your data, and you can use any combination
 ### Settings
 
 Everything above is configured from one screen: display name, theme (light / dark / follow
-system), **hide amounts** (masks every figure app-wide behind dots when you're in public), the day
+system — both built on the same warm, paper-toned palette), **hide amounts** (masks every figure app-wide behind dots when you're in public), the day
 your financial month starts (1–28, so a 25th-of-the-month salary cycle really runs 25 Jun – 24
 Jul), reminders, app lock, cloud account and password, encryption, backups, CSV import, category /
 label / rule management, and quick links out to Loans, Merchants, and Year in Review.
@@ -303,27 +304,28 @@ only adds user accounts and cloud backup storage.
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Framework | React 19 |
-| Language | TypeScript 6 |
-| Build tool | Vite 8 |
-| Styling | Tailwind CSS v4 (no config file — `@theme` in CSS) |
-| UI components | shadcn/ui (`base-nova`) on Base UI |
-| State | Zustand 5, persisted to `localStorage` |
-| Routing | React Router 7 (`react-router`) |
-| Charts | Recharts 3 |
-| Dates | date-fns 4 |
-| Virtual scrolling | @tanstack/react-virtual |
-| CSV | papaparse |
-| Icons | Lucide React |
-| Tests | Vitest (node environment) |
-| PWA | vite-plugin-pwa with `injectManifest` + a hand-written Workbox service worker |
-| Backend | PHP 8 + Composer |
-| Auth | firebase/php-jwt (30-day tokens, revocable via a `token_version` counter) |
-| Rate limiting | Custom file-based fixed-window limiter (no Redis/APCu dependency) |
-| Email | PHPMailer over SMTP |
-| Database | MySQL |
+| Layer             | Technology                                                                                         |
+| ----------------- | -------------------------------------------------------------------------------------------------- |
+| Framework         | React 19                                                                                           |
+| Language          | TypeScript 6                                                                                       |
+| Build tool        | Vite 8                                                                                             |
+| Styling           | Tailwind CSS v4 (no config file — `@theme` in CSS), "Focus" design system ([design.md](design.md)) |
+| Font              | Geist Variable (`@fontsource-variable/geist`)                                                      |
+| UI components     | shadcn/ui (`base-nova`) on Base UI                                                                 |
+| State             | Zustand 5, persisted to `localStorage`                                                             |
+| Routing           | React Router 7 (`react-router`)                                                                    |
+| Charts            | Recharts 3                                                                                         |
+| Dates             | date-fns 4                                                                                         |
+| Virtual scrolling | @tanstack/react-virtual                                                                            |
+| CSV               | papaparse                                                                                          |
+| Icons             | Lucide React                                                                                       |
+| Tests             | Vitest (node environment)                                                                          |
+| PWA               | vite-plugin-pwa with `injectManifest` + a hand-written Workbox service worker                      |
+| Backend           | PHP 8 + Composer                                                                                   |
+| Auth              | firebase/php-jwt (30-day tokens, revocable via a `token_version` counter)                          |
+| Rate limiting     | Custom file-based fixed-window limiter (no Redis/APCu dependency)                                  |
+| Email             | PHPMailer over SMTP                                                                                |
+| Database          | MySQL                                                                                              |
 
 ## Local Development
 
@@ -385,7 +387,7 @@ Read [CLAUDE.md](CLAUDE.md) for the full set. The short version:
 - **The PWA doesn't run under `vite dev`.** Use `npm run build && npm run preview`.
 - **The service worker is hand-written.** `runtimeCaching`, `navigateFallback`,
   `cleanupOutdatedCaches`, and `clientsClaim` are `generateSW`-only options that `injectManifest`
-  ignores *silently*. `src/sw/sw.ts` writes them all out by hand; the SPA navigation fallback is
+  ignores _silently_. `src/sw/sw.ts` writes them all out by hand; the SPA navigation fallback is
   the one that matters most.
 - **Never put secrets in `Settings`.** It's serialized into every export and cloud upload. The PIN
   hash and backup-encryption config live in their own stores for exactly this reason.
@@ -407,9 +409,13 @@ finio-web/
 │   ├── services/            # API client, backup, notifications, app lock, downloads
 │   ├── utils/               # All the pure logic (and all the tests)
 │   ├── types/index.ts       # Every domain interface
-│   └── data/                # Default categories/labels/settings + onboarding sample data
+│   └── data/                # Default categories/labels/settings, colour palette, sample data
 ├── backend/                 # Optional PHP API (see below)
 ├── public/                  # PWA icons, .htaccess
+├── scripts/                 # gen-dummydata.mjs → dummydata.json (a large import fixture for QA)
+├── .github/workflows/       # deploy.yml — build + FTPS deploy on push to main
+├── design.md                # The visual system: tokens, layout shell, component rules
+├── improvements.md          # Latest review pass: open bugs and feature ideas
 ├── vite.config.ts           # Vite + PWA manifest + chunk splitting
 ├── vitest.config.ts         # Test config (node environment)
 └── tsconfig.sw.json         # Separate TS project for the service worker
@@ -424,6 +430,11 @@ npm run build
 Deploy `dist/` to any static host. Because it's an SPA, the host must rewrite unknown paths to
 `index.html` — `public/.htaccess` does this for Apache/cPanel; on Netlify, Vercel, or Nginx use
 their equivalent.
+
+The hosted instance deploys automatically: `.github/workflows/deploy.yml` builds on every push to
+`main` and uploads `dist/` over FTPS. It needs five repository secrets — `VITE_API_URL`,
+`FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD`, `FTP_SERVER_DIR` — and skips pushes that only touch
+`backend/` or Markdown files. The workflow doesn't run tests, so run `npm test` before you push.
 
 ---
 
@@ -516,17 +527,17 @@ just resets everyone's limits.
 Then, in **File Manager**, create `~/finio-config/config.php` and paste in the entire contents of
 `backend/config.example.php`. Replace every placeholder:
 
-| Placeholder | Replace with |
-|---|---|
-| `CPANEL_USER_finio` | Your DB name (e.g. `johndoe_finio`) |
-| `CPANEL_USER_finiouser` | Your DB user (e.g. `johndoe_finiouser`) |
-| `YOUR_DB_PASSWORD` | The DB password from Step 1 |
-| `CHANGE_THIS_TO_...` | The 64-char JWT secret from Step 4 |
-| `mail.yourdomain.com` | Your mail host |
-| `noreply@yourdomain.com` | Your noreply address from Step 5 |
-| `YOUR_EMAIL_PASSWORD` | The email password from Step 5 |
-| `CPANEL_USER` (in `backup_dir` and `rate_limit_dir`) | Your cPanel username (e.g. `johndoe`) |
-| `https://api.yourdomain.com` | Your API subdomain URL |
+| Placeholder                                          | Replace with                            |
+| ---------------------------------------------------- | --------------------------------------- |
+| `CPANEL_USER_finio`                                  | Your DB name (e.g. `johndoe_finio`)     |
+| `CPANEL_USER_finiouser`                              | Your DB user (e.g. `johndoe_finiouser`) |
+| `YOUR_DB_PASSWORD`                                   | The DB password from Step 1             |
+| `CHANGE_THIS_TO_...`                                 | The 64-char JWT secret from Step 4      |
+| `mail.yourdomain.com`                                | Your mail host                          |
+| `noreply@yourdomain.com`                             | Your noreply address from Step 5        |
+| `YOUR_EMAIL_PASSWORD`                                | The email password from Step 5          |
+| `CPANEL_USER` (in `backup_dir` and `rate_limit_dir`) | Your cPanel username (e.g. `johndoe`)   |
+| `https://api.yourdomain.com`                         | Your API subdomain URL                  |
 
 Then set `allowed_origins` to the frontends allowed to call the API — CORS is enforced against
 this list:
@@ -655,22 +666,22 @@ origin is in the backend's `allowed_origins`.
 
 ### API Reference
 
-| Method + path | Auth | Rate limit (per IP unless noted) | Purpose |
-|---|---|---|---|
-| `POST /auth/register` | — | 5 / hour | Create account, email an OTP |
-| `POST /auth/verify-otp` | — | 10 / 15 min | → `{ token, user }` |
-| `POST /auth/resend-otp` | — | 3 / 15 min | Re-send the verification OTP |
-| `POST /auth/login` | — | 10 / 15 min | → `{ token, user }` |
-| `POST /auth/forgot-password` | — | 5 / hour | Email a reset OTP |
-| `POST /auth/reset-password` | — | 10 / 15 min | Set a new password with the OTP |
-| `POST /backup/upload` | JWT | 30 / min, per user | Store a backup (one per user per day, capped at `backup_max_size_mb`) |
-| `GET /backup/latest` | JWT | 60 / min, per user | Most recent backup |
-| `GET /backup/list` | JWT | 60 / min, per user | Every backup's date and size |
-| `GET /backup/{date}` | JWT | 60 / min, per user | One specific backup |
-| `DELETE /backup/{date}` | JWT | 30 / min, per user | Delete one backup |
-| `GET /user/me` | JWT | 60 / min, per user | Profile |
-| `PUT /user/me` | JWT | 10 / min, per user | Change password → returns a fresh token |
-| `DELETE /user/me` | JWT | 5 / min, per user | Delete the account and all its backups |
+| Method + path                | Auth | Rate limit (per IP unless noted) | Purpose                                                               |
+| ---------------------------- | ---- | -------------------------------- | --------------------------------------------------------------------- |
+| `POST /auth/register`        | —    | 5 / hour                         | Create account, email an OTP                                          |
+| `POST /auth/verify-otp`      | —    | 10 / 15 min                      | → `{ token, user }`                                                   |
+| `POST /auth/resend-otp`      | —    | 3 / 15 min                       | Re-send the verification OTP                                          |
+| `POST /auth/login`           | —    | 10 / 15 min                      | → `{ token, user }`                                                   |
+| `POST /auth/forgot-password` | —    | 5 / hour                         | Email a reset OTP                                                     |
+| `POST /auth/reset-password`  | —    | 10 / 15 min                      | Set a new password with the OTP                                       |
+| `POST /backup/upload`        | JWT  | 30 / min, per user               | Store a backup (one per user per day, capped at `backup_max_size_mb`) |
+| `GET /backup/latest`         | JWT  | 60 / min, per user               | Most recent backup                                                    |
+| `GET /backup/list`           | JWT  | 60 / min, per user               | Every backup's date and size                                          |
+| `GET /backup/{date}`         | JWT  | 60 / min, per user               | One specific backup                                                   |
+| `DELETE /backup/{date}`      | JWT  | 30 / min, per user               | Delete one backup                                                     |
+| `GET /user/me`               | JWT  | 60 / min, per user               | Profile                                                               |
+| `PUT /user/me`               | JWT  | 10 / min, per user               | Change password → returns a fresh token                               |
+| `DELETE /user/me`            | JWT  | 5 / min, per user                | Delete the account and all its backups                                |
 
 The backup body is opaque to the server. With encryption enabled the client uploads an
 `{v, enc, kdf, iterations, salt, iv, ciphertext}` envelope instead of the finance payload — no
@@ -684,7 +695,7 @@ before it, independent of the 30-day expiry.
 
 **Rate limiting.** Every route above enforces a fixed-window limit via a small file-based counter
 (no Redis/APCu required, which matters on shared hosting) — exceeding it returns `429` with a
-`Retry-After` header. Limits fail *open*, not closed: if the counter storage itself has a problem,
+`Retry-After` header. Limits fail _open_, not closed: if the counter storage itself has a problem,
 requests are allowed through rather than the API going down.
 
 ---
@@ -693,5 +704,7 @@ requests are allowed through rather than the API going down.
 
 [CLAUDE.md](CLAUDE.md) is the architecture guide — domain types, state management, the PWA setup,
 and a long list of gotchas worth reading before you change anything money-related.
+[design.md](design.md) covers the look — read it before changing any styling.
+[improvements.md](improvements.md) lists known bugs and ideas that are up for grabs.
 
 Before opening a PR: `npm test`, `npm run lint`, `npm run format`.
