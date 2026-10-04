@@ -151,7 +151,7 @@ export function Layout() {
         <Sidebar />
 
         {/* Content column */}
-        <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+        <div className="flex min-h-0 min-w-0 flex-1 flex-col lg:pl-60">
           <Outlet />
         </div>
       </div>
@@ -167,7 +167,7 @@ export function Layout() {
             setTemplatesOpen(true);
           }}
           className={cn(
-            'bg-primary text-primary-foreground fixed right-4 z-50 flex h-14 w-14 items-center justify-center rounded-full shadow-[var(--shadow-float)] transition-transform active:scale-95 lg:hidden',
+            'bg-coin fixed right-4 z-50 flex h-14 w-14 items-center justify-center rounded-full transition-transform active:scale-95 lg:hidden',
             hideFab && 'hidden',
           )}
           style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 5.5rem)' }}
@@ -176,7 +176,7 @@ export function Layout() {
           <Plus size={26} strokeWidth={2.4} />
         </button>
         <PopoverContent anchor={fabRef} side="top" align="end" className="w-64">
-          <p className="text-muted-foreground px-1 pb-1 text-xs font-medium tracking-wide uppercase">
+          <p className="text-muted-foreground px-1 pb-1 text-xs font-medium">
             Templates
           </p>
           {templates.length === 0 ? (
@@ -205,7 +205,7 @@ export function Layout() {
 
       {/* Bottom Nav — mobile only */}
       <nav
-        className="pb-safe border-border bg-card fixed right-0 left-0 z-40 flex w-full items-center border-t px-2 pt-2 lg:hidden"
+        className="pb-safe glass-chrome fixed right-0 left-0 z-40 flex w-full items-center border-t border-[var(--glass-border)] px-2 pt-2 shadow-[0_-12px_30px_-22px_rgb(40_26_110/0.45)] lg:hidden"
         style={{ bottom: 0 }}
       >
         {navTabs
@@ -225,7 +225,7 @@ export function Layout() {
               >
                 <Icon size={20} strokeWidth={isActive ? 2.4 : 2} />
                 <span
-                  className={cn('bg-primary h-1 w-1 rounded-full', !isActive && 'opacity-0')}
+                  className={cn('bg-grad-primary h-1 w-4 rounded-full', !isActive && 'opacity-0')}
                   aria-hidden="true"
                 />
                 <span className="text-xs font-medium">{tab.label}</span>
@@ -242,7 +242,7 @@ export function Layout() {
         >
           <Wrench size={20} strokeWidth={toolsActive ? 2.4 : 2} />
           <span
-            className={cn('bg-primary h-1 w-1 rounded-full', !toolsActive && 'opacity-0')}
+            className={cn('bg-grad-primary h-1 w-4 rounded-full', !toolsActive && 'opacity-0')}
             aria-hidden="true"
           />
           <span className="text-xs font-medium">Tools</span>

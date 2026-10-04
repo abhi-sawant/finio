@@ -476,7 +476,7 @@ export default function ImportCsv() {
               <div className="bg-muted/50 space-y-1.5 rounded-sm p-3">
                 {result.issues.map((issue) => (
                   <p key={issue} className="flex gap-2 text-xs">
-                    <AlertTriangle size={14} className="mt-px shrink-0 text-[#c79b4f]" />
+                    <AlertTriangle size={14} className="mt-px shrink-0 text-warning" />
                     <span className="text-muted-foreground">{issue}</span>
                   </p>
                 ))}

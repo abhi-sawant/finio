@@ -177,29 +177,29 @@ export default function Analytics() {
             <div className="card-elevated bg-grad-surface rounded-md p-4">
               <div className="grid grid-cols-3 gap-3">
                 <div>
-                  <p className="text-muted-foreground text-[10px] tracking-wide uppercase">
+                  <p className="text-muted-foreground text-xs font-medium">
                     Income
                   </p>
-                  <p className="text-primary text-sm font-semibold">
+                  <p className="text-positive font-money text-base">
                     {formatCurrency(totalIncome, true, hideAmounts, {
                       forceCompact: summaryCompact,
                     })}
                   </p>
                 </div>
                 <div>
-                  <p className="text-muted-foreground text-[10px] tracking-wide uppercase">
+                  <p className="text-muted-foreground text-xs font-medium">
                     Expenses
                   </p>
-                  <p className="text-foreground text-sm font-semibold">
+                  <p className="text-foreground font-money text-base">
                     {formatCurrency(totalExpenses, true, hideAmounts, {
                       forceCompact: summaryCompact,
                     })}
                   </p>
                 </div>
                 <div>
-                  <p className="text-muted-foreground text-[10px] tracking-wide uppercase">Net</p>
+                  <p className="text-muted-foreground text-xs font-medium">Net</p>
                   <p
-                    className={`text-sm font-semibold ${net >= 0 ? 'text-primary' : 'text-destructive'}`}
+                    className={`font-money text-base ${net >= 0 ? 'text-positive' : 'text-destructive'}`}
                   >
                     {formatCurrency(net, true, hideAmounts, { forceCompact: summaryCompact })}
                   </p>

@@ -351,7 +351,7 @@ export default function Transactions() {
         <div className="flex items-center justify-end gap-3">
           <span className="text-muted-foreground text-xs">
             Earned{' '}
-            <span className="text-primary font-bold">
+            <span className="text-positive font-bold">
               {formatCurrency(totalIncome, false, hideAmounts)}
             </span>
           </span>
@@ -511,7 +511,7 @@ export default function Transactions() {
                   className="absolute top-0 left-0 w-full"
                 >
                   {row.kind === 'header' ? (
-                    <p className="text-muted-foreground mt-3 ps-2 pb-1 text-[11px] font-medium tracking-wide uppercase first:pt-0">
+                    <p className="text-muted-foreground mt-3 ps-2 pb-1 text-xs font-medium first:pt-0">
                       {formatDate(row.date)}
                     </p>
                   ) : (

@@ -368,7 +368,7 @@ export default function Loans() {
       <Main className="lg:max-w-xl">
         {activeLoans.length > 0 && (
           <div className="card-elevated bg-grad-primary-soft rounded-md p-4">
-            <p className="text-muted-foreground text-[10px] tracking-wide uppercase">
+            <p className="text-muted-foreground text-xs font-medium">
               Outstanding across {activeLoans.length} loan{activeLoans.length === 1 ? '' : 's'}
             </p>
             <p className="text-lg font-bold">

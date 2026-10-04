@@ -118,7 +118,7 @@ export default function YearInReview() {
             <div className="card-elevated bg-grad-surface rounded-md p-4">
               <div className="grid grid-cols-3 gap-3 text-center">
                 <div>
-                  <p className="text-muted-foreground text-[10px] tracking-wide uppercase">
+                  <p className="text-muted-foreground text-xs font-medium">
                     Income
                   </p>
                   <p className="text-primary text-sm font-semibold">
@@ -128,7 +128,7 @@ export default function YearInReview() {
                   </p>
                 </div>
                 <div>
-                  <p className="text-muted-foreground text-[10px] tracking-wide uppercase">
+                  <p className="text-muted-foreground text-xs font-medium">
                     Expenses
                   </p>
                   <p className="text-destructive text-sm font-semibold">
@@ -138,9 +138,9 @@ export default function YearInReview() {
                   </p>
                 </div>
                 <div>
-                  <p className="text-muted-foreground text-[10px] tracking-wide uppercase">Net</p>
+                  <p className="text-muted-foreground text-xs font-medium">Net</p>
                   <p
-                    className={`text-sm font-semibold ${review.current.net >= 0 ? 'text-primary' : 'text-destructive'}`}
+                    className={`text-sm font-semibold ${review.current.net >= 0 ? 'text-positive' : 'text-destructive'}`}
                   >
                     {formatCurrency(review.current.net, true, hideAmounts, {
                       forceCompact: heroCompact,
@@ -163,21 +163,21 @@ export default function YearInReview() {
               <h3 className="mb-3 text-sm font-semibold">Net Worth</h3>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-muted-foreground text-[10px] tracking-wide uppercase">
+                  <p className="text-muted-foreground text-xs font-medium">
                     Start of year
                   </p>
                   <p className="text-sm font-semibold">{money(review.netWorthStart)}</p>
                 </div>
                 <ArrowRight size={16} className="text-muted-foreground shrink-0" />
                 <div className="text-right">
-                  <p className="text-muted-foreground text-[10px] tracking-wide uppercase">
+                  <p className="text-muted-foreground text-xs font-medium">
                     {yearOffset === 0 ? 'Now' : 'End of year'}
                   </p>
                   <p className="text-sm font-semibold">{money(review.netWorthEnd)}</p>
                 </div>
               </div>
               <p
-                className={`mt-2 text-center text-xs font-medium ${review.netWorthChange >= 0 ? 'text-primary' : 'text-destructive'}`}
+                className={`mt-2 text-center text-xs font-medium ${review.netWorthChange >= 0 ? 'text-positive' : 'text-destructive'}`}
               >
                 {review.netWorthChange >= 0 ? '+' : ''}
                 {money(review.netWorthChange)} this year
@@ -208,7 +208,7 @@ export default function YearInReview() {
               </div>
               {review.busiestMonth && (
                 <p className="text-muted-foreground mt-3 flex items-center justify-center gap-1 text-xs">
-                  <Trophy size={12} className="text-[#c79b4f]" />
+                  <Trophy size={12} className="text-warning" />
                   Biggest spend: {review.busiestMonth.label} · {money(review.busiestMonth.expenses)}
                 </p>
               )}

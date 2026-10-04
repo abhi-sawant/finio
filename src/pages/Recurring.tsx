@@ -575,7 +575,7 @@ export default function Recurring() {
                       r.type === 'income'
                         ? 'text-primary'
                         : r.type === 'transfer'
-                          ? 'text-[#6e8fb0]'
+                          ? 'text-chart-5'
                           : 'text-destructive'
                     }`}
                   >

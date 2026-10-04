@@ -24,7 +24,7 @@ const FORECAST_DAYS = 100;
 function dayClasses(day: CashFlowCalendarDay): string {
   if (!day.inRange) return 'opacity-0';
   if (day.netFlow === 0) return 'bg-muted/50 text-muted-foreground';
-  return day.netFlow > 0 ? 'bg-primary/10 text-primary' : 'bg-destructive/10 text-destructive';
+  return day.netFlow > 0 ? 'bg-positive/10 text-positive' : 'bg-destructive/10 text-destructive';
 }
 
 export function CashFlowCalendar() {

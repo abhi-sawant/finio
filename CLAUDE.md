@@ -10,7 +10,7 @@
 Related docs:
 
 - [README.md](README.md) — user- and self-hoster-facing; this file is the architecture guide.
-- [design.md](design.md) — the "Focus" visual system (tokens, layout shell, component conventions).
+- [design.md](design.md) — the "Mudra" visual system (tokens, layout shell, component conventions).
   Read it before touching styling.
 - [improvements.md](improvements.md) — the latest review pass: open bugs, improvements and feature
   ideas, as of `a9f1ae0` (2026-08-24). Nothing in it has been fixed yet — check it before assuming a
@@ -156,6 +156,7 @@ Outside `src/`:
 scripts/gen-dummydata.mjs     # Regenerates dummydata.json (seeded PRNG — reruns are reproducible)
 dummydata.json                # ~1000-transaction import fixture for load/QA testing; not used by the app
 public/.htaccess              # SPA rewrite to index.html for Apache/cPanel
+public/guilloche.svg          # Procedural rosette, masked behind every screen (body::before); generated, not hand-drawn
 ```
 
 ### State Management
@@ -285,22 +286,38 @@ Enums: `AccountType`, `TransactionType` (expense/income/transfer), `RecurrenceFr
 
 ## UI & Styling
 
-- **"Focus" visual system** (introduced in `0e0079c`, replacing the old violet gradient /
-  glassmorphism theme) — warm cream "paper" backgrounds, opaque cards with hairline borders, one
-  deep-green accent (`--primary: #146b54`, brighter `#34a582` in dark mode), and a rust-toned
-  `warning-band` token pair for surfaced alerts. The full spec is [design.md](design.md); the tokens
-  live in [`src/index.css`](src/index.css). Rules that are easy to break:
+- **"Mudra" visual system** (adopted 2026-10-04, replacing the "Focus" ledger look) — the app is
+  printed like a rupee note: lavender→mint→peach "note paper" in light mode, an indigo field "under a
+  UV lamp" in dark, frosted-glass cards, faint guilloche engraving, microprint and a windowed
+  colour-shift thread. One accent, the ₹100 lavender (`--primary: #4b36c7`, `#b9adff` in dark). The
+  full spec is [design.md](design.md); every token lives in [`src/index.css`](src/index.css), each
+  with a hand-tuned dark pair. Rules that are easy to break:
   - Components use semantic tokens (`bg-card`, `text-muted-foreground`, `bg-warning-band`…), never
-    raw hex or ad-hoc Tailwind palette colours (`bg-amber-100`).
-  - No gradients, glows or `backdrop-blur` on surfaces. The legacy `bg-grad-*` / `shadow-glow-*`
-    class names still exist only as a shim that resolves to flat fills — don't add new uses.
-  - A card is `card-elevated rounded-md`; a homogeneous list is **one** `card-elevated divide-y`
-    container of plain rows, not a stack of cards. Per-row icon "medallions" were removed on purpose.
+    raw hex or ad-hoc Tailwind palette colours (`bg-amber-100`). Income and other "good" figures are
+    `text-positive` (green), never `text-primary`; caution is `text-warning`.
+  - `bg-grad-*` are real ₹100-note gradients now: `bg-grad-primary` (+ `shadow-glow-primary`,
+    `text-white`) is the filled-action vocabulary and the default `Button` variant. The gradient
+    stays deep indigo in **both** modes because call sites hardcode white text.
+  - A card is `card-elevated rounded-md` (frosted glass: translucent fill, white hairline,
+    `backdrop-filter`); a homogeneous list is **one** `card-elevated divide-y` container of plain
+    rows. Sticky chrome (header once scrolled, tab bar, sidebar) is `glass-chrome`.
+  - The hero figure on a page is a [`NoteCard`](src/components/ui/note-card.tsx) (Dashboard "safe to
+    spend", Accounts "net balance"): guilloche, pointer-driven thread hue shift, microprint privacy
+    band, UV fibres in dark. Don't nest cards inside it.
+  - An account's tint is its **type's** rupee denomination ([`note.ts`](src/components/accounts/note.ts):
+    bank ₹100 lavender, savings ₹500 stone, card ₹2000 magenta, FD/RD ₹200 yellow…), never its
+    user colour — `noteStyle(type)` for tiles, `.note-chip` for list rows.
+  - No uppercase tracked micro-labels or eyebrows above headings; labels are sentence-case
+    `text-xs font-medium` muted.
   - Every page is `<Header>` + `<Main>` from `src/components/ui/` (shared `max-w-5xl` width, and
-    `Main`'s large mobile bottom padding keeps content clear of the tab bar/FAB).
+    `Main`'s large mobile bottom padding keeps content clear of the tab bar/FAB). `Header` is
+    transparent at rest and frosts on scroll; the desktop `Sidebar` is `fixed`, and the content
+    column carries `lg:pl-60`.
   - Every colour picker offers `COLOR_PALETTE` from [`src/data/colorPalette.ts`](src/data/colorPalette.ts).
     Changing it only changes what pickers offer, never colours already saved on entities.
-  - Font is Geist Variable (`@fontsource-variable/geist`), used for both body and headings.
+  - Fonts: Geist Variable for everything people read or type; **Unbounded Variable** (the banknote
+    numeral) for `h1` page titles, dialog titles (`font-heading`) and headline money (`.font-money`).
+    Row amounts stay Geist.
 - **Tailwind CSS v4** — configured via `@tailwindcss/vite` plugin (no `tailwind.config.js`; directives in `index.css`).
 - **shadcn/ui** with `base-nova` style, using `@base-ui/react` under the hood. Add new components with `npx shadcn@latest add <component>`.
 - **Lucide React** for icons.
@@ -317,7 +334,7 @@ Enums: `AccountType`, `TransactionType` (expense/income/transfer), `RecurrenceFr
 Configured in [vite.config.ts](vite.config.ts) via `vite-plugin-pwa`, using **`strategies:
 'injectManifest'`** with a hand-written worker at [`src/sw/sw.ts`](src/sw/sw.ts).
 
-- App name: "Finio - Finance Tracker", theme color `#146b54`
+- App name: "Finio - Finance Tracker", manifest theme color `#4b36c7`; `index.html` sets a light/dark `theme-color` pair matching the note paper
 - Manifest icons: 64px, 96px, 192px, 512px, maskable 512px (in `public/`)
 - `shortcuts`: Add Expense, Add Income, Transactions, Budgets (96px icon each — capped at four,
   since Android surfaces 3–4 and silently drops the rest)

@@ -71,7 +71,7 @@ export const TransactionItem = memo(function TransactionItem({
 
   const amountColor =
     transaction.type === 'income'
-      ? 'text-primary'
+      ? 'text-positive'
       : transaction.type === 'expense'
         ? 'text-foreground'
         : 'text-muted-foreground';

@@ -1,75 +1,121 @@
 ---
 name: Finio
-description: A calm, paper-like personal finance PWA with one deep-green accent, flat hairline-bordered surfaces and loud numbers.
+description: A privacy-first rupee ledger printed like a banknote — note-paper gradients, frosted glass, guilloche linework and denomination tints, with every figure legible first and ornamental second.
 colors:
-  primary: "#146b54"
-  primary-foreground: "#fffdf9"
-  primary-dark-mode: "#34a582"
-  accent-tint: "#e9f1ec"
-  accent-ink: "#0f4c3d"
-  destructive: "#b3421f"
-  destructive-dark-mode: "#e0714a"
-  warning-band: "#fbede6"
-  warning-band-ink: "#7a2e13"
-  paper: "#f7f5f1"
-  card: "#fffdf9"
-  ink: "#1b1a17"
-  secondary-fill: "#f0ece3"
-  muted-ink: "#6e695f"
-  hairline: "#eae5db"
-  night-paper: "#211e1a"
-  night-card: "#2a2521"
-  night-ink: "#f3efe7"
-  night-muted-ink: "#b0a99c"
-  chart-gold: "#c79b4f"
-  chart-sage: "#6ba292"
-  chart-slate: "#6e8fb0"
+  primary: "#4b36c7"
+  primary-foreground: "#ffffff"
+  primary-gradient-light: "#7562ec"
+  accent-tint: "#e9e4ff"
+  accent-ink: "#3b2a96"
+  positive: "#0b7a55"
+  warning: "#9a6a00"
+  destructive: "#b0125f"
+  warning-band: "#ffe1ef"
+  warning-band-ink: "#5c0d38"
+  ink: "#1d1747"
+  muted-ink: "#5b5689"
+  background: "#f1eefb"
+  card: "#fdfcff"
+  secondary-fill: "#ebe7f8"
+  paper-lavender: "#f1edff"
+  paper-mint: "#ebf6f1"
+  paper-peach: "#fff1e3"
+  chart-magenta: "#c2185b"
+  chart-gold: "#c48a12"
+  chart-green: "#0f8f6a"
+  chart-blue: "#2f7fd1"
+  uv-primary: "#b9adff"
+  uv-primary-foreground: "#15103d"
+  uv-accent-tint: "#302874"
+  uv-accent-ink: "#ddd6ff"
+  uv-positive: "#5fe0ae"
+  uv-warning: "#f2c55c"
+  uv-destructive: "#ff7ab8"
+  uv-warning-band: "#4a1534"
+  uv-warning-band-ink: "#ffe1ee"
+  uv-ink: "#eeeaff"
+  uv-muted-ink: "#aaa4d8"
+  uv-background: "#161236"
+  uv-card: "#221d4d"
+  uv-secondary-fill: "#2b2559"
+  coin-ink: "#1d1747"
 typography:
+  display-money:
+    fontFamily: "Unbounded Variable, Geist Variable, sans-serif"
+    fontSize: "2.75rem"
+    fontWeight: 600
+    lineHeight: 1.05
+    letterSpacing: "-0.03em"
+  headline:
+    fontFamily: "Unbounded Variable, Geist Variable, sans-serif"
+    fontSize: "1.5rem"
+    fontWeight: 600
+    letterSpacing: "-0.02em"
+  money:
+    fontFamily: "Unbounded Variable, Geist Variable, sans-serif"
+    fontSize: "1.125rem"
+    fontWeight: 600
+    letterSpacing: "-0.03em"
   title:
     fontFamily: "Geist Variable, sans-serif"
     fontSize: "1rem"
+    fontWeight: 600
+  dialog-title:
+    fontFamily: "Unbounded Variable, Geist Variable, sans-serif"
+    fontSize: "1rem"
     fontWeight: 500
+    lineHeight: 1
   body:
     fontFamily: "Geist Variable, sans-serif"
     fontSize: "0.875rem"
     fontWeight: 400
-  value:
+    fontFeature: "\"tnum\""
+  row-value:
     fontFamily: "Geist Variable, sans-serif"
     fontSize: "0.875rem"
     fontWeight: 600
+    fontFeature: "\"tnum\""
   label:
     fontFamily: "Geist Variable, sans-serif"
     fontSize: "0.75rem"
     fontWeight: 500
+    letterSpacing: "normal"
 rounded:
-  sm: "9.6px"
-  md: "12.8px"
-  lg: "16px"
-  xl: "22.4px"
+  chip: "5px"
+  sm: "13.2px"
+  md: "17.6px"
+  lg: "22px"
+  note: "25.3px"
   full: "9999px"
 spacing:
-  page-gutter: "12px"
+  page-x-mobile: "12px"
+  page-x-desktop: "32px"
+  stack: "16px"
+  stack-desktop: "24px"
+  column-gap-desktop: "32px"
   card-padding: "16px"
-  row-y: "12px"
-  section-gap: "16px"
+  row-padding-y: "12px"
 components:
   button-primary:
     backgroundColor: "{colors.primary}"
     textColor: "{colors.primary-foreground}"
     rounded: "{rounded.full}"
-    height: "36px"
     padding: "0 16px"
+    height: "36px"
   button-outline:
     backgroundColor: "{colors.card}"
     textColor: "{colors.ink}"
     rounded: "{rounded.full}"
     height: "36px"
-    padding: "0 16px"
   button-destructive:
     textColor: "{colors.destructive}"
     rounded: "{rounded.full}"
     height: "36px"
-    padding: "0 16px"
+  header-icon-button:
+    backgroundColor: "{colors.card}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.full}"
+    size: "40px"
   input:
     backgroundColor: "{colors.card}"
     textColor: "{colors.ink}"
@@ -78,168 +124,341 @@ components:
     padding: "4px 12px"
   card:
     backgroundColor: "{colors.card}"
-    textColor: "{colors.ink}"
     rounded: "{rounded.md}"
+    padding: "{spacing.card-padding}"
+  dialog:
+    backgroundColor: "{colors.card}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.lg}"
     padding: "16px"
+  fab-coin:
+    textColor: "{colors.coin-ink}"
+    rounded: "{rounded.full}"
+    size: "56px"
+  note-tile:
+    rounded: "{rounded.md}"
+    padding: "14px 34px 14px 14px"
+    height: "108px"
+  note-chip:
+    rounded: "{rounded.chip}"
+    width: "30px"
+    height: "20px"
+  nav-item-active:
+    backgroundColor: "{colors.accent-tint}"
+    textColor: "{colors.accent-ink}"
+    rounded: "{rounded.full}"
+    padding: "12px"
 ---
 
 # Design System: Finio
 
+Tokens live in [`src/index.css`](src/index.css) (`:root` for light, `.dark` for dark). Every value
+in this file is taken from the shipped build; where a token is a gradient, the frontmatter records
+its key stops and the full CSS value is in `.impeccable/design.json`.
+
 ## Overview
 
-**Creative North Star: "The Household Ledger"**
+**Creative North Star: "Mudra" — the money looks like money.**
 
-Finio looks like a ledger kept at home: warm cream paper, ink-dark text, ruled hairlines between entries and a single green mark where attention is needed. It is calm, flat and paper-like. Nothing glows, blurs or gradients; depth is a hairline border and a barely-there neutral shadow. The mood is private and trustworthy rather than exciting, which fits an app whose data never leaves the device by default.
+Finio is printed the way a rupee note is printed. Light mode is note paper in daylight: a fixed
+lavender-to-mint-to-peach paper gradient, indigo ink, and the ₹100 lavender as the one accent.
+Dark mode is the same note under a UV lamp: an indigo field, the engraving lit in lavender, and
+security fibres that only fluoresce in the dark. The security-printing vocabulary — guilloche
+rosettes, a windowed colour-shift thread, microprint, denomination tints — is the house material,
+used on the surfaces that carry money and kept out of the reading.
 
-Density is "tight rows, spacious sections." List rows are compact and share one container; sections breathe with generous page padding and a large bottom inset that keeps content clear of the tab bar and FAB. Numbers are the loudest thing on any screen (semibold, larger), captions are quiet (muted, smaller). Tactility is reserved for press: a 1px press-down on buttons and a slight scale on the main add action.
+The world lends type, palette and one signature move; it never takes the layout or the controls.
+Lists, forms and settings stay quiet frosted-glass panels of plain rows in Geist. The banknote face
+(Unbounded) is reserved for headline figures and titles, so ornament never competes with a figure
+the user has to read. Every figure is legible first and ornamental second.
 
-Dark mode is a warm charcoal "night paper," not an inversion. The accent is re-tuned brighter, borders become alpha-over-background, and every token has a hand-picked dark value.
+Light and dark are both first-class: every token has a hand-tuned pair, including every
+denomination tint.
 
 **Key Characteristics:**
-- One accent (deep green), used for the primary action, active state, focus ring and links only.
-- Opaque cards with hairline borders; no gradients, glows or backdrop blur on surfaces.
-- Warm neutrals (cream, charcoal) instead of clinical white, black or blue-gray.
-- Semantic tokens only; components never hold raw hex.
-- Pill buttons, softly rounded cards (roughly 13px), small rounded inputs (roughly 10px).
-- One typeface (Geist Variable) for everything; hierarchy via size and weight.
+- Fixed note-paper gradient behind every screen, with a faint engraved guilloche rosette top-right.
+- Frosted glass cards and chrome: translucent white over the paper, white hairline, lavender-tinted shadow.
+- Unbounded for headline money, page titles and dialog titles; Geist for everything read.
+- One hero banknote per money screen (NoteCard), with a pointer-driven colour-shift thread.
+- Accounts printed in their type's rupee denomination tint.
+- Filled actions are a ₹100-lavender gradient; the add button is a single-hue lavender coin.
 
 ## Colors
 
-A warm paper-and-ink neutral field with a single forest-green accent and a rust red for danger. Hues are declared as CSS custom properties on `:root` and `.dark`, mapped into Tailwind's theme by reference.
+Indigo ink on lavender note paper, one ₹100-lavender accent, and semantic colours borrowed from
+other denominations (₹2000 magenta for danger, a mint green for income, amber for caution).
+Dark-mode pairs carry the `uv-` prefix in the frontmatter.
 
 ### Primary
-- **Ledger Green** (#146b54): primary buttons, active nav indicator, focus ring (`ring`), links, the FAB and the logo mark. In dark mode it becomes **Lamp Green** (#34a582) with near-black text (#0b1f19) on it, brighter and more saturated so it does not read as disabled.
-- **Sage Tint** (#e9f1ec) with **Deep Ink Green** (#0f4c3d): the soft `accent` pair for hover and selected backgrounds and tinted icons. Dark: #24352e with #8fcbb3.
+- **₹100 Lavender** (`primary`, dark: `uv-primary`): links, active tab, focus ring, caret, native
+  control accents, selection tint (28% mix) and scrollbar thumb (35% mix). Filled buttons do not
+  use it flat — they use the lavender gradient (`primary-gradient-light` → `primary`, 135deg),
+  which is deep enough to carry white text in both modes.
+- **Lavender Tint / Lavender Ink** (`accent-tint` / `accent-ink`, dark: `uv-accent-tint` /
+  `uv-accent-ink`): the active sidebar item and hover fills.
 
 ### Secondary
-- **Rust** (#b3421f, dark #e0714a): `destructive`, negative balances and overspend. The destructive button is a 10% tint of this, not a solid red fill.
-- **Warm Band** (#fbede6, text #7a2e13, accent #b3421f): the one bespoke token pair, for collapsed alert bands that are neither success nor destructive. Dark: #3a2a20, #e8c9b8, #e57a55.
+- **Mint Ledger Green** (`positive`, dark: `uv-positive`): income, positive figures, "owes you".
+- **Note Amber** (`warning`, dark: `uv-warning`): caution text (near a limit, due soon).
+- **₹2000 Magenta** (`destructive`, dark: `uv-destructive`): overspend, negative balances,
+  delete. Destructive buttons are a 10% (dark 20%) tint of it, not a solid fill.
+- **Magenta Band** (`warning-band` / `warning-band-ink`, accent `#b0125f` / dark `#ff8cc2`): the
+  one collapsed-alert band on a screen, a soft ₹2000 tint.
+
+### Tertiary — denomination tints
+Each account type is printed as a rupee note (`src/components/accounts/note.ts`). Tints are
+135deg gradients with a matching ink; full light and dark values are in `--note-<value>` and the
+sidecar.
+
+| Account type | Denomination | Light (from → to, ink) | Dark (from → to, ink) |
+| --- | --- | --- | --- |
+| Bank account (`checking`) | ₹100 lavender | `#ece6ff` → `#d9cffc`, `#3b2a86` | `#3a2f86` → `#251c5c`, `#dcd3ff` |
+| Savings | ₹500 stone | `#eef0e6` → `#d8dccb`, `#3d4630` | `#3a4030` → `#262a1f`, `#e2e6d2` |
+| Credit card | ₹2000 magenta | `#ffe3f1` → `#fbc6e0`, `#8a1550` | `#6a1846` → `#43102d`, `#ffd0e6` |
+| Fixed / recurring deposit | ₹200 yellow | `#fff4c4` → `#ffe48a`, `#6b4d00` | `#5e4a0c` → `#3c2f07`, `#ffe9a3` |
+| Cash | ₹10 chocolate | `#f6e8dc` → `#e6c9b0`, `#5a3215` | `#4a2c18` → `#2f1c0f`, `#f6d9c0` |
+| Wallet | ₹50 cyan | `#e0f6fb` → `#b8e8f2`, `#0d4f60` | `#0f4652` → `#0a2f37`, `#c4f1fa` |
+| Investment | ₹20 green-yellow | `#f2f8d8` → `#dcebaa`, `#485a0c` | `#3f4c0f` → `#29320a`, `#e8f5b8` |
+
+Charts use `primary`, `chart-magenta`, `chart-gold`, `chart-green`, `chart-blue` in light and
+`#a495ff`, `#ff6fae`, `#f2c55c`, `#4fd6a2`, `#6fb4ff` in dark.
 
 ### Neutral
-- **Cream Paper** (#f7f5f1): page background. Dark: **Night Paper** (#211e1a).
-- **Card Stock** (#fffdf9): cards, popovers, sidebar, tab bar. Dark: #2a2521.
-- **Ledger Ink** (#1b1a17): foreground text. Dark: #f3efe7.
-- **Oat** (#f0ece3): `secondary` and `muted` fills (chips, disabled inputs). Dark: #35302a.
-- **Pencil Gray** (#6e695f): muted captions and secondary labels. Dark: #b0a99c.
-- **Hairline** (#eae5db): borders and input outlines. Dark: `rgba(243,239,231,0.10)` borders, `0.14` inputs.
-- **Chart set:** green #146b54, rust #b3421f, gold #c79b4f, sage #6ba292, slate #6e8fb0 (dark variants brighten each).
+- **Indigo Ink** (`ink`, dark: `uv-ink`): all body text and headline figures.
+- **Muted Indigo** (`muted-ink`, dark: `uv-muted-ink`): captions, labels, secondary row text.
+- **Note Paper** (`background` under a fixed 172deg gradient `paper-lavender` → `paper-mint` →
+  `paper-peach`; dark: `uv-background` under `#1b1546` → `#15113a` → `#171238` → `#22143a`, a low
+  maroon UV glow only at the bottom edge).
+- **Card White** (`card`, dark: `uv-card`): opaque surfaces — dialogs, popovers, inputs.
+- **Secondary Fill** (`secondary-fill`, dark: `uv-secondary-fill`): track backgrounds, secondary
+  buttons, muted fills.
+- **Hairlines**: borders are ink at 10% (`rgb(29 23 71 / 0.1)`; dark `rgb(238 234 255 / 0.1)`),
+  input strokes at 16%. Glass edges are white: 90% in light, 11% in dark.
+- **Engraving**: the page rosette is `rgb(90 70 190 / 0.075)` (dark `rgb(170 150 255 / 0.09)`).
 
 ### Named Rules
-**The One Voice Rule.** The green accent marks the single most important action or number on a screen. Three "important" colors means none are.
+**The One Lavender Rule.** Lavender is the only accent. Every other hue on screen is either a
+semantic signal or a denomination tint that means an account type.
 
-**The Hairline-Not-Shadow Rule.** Separation comes from a 1px hairline border or `divide-y`. Never from a heavier shadow or a tint.
+**The Denomination-by-Type Rule.** An account's note tint is decided by its type, never by its
+user-chosen colour, so a credit card is always the ₹2000 magenta and a deposit always the ₹200
+yellow. User colours stay on categories, goals and people.
 
-**The Semantic Token Rule.** Components use `bg-card`, `text-muted-foreground`, `bg-warning-band` and the like. No raw hex, no ad-hoc Tailwind palette colors such as `bg-amber-100`.
+**The Green-Means-Money-In Rule.** Income and positive figures are `positive`, never `primary`;
+caution is `warning`. Lavender means "you can act here", not "good".
+
+**The Semantic-Token Rule.** Components use the semantic tokens and the `--note-*`, `--glass-*`,
+`--grad-*` variables; never raw hex or Tailwind palette colours (`bg-amber-100`).
 
 ## Typography
 
-**Display Font:** Geist Variable (with sans-serif fallback), used for headings too (`--font-heading` maps to `--font-sans`)
-**Body Font:** Geist Variable
-**Label/Mono Font:** none; Geist throughout
+**Display Font:** Unbounded Variable (with Geist Variable, sans-serif)
+**Body Font:** Geist Variable (with sans-serif)
 
-**Character:** A single clean, slightly technical grotesque that stays out of the way of the numbers. Hierarchy is made with size and weight, never with a second face.
+**Character:** Unbounded is the wide banknote numeral — a printed face for the figure and the
+title. Geist does all the reading. Tabular figures are on for the whole body so listed money aligns.
 
 ### Hierarchy
-- **Hero value** (semibold or bolder, one bespoke larger size per page): the one total, e.g. total balance on the Dashboard.
-- **Title** (500, 1rem): dialog and section titles, in the heading font.
-- **Body** (400, 0.875rem): rows, form text, paragraphs.
-- **Value** (600, 0.875rem, right-aligned): amounts in a row; flips to the destructive color when negative.
-- **Label** (500, 0.75rem, muted): captions and form labels. Small section eyebrows may use uppercase with wide tracking.
-- **Micro** (0.6875rem muted): secondary row caption under a value.
-
-Stay inside Tailwind's default scale (`text-xs` to `text-2xl`). Inputs render at base size on mobile (to avoid iOS zoom) and `md:text-sm` on larger screens.
+- **Display money** (600, 2.75rem, line-height 1.05, -0.03em, Unbounded): the hero figure on the
+  banknote — "Safe to spend today", net balance on Accounts.
+- **Headline** (600–700, 1.5rem, -0.02em, Unbounded): every `h1` page title, set globally.
+- **Money** (600, -0.03em, Unbounded via `font-money`): headline figures below the hero — note
+  tiles (1.125rem), total balance (1.25rem), month stats (1rem), number-pad display (1.875rem, 1.5rem
+  past 10 characters).
+- **Dialog title** (500, 1rem, line-height 1, Unbounded).
+- **Title** (600, 1rem, Geist): section headings ("Where it sits", "Latest").
+- **Body** (400, 0.875rem, Geist, tabular): row names and sentences. Row values are 600 Geist,
+  never Unbounded.
+- **Label** (500, 0.75rem, Geist, sentence case, muted): field labels, stat captions, "See all".
 
 ### Named Rules
-**The Loud Number Rule.** A monetary value is semibold at a larger size than its muted caption. This pairing repeats everywhere a number appears.
+**The Figure-First Rule.** Unbounded only on headline money and titles. Rows, lists and body
+figures stay in Geist — a list of wide numerals reads as decoration.
+
+**The Sentence-Case Label Rule.** Labels are sentence-case 0.75rem 500 in muted ink. No uppercase
+tracked microlabels and no eyebrows above headings. The banknote microprint is ornament, not a
+label (see Components).
 
 ## Layout
 
-Every screen is a `Header` plus a `Main` from `src/components/ui/`, both in a centered `max-w-5xl` column so header and content align. Header is sticky with a 12px gutter (`px-3`, `lg:px-8`) and holds a title or back button plus zero to two icon actions. Main has `space-y-4` (`lg:space-y-6`) and very large bottom padding (`pb-40` mobile, `pb-8` desktop) so nothing sits under the fixed bottom nav or FAB.
+One centred content column, `max-w-5xl` (64rem), padded 12px on mobile and 32px from `lg`
+(1024px). Every page is `<Header>` + `<Main>`; `Main` stacks at 16px (24px on desktop) and carries
+160px bottom padding on mobile so content clears the tab bar and coin.
 
-Below `lg`, navigation is a fixed bottom tab bar (five items with a small active dot, plus "More") and a floating add button. From `lg` up, a 240px `Sidebar` carries the logo, a full-width pill "add" action and nav groups, and the tab bar disappears. Safe-area insets are respected (`safe-top`, `pb-safe`, `bottom-safe-nav`) and `overscroll-behavior: none` prevents bounce against fixed bars.
-
-A single standalone item (a stat, a form section) is its own card with 16px padding. A homogeneous list is **one** card with `divide-y` and plain rows (`py-3`), never a stack of individually shadowed cards. Row anatomy: icon or avatar, a `min-w-0 flex-1` title (truncating) over a muted subtitle, and a right-aligned value over a micro caption.
-
-### Named Rules
-**The One Container Rule.** A list of similar things is one bordered container with dividers, not n cards.
+- **Mobile:** a glass bottom tab bar (5 tabs including Tools), with the 56px lavender coin fixed
+  bottom-right, 5.5rem above the safe-area inset. The coin is hidden on Accounts, Tools and
+  Settings, which have their own primary action.
+- **Desktop (`lg`+):** a fixed 240px glass sidebar on the left (coin "F" mark, full-width gradient
+  "Add Transaction", primary nav, "Tools" group); the content column is offset by it.
+- **Dashboard grid:** at `lg` a two-column grid (32px column gap, 24px row gap). The hero note
+  spans both columns; the alert band spans both; below, sections take explicit column and row
+  placement. Source order equals reading order on mobile — desktop placement is done with grid
+  lines, never by reordering the DOM.
+- **Note tiles:** a horizontal snap strip on mobile (160px tiles, 12px gap, bleeding to the screen
+  edge) that becomes a 3-across grid at `lg`.
+- Content inside cards pads 16px; plain list rows pad 12px vertically.
 
 ## Elevation & Depth
 
-Flat and tonal. At rest, surfaces are Card Stock on Cream Paper separated by a 1px hairline and `--shadow-card` (`0 1px 2px rgba(27,26,23,0.05)`). Only floating layers (dialogs, popovers, menus, selects) lift, using `--shadow-float` (`0 18px 40px -20px rgba(27,26,23,0.35)`) plus a `ring-1` in the border color. Dark mode uses the same shapes at higher opacity (0.4 and 0.6). Shadows are always neutral, never tinted with the accent.
-
-Modal backdrops are translucent (`bg-foreground/15`) with a light `backdrop-blur-xs`; the dialog surface itself is fully opaque (`bg-popover`). Blur is reserved for backdrops only.
-
-Legacy `bg-grad-*` and `shadow-glow-*` class names survive as a shim that resolves to flat fills and the float shadow. Do not use them in new work.
+Depth is layered glass over a printed paper, and every shadow is lavender-tinted in light mode
+(pure black in dark). Cards sit on the paper as frosted panels (18px blur, 170% saturation, white
+inner top highlight, a long soft drop shadow). Chrome — header on scroll, tab bar, sidebar — is a
+stronger glass (24px blur, 180% saturation). Dialogs and popovers are opaque and float on the
+strongest shadow. The hero banknote alone tilts in 3D.
 
 ### Shadow Vocabulary
-- **Card rest** (`box-shadow: 0 1px 2px rgba(27,26,23,0.05)`): every `card-elevated` surface.
-- **Float** (`box-shadow: 0 18px 40px -20px rgba(27,26,23,0.35)`): dialogs, popovers, dropdowns, selects.
+- **Card** (`0 18px 36px -26px rgb(60 40 140 / 0.42)`; dark `0 20px 40px -26px rgb(0 0 0 / 0.7)`),
+  always paired with `inset 0 1px 0` glass highlight: glass cards, number-pad display, alert band.
+- **Float** (`0 28px 56px -26px rgb(40 26 110 / 0.5)`; dark `0 28px 56px -24px rgb(0 0 0 / 0.75)`):
+  the hero note, dialogs, selected-option rings.
+- **Primary glow** (`inset 0 1px 0 rgb(255 255 255 / 0.25), 0 10px 22px -10px rgb(75 54 199 / 0.65)`;
+  dark `0 10px 24px -8px rgb(108 87 214 / 0.7)`): under gradient-filled buttons only. Success and
+  danger glows exist for the matching gradient fills.
+- **Coin** (`inset 0 1px 1px rgb(255 255 255 / 0.6), 0 10px 24px -6px rgb(108 87 214 / 0.7)`).
+- **Tile** (`0 14px 28px -20px rgb(40 26 110 / 0.5)`): denomination note tiles.
+- **Tab bar** (`0 -12px 30px -22px rgb(40 26 110 / 0.45)`): casts upward onto content.
 
 ### Named Rules
-**The Flat-By-Default Rule.** Surfaces are flat at rest. Only layers that float above the page get the float shadow.
+**The Lavender-Shadow Rule.** Shadows in light mode are tinted indigo/lavender, never neutral grey.
+
+**The Transparent-At-Rest Rule.** The header sits transparent on the paper and frosts over only
+once content scrolls beneath it (scrollY > 4); a solid band across the top would hide the paper.
 
 ## Shapes
 
-One base `--radius: 1rem`; all steps derive from it: sm 9.6px, md 12.8px, lg 16px, xl 22.4px, 2xl 28.8px. Buttons and pill controls are fully round. Cards and dialogs use `rounded-md`; inputs, menu items and picker tiles use `rounded-sm`. User-chosen entities (category, goal, person) get a 36px circle tinted with the entity's own color. Never use arbitrary one-off radii; pick the nearest step.
+Soft, generous corners from a 22px base radius (`--radius: 1.375rem`): inputs and number keys at
+13.2px (`sm`), cards, list containers and note tiles at 17.6px (`md`), dialogs and alert bands at
+22px (`lg`), the hero note at 25.3px. Every button, icon button, nav item, tab indicator, coin and
+progress track is fully round. The one sharp shape is the account note chip (30×20px, 5px) — a
+miniature banknote with its windowed thread.
+
+Recurring geometry: the guilloche rosette (procedural, `currentColor` strokes at 0.55px), and the
+windowed thread — a vertical band masked into dashes, repeated at every scale (hero thread 9px
+with 16/10px windows, tile thread 4px with 9/6px windows, chip thread 2px with 3/2px windows,
+goal progress masked into 10/3px horizontal windows).
 
 ## Components
 
 ### Buttons
-- **Shape:** fully round pills (9999px); default height 36px (`h-9`), sizes xs 24, sm 28, default 36, lg 44; icon-only sizes are square (24/28/32/36).
-- **Primary (`default`):** Ledger Green fill with Card Stock text; hover at 85% for link-style anchors.
-- **Outline:** Card Stock fill, hairline border, Oat on hover.
-- **Secondary / Ghost:** Oat fill, or transparent with Oat hover.
-- **Destructive:** 10% rust tint with rust text (20% on hover); solid red only for the final confirm inside an alert dialog.
-- **Interaction:** 1px press-down on active, a 3px 50%-opacity focus ring in the border-ring color identical across variants, disabled at half opacity with no pointer events, built-in invalid styling.
+Pill-shaped and lit from above.
+- **Shape:** fully round (9999px). Heights 24 / 28 / 36 / 44px (`xs`/`sm`/default/`lg`), icon
+  buttons 32px, header icon buttons 40px.
+- **Primary:** the lavender gradient (135deg, `primary-gradient-light` → `primary`; dark starts at
+  `#7d6af2`) with white text and the primary glow; 14px 500 Geist, 16px horizontal padding.
+  Hover brightens 110%; press nudges down 1px.
+- **Outline:** strong glass fill with a white glass hairline and 12px backdrop blur; hover fills muted.
+- **Destructive:** magenta at 10% (dark 20%) with magenta text — a tint, never a solid red slab.
+- **Ghost / Secondary / Link:** muted hover fill; secondary fill; lavender underline-on-hover.
+- **Focus:** ring-coloured border plus a 3px ring at 50%.
+- **Header icon button:** 40px round outline button, 18px icon; a pressed toggle switches to the
+  lavender gradient with white icon.
 
-### Inputs / Fields
-- **Style:** Card Stock fill, 1px hairline border, 10px radius, 40px tall, 12px horizontal padding. Label above in muted 12px medium, 6px gap.
-- **Focus:** border shifts to the accent and a 3px 50% accent ring appears.
-- **Error / Disabled:** destructive border with a 20% destructive ring; disabled turns Oat and loses pointer events at half opacity.
-- **Amount entry:** the primary amount field uses a custom on-screen number pad rather than the OS keyboard, keeping layout stable.
+### Coin (add button)
+A single-hue lavender coin lit from the top-left: radial gradient `#f8f5ff` (0–8%) → `#d8ceff` →
+`#a594f2` → `#6c57d6` at 30% 25%, indigo ink `+` (26px, stroke 2.4), coin shadow. 56px on the
+mobile FAB, 36px as the sidebar's "F" mark. Same in both modes. Long-press opens templates.
 
 ### Cards / Containers
-- **Corner Style:** about 13px (`rounded-md`).
-- **Background:** Card Stock, opaque.
-- **Shadow Strategy:** card rest only; see Elevation.
-- **Border:** 1px hairline (`card-elevated`).
-- **Internal Padding:** 16px; list rows 12px vertical.
+- **Corner Style:** 17.6px (`md`).
+- **Background:** frosted glass — white at 60% (dark: white at 6%) with 18px blur.
+- **Border:** 1px white glass hairline (90%; dark 11%) and an inset white top highlight.
+- **Shadow Strategy:** Card shadow (see Elevation).
+- **Internal Padding:** 16px.
+- A homogeneous list is **one** glass card divided by hairlines, holding plain rows — not a stack
+  of cards, and no per-row icon medallions.
+
+### Inputs / Fields
+- **Style:** opaque card fill, 1px input stroke (ink 16%), 13.2px radius, 40px tall, 16px text on
+  mobile / 14px from `md`.
+- **Focus:** ring-coloured border plus a 3px lavender ring at 50%.
+- **Error / Disabled:** magenta border with a 20% magenta ring; disabled is muted fill at 50% opacity.
+
+### Number pad and PIN pad
+The entry display is a `grad-surface` panel (light `#fefdff` → `#efe9ff` → `#e2f3ec`; dark
+`#2c2468` → `#1e1a4c` → `#12302a`) at `md` radius, with the figure in the money face. Keys are
+56px strong-glass tiles at `sm` radius with a white hairline and inset highlight, 20px 600 digits,
+scaling to 95% on press. PIN dots differ by shape (solid disc vs 2px ring), not only colour; a
+wrong PIN shakes for 320ms (none under reduced motion).
+
+### Dialogs and popovers
+Opaque card colour, 22px radius, 16px padding, 1px border ring, Float shadow, over a 15% ink scrim
+with a light backdrop blur. Titles are in Unbounded. Opaque on purpose: forms are read, not admired.
 
 ### Navigation
-- **Mobile:** fixed tab bar on Card Stock with a top hairline, icon plus 12px medium label, and a 4px green dot marking the active tab (transparent otherwise). A floating add button sits above it; long-press opens a template popover. Some pages hide the FAB where it would cover a primary action.
-- **Desktop:** 240px sidebar on Card Stock with a right hairline, green circular "F" mark, full-width pill add action and grouped nav.
+- **Mobile tab bar:** strong glass, white top hairline, upward shadow. Inactive tabs muted;
+  the active tab turns lavender, thickens its icon stroke (2 → 2.4) and shows a 16×4px gradient pill
+  between icon and 12px 500 label.
+- **Desktop sidebar:** 240px strong glass with right hairline. Items are full-round 14px 500 rows;
+  active is lavender tint with lavender ink; hover is muted at 60%. Group label "Tools" is a
+  sentence-case muted label.
+- **Header:** transparent at rest; glass with a hairline once scrolled. `h1` in Unbounded.
 
-### Dialogs and Popovers
-Centered, never a drawer, on mobile and desktop (`max-w-[calc(100%-2rem)]`, `sm:max-w-sm`). Fully opaque `bg-popover`, `ring-1` border color, float shadow, 100ms fade and zoom. Footer buttons stack with the primary on top on mobile and sit right-aligned on desktop. Confirmation uses one shared promise-based `useConfirm()`, never `window.confirm`.
+### Note chip
+A 30×20px miniature banknote in the account type's denomination tint, with a 2px dashed thread
+near its right edge in the note's ink at 40%. Leads every account row; archived accounts show it
+greyscale at 50%.
 
-### Switches
-One `Switch` primitive (a real `button` with `role="switch"`): green track when on, Oat when off, a white thumb with a small shadow in both themes. A `SwitchField` lays out icon, title, description and switch as a settings row.
+### NoteCard (signature hero)
+The one banknote per money screen (Dashboard "Safe to spend today", Accounts net balance).
+- `grad-surface` fill, glass hairline, inset highlight, Float shadow, 25.3px radius; padding
+  22/22/34px on mobile, 28/32/40px from `lg`.
+- A guilloche rosette top-right in lavender at 26% (250px; at `lg` it becomes a 380px watermark
+  window on the right half).
+- A 9px windowed **security thread** on the right whose hue runs 150° → 200° → 255° and shifts by
+  up to 140° as the pointer crosses the note; the note also tilts up to ±2°/±3° (perspective 900px,
+  0.5s ease-out-expo). Touch input does not tilt; reduced motion removes the transform.
+- A thin-film conic sheen over the note (soft-light in light, screen at 30% in dark).
+- **Microprint**: 6px 600 tracked uppercase text repeating the privacy promise ("FINIO · KEPT ON
+  THIS DEVICE · NOT A BANK · YOUR DATA STAYS YOURS") along the bottom edge at 36% ink,
+  `aria-hidden`. It is engraving texture, not a label.
+- **UV fibres**: 26 seeded curved strokes (cyan, pink, yellow) on the right half only, so none
+  crosses a figure. Invisible in light; at 85% with a 2px glow in dark.
+- Content keeps clear of the thread with 80px right padding on mobile.
+- The budget-spent bar inside it is the **register**: a 115deg engraved hatch (light `#3d2bb8` /
+  `#6b58e8`; dark `#8f7dff` / `#bdb1ff`), not a flat fill.
 
-### Toasts
-One Sonner instance at the top center, rich colors and a close button. Reversible actions get a toast with an inline **Undo**; irreversible ones get a confirm dialog beforehand, never both.
+### Note tile
+Each open account printed as its denomination: 108px minimum height, `md` radius, 14px padding
+(34px right, clear of its thread), glass hairline and inset highlight, Tile shadow, a small
+guilloche rosette bottom-right at 45%, and a 4px windowed thread in the note's ink at 35%. Content:
+name (14px 600, two lines max), type label (12px at 80%), balance in the money face pinned to the
+bottom. Press scales to 97%; focus is a 2px ring outline offset 2px.
 
-### Charts
-Recharts using the five-step chart palette. Any chart that is the sole carrier of data is paired with a real table behind a "View data table" disclosure.
+### Thread progress
+Goals and other toward-a-target bars fill with the colour-shift thread (light hsl 150/70/38 →
+200/78/46 → 255/70/56; dark hsl 150/65/52 → 200/80/60 → 255/85/75) masked into 10px windows with
+3px gaps, inside an 8px round muted track.
+
+### Alert band
+At most one surfaced alert per screen: the magenta band fill with band ink, glass hairline, Card
+shadow, 22px radius, 16px padding, spanning the full grid width.
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** use the accent only for the primary action, active states, focus ring and links (The One Voice Rule).
-- **Do** reference semantic tokens (`bg-card`, `text-muted-foreground`, `bg-warning-band`) for every color.
-- **Do** build every page from `Header` + `Main` and keep `Main`'s large bottom padding.
-- **Do** render a list as one `card-elevated divide-y` container of plain rows.
-- **Do** make amounts semibold and larger than their muted captions, and flip negatives to the destructive color.
-- **Do** truncate titles inside a `min-w-0 flex-1` wrapper so the value column never gets pushed off screen.
-- **Do** give every icon-only control an `aria-label`, and gate any non-essential animation behind `prefers-reduced-motion`.
-- **Do** pick every color-picker swatch from the shared 18-swatch `COLOR_PALETTE`.
-- **Do** keep transitions fast (about 100ms fade and scale); reserve a distinct animation (the wrong-PIN shake) for real error signals.
+- **Do** put one NoteCard on a money screen and let it carry the ornament; keep everything below it
+  quiet glass and plain rows.
+- **Do** set headline money, page titles and dialog titles in Unbounded (`font-money` /
+  `font-heading`), and every row, list and body figure in Geist with tabular figures.
+- **Do** tint accounts by type through `noteStyle(type)` and `--note-*`, with each tint's ink.
+- **Do** use `positive` for income and positive figures, `warning` for caution, `destructive` for
+  overspend and deletion.
+- **Do** use frosted glass for cards and chrome, opaque card colour for dialogs, popovers and inputs.
+- **Do** keep every ornament `aria-hidden` and `pointer-events: none`, and keep fibres, rosettes and
+  threads clear of figures.
+- **Do** give every motion a reduced-motion fallback (the note tilt and PIN shake both stop).
+- **Do** design both modes: every new token needs a light value and a hand-tuned dark (UV) value.
+- **Do** offer `COLOR_PALETTE` from `src/data/colorPalette.ts` in every colour picker.
 
 ### Don't:
-- **Don't** add gradients, glows or `backdrop-blur` to surfaces; blur belongs to modal backdrops only.
-- **Don't** put raw hex or ad-hoc palette colors (`bg-amber-100`) in components.
-- **Don't** stack individually shadowed cards for a homogeneous list, and don't add per-row icon medallions.
-- **Don't** use native `window.confirm()` or a hand-rolled `role="switch"` span.
-- **Don't** introduce one-off radii, a second typeface, or a second accent color.
-- **Don't** use new `bg-grad-*` or `shadow-glow-*` classes; they exist only as a flat-fill shim.
-- **Don't** invert colors for dark mode; hand-tune each token.
-- **Don't** let a chart be the only carrier of its data.
+- **Don't** put a large denomination numeral on a note tile or the hero. A ghost "2000" beside a real
+  balance reads as money; the only numerals on a note are the user's figures.
+- **Don't** use the account's user-chosen colour for its note tint.
+- **Don't** use `primary` lavender for income or "good" states.
+- **Don't** add uppercase tracked microlabels or eyebrow kickers above headings; labels are
+  sentence case.
+- **Don't** set list rows or body figures in Unbounded.
+- **Don't** use neutral grey shadows in light mode, or solid filled red buttons for destructive actions.
+- **Don't** give the header a solid background at rest.
+- **Don't** use raw hex or Tailwind palette colours in components.
+- **Don't** stack cards for a homogeneous list, or bring back per-row icon medallions.

@@ -97,7 +97,7 @@ export function PinPad({
   });
 
   const keyClass =
-    'bg-card active:bg-muted flex h-14 items-center justify-center rounded-md text-xl font-semibold transition-all active:scale-95 select-none disabled:opacity-40';
+    'active:bg-muted flex h-14 items-center justify-center rounded-md border border-[var(--glass-border)] bg-[var(--glass-strong)] text-xl font-semibold shadow-[inset_0_1px_0_var(--glass-highlight)] transition-all active:scale-95 select-none disabled:opacity-40';
 
   return (
     <div className="grid grid-cols-3 gap-2">

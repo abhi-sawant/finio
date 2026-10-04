@@ -138,13 +138,13 @@ export function CashFlowForecast() {
 
       <dl className="mt-3 grid grid-cols-3 gap-2">
         <div className="bg-muted/40 rounded-sm p-2.5">
-          <dt className="text-muted-foreground flex items-center gap-1 text-[10px] tracking-wide uppercase">
+          <dt className="text-muted-foreground flex items-center gap-1 text-xs font-medium">
             <Wallet size={10} /> Today
           </dt>
           <dd className="mt-0.5 text-xs font-semibold">{money(forecast.startBalance)}</dd>
         </div>
         <div className="bg-muted/40 rounded-sm p-2.5">
-          <dt className="text-muted-foreground text-[10px] tracking-wide uppercase">
+          <dt className="text-muted-foreground text-xs font-medium">
             In {days} days
           </dt>
           <dd
@@ -154,7 +154,7 @@ export function CashFlowForecast() {
           </dd>
         </div>
         <div className="bg-muted/40 rounded-sm p-2.5">
-          <dt className="text-muted-foreground flex items-center gap-1 text-[10px] tracking-wide uppercase">
+          <dt className="text-muted-foreground flex items-center gap-1 text-xs font-medium">
             <TrendingDown size={10} /> Lowest
           </dt>
           <dd
@@ -182,7 +182,7 @@ export function CashFlowForecast() {
 
       {upcoming.length > 0 && (
         <div className="mt-4">
-          <p className="text-muted-foreground mb-2 text-[10px] tracking-wide uppercase">
+          <p className="text-muted-foreground mb-2 text-xs font-medium">
             Scheduled next — {money(forecast.totals.scheduledOut)} out,{' '}
             {money(forecast.totals.scheduledIn)} in over {days} days
           </p>
@@ -199,7 +199,7 @@ export function CashFlowForecast() {
                   {flow.note || categoryName(flow.categoryId)}
                 </span>
                 <span
-                  className={`shrink-0 font-semibold ${flow.delta > 0 ? 'text-primary' : 'text-destructive'}`}
+                  className={`shrink-0 font-semibold ${flow.delta > 0 ? 'text-positive' : 'text-destructive'}`}
                 >
                   {flow.delta > 0 ? '+' : '−'}
                   {money(Math.abs(flow.delta))}

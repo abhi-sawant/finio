@@ -715,7 +715,7 @@ export default function AddTransaction() {
         )}
 
         {/* Submit */}
-        <div className="bg-background fixed bottom-0 left-0 z-50 w-full p-3 shadow">
+        <div className="glass-chrome pb-safe fixed bottom-0 left-0 z-50 w-full border-t border-[var(--glass-border)] p-3">
           <Button onClick={handleSubmit} className="w-full rounded-md" size="lg">
             {existing ? 'Update Transaction' : 'Add Transaction'}
           </Button>

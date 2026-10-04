@@ -537,7 +537,7 @@ function PersonCard({
 
       <p
         className={`mb-3 text-sm font-medium ${
-          isSettled ? 'text-muted-foreground' : theyOweYou ? 'text-primary' : 'text-destructive'
+          isSettled ? 'text-muted-foreground' : theyOweYou ? 'text-positive' : 'text-destructive'
         }`}
       >
         {isSettled

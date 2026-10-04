@@ -1,96 +1,489 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-01T00:00:00Z",
+  "generatedAt": "2026-10-04T00:00:00Z",
   "title": "Design System: Finio",
   "extensions": {
     "colorMeta": {
-      "primary": { "role": "primary", "displayName": "Ledger Green", "canonical": "#146b54", "tonalRamp": ["#082b22", "#0d4535", "#146b54", "#2a8a70", "#52a891", "#86c4b3", "#bcdfd4", "#e9f1ec"] },
-      "destructive": { "role": "secondary", "displayName": "Rust", "canonical": "#b3421f", "tonalRamp": ["#3a1608", "#5c230f", "#7a2e13", "#b3421f", "#d2693f", "#e49a7b", "#f0c5b3", "#fbede6"] },
-      "paper": { "role": "neutral", "displayName": "Cream Paper", "canonical": "#f7f5f1", "tonalRamp": ["#1b1a17", "#3a3732", "#6e695f", "#9a9488", "#c9c3b6", "#eae5db", "#f0ece3", "#f7f5f1"] },
-      "card": { "role": "neutral", "displayName": "Card Stock", "canonical": "#fffdf9", "tonalRamp": ["#211e1a", "#2a2521", "#35302a", "#6e695f", "#b0a99c", "#eae5db", "#f7f5f1", "#fffdf9"] }
+      "primary": {
+        "role": "primary",
+        "displayName": "₹100 Lavender",
+        "canonical": "#4b36c7",
+        "tonalRamp": [
+          "#15103d",
+          "#2a1f7a",
+          "#3b2a96",
+          "#4b36c7",
+          "#7562ec",
+          "#a594f2",
+          "#d8ceff",
+          "#f1edff"
+        ]
+      },
+      "uv-primary": {
+        "role": "primary",
+        "displayName": "₹100 Lavender (UV)",
+        "canonical": "#b9adff",
+        "tonalRamp": [
+          "#15103d",
+          "#3b2a96",
+          "#6c57d6",
+          "#8f7dff",
+          "#a495ff",
+          "#b9adff",
+          "#ddd6ff",
+          "#f8f5ff"
+        ]
+      },
+      "positive": {
+        "role": "secondary",
+        "displayName": "Mint Ledger Green",
+        "canonical": "#0b7a55",
+        "tonalRamp": [
+          "#052b1e",
+          "#0b4f38",
+          "#0b7a55",
+          "#17a777",
+          "#4fd6a2",
+          "#5fe0ae",
+          "#d3f0e4",
+          "#e6f7f0"
+        ]
+      },
+      "destructive": {
+        "role": "secondary",
+        "displayName": "₹2000 Magenta",
+        "canonical": "#b0125f",
+        "tonalRamp": [
+          "#3a0820",
+          "#5c0d38",
+          "#8a1550",
+          "#b0125f",
+          "#e0418f",
+          "#ff7ab8",
+          "#fbc6e0",
+          "#ffe1ef"
+        ]
+      },
+      "warning": {
+        "role": "secondary",
+        "displayName": "Note Amber",
+        "canonical": "#9a6a00",
+        "tonalRamp": [
+          "#3c2f07",
+          "#6b4d00",
+          "#9a6a00",
+          "#b07b05",
+          "#e3ac2f",
+          "#f2c55c",
+          "#ffe48a",
+          "#fff4c4"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Indigo Ink",
+        "canonical": "#1d1747",
+        "tonalRamp": [
+          "#0e0b26",
+          "#1d1747",
+          "#2b2559",
+          "#5b5689",
+          "#aaa4d8",
+          "#ebe7f8",
+          "#f1eefb",
+          "#fdfcff"
+        ]
+      },
+      "background": {
+        "role": "neutral",
+        "displayName": "Note Paper",
+        "canonical": "#f1eefb"
+      },
+      "uv-background": {
+        "role": "neutral",
+        "displayName": "UV Indigo Field",
+        "canonical": "#161236"
+      }
     },
+    "gradients": {
+      "paper-light": "linear-gradient(172deg, #f1edff 0%, #ebf6f1 50%, #fff1e3 100%)",
+      "paper-dark": "linear-gradient(172deg, #1b1546 0%, #15113a 55%, #171238 85%, #22143a 100%)",
+      "grad-primary-light": "linear-gradient(135deg, #7562ec 0%, #4b36c7 100%)",
+      "grad-primary-dark": "linear-gradient(135deg, #7d6af2 0%, #4b36c7 100%)",
+      "grad-surface-light": "linear-gradient(135deg, #fefdff 0%, #efe9ff 55%, #e2f3ec 100%)",
+      "grad-surface-dark": "linear-gradient(135deg, #2c2468 0%, #1e1a4c 52%, #12302a 100%)",
+      "coin": "radial-gradient(circle at 30% 25%, #f8f5ff 0 8%, #d8ceff 30%, #a594f2 68%, #6c57d6)",
+      "register-light": "repeating-linear-gradient(115deg, #3d2bb8 0 2px, #6b58e8 2px 4.5px)",
+      "register-dark": "repeating-linear-gradient(115deg, #8f7dff 0 2px, #bdb1ff 2px 4.5px)",
+      "thread-light": "linear-gradient(90deg, hsl(150 70% 38%), hsl(200 78% 46%), hsl(255 70% 56%))",
+      "thread-dark": "linear-gradient(90deg, hsl(150 65% 52%), hsl(200 80% 60%), hsl(255 85% 75%))",
+      "glass-light": "rgb(255 255 255 / 0.6); border rgb(255 255 255 / 0.9); strong rgb(255 255 255 / 0.78)",
+      "glass-dark": "rgb(255 255 255 / 0.06); border rgb(255 255 255 / 0.11); strong rgb(30 24 70 / 0.72)"
+    },
+    "denominations": [
+      {
+        "denomination": "₹100",
+        "accountTypes": "checking",
+        "light": {
+          "fill": "linear-gradient(135deg, #ece6ff 0%, #d9cffc 100%)",
+          "ink": "#3b2a86"
+        },
+        "dark": {
+          "fill": "linear-gradient(135deg, #3a2f86 0%, #251c5c 100%)",
+          "ink": "#dcd3ff"
+        }
+      },
+      {
+        "denomination": "₹500",
+        "accountTypes": "savings",
+        "light": {
+          "fill": "linear-gradient(135deg, #eef0e6 0%, #d8dccb 100%)",
+          "ink": "#3d4630"
+        },
+        "dark": {
+          "fill": "linear-gradient(135deg, #3a4030 0%, #262a1f 100%)",
+          "ink": "#e2e6d2"
+        }
+      },
+      {
+        "denomination": "₹2000",
+        "accountTypes": "credit",
+        "light": {
+          "fill": "linear-gradient(135deg, #ffe3f1 0%, #fbc6e0 100%)",
+          "ink": "#8a1550"
+        },
+        "dark": {
+          "fill": "linear-gradient(135deg, #6a1846 0%, #43102d 100%)",
+          "ink": "#ffd0e6"
+        }
+      },
+      {
+        "denomination": "₹200",
+        "accountTypes": "fd, rd",
+        "light": {
+          "fill": "linear-gradient(135deg, #fff4c4 0%, #ffe48a 100%)",
+          "ink": "#6b4d00"
+        },
+        "dark": {
+          "fill": "linear-gradient(135deg, #5e4a0c 0%, #3c2f07 100%)",
+          "ink": "#ffe9a3"
+        }
+      },
+      {
+        "denomination": "₹10",
+        "accountTypes": "cash",
+        "light": {
+          "fill": "linear-gradient(135deg, #f6e8dc 0%, #e6c9b0 100%)",
+          "ink": "#5a3215"
+        },
+        "dark": {
+          "fill": "linear-gradient(135deg, #4a2c18 0%, #2f1c0f 100%)",
+          "ink": "#f6d9c0"
+        }
+      },
+      {
+        "denomination": "₹50",
+        "accountTypes": "wallet",
+        "light": {
+          "fill": "linear-gradient(135deg, #e0f6fb 0%, #b8e8f2 100%)",
+          "ink": "#0d4f60"
+        },
+        "dark": {
+          "fill": "linear-gradient(135deg, #0f4652 0%, #0a2f37 100%)",
+          "ink": "#c4f1fa"
+        }
+      },
+      {
+        "denomination": "₹20",
+        "accountTypes": "investment",
+        "light": {
+          "fill": "linear-gradient(135deg, #f2f8d8 0%, #dcebaa 100%)",
+          "ink": "#485a0c"
+        },
+        "dark": {
+          "fill": "linear-gradient(135deg, #3f4c0f 0%, #29320a 100%)",
+          "ink": "#e8f5b8"
+        }
+      }
+    ],
     "typographyMeta": {
-      "title": { "displayName": "Title", "purpose": "Dialog and section titles." },
-      "body": { "displayName": "Body", "purpose": "Rows, forms, paragraphs." },
-      "value": { "displayName": "Value", "purpose": "Right-aligned amounts; destructive color when negative." },
-      "label": { "displayName": "Label", "purpose": "Muted captions and form labels." }
+      "display-money": {
+        "displayName": "Display money",
+        "purpose": "Hero banknote figure only."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Every h1 page title (global)."
+      },
+      "money": {
+        "displayName": "Money",
+        "purpose": "Headline figures below the hero: tiles, totals, month stats, number pad."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Section headings in Geist."
+      },
+      "dialog-title": {
+        "displayName": "Dialog title",
+        "purpose": "Dialog and alert-dialog titles."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Rows and sentences, tabular figures."
+      },
+      "row-value": {
+        "displayName": "Row value",
+        "purpose": "Amounts in list rows; never Unbounded."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Sentence-case muted captions and field labels."
+      }
     },
     "shadows": [
-      { "name": "card", "value": "0 1px 2px rgba(27,26,23,0.05)", "purpose": "Resting elevation of every card." },
-      { "name": "float", "value": "0 18px 40px -20px rgba(27,26,23,0.35)", "purpose": "Dialogs, popovers, menus." }
+      {
+        "name": "card",
+        "value": "inset 0 1px 0 var(--glass-highlight), 0 18px 36px -26px rgb(60 40 140 / 0.42)",
+        "dark": "0 20px 40px -26px rgb(0 0 0 / 0.7)",
+        "purpose": "Glass cards, number-pad display, alert band."
+      },
+      {
+        "name": "float",
+        "value": "0 28px 56px -26px rgb(40 26 110 / 0.5)",
+        "dark": "0 28px 56px -24px rgb(0 0 0 / 0.75)",
+        "purpose": "Hero note, dialogs, selected-option rings."
+      },
+      {
+        "name": "glow-primary",
+        "value": "inset 0 1px 0 rgb(255 255 255 / 0.25), 0 10px 22px -10px rgb(75 54 199 / 0.65)",
+        "dark": "inset 0 1px 0 rgb(255 255 255 / 0.25), 0 10px 24px -8px rgb(108 87 214 / 0.7)",
+        "purpose": "Under gradient-filled primary buttons only."
+      },
+      {
+        "name": "glow-success",
+        "value": "inset 0 1px 0 rgb(255 255 255 / 0.25), 0 10px 22px -10px rgb(11 122 85 / 0.5)",
+        "dark": "inset 0 1px 0 rgb(255 255 255 / 0.25), 0 10px 24px -8px rgb(23 167 119 / 0.45)",
+        "purpose": "Under success-gradient fills."
+      },
+      {
+        "name": "glow-danger",
+        "value": "inset 0 1px 0 rgb(255 255 255 / 0.25), 0 10px 22px -10px rgb(176 18 95 / 0.55)",
+        "dark": "inset 0 1px 0 rgb(255 255 255 / 0.25), 0 10px 24px -8px rgb(224 65 143 / 0.5)",
+        "purpose": "Under danger-gradient fills."
+      },
+      {
+        "name": "coin",
+        "value": "inset 0 1px 1px rgb(255 255 255 / 0.6), 0 10px 24px -6px rgb(108 87 214 / 0.7)",
+        "purpose": "The lavender coin add button and sidebar mark."
+      },
+      {
+        "name": "tile",
+        "value": "inset 0 1px 0 var(--glass-highlight), 0 14px 28px -20px rgb(40 26 110 / 0.5)",
+        "purpose": "Denomination note tiles."
+      },
+      {
+        "name": "tab-bar",
+        "value": "0 -12px 30px -22px rgb(40 26 110 / 0.45)",
+        "purpose": "Mobile tab bar casting upward."
+      },
+      {
+        "name": "backdrop-glass-card",
+        "value": "blur(18px) saturate(170%)",
+        "purpose": "backdrop-filter on glass cards."
+      },
+      {
+        "name": "backdrop-glass-chrome",
+        "value": "blur(24px) saturate(180%)",
+        "purpose": "backdrop-filter on header (scrolled), tab bar, sidebar."
+      }
     ],
     "motion": [
-      { "name": "overlay", "value": "100ms fade + zoom-95", "purpose": "Dialogs, popovers, selects." },
-      { "name": "press", "value": "translateY(1px) on :active", "purpose": "Buttons." },
-      { "name": "shake", "value": "320ms ease-in-out, +/-6px", "purpose": "Wrong PIN; disabled under reduced motion." }
+      {
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Note tilt (0.5s) and tile press (0.2s)."
+      },
+      {
+        "name": "note-tilt",
+        "value": "rotateX up to ±2deg, rotateY up to ±3deg, thread hue shift up to 140deg; perspective 900px",
+        "purpose": "NoteCard pointer response; not on touch; removed under reduced motion."
+      },
+      {
+        "name": "header-frost",
+        "value": "background-color, border-color 200ms",
+        "purpose": "Header frosting once scrolled past 4px."
+      },
+      {
+        "name": "shake",
+        "value": "translateX ±6px, 320ms ease-in-out",
+        "purpose": "Wrong PIN; none under reduced motion."
+      },
+      {
+        "name": "press",
+        "value": "scale(0.95) keys and coin; scale(0.97) tiles; translateY(1px) buttons",
+        "purpose": "Press feedback."
+      }
     ],
     "breakpoints": [
-      { "name": "lg", "value": "1024px" }
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px",
+        "purpose": "Sidebar replaces tab bar; Dashboard two-column grid; tiles 3-across; wide NoteCard."
+      }
     ]
   },
   "components": [
     {
-      "name": "Primary Button", "kind": "button", "refersTo": "button-primary",
-      "description": "The one primary action on a screen.",
-      "html": "<button class=\"ds-btn-primary\">Save</button>",
-      "css": ".ds-btn-primary{height:36px;padding:0 16px;border:1px solid transparent;border-radius:9999px;background:#146b54;color:#fffdf9;font:500 14px 'Geist Variable',sans-serif;cursor:pointer;transition:all .15s}.ds-btn-primary:hover{background:#146b54d9}.ds-btn-primary:active{transform:translateY(1px)}.ds-btn-primary:focus-visible{outline:none;box-shadow:0 0 0 3px #146b5480}"
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Lavender-gradient pill with white text and a lavender glow; the filled action.",
+      "html": "<button class=\"ds-btn-primary\">Save transaction</button>",
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 16px;border:1px solid transparent;border-radius:9999px;background-image:var(--grad-primary, linear-gradient(135deg,#7562ec 0%,#4b36c7 100%));color:#fff;font:500 14px 'Geist Variable',sans-serif;box-shadow:inset 0 1px 0 rgb(255 255 255 / .25),0 10px 22px -10px rgb(75 54 199 / .65);transition:filter .15s,transform .15s;cursor:pointer}.ds-btn-primary:hover{filter:brightness(1.1)}.ds-btn-primary:active{transform:translateY(1px)}.ds-btn-primary:focus-visible{outline:none;box-shadow:0 0 0 3px rgb(75 54 199 / .5)}"
     },
     {
-      "name": "Outline Button", "kind": "button", "refersTo": "button-outline",
-      "description": "Secondary action that needs a visible boundary.",
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Strong-glass pill with a white hairline; secondary actions and header icon buttons.",
       "html": "<button class=\"ds-btn-outline\">Cancel</button>",
-      "css": ".ds-btn-outline{height:36px;padding:0 16px;border:1px solid #eae5db;border-radius:9999px;background:#fffdf9;color:#1b1a17;font:500 14px 'Geist Variable',sans-serif;cursor:pointer;transition:all .15s}.ds-btn-outline:hover{background:#f0ece3}.ds-btn-outline:active{transform:translateY(1px)}.ds-btn-outline:focus-visible{outline:none;border-color:#146b54;box-shadow:0 0 0 3px #146b5480}"
+      "css": ".ds-btn-outline{height:36px;padding:0 16px;border-radius:9999px;border:1px solid var(--glass-border, rgb(255 255 255 / .9));background:var(--glass-strong, rgb(255 255 255 / .78));backdrop-filter:blur(12px);color:var(--foreground,#1d1747);font:500 14px 'Geist Variable',sans-serif;cursor:pointer;transition:background .15s}.ds-btn-outline:hover{background:var(--muted,#ebe7f8)}.ds-btn-outline:focus-visible{outline:none;box-shadow:0 0 0 3px rgb(75 54 199 / .5)}"
     },
     {
-      "name": "Destructive Button", "kind": "button", "refersTo": "button-destructive",
-      "description": "Tinted danger action; solid only for the final confirm.",
+      "name": "Destructive Button",
+      "kind": "button",
+      "refersTo": "button-destructive",
+      "description": "Magenta tint with magenta text; never a solid slab.",
       "html": "<button class=\"ds-btn-danger\">Delete</button>",
-      "css": ".ds-btn-danger{height:36px;padding:0 16px;border:1px solid transparent;border-radius:9999px;background:#b3421f1a;color:#b3421f;font:500 14px 'Geist Variable',sans-serif;cursor:pointer;transition:all .15s}.ds-btn-danger:hover{background:#b3421f33}.ds-btn-danger:active{transform:translateY(1px)}"
+      "css": ".ds-btn-danger{height:36px;padding:0 16px;border-radius:9999px;border:1px solid transparent;background:color-mix(in srgb,var(--destructive,#b0125f) 10%,transparent);color:var(--destructive,#b0125f);font:500 14px 'Geist Variable',sans-serif;cursor:pointer}.ds-btn-danger:hover{background:color-mix(in srgb,var(--destructive,#b0125f) 20%,transparent)}.ds-btn-danger:focus-visible{outline:none;box-shadow:0 0 0 3px rgb(176 18 95 / .2)}"
     },
     {
-      "name": "Text Input", "kind": "input", "refersTo": "input",
-      "description": "Card-filled field with hairline border and green focus ring.",
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Opaque card fill, ink-16% stroke, 13.2px radius, lavender focus ring.",
       "html": "<input class=\"ds-input\" placeholder=\"Note\" />",
-      "css": ".ds-input{height:40px;width:100%;box-sizing:border-box;padding:4px 12px;border:1px solid #eae5db;border-radius:9.6px;background:#fffdf9;color:#1b1a17;font:400 16px 'Geist Variable',sans-serif;outline:none;transition:border-color .15s}.ds-input::placeholder{color:#6e695f}.ds-input:focus-visible{border-color:#146b54;box-shadow:0 0 0 3px #146b5480}"
+      "css": ".ds-input{height:40px;width:240px;padding:4px 12px;border-radius:13.2px;border:1px solid var(--input, rgb(29 23 71 / .16));background:var(--card,#fdfcff);color:var(--foreground,#1d1747);font:400 14px 'Geist Variable',sans-serif;outline:none;transition:border-color .15s,box-shadow .15s}.ds-input::placeholder{color:var(--muted-foreground,#5b5689)}.ds-input:focus-visible{border-color:var(--ring,#4b36c7);box-shadow:0 0 0 3px rgb(75 54 199 / .5)}"
     },
     {
-      "name": "List Card", "kind": "card", "refersTo": "card",
-      "description": "One bordered container; rows divided by hairlines; value on the right.",
-      "html": "<div class=\"ds-card\"><div class=\"ds-row\"><div class=\"ds-row-main\"><div class=\"ds-title\">HDFC Savings</div><div class=\"ds-sub\">Bank account</div></div><div class=\"ds-val\">₹42,150</div></div><div class=\"ds-row\"><div class=\"ds-row-main\"><div class=\"ds-title\">Credit Card</div><div class=\"ds-sub\">Due 5 Oct</div></div><div class=\"ds-val neg\">-₹8,420</div></div></div>",
-      "css": ".ds-card{background:#fffdf9;border:1px solid #eae5db;border-radius:12.8px;box-shadow:0 1px 2px rgba(27,26,23,.05);font-family:'Geist Variable',sans-serif;color:#1b1a17}.ds-row{display:flex;align-items:center;gap:12px;padding:12px 16px}.ds-row+.ds-row{border-top:1px solid #eae5db}.ds-row-main{flex:1;min-width:0}.ds-title{font-size:14px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ds-sub{font-size:12px;color:#6e695f}.ds-val{font-size:14px;font-weight:600}.ds-val.neg{color:#b3421f}"
+      "name": "Glass List Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "One frosted glass container of hairline-divided plain rows.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-row\"><span class=\"ds-chip\" style=\"background-image:linear-gradient(135deg,#ece6ff,#d9cffc);color:#3b2a86\"></span><div class=\"ds-row-text\"><b>HDFC Checking</b><small>Bank account</small></div><span class=\"ds-row-val\">₹1,10,000</span></div><div class=\"ds-row\"><span class=\"ds-chip\" style=\"background-image:linear-gradient(135deg,#ffe3f1,#fbc6e0);color:#8a1550\"></span><div class=\"ds-row-text\"><b>Credit Card</b><small>Credit card</small></div><span class=\"ds-row-val\" style=\"color:#b0125f\">-₹1,900</span></div></div>",
+      "css": ".ds-card{width:320px;padding:0 16px;border-radius:17.6px;background:var(--glass, rgb(255 255 255 / .6));border:1px solid var(--glass-border, rgb(255 255 255 / .9));box-shadow:inset 0 1px 0 rgb(255 255 255 / .95),0 18px 36px -26px rgb(60 40 140 / .42);backdrop-filter:blur(18px) saturate(170%);font-family:'Geist Variable',sans-serif;color:#1d1747}.ds-row{display:flex;align-items:center;gap:12px;padding:12px 0}.ds-row+.ds-row{border-top:1px solid rgb(29 23 71 / .1)}.ds-row:hover{opacity:.9}.ds-row-text{flex:1;display:flex;flex-direction:column;font-size:14px}.ds-row-text b{font-weight:500}.ds-row-text small{font-size:12px;color:#5b5689}.ds-row-val{font-size:14px;font-weight:600;font-variant-numeric:tabular-nums}.ds-chip{position:relative;width:30px;height:20px;border-radius:5px;box-shadow:inset 0 0 0 1px rgb(255 255 255 / .55),0 3px 8px -4px rgb(40 26 110 / .45)}.ds-chip::after{content:'';position:absolute;top:0;bottom:0;right:8px;width:2px;background:currentColor;opacity:.4;-webkit-mask:repeating-linear-gradient(180deg,#000 0 3px,transparent 3px 5px);mask:repeating-linear-gradient(180deg,#000 0 3px,transparent 3px 5px)}"
     },
     {
-      "name": "Switch", "kind": "custom", "refersTo": "switch",
-      "description": "Green track when on, Oat when off, white thumb.",
-      "html": "<button class=\"ds-switch\" role=\"switch\" aria-checked=\"true\"><span></span></button>",
-      "css": ".ds-switch{position:relative;width:40px;height:22px;border:0;border-radius:9999px;background:#146b54;cursor:pointer}.ds-switch span{position:absolute;top:2px;left:20px;width:18px;height:18px;border-radius:9999px;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25)}.ds-switch:focus-visible{outline:none;box-shadow:0 0 0 3px #146b5480}"
+      "name": "Mobile Tab Bar",
+      "kind": "nav",
+      "refersTo": "nav-item-active",
+      "description": "Strong glass bar; active tab lavender with a gradient pill indicator and sentence-case label.",
+      "html": "<nav class=\"ds-tabs\"><a class=\"ds-tab is-active\" href=\"#\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\"><rect x=\"3\" y=\"3\" width=\"7\" height=\"9\" rx=\"1\"/><rect x=\"14\" y=\"3\" width=\"7\" height=\"5\" rx=\"1\"/><rect x=\"14\" y=\"12\" width=\"7\" height=\"9\" rx=\"1\"/><rect x=\"3\" y=\"16\" width=\"7\" height=\"5\" rx=\"1\"/></svg><i></i><span>Home</span></a><a class=\"ds-tab\" href=\"#\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M3 3v18h18\"/><path d=\"M8 17V9M13 17V5M18 17v-3\"/></svg><i></i><span>Analytics</span></a></nav>",
+      "css": ".ds-tabs{display:flex;width:320px;padding:8px 8px 6px;background:rgb(255 255 255 / .78);backdrop-filter:blur(24px) saturate(180%);border-top:1px solid rgb(255 255 255 / .9);box-shadow:0 -12px 30px -22px rgb(40 26 110 / .45);font-family:'Geist Variable',sans-serif}.ds-tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 4px;border-radius:13.2px;color:#5b5689;text-decoration:none;transition:color .15s}.ds-tab:hover{color:#1d1747}.ds-tab:focus-visible{outline:2px solid #4b36c7;outline-offset:2px}.ds-tab i{width:16px;height:4px;border-radius:9999px;background-image:linear-gradient(135deg,#7562ec,#4b36c7);opacity:0}.ds-tab span{font-size:12px;font-weight:500}.ds-tab.is-active{color:#4b36c7}.ds-tab.is-active i{opacity:1}"
     },
     {
-      "name": "Tab Bar Item", "kind": "nav", "refersTo": "nav",
-      "description": "Icon, 12px label and a green dot marking the active tab.",
-      "html": "<a class=\"ds-tab\" href=\"#\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 10.5 12 3l9 7.5V21H3z\"/></svg><span>Home</span><i></i></a>",
-      "css": ".ds-tab{display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 12px;color:#146b54;font:500 12px 'Geist Variable',sans-serif;text-decoration:none}.ds-tab i{width:4px;height:4px;border-radius:9999px;background:#146b54}"
+      "name": "Coin Add Button",
+      "kind": "custom",
+      "refersTo": "fab-coin",
+      "description": "56px single-hue lavender coin lit from the top-left; the mobile add action.",
+      "html": "<button class=\"ds-coin\" aria-label=\"Add transaction\"><svg width=\"26\" height=\"26\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"round\"><path d=\"M12 5v14M5 12h14\"/></svg></button>",
+      "css": ".ds-coin{width:56px;height:56px;border:0;border-radius:9999px;display:flex;align-items:center;justify-content:center;background-image:radial-gradient(circle at 30% 25%,#f8f5ff 0 8%,#d8ceff 30%,#a594f2 68%,#6c57d6);color:#1d1747;box-shadow:inset 0 1px 1px rgb(255 255 255 / .6),0 10px 24px -6px rgb(108 87 214 / .7);transition:transform .15s;cursor:pointer}.ds-coin:active{transform:scale(.95)}.ds-coin:hover{filter:brightness(1.04)}.ds-coin:focus-visible{outline:2px solid #4b36c7;outline-offset:3px}"
+    },
+    {
+      "name": "Note Tile",
+      "kind": "custom",
+      "refersTo": "note-tile",
+      "description": "An account printed in its type's denomination tint, with its own windowed thread; no denomination numeral.",
+      "html": "<button class=\"ds-tile\" style=\"background-image:linear-gradient(135deg,#ece6ff 0%,#d9cffc 100%);color:#3b2a86\"><b>HDFC Checking</b><small>Bank account</small><span>₹1.1L</span></button>",
+      "css": ".ds-tile{position:relative;display:flex;flex-direction:column;width:160px;min-height:108px;padding:14px 34px 14px 14px;overflow:hidden;text-align:left;border-radius:17.6px;border:1px solid rgb(255 255 255 / .9);box-shadow:inset 0 1px 0 rgb(255 255 255 / .95),0 14px 28px -20px rgb(40 26 110 / .5);font-family:'Geist Variable',sans-serif;cursor:pointer;transition:transform .2s cubic-bezier(.16,1,.3,1)}.ds-tile::after{content:'';position:absolute;top:0;bottom:0;right:14px;width:4px;background:currentColor;opacity:.35;-webkit-mask:repeating-linear-gradient(180deg,#000 0 9px,transparent 9px 15px);mask:repeating-linear-gradient(180deg,#000 0 9px,transparent 9px 15px)}.ds-tile b{font-size:14px;font-weight:600;line-height:1.2}.ds-tile small{font-size:12px;opacity:.8}.ds-tile span{margin-top:auto;padding-top:12px;font:600 18px 'Unbounded Variable','Geist Variable',sans-serif;letter-spacing:-.03em}.ds-tile:active{transform:scale(.97)}.ds-tile:hover{filter:brightness(1.02)}.ds-tile:focus-visible{outline:2px solid #4b36c7;outline-offset:2px}"
+    },
+    {
+      "name": "NoteCard Hero",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "The banknote hero: surface gradient, windowed colour-shift thread, Unbounded figure, register bar, microprint privacy band.",
+      "html": "<div class=\"ds-note\"><div class=\"ds-note-thread\"></div><p class=\"ds-note-label\">Safe to spend today</p><p class=\"ds-note-fig\">₹892</p><p class=\"ds-note-sub\">₹25,000 left this month · 28 days to go</p><div class=\"ds-note-track\"><div class=\"ds-note-reg\"></div></div><div class=\"ds-note-micro\" aria-hidden=\"true\">FINIO · KEPT ON THIS DEVICE · NOT A BANK · YOUR DATA STAYS YOURS · FINIO · KEPT ON THIS DEVICE ·</div></div>",
+      "css": ".ds-note{position:relative;overflow:hidden;width:340px;padding:22px 100px 34px 22px;border-radius:25.3px;background-image:linear-gradient(135deg,#fefdff 0%,#efe9ff 55%,#e2f3ec 100%);border:1px solid rgb(255 255 255 / .9);box-shadow:inset 0 1px 0 rgb(255 255 255 / .95),0 28px 56px -26px rgb(40 26 110 / .5);font-family:'Geist Variable',sans-serif;color:#1d1747;transition:transform .5s cubic-bezier(.16,1,.3,1)}.ds-note:hover{transform:perspective(900px) rotateY(2deg)}.ds-note:hover .ds-note-thread{filter:hue-rotate(70deg)}.ds-note-thread{position:absolute;top:0;bottom:0;right:56px;width:9px;opacity:.85;background:linear-gradient(180deg,hsl(150 70% 42%),hsl(200 78% 50%),hsl(255 70% 58%));-webkit-mask:repeating-linear-gradient(180deg,#000 0 16px,transparent 16px 26px);mask:repeating-linear-gradient(180deg,#000 0 16px,transparent 16px 26px);transition:filter .5s}.ds-note-label{margin:0;font-size:14px;font-weight:500;color:#5b5689}.ds-note-fig{margin:4px 0 0;font:600 2.75rem/1.05 'Unbounded Variable','Geist Variable',sans-serif;letter-spacing:-.03em}.ds-note-sub{margin:6px 0 12px;font-size:14px}.ds-note-track{height:8px;border-radius:9999px;background:#ebe7f8;overflow:hidden}.ds-note-reg{width:38%;height:100%;background:repeating-linear-gradient(115deg,#3d2bb8 0 2px,#6b58e8 2px 4.5px)}.ds-note-micro{position:absolute;left:0;right:0;bottom:10px;white-space:nowrap;overflow:hidden;font-size:6px;font-weight:600;letter-spacing:.2em;color:rgb(29 23 71 / .36)}"
     }
   ],
   "narrative": {
-    "northStar": "The Household Ledger",
-    "overview": "Finio looks like a ledger kept at home: warm cream paper, ink-dark text, ruled hairlines between entries and a single green mark where attention is needed. It is calm, flat and paper-like.",
+    "northStar": "Mudra — the money looks like money.",
+    "overview": "Finio is printed the way a rupee note is printed. Light mode is note paper in daylight: a fixed lavender-to-mint-to-peach paper gradient, indigo ink, and the ₹100 lavender as the one accent. Dark mode is the same note under a UV lamp: an indigo field, the engraving lit in lavender, and security fibres that only fluoresce in the dark. The security-printing vocabulary — guilloche rosettes, a windowed colour-shift thread, microprint, denomination tints — is the house material, used on the surfaces that carry money and kept out of the reading.\n\nThe world lends type, palette and one signature move; it never takes the layout or the controls. Lists, forms and settings stay quiet frosted-glass panels of plain rows in Geist. The banknote face (Unbounded) is reserved for headline figures and titles, so ornament never competes with a figure the user has to read. Every figure is legible first and ornamental second.\n\nLight and dark are both first-class: every token has a hand-tuned pair, including every denomination tint.",
     "keyCharacteristics": [
-      "One accent (deep green), used for the primary action, active state, focus ring and links only.",
-      "Opaque cards with hairline borders; no gradients, glows or backdrop blur on surfaces.",
-      "Warm neutrals (cream, charcoal) instead of clinical white, black or blue-gray.",
-      "Semantic tokens only; components never hold raw hex.",
-      "Pill buttons, softly rounded cards, small rounded inputs.",
-      "One typeface (Geist Variable) for everything."
+      "Fixed note-paper gradient behind every screen, with a faint engraved guilloche rosette top-right.",
+      "Frosted glass cards and chrome: translucent white over the paper, white hairline, lavender-tinted shadow.",
+      "Unbounded for headline money, page titles and dialog titles; Geist for everything read.",
+      "One hero banknote per money screen (NoteCard), with a pointer-driven colour-shift thread.",
+      "Accounts printed in their type's rupee denomination tint.",
+      "Filled actions are a ₹100-lavender gradient; the add button is a single-hue lavender coin."
     ],
     "rules": [
-      { "name": "The One Voice Rule", "body": "The green accent marks the single most important action or number on a screen.", "section": "colors" },
-      { "name": "The Hairline-Not-Shadow Rule", "body": "Separation comes from a 1px hairline border or divide-y, never a heavier shadow or tint.", "section": "colors" },
-      { "name": "The Semantic Token Rule", "body": "Components use semantic tokens. No raw hex, no ad-hoc Tailwind palette colors.", "section": "colors" },
-      { "name": "The Loud Number Rule", "body": "A monetary value is semibold at a larger size than its muted caption.", "section": "typography" },
-      { "name": "The Flat-By-Default Rule", "body": "Surfaces are flat at rest. Only floating layers get the float shadow.", "section": "elevation" }
+      {
+        "name": "The One Lavender Rule",
+        "body": "Lavender is the only accent. Every other hue on screen is either a semantic signal or a denomination tint that means an account type.",
+        "section": "colors"
+      },
+      {
+        "name": "The Denomination-by-Type Rule",
+        "body": "An account's note tint is decided by its type, never by its user-chosen colour, so a credit card is always the ₹2000 magenta and a deposit always the ₹200 yellow. User colours stay on categories, goals and people.",
+        "section": "colors"
+      },
+      {
+        "name": "The Green-Means-Money-In Rule",
+        "body": "Income and positive figures are `positive`, never `primary`; caution is `warning`. Lavender means \"you can act here\", not \"good\".",
+        "section": "colors"
+      },
+      {
+        "name": "The Semantic-Token Rule",
+        "body": "Components use the semantic tokens and the `--note-*`, `--glass-*`, `--grad-*` variables; never raw hex or Tailwind palette colours (`bg-amber-100`).",
+        "section": "colors"
+      },
+      {
+        "name": "The Figure-First Rule",
+        "body": "Unbounded only on headline money and titles. Rows, lists and body figures stay in Geist — a list of wide numerals reads as decoration.",
+        "section": "typography"
+      },
+      {
+        "name": "The Sentence-Case Label Rule",
+        "body": "Labels are sentence-case 0.75rem 500 in muted ink. No uppercase tracked microlabels and no eyebrows above headings. The banknote microprint is ornament, not a label (see Components).",
+        "section": "typography"
+      },
+      {
+        "name": "The Lavender-Shadow Rule",
+        "body": "Shadows in light mode are tinted indigo/lavender, never neutral grey.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Transparent-At-Rest Rule",
+        "body": "The header sits transparent on the paper and frosts over only once content scrolls beneath it (scrollY > 4); a solid band across the top would hide the paper.",
+        "section": "elevation"
+      }
     ],
-    "dos": ["Do use the accent only for the primary action, active states, focus ring and links.", "Do render a list as one card-elevated divide-y container of plain rows."],
-    "donts": ["Don't add gradients, glows or backdrop-blur to surfaces.", "Don't put raw hex or ad-hoc palette colors in components."]
+    "dos": [
+      "Do put one NoteCard on a money screen and let it carry the ornament; keep everything below it quiet glass and plain rows.",
+      "Do set headline money, page titles and dialog titles in Unbounded (`font-money` / `font-heading`), and every row, list and body figure in Geist with tabular figures.",
+      "Do tint accounts by type through `noteStyle(type)` and `--note-*`, with each tint's ink.",
+      "Do use `positive` for income and positive figures, `warning` for caution, `destructive` for overspend and deletion.",
+      "Do use frosted glass for cards and chrome, opaque card colour for dialogs, popovers and inputs.",
+      "Do keep every ornament `aria-hidden` and `pointer-events: none`, and keep fibres, rosettes and threads clear of figures.",
+      "Do give every motion a reduced-motion fallback (the note tilt and PIN shake both stop).",
+      "Do design both modes: every new token needs a light value and a hand-tuned dark (UV) value.",
+      "Do offer `COLOR_PALETTE` from `src/data/colorPalette.ts` in every colour picker."
+    ],
+    "donts": [
+      "Don't put a large denomination numeral on a note tile or the hero. A ghost \"2000\" beside a real balance reads as money; the only numerals on a note are the user's figures.",
+      "Don't use the account's user-chosen colour for its note tint.",
+      "Don't use `primary` lavender for income or \"good\" states.",
+      "Don't add uppercase tracked microlabels or eyebrow kickers above headings; labels are sentence case.",
+      "Don't set list rows or body figures in Unbounded.",
+      "Don't use neutral grey shadows in light mode, or solid filled red buttons for destructive actions.",
+      "Don't give the header a solid background at rest.",
+      "Don't use raw hex or Tailwind palette colours in components.",
+      "Don't stack cards for a homogeneous list, or bring back per-row icon medallions."
+    ]
   }
 }

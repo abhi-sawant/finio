@@ -6,6 +6,7 @@ import { accountDisplayValue, depositCaption, isDepositAccount } from '@/utils/d
 import { cn } from '@/lib/utils';
 import type { Account } from '@/types';
 import { Trash2, Archive } from 'lucide-react';
+import { ACCOUNT_TYPE_LABEL, noteStyle } from './note';
 
 function dueLabel(daysUntilDue: number): string {
   if (daysUntilDue < 0) {
@@ -52,6 +53,11 @@ export const AccountCard = memo(function AccountCard({
   return (
     <div className="group flex w-full items-center gap-2 py-3">
       <button onClick={onClick} className="flex min-w-0 flex-1 items-center gap-3 text-left">
+        <span
+          className={cn('note-chip', isArchived && 'opacity-50 grayscale')}
+          style={noteStyle(account.type)}
+          aria-hidden
+        />
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-medium">{account.name}</p>
           <p className="text-muted-foreground truncate text-xs">
@@ -59,7 +65,7 @@ export const AccountCard = memo(function AccountCard({
               ? `Closed · ${transactionCount} transaction${transactionCount === 1 ? '' : 's'}`
               : isDeposit
                 ? depositCaption(account)
-                : account.type}
+                : ACCOUNT_TYPE_LABEL[account.type]}
           </p>
           {dueInfo && (
             <p

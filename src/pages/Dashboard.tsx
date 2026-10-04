@@ -34,6 +34,9 @@ import {
 } from '@/utils/calculations';
 import { accountDisplayValue, isDepositAccount } from '@/utils/deposit';
 import { BudgetProgressBar } from '@/components/budgets/BudgetHealthBadge';
+import { NoteCard } from '@/components/ui/note-card';
+import { Guilloche } from '@/components/ui/guilloche';
+import { ACCOUNT_TYPE_LABEL, noteStyle } from '@/components/accounts/note';
 import { GoalIcon } from '@/components/goals/GoalIcon';
 import { PersonIcon } from '@/components/people/PersonIcon';
 import { normalizeMonthStartDay, periodRange } from '@/utils/period';
@@ -260,9 +263,9 @@ export default function Dashboard() {
       {/* Header */}
       <Header>
         <div>
-          <h1 className="text-xl font-bold">{userName}</h1>
+          <h1 className="text-2xl font-semibold">{userName}</h1>
           <p className="text-muted-foreground mt-0.5 flex items-center gap-1 text-xs">
-            <ShieldCheck size={12} className="text-primary shrink-0" aria-hidden />
+            <ShieldCheck size={12} className="text-positive shrink-0" aria-hidden />
             {signedIn
               ? lastBackupAt
                 ? `Kept on this device · backed up ${formatDistanceToNow(new Date(lastBackupAt), { addSuffix: true })}`
@@ -280,18 +283,16 @@ export default function Dashboard() {
 
       <Main className="flex flex-col gap-4 space-y-0 lg:grid lg:grid-cols-2 lg:items-start lg:space-y-0 lg:gap-x-8 lg:gap-y-6">
         {/* Hero */}
-        <div className="card-elevated rounded-md p-6 text-center lg:col-start-1 lg:row-start-1">
+        <NoteCard className="lg:col-span-2 lg:row-start-1">
           {overallBudget ? (
             <>
-              <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                Safe to spend today
-              </p>
+              <p className="text-muted-foreground text-sm font-medium">Safe to spend today</p>
               <p
-                className={`mt-1 text-4xl font-bold tracking-tight ${overallBudget.isOver ? 'text-destructive' : 'text-primary'}`}
+                className={`font-money mt-1 text-[2.75rem] leading-[1.05] ${overallBudget.isOver ? 'text-destructive' : ''}`}
               >
                 {formatCurrency(safePerDay, false, hideAmounts, { precise: false })}
               </p>
-              <p className="text-muted-foreground mt-1.5 text-xs">
+              <p className="mt-1.5 text-sm text-balance">
                 {overallBudget.isOver
                   ? `Over budget by ${formatCurrency(Math.abs(overallBudget.remaining), false, hideAmounts)}`
                   : `${formatCurrency(overallBudget.remaining, false, hideAmounts)} left this ${BUDGET_PERIOD_NOUN[overallBudget.budget.period]}`}
@@ -307,7 +308,7 @@ export default function Dashboard() {
               {!overallBudget.isOver && (
                 <button
                   onClick={() => setHowOpen(true)}
-                  className="text-primary -my-2 mt-1 px-2 py-3 text-xs font-medium hover:underline"
+                  className="text-primary -mx-2 -my-2 mt-1 px-2 py-3 text-xs font-medium hover:underline"
                 >
                   How this is worked out
                 </button>
@@ -317,11 +318,11 @@ export default function Dashboard() {
                   <div className="mt-3">
                     <BudgetProgressBar
                       status={overallBudget}
-                      okFill="var(--primary)"
+                      okFill="var(--register)"
                       valueText={`${formatCurrency(overallBudget.spent, true, hideAmounts)} of ${formatCurrency(overallBudget.limit, true, hideAmounts)} spent`}
                     />
                   </div>
-                  <p className="text-muted-foreground mt-2 text-xs" aria-hidden>
+                  <p className="text-muted-foreground mt-1.5 text-xs" aria-hidden>
                     Spent {formatCurrency(overallBudget.spent, true, hideAmounts)} of{' '}
                     {formatCurrency(overallBudget.limit, true, hideAmounts)}
                   </p>
@@ -330,10 +331,8 @@ export default function Dashboard() {
             </>
           ) : (
             <>
-              <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                Total balance
-              </p>
-              <p className="text-primary mt-1 text-4xl font-bold tracking-tight">
+              <p className="text-muted-foreground text-sm font-medium">Total balance</p>
+              <p className="font-money mt-1 text-[2.75rem] leading-[1.05]">
                 {formatCurrency(totalBalance, false, hideAmounts)}
               </p>
               {creditOutstanding > 0 && (
@@ -349,20 +348,20 @@ export default function Dashboard() {
               {accounts.length > 0 && (
                 <button
                   onClick={() => navigate('/budgets')}
-                  className="bg-primary text-primary-foreground mt-4 rounded-full px-5 py-2 text-sm font-medium"
+                  className="bg-grad-primary shadow-glow-primary mt-4 rounded-full px-5 py-2 text-sm font-medium text-white"
                 >
                   Set a monthly budget
                 </button>
               )}
             </>
           )}
-        </div>
+        </NoteCard>
 
         {/* One alert surfaced, the rest collapsed behind a review sheet */}
         {topAttention && (
           <button
             onClick={() => setAlertsOpen(true)}
-            className="bg-warning-band w-full rounded-md p-4 text-left lg:col-start-1 lg:row-start-2"
+            className="bg-warning-band w-full rounded-lg border border-[var(--glass-border)] p-4 text-left shadow-[var(--shadow-card)] lg:col-span-2 lg:row-start-2"
           >
             <div className="flex items-center gap-3">
               <AlertTriangle size={18} className="text-warning-band-accent shrink-0" />
@@ -451,251 +450,253 @@ export default function Dashboard() {
         </Dialog>
 
         {/* Where it sits */}
-        <section className="lg:col-start-1 lg:row-start-3">
-          <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-base font-semibold">Where it sits</h2>
-            <button
-              onClick={() => navigate('/accounts')}
-              className="text-primary -my-3 px-1 py-3.5 text-xs font-medium hover:underline"
-            >
-              See all
-            </button>
-          </div>
-          {overallBudget && accounts.length > 0 && (
-            <div className="mb-3 flex items-baseline justify-between gap-3">
-              <span className="text-muted-foreground text-xs">Total balance</span>
-              <div className="text-right">
-                <p className="text-base font-bold">
-                  {formatCurrency(totalBalance, false, hideAmounts)}
-                </p>
-                {creditOutstanding > 0 && (
-                  <p className="text-muted-foreground text-xs">
-                    {formatCurrency(afterDues, false, hideAmounts)} after card dues
+        {/* Source order is the mobile reading order (and so focus/screen-reader order); desktop
+            places the same sections in two columns with explicit grid spans, no visual reordering. */}
+        <div className="flex flex-col gap-4 lg:col-span-2 lg:row-start-3 lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8 lg:gap-y-6">
+          <section className="lg:col-start-1 lg:row-start-1">
+            <div className="mb-3 flex items-center justify-between">
+              <h2 className="text-base font-semibold">Where it sits</h2>
+              <button
+                onClick={() => navigate('/accounts')}
+                className="text-primary -my-3 px-1 py-3.5 text-xs font-medium hover:underline"
+              >
+                See all
+              </button>
+            </div>
+            {overallBudget && accounts.length > 0 && (
+              <div className="mb-3 flex items-baseline justify-between gap-3">
+                <span className="text-muted-foreground text-xs">Total balance</span>
+                <div className="text-right">
+                  <p className="font-money text-xl">
+                    {formatCurrency(totalBalance, false, hideAmounts)}
                   </p>
-                )}
-                {depositValue > 0 && (
-                  <p className="text-muted-foreground text-xs">
-                    + {formatCurrency(depositValue, false, hideAmounts)} locked in deposits
-                  </p>
-                )}
+                  {creditOutstanding > 0 && (
+                    <p className="text-muted-foreground text-xs">
+                      {formatCurrency(afterDues, false, hideAmounts)} after card dues
+                    </p>
+                  )}
+                  {depositValue > 0 && (
+                    <p className="text-muted-foreground text-xs">
+                      + {formatCurrency(depositValue, false, hideAmounts)} locked in deposits
+                    </p>
+                  )}
+                </div>
               </div>
-            </div>
-          )}
-          {accounts.length === 0 ? (
-            <button
-              onClick={() => navigate('/add-account')}
-              className="border-border hover:bg-muted flex w-full flex-col items-center gap-2 rounded-md border-2 border-dashed p-6 transition-colors"
-            >
-              <Plus size={24} className="text-primary" />
-              <span className="text-primary text-sm font-medium">Add your first account</span>
-              <span className="text-muted-foreground text-center text-xs">
-                You need at least one account to record transactions.
-              </span>
-            </button>
-          ) : (
-            <div className="scrollbar-hide flex gap-3 overflow-x-auto pb-2 lg:grid lg:grid-cols-4 lg:overflow-x-visible">
-              {openAccounts.map((account) => {
-                const value = accountDisplayValue(account);
-                return (
-                  <button
-                    key={account.id}
-                    onClick={() => navigate(`/edit-account/${account.id}`)}
-                    className="card-elevated min-w-32.5 shrink-0 rounded-md p-3 text-left lg:min-w-0"
-                  >
-                    <p className="text-muted-foreground truncate text-xs">{account.name}</p>
-                    <p
-                      className={`mt-0.5 text-sm font-semibold ${value < 0 ? 'text-destructive' : ''}`}
+            )}
+            {accounts.length === 0 ? (
+              <button
+                onClick={() => navigate('/add-account')}
+                className="border-border hover:bg-muted flex w-full flex-col items-center gap-2 rounded-md border-2 border-dashed p-6 transition-colors"
+              >
+                <Plus size={24} className="text-primary" />
+                <span className="text-primary text-sm font-medium">Add your first account</span>
+                <span className="text-muted-foreground text-center text-xs">
+                  You need at least one account to record transactions.
+                </span>
+              </button>
+            ) : (
+              <div className="scrollbar-hide -mx-3 flex snap-x scroll-px-3 gap-3 overflow-x-auto px-3 pt-1 pb-3 lg:mx-0 lg:grid lg:grid-cols-3 lg:overflow-x-visible lg:px-0">
+                {openAccounts.map((account) => {
+                  const value = accountDisplayValue(account);
+                  return (
+                    <button
+                      key={account.id}
+                      onClick={() => navigate(`/edit-account/${account.id}`)}
+                      className="note-tile w-40 shrink-0 snap-start lg:w-auto"
+                      style={noteStyle(account.type)}
                     >
-                      {formatCurrency(value, true, hideAmounts, {
-                        forceCompact: accountsCompact,
-                      })}
-                    </p>
-                    {isDepositAccount(account) && (
-                      <p className="text-muted-foreground mt-0.5 text-xs">
-                        {account.type === 'rd' ? 'RD' : 'FD'} · current value
-                      </p>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          )}
-        </section>
-
-        {/* Recent Transactions */}
-        <section className="lg:col-start-2 lg:row-span-3 lg:row-start-1">
-          <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-base font-semibold">Latest</h2>
-            <button
-              onClick={() => navigate('/transactions')}
-              className="text-primary -my-3 px-1 py-3.5 text-xs font-medium hover:underline"
-            >
-              See all
-            </button>
-          </div>
-          {recentTxns.length === 0 ? (
-            <div className="py-8 text-center">
-              <p className="text-muted-foreground text-sm">No transactions yet.</p>
-              {accounts.length > 0 && (
-                <button
-                  onClick={() => navigate('/add-transaction')}
-                  className="text-primary mt-1 px-2 py-3 text-sm font-medium hover:underline"
-                >
-                  Add your first transaction
-                </button>
-              )}
-            </div>
-          ) : (
-            <div className="card-elevated divide-border divide-y rounded-md">
-              {recentTxns.map((tx) => (
-                <TransactionItem
-                  key={tx.id}
-                  transaction={tx}
-                  categories={categories}
-                  accounts={accounts}
-                  labels={labels}
-                  showDate
-                  onClick={() => navigate(`/edit-transaction/${tx.id}`)}
-                />
-              ))}
-            </div>
-          )}
-        </section>
-
-        {/* This month — IN/OUT/DAILY AVG/SAVED/TOP in one plain card, no tinted tiles */}
-        <section className="lg:col-start-2 lg:row-start-4">
-          <div className="mb-3 flex items-baseline justify-between gap-3">
-            <h2 className="text-base font-semibold">This month</h2>
-            <span className="text-muted-foreground text-xs">{periodLabel}</span>
-          </div>
-          <div className="card-elevated rounded-md p-4">
-            {monthTxns.length > 0 ? (
-              <div className="grid grid-cols-3 gap-3 lg:grid-cols-5">
-                <div>
-                  <p className="text-muted-foreground text-xs tracking-wide uppercase">In</p>
-                  <p className="mt-0.5 text-sm font-semibold">
-                    {formatCurrency(monthIncome, true, hideAmounts)}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-muted-foreground text-xs tracking-wide uppercase">Out</p>
-                  <p className="mt-0.5 text-sm font-semibold">
-                    {formatCurrency(monthExpenses, true, hideAmounts)}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-muted-foreground text-xs tracking-wide uppercase">Daily avg</p>
-                  <p className="mt-0.5 text-sm font-semibold">
-                    {formatCurrency(stats.dailyAverage, true, hideAmounts, { precise: false })}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-muted-foreground text-xs tracking-wide uppercase">Saved</p>
-                  <p className="mt-0.5 text-sm font-semibold">
-                    {Math.round(stats.savingsRate * 100)}%
-                    {stats.savingsRateChange !== null && (
-                      <span className="text-muted-foreground ml-1 text-xs font-normal">
-                        {formatPercentChange(stats.savingsRateChange)}
+                      <Guilloche className="note-tile-rosette" petals={14} rings={5} />
+                      <span className="relative line-clamp-2 text-sm leading-tight font-semibold break-words">
+                        {account.name}
                       </span>
-                    )}
-                  </p>
-                </div>
-                {stats.topCategory && (
-                  <div>
-                    <p className="text-muted-foreground text-xs tracking-wide uppercase">Top</p>
-                    <p className="mt-0.5 truncate text-sm font-semibold">
-                      {stats.topCategory.category.name}
-                    </p>
-                  </div>
+                      <span className="relative truncate text-xs opacity-80">
+                        {isDepositAccount(account)
+                          ? `${account.type === 'rd' ? 'RD' : 'FD'} · current value`
+                          : ACCOUNT_TYPE_LABEL[account.type]}
+                      </span>
+                      <span className="font-money relative mt-auto pt-3 text-lg">
+                        {formatCurrency(value, true, hideAmounts, {
+                          forceCompact: accountsCompact,
+                        })}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </section>
+          <section className="lg:col-start-2 lg:row-span-2 lg:row-start-1">
+            <div className="mb-3 flex items-center justify-between">
+              <h2 className="text-base font-semibold">Latest</h2>
+              <button
+                onClick={() => navigate('/transactions')}
+                className="text-primary -my-3 px-1 py-3.5 text-xs font-medium hover:underline"
+              >
+                See all
+              </button>
+            </div>
+            {recentTxns.length === 0 ? (
+              <div className="py-8 text-center">
+                <p className="text-muted-foreground text-sm">No transactions yet.</p>
+                {accounts.length > 0 && (
+                  <button
+                    onClick={() => navigate('/add-transaction')}
+                    className="text-primary mt-1 px-2 py-3 text-sm font-medium hover:underline"
+                  >
+                    Add your first transaction
+                  </button>
                 )}
               </div>
             ) : (
-              <p className="text-muted-foreground text-center text-sm">
-                {overallBudget
-                  ? 'Nothing logged yet this month.'
-                  : 'Set a budget and this becomes "safe to spend"'}
-              </p>
+              <div className="card-elevated divide-border divide-y rounded-md">
+                {recentTxns.map((tx) => (
+                  <TransactionItem
+                    key={tx.id}
+                    transaction={tx}
+                    categories={categories}
+                    accounts={accounts}
+                    labels={labels}
+                    showDate
+                    onClick={() => navigate(`/edit-transaction/${tx.id}`)}
+                  />
+                ))}
+              </div>
             )}
-            {monthTxns.length === 0 && overallBudget && prevMonthTxns.length > 0 && (
-              <p className="text-muted-foreground mt-1 text-center text-xs">
-                Last month: {formatCurrency(prevMonthIncome, true, hideAmounts)} in ·{' '}
-                {formatCurrency(prevMonthExpenses, true, hideAmounts)} out
-              </p>
-            )}
-          </div>
-        </section>
-        {/* Also tracking — goals and debts share one quiet card, below the daily-use sections */}
-        {(topGoals.length > 0 || topDebts.length > 0) && (
-          <section className="lg:col-start-1 lg:row-start-4">
-            <h2 className="mb-3 text-base font-semibold">Also tracking</h2>
-            <div className="card-elevated divide-border divide-y rounded-md">
-              {topGoals.length > 0 && (
-                <button onClick={() => navigate('/goals')} className="w-full p-4 text-left">
-                  <div className="mb-3 flex items-center gap-2">
-                    <PiggyBank size={16} className="text-primary" />
-                    <h3 className="text-sm font-semibold">Savings Goals</h3>
-                    <ChevronRight size={14} className="text-muted-foreground ml-auto" />
+          </section>
+
+          {/* This month — IN/OUT/DAILY AVG/SAVED/TOP in one plain card, no tinted tiles */}
+          <section className="lg:col-start-2 lg:row-start-3">
+            <div className="mb-3 flex items-baseline justify-between gap-3">
+              <h2 className="text-base font-semibold">This month</h2>
+              <span className="text-muted-foreground text-xs">{periodLabel}</span>
+            </div>
+            <div className="card-elevated rounded-md p-4">
+              {monthTxns.length > 0 ? (
+                <div className="grid grid-cols-3 gap-3 lg:grid-cols-5">
+                  <div>
+                    <p className="text-muted-foreground text-xs font-medium">In</p>
+                    <p className="font-money mt-0.5 text-base">
+                      {formatCurrency(monthIncome, true, hideAmounts)}
+                    </p>
                   </div>
-                  <div className="space-y-3">
-                    {topGoals.map((s) => (
-                      <div key={s.goal.id}>
-                        <div className="mb-1 flex items-center justify-between gap-2">
-                          <span className="flex min-w-0 flex-1 items-center gap-1.5 text-xs font-medium">
-                            <span className="shrink-0">
-                              <GoalIcon icon={s.goal.icon} size={12} color={s.goal.color} />
-                            </span>
-                            <span className="truncate">{s.goal.name}</span>
-                          </span>
-                          <span className="text-muted-foreground shrink-0 text-xs font-semibold">
-                            {formatCurrency(s.current, false, hideAmounts)} /{' '}
-                            {formatCurrency(s.goal.targetAmount, false, hideAmounts)}
-                          </span>
-                        </div>
-                        <div className="bg-muted h-1.5 overflow-hidden rounded-full">
-                          <div
-                            className="h-full rounded-full"
-                            style={{
-                              width: `${Math.min(Math.max(s.percent, 0), 100)}%`,
-                              backgroundColor: 'var(--primary)',
-                            }}
-                          />
-                        </div>
-                      </div>
-                    ))}
+                  <div>
+                    <p className="text-muted-foreground text-xs font-medium">Out</p>
+                    <p className="font-money mt-0.5 text-base">
+                      {formatCurrency(monthExpenses, true, hideAmounts)}
+                    </p>
                   </div>
-                </button>
+                  <div>
+                    <p className="text-muted-foreground text-xs font-medium">Daily avg</p>
+                    <p className="font-money mt-0.5 text-base">
+                      {formatCurrency(stats.dailyAverage, true, hideAmounts, { precise: false })}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-muted-foreground text-xs font-medium">Saved</p>
+                    <p className="font-money mt-0.5 text-base">
+                      {Math.round(stats.savingsRate * 100)}%
+                      {stats.savingsRateChange !== null && (
+                        <span className="text-muted-foreground ml-1 font-sans text-xs font-normal tracking-normal">
+                          {formatPercentChange(stats.savingsRateChange)}
+                        </span>
+                      )}
+                    </p>
+                  </div>
+                  {stats.topCategory && (
+                    <div>
+                      <p className="text-muted-foreground text-xs font-medium">Top</p>
+                      <p className="mt-0.5 truncate text-sm font-semibold">
+                        {stats.topCategory.category.name}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <p className="text-muted-foreground text-center text-sm">
+                  {overallBudget
+                    ? 'Nothing logged yet this month.'
+                    : 'Set a budget and this becomes "safe to spend"'}
+                </p>
               )}
-              {topDebts.length > 0 && (
-                <button onClick={() => navigate('/debts')} className="w-full p-4 text-left">
-                  <div className="mb-3 flex items-center gap-2">
-                    <HandCoins size={16} className="text-primary" />
-                    <h3 className="text-sm font-semibold">Debts & Lending</h3>
-                    <ChevronRight size={14} className="text-muted-foreground ml-auto" />
-                  </div>
-                  <div className="divide-border divide-y">
-                    {topDebts.map((s) => (
-                      <div
-                        key={s.person.id}
-                        className="flex items-center gap-3 py-2 first:pt-0 last:pb-0"
-                      >
-                        <PersonIcon icon={s.person.icon} size={14} color={s.person.color} />
-                        <p className="min-w-0 flex-1 truncate text-xs font-medium">
-                          {s.person.name}
-                        </p>
-                        <p
-                          className={`shrink-0 text-xs font-semibold ${s.balance > 0 ? 'text-primary' : 'text-destructive'}`}
-                        >
-                          {s.balance > 0 ? 'Owes you ' : 'You owe '}
-                          {formatCurrency(Math.abs(s.balance), true, hideAmounts)}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </button>
+              {monthTxns.length === 0 && overallBudget && prevMonthTxns.length > 0 && (
+                <p className="text-muted-foreground mt-1 text-center text-xs">
+                  Last month: {formatCurrency(prevMonthIncome, true, hideAmounts)} in ·{' '}
+                  {formatCurrency(prevMonthExpenses, true, hideAmounts)} out
+                </p>
               )}
             </div>
           </section>
-        )}
+          {(topGoals.length > 0 || topDebts.length > 0) && (
+            <section className="lg:col-start-1 lg:row-span-2 lg:row-start-2">
+              <h2 className="mb-3 text-base font-semibold">Also tracking</h2>
+              <div className="card-elevated divide-border divide-y rounded-md">
+                {topGoals.length > 0 && (
+                  <button onClick={() => navigate('/goals')} className="w-full p-4 text-left">
+                    <div className="mb-3 flex items-center gap-2">
+                      <PiggyBank size={16} className="text-primary" />
+                      <h3 className="text-sm font-semibold">Savings Goals</h3>
+                      <ChevronRight size={14} className="text-muted-foreground ml-auto" />
+                    </div>
+                    <div className="space-y-3">
+                      {topGoals.map((s) => (
+                        <div key={s.goal.id}>
+                          <div className="mb-1 flex items-center justify-between gap-2">
+                            <span className="flex min-w-0 flex-1 items-center gap-1.5 text-xs font-medium">
+                              <span className="shrink-0">
+                                <GoalIcon icon={s.goal.icon} size={12} color={s.goal.color} />
+                              </span>
+                              <span className="truncate">{s.goal.name}</span>
+                            </span>
+                            <span className="text-muted-foreground shrink-0 text-xs font-semibold">
+                              {formatCurrency(s.current, false, hideAmounts)} /{' '}
+                              {formatCurrency(s.goal.targetAmount, false, hideAmounts)}
+                            </span>
+                          </div>
+                          <div className="bg-muted h-2 overflow-hidden rounded-full">
+                            <div
+                              className="thread-fill h-full"
+                              style={{
+                                width: `${Math.min(Math.max(s.percent, 0), 100)}%`,
+                              }}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </button>
+                )}
+                {topDebts.length > 0 && (
+                  <button onClick={() => navigate('/debts')} className="w-full p-4 text-left">
+                    <div className="mb-3 flex items-center gap-2">
+                      <HandCoins size={16} className="text-primary" />
+                      <h3 className="text-sm font-semibold">Debts & Lending</h3>
+                      <ChevronRight size={14} className="text-muted-foreground ml-auto" />
+                    </div>
+                    <div className="divide-border divide-y">
+                      {topDebts.map((s) => (
+                        <div
+                          key={s.person.id}
+                          className="flex items-center gap-3 py-2 first:pt-0 last:pb-0"
+                        >
+                          <PersonIcon icon={s.person.icon} size={14} color={s.person.color} />
+                          <p className="min-w-0 flex-1 truncate text-xs font-medium">
+                            {s.person.name}
+                          </p>
+                          <p
+                            className={`shrink-0 text-xs font-semibold ${s.balance > 0 ? 'text-positive' : 'text-destructive'}`}
+                          >
+                            {s.balance > 0 ? 'Owes you ' : 'You owe '}
+                            {formatCurrency(Math.abs(s.balance), true, hideAmounts)}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </button>
+                )}
+              </div>
+            </section>
+          )}
+        </div>
       </Main>
     </>
   );

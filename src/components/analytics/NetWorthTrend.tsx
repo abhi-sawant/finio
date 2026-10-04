@@ -80,10 +80,10 @@ export function NetWorthTrend() {
       </div>
 
       <div className="mb-3 flex flex-wrap items-baseline gap-x-2 gap-y-1">
-        <span className="text-lg font-bold">{latest ? money(latest.netWorth) : '—'}</span>
+        <span className="font-money text-lg">{latest ? money(latest.netWorth) : '—'}</span>
         {change !== 0 && (
           <span
-            className={`inline-flex items-center gap-0.5 text-xs font-medium ${change > 0 ? 'text-primary' : 'text-destructive'}`}
+            className={`inline-flex items-center gap-0.5 text-xs font-medium ${change > 0 ? 'text-positive' : 'text-destructive'}`}
           >
             {change > 0 ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
             {money(Math.abs(change))}

@@ -196,10 +196,10 @@ export default function AddLoan() {
 
         {previewEmi > 0 && (
           <div className="card-elevated bg-grad-primary-soft rounded-md p-4 text-center">
-            <p className="text-muted-foreground text-[10px] tracking-wide uppercase">
+            <p className="text-muted-foreground text-xs font-medium">
               Estimated EMI
             </p>
-            <p className="text-lg font-bold">{formatCurrency(previewEmi)}/month</p>
+            <p className="font-money text-lg">{formatCurrency(previewEmi)}/month</p>
           </div>
         )}
 

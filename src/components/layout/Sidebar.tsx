@@ -8,10 +8,10 @@ export function Sidebar() {
   const navigate = useNavigate();
 
   return (
-    <aside className="border-border bg-card hidden w-60 shrink-0 flex-col gap-1 border-r px-3 py-5 lg:flex">
+    <aside className="glass-chrome fixed top-0 left-0 z-30 hidden h-dvh w-60 shrink-0 flex-col gap-1 overflow-y-auto border-r border-[var(--glass-border)] px-3 py-5 lg:flex">
       {/* Brand */}
       <div className="mb-4 flex items-center gap-2.5 px-2">
-        <div className="bg-primary text-primary-foreground flex h-9 w-9 items-center justify-center rounded-full text-base font-bold">
+        <div className="bg-coin font-money flex h-9 w-9 items-center justify-center rounded-full text-sm">
           F
         </div>
         <span className="font-heading text-lg font-bold tracking-tight">Finio</span>
@@ -20,7 +20,7 @@ export function Sidebar() {
       {/* Add transaction */}
       <button
         onClick={() => navigate('/add-transaction')}
-        className="bg-primary text-primary-foreground mb-3 flex items-center justify-center gap-2 rounded-full py-3 text-sm font-semibold shadow-[var(--shadow-card)] transition-transform active:scale-[0.98]"
+        className="bg-grad-primary shadow-glow-primary mb-3 flex items-center justify-center gap-2 rounded-full py-3 text-sm font-semibold text-white transition-transform active:scale-[0.98]"
       >
         <Plus size={18} strokeWidth={2.4} />
         Add Transaction
@@ -51,7 +51,7 @@ export function Sidebar() {
       </nav>
 
       {/* Tools */}
-      <p className="text-muted-foreground mt-4 px-3 pb-1 text-xs font-medium tracking-wide uppercase">
+      <p className="text-muted-foreground mt-4 px-3 pb-1 text-xs font-medium">
         Tools
       </p>
       <nav className="flex flex-col gap-1">

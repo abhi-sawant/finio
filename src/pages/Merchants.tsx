@@ -52,7 +52,7 @@ function MerchantRow({
         </div>
         <div className="flex items-center gap-2 pl-3">
           <p
-            className={`text-sm font-semibold ${merchant.type === 'income' ? 'text-primary' : ''}`}
+            className={`text-sm font-semibold ${merchant.type === 'income' ? 'text-positive' : ''}`}
           >
             {formatCurrency(merchant.totalAmount, true, hideAmounts, { forceCompact: compact })}
           </p>
@@ -139,11 +139,11 @@ export default function Merchants() {
         <div className="card-elevated bg-grad-primary-soft rounded-md p-4">
           <div className="mb-1 flex items-center gap-1.5">
             <Store size={12} className="text-primary" />
-            <p className="text-muted-foreground text-[10px] tracking-wide uppercase">
+            <p className="text-muted-foreground text-xs font-medium">
               {merchants.length} merchant{merchants.length === 1 ? '' : 's'}
             </p>
           </div>
-          <p className="text-lg font-bold">{formatCurrency(total, true, hideAmounts)}</p>
+          <p className="font-money text-lg">{formatCurrency(total, true, hideAmounts)}</p>
         </div>
 
         <div className="space-y-2">

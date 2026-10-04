@@ -128,17 +128,17 @@ export function SpendingHeatmap() {
 
       <dl className="mt-3 grid grid-cols-3 gap-2 text-center">
         <div>
-          <dt className="text-muted-foreground text-[10px] tracking-wide uppercase">Total</dt>
+          <dt className="text-muted-foreground text-xs font-medium">Total</dt>
           <dd className="text-xs font-semibold">{money(calendar.total)}</dd>
         </div>
         <div>
-          <dt className="text-muted-foreground text-[10px] tracking-wide uppercase">
+          <dt className="text-muted-foreground text-xs font-medium">
             Avg / spend day
           </dt>
           <dd className="text-xs font-semibold">{money(calendar.averagePerActiveDay)}</dd>
         </div>
         <div>
-          <dt className="text-muted-foreground text-[10px] tracking-wide uppercase">Busiest</dt>
+          <dt className="text-muted-foreground text-xs font-medium">Busiest</dt>
           <dd className="text-xs font-semibold">
             {calendar.busiest ? (
               <>

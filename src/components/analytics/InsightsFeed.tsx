@@ -28,7 +28,7 @@ const KIND_ICON = {
 } as const;
 
 const SEVERITY_STYLE = {
-  warn: { wrap: 'bg-[#c79b4f]/15', icon: 'text-[#c79b4f]' },
+  warn: { wrap: 'bg-warning/15', icon: 'text-warning' },
   info: { wrap: 'bg-primary/15', icon: 'text-primary' },
   good: { wrap: 'bg-primary/10', icon: 'text-primary' },
 } as const;
@@ -95,7 +95,7 @@ export function InsightsFeed() {
           <Lightbulb size={13} className="text-primary" />
         </div>
         <h3 className="text-sm font-semibold">Insights</h3>
-        <span className="text-muted-foreground ml-auto text-[10px] tracking-wide uppercase">
+        <span className="text-muted-foreground ml-auto text-xs font-medium">
           {periodLabel(periodRange('monthly', new Date(), monthStartDay), monthStartDay)}
         </span>
       </div>

@@ -508,7 +508,7 @@ export function BackupSection() {
                   onClick={() => openCryptoDialog('unlock')}
                   className="flex w-full items-center gap-3 p-4"
                 >
-                  <LockKeyhole size={18} className="shrink-0 text-[#c79b4f]" />
+                  <LockKeyhole size={18} className="shrink-0 text-warning" />
                   <div className="flex-1 text-left">
                     <span className="block text-sm font-medium">Cloud backup locked</span>
                     <span className="text-muted-foreground text-xs">
@@ -760,7 +760,7 @@ export function BackupSection() {
                 <div className="bg-muted/50 space-y-1.5 rounded-sm p-3">
                   {preview.report.warnings.map((warning) => (
                     <p key={warning} className="flex gap-2 text-xs">
-                      <AlertTriangle size={14} className="mt-px shrink-0 text-[#c79b4f]" />
+                      <AlertTriangle size={14} className="mt-px shrink-0 text-warning" />
                       <span>{warning}</span>
                     </p>
                   ))}

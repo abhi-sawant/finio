@@ -18,6 +18,7 @@ import { useConfirm } from '@/components/ui/use-confirm';
 import Header from '@/components/ui/header';
 import { HeaderIconButton } from '@/components/ui/header-icon-button';
 import Main from '@/components/ui/main';
+import { NoteCard } from '@/components/ui/note-card';
 
 export default function Accounts() {
   const navigate = useNavigate();
@@ -121,15 +122,13 @@ export default function Accounts() {
       </Header>
       <Main>
         {/* Summary */}
-        <div className="card-elevated rounded-md p-4 text-center">
-          <p className="text-muted-foreground text-[11px] font-medium tracking-wide uppercase">
-            Net balance
-          </p>
-          <p className="mt-1 text-3xl font-bold tracking-tight">
+        <NoteCard>
+          <p className="text-muted-foreground text-sm font-medium">Net balance</p>
+          <p className="font-money mt-1 text-[2.25rem] leading-[1.05]">
             {formatCurrency(totalBalance, false, hideAmounts)}
           </p>
           {creditAccounts.length > 0 && (
-            <p className="text-muted-foreground mt-1.5 text-xs">
+            <p className="text-muted-foreground mt-1.5 text-xs text-balance">
               {formatCurrency(creditDue, false, hideAmounts)} owed on {creditAccounts.length} card
               {creditAccounts.length === 1 ? '' : 's'} ·{' '}
               {formatCurrency(totalBalance - creditDue, false, hideAmounts)} after dues
@@ -141,14 +140,12 @@ export default function Accounts() {
               {depositAccounts.length} deposit{depositAccounts.length === 1 ? '' : 's'}
             </p>
           )}
-        </div>
+        </NoteCard>
 
         {/* Regular Accounts */}
         {regularAccounts.length > 0 && (
           <div>
-            <h2 className="text-muted-foreground mb-2 text-[11px] font-medium tracking-wide uppercase">
-              Accounts
-            </h2>
+            <h2 className="mb-3 text-base font-semibold">Accounts</h2>
             <div className="card-elevated divide-border divide-y rounded-md px-4">
               {regularAccounts.map((account) => (
                 <AccountCard
@@ -167,9 +164,7 @@ export default function Accounts() {
         {/* Fixed & recurring deposits — valued at what they're worth today */}
         {depositAccounts.length > 0 && (
           <div>
-            <h2 className="text-muted-foreground mb-2 text-[11px] font-medium tracking-wide uppercase">
-              Deposits
-            </h2>
+            <h2 className="mb-3 text-base font-semibold">Deposits</h2>
             <div className="card-elevated divide-border divide-y rounded-md px-4">
               {depositAccounts.map((account) => (
                 <AccountCard
@@ -188,9 +183,7 @@ export default function Accounts() {
         {/* Credit Accounts */}
         {creditAccounts.length > 0 && (
           <div>
-            <h2 className="text-muted-foreground mb-2 text-[11px] font-medium tracking-wide uppercase">
-              Credit cards
-            </h2>
+            <h2 className="mb-3 text-base font-semibold">Credit cards</h2>
             <div className="card-elevated divide-border divide-y rounded-md px-4">
               {creditAccounts.map((account) => (
                 <AccountCard
@@ -211,7 +204,7 @@ export default function Accounts() {
           <div>
             <button
               onClick={() => setShowArchived((v) => !v)}
-              className="text-muted-foreground mb-2 flex items-center gap-1 text-[11px] font-medium tracking-wide uppercase"
+              className="text-muted-foreground mb-3 flex items-center gap-1 text-sm font-medium"
               aria-expanded={showArchived}
             >
               {showArchived ? <ChevronDown size={14} /> : <ChevronRight size={14} />}

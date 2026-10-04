@@ -129,7 +129,7 @@ export default function Budgets() {
       const label = labels.find((l) => l.id === budget.labelId);
       return { name: label?.name ?? 'Unknown label', color: label?.color ?? '#94a3b8' };
     }
-    if (budget.categoryId === '') return { name: 'Overall Expenses', color: '#146b54' };
+    if (budget.categoryId === '') return { name: 'Overall Expenses', color: 'var(--primary)' };
     const cat = categories.find((c) => c.id === budget.categoryId);
     return { name: cat?.name ?? 'Unknown', color: cat?.color ?? '#94a3b8' };
   };
@@ -434,7 +434,7 @@ function BudgetCard({
           : `${formatCurrency(status.remaining, false, hideAmounts)} left ${PERIOD_NOUN[budget.period]}`}
       </p>
       {budget.rollover && status.carryover !== 0 && (
-        <p className="text-[11px] text-[#c79b4f]">
+        <p className="text-[11px] text-warning">
           {status.carryover > 0
             ? `Includes ${formatCurrency(status.carryover, false, hideAmounts)} rolled over`
             : `Includes ${formatCurrency(-status.carryover, false, hideAmounts)} overspend carried in`}

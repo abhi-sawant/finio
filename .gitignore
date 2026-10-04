@@ -26,3 +26,6 @@ dist-ssr
 
 # /diagram skill local diagram store
 flow-docs/
+
+# Impeccable review captures (regenerated each review round)
+.impeccable/review/

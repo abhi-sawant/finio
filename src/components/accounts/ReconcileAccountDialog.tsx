@@ -106,7 +106,7 @@ export function ReconcileAccountDialog({
                 <p className="text-sm">
                   Off by{' '}
                   <span
-                    className={adjustment.type === 'income' ? 'text-primary' : 'text-destructive'}
+                    className={adjustment.type === 'income' ? 'text-positive' : 'text-destructive'}
                   >
                     {adjustment.type === 'income' ? '+' : '−'}
                     {formatCurrency(adjustment.amount)}

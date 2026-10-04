@@ -113,7 +113,7 @@ export function PeriodComparison() {
           const base = index === 0 ? null : comparison.current;
           return (
             <div key={heading} className="bg-muted/40 rounded-sm p-3">
-              <p className="text-muted-foreground truncate text-[10px] tracking-wide uppercase">
+              <p className="text-muted-foreground truncate text-xs font-medium">
                 {heading}
               </p>
               <p className="text-muted-foreground mt-0.5 truncate text-[10px]">{summary.label}</p>
@@ -121,7 +121,7 @@ export function PeriodComparison() {
               <dl className="mt-2 space-y-1.5">
                 <div>
                   <dt className="text-muted-foreground text-[10px]">Income</dt>
-                  <dd className="text-primary text-xs font-semibold">{money(summary.income)}</dd>
+                  <dd className="text-positive text-xs font-semibold">{money(summary.income)}</dd>
                 </div>
                 <div>
                   <dt className="text-muted-foreground text-[10px]">Expenses</dt>
@@ -132,7 +132,7 @@ export function PeriodComparison() {
                 <div>
                   <dt className="text-muted-foreground text-[10px]">Net</dt>
                   <dd
-                    className={`text-xs font-semibold ${summary.net >= 0 ? 'text-primary' : 'text-destructive'}`}
+                    className={`text-xs font-semibold ${summary.net >= 0 ? 'text-positive' : 'text-destructive'}`}
                   >
                     {money(summary.net)}
                   </dd>
@@ -160,7 +160,7 @@ export function PeriodComparison() {
 
       {movers.length > 0 && (
         <div className="mt-4">
-          <p className="text-muted-foreground mb-2 text-[10px] tracking-wide uppercase">
+          <p className="text-muted-foreground mb-2 text-xs font-medium">
             Biggest movers vs {previousLabel.toLowerCase()}
           </p>
           <ul className="space-y-2">
