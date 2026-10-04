@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { Target, ChevronRight, Repeat, CalendarIcon } from 'lucide-react';
+import { Target, ChevronRight, Repeat, CalendarIcon, CalendarX } from 'lucide-react';
 import { useFinanceStore } from '@/store/useFinanceStore';
 import { formatCurrency, formatShortDate, shouldCompactGroup } from '@/utils/formatters';
 import { getTotalIncome, getTotalExpenses } from '@/utils/calculations';
@@ -30,10 +30,10 @@ type FilterType = 'all' | 'month' | '3months' | '6months' | 'year' | 'custom';
 
 const FILTER_CHIPS: { value: Exclude<FilterType, 'custom'>; label: string }[] = [
   { value: 'all', label: 'All' },
-  { value: 'month', label: 'This Month' },
-  { value: '3months', label: 'Last 3 Months' },
-  { value: '6months', label: 'Last 6 Months' },
-  { value: 'year', label: 'This Year' },
+  { value: 'month', label: 'This month' },
+  { value: '3months', label: 'Last 3 months' },
+  { value: '6months', label: 'Last 6 months' },
+  { value: 'year', label: 'This year' },
 ];
 
 export default function Analytics() {
@@ -177,9 +177,7 @@ export default function Analytics() {
             <div className="card-elevated bg-grad-surface rounded-md p-4">
               <div className="grid grid-cols-3 gap-3">
                 <div>
-                  <p className="text-muted-foreground text-xs font-medium">
-                    Income
-                  </p>
+                  <p className="text-muted-foreground text-xs font-medium">Income</p>
                   <p className="text-positive font-money text-base">
                     {formatCurrency(totalIncome, true, hideAmounts, {
                       forceCompact: summaryCompact,
@@ -187,9 +185,7 @@ export default function Analytics() {
                   </p>
                 </div>
                 <div>
-                  <p className="text-muted-foreground text-xs font-medium">
-                    Expenses
-                  </p>
+                  <p className="text-muted-foreground text-xs font-medium">Expenses</p>
                   <p className="text-foreground font-money text-base">
                     {formatCurrency(totalExpenses, true, hideAmounts, {
                       forceCompact: summaryCompact,
@@ -210,22 +206,32 @@ export default function Analytics() {
             {/* Insights — always about the current month, so it sits outside the filter. */}
             <InsightsFeed />
 
-            <div className="space-y-4 lg:grid lg:grid-cols-2 lg:gap-4 lg:space-y-0">
-              {/* Spending by Category */}
-              <SpendingDonut transactions={filteredTransactions} />
-
-              {/* Income vs Expense Bar */}
-              <IncomeExpenseBar transactions={filteredTransactions} />
-
-              {/* Balance Trend */}
-              <BalanceTrend from={dateRange.from} to={dateRange.to} />
-
-              {/* Label Spending */}
-              <LabelSpendingBar transactions={filteredTransactions} />
-
-              {/* Top Merchants */}
-              <TopMerchants transactions={filteredTransactions} />
-            </div>
+            {filteredTransactions.length === 0 ? (
+              <div className="card-elevated rounded-md px-4 py-10 text-center">
+                <CalendarX size={28} className="text-muted-foreground mx-auto mb-3" aria-hidden />
+                <p className="text-sm font-medium">Nothing in this period</p>
+                <p className="text-muted-foreground mt-1 text-xs">
+                  No transactions fall in the selected range — try a wider one.
+                </p>
+                <Button
+                  variant="outline"
+                  className="mt-4 rounded-full px-5"
+                  onClick={() => handleFilterChange('all')}
+                >
+                  Show all time
+                </Button>
+              </div>
+            ) : (
+              // Each card hides itself when it has nothing to draw, so an odd card can be left
+              // last — it then spans both columns rather than leaving an empty cell beside it.
+              <div className="space-y-4 lg:grid lg:grid-cols-2 lg:gap-4 lg:space-y-0 lg:[&>*:last-child:nth-child(odd)]:col-span-2">
+                <SpendingDonut transactions={filteredTransactions} />
+                <IncomeExpenseBar transactions={filteredTransactions} />
+                <BalanceTrend from={dateRange.from} to={dateRange.to} />
+                <LabelSpendingBar transactions={filteredTransactions} />
+                <TopMerchants transactions={filteredTransactions} />
+              </div>
+            )}
 
             {/*
               The cards below each carry their own window — a forecast, a trend and a
@@ -244,12 +250,10 @@ export default function Analytics() {
         <div className="card-elevated divide-border divide-y rounded-md">
           <button
             onClick={() => navigate('/budgets')}
-            className="flex w-full items-center justify-between p-4"
+            className="flex w-full items-center justify-between px-4 py-3"
           >
             <div className="flex items-center gap-3">
-              <div className="bg-grad-primary-soft flex h-9 w-9 items-center justify-center rounded-full">
-                <Target size={16} className="text-primary" />
-              </div>
+              <Target size={18} className="text-muted-foreground shrink-0" aria-hidden />
               <div className="text-left">
                 <p className="text-sm font-medium">Budgets</p>
                 <p className="text-muted-foreground text-xs">
@@ -261,14 +265,12 @@ export default function Analytics() {
           </button>
           <button
             onClick={() => navigate('/recurring')}
-            className="flex w-full items-center justify-between p-4"
+            className="flex w-full items-center justify-between px-4 py-3"
           >
             <div className="flex items-center gap-3">
-              <div className="bg-grad-info flex h-9 w-9 items-center justify-center rounded-full">
-                <Repeat size={16} className="text-white" />
-              </div>
+              <Repeat size={18} className="text-muted-foreground shrink-0" aria-hidden />
               <div className="text-left">
-                <p className="text-sm font-medium">Recurring Transactions</p>
+                <p className="text-sm font-medium">Recurring transactions</p>
                 <p className="text-muted-foreground text-xs">
                   {activeRecurringCount === 0
                     ? 'Automate repeating items'

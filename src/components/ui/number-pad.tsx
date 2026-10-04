@@ -80,7 +80,7 @@ export function NumberPad({ value, onChange }: NumberPadProps) {
             key={btn}
             type="button"
             onClick={() => handlePress(btn)}
-            className="active:bg-muted flex h-14 items-center justify-center rounded-md border border-[var(--glass-border)] bg-[var(--glass-strong)] text-xl font-semibold shadow-[inset_0_1px_0_var(--glass-highlight)] transition-all select-none active:scale-95"
+            className="active:bg-muted border-border flex h-14 items-center justify-center rounded-md border bg-[var(--glass-strong)] text-xl font-semibold shadow-sm transition-all select-none active:scale-95"
           >
             {btn === '⌫' ? (
               <Delete size={20} className="text-muted-foreground" />

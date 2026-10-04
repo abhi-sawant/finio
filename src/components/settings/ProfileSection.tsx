@@ -75,9 +75,7 @@ export function ProfileSection() {
       {/* Profile name */}
       <div className="card-elevated divide-border divide-y rounded-md">
         <div className="flex items-center gap-3 p-4">
-          <div className="bg-grad-primary-soft flex h-10 w-10 items-center justify-center rounded-full">
-            <User size={18} className="text-primary" />
-          </div>
+          <User size={18} className="text-muted-foreground shrink-0" aria-hidden="true" />
           {editingName ? (
             <Input
               autoFocus
@@ -135,14 +133,15 @@ export function ProfileSection() {
           {/* A grid beats a 28-item dropdown here — every day is one tap away. */}
           <button
             onClick={() => setShowMonthStartPicker(true)}
-            className="bg-muted shrink-0 rounded-sm px-3 py-1.5 text-sm font-medium"
+            aria-label="Change the day the month starts"
+            className="bg-muted hover:bg-muted/70 shrink-0 rounded-full px-3 py-1.5 text-sm font-medium transition-colors"
           >
             {formatOrdinal(monthStartDay)}
           </button>
         </div>
 
         <Dialog open={showMonthStartPicker} onOpenChange={setShowMonthStartPicker}>
-          <DialogContent className="bg-card top-1/3 mx-auto w-11/12 rounded-md sm:max-w-sm">
+          <DialogContent className="bg-card top-1/3 mx-auto w-11/12 sm:max-w-sm">
             <DialogHeader>
               <DialogTitle>Month starts on</DialogTitle>
               <DialogDescription>
@@ -158,9 +157,10 @@ export function ProfileSection() {
                     updateSettings({ monthStartDay: day });
                     setShowMonthStartPicker(false);
                   }}
-                  className={`rounded-sm py-2 text-sm font-medium transition-colors ${
+                  aria-pressed={day === monthStartDay}
+                  className={`rounded-full py-2 text-sm font-medium transition-colors ${
                     day === monthStartDay
-                      ? 'bg-grad-primary text-white'
+                      ? 'bg-grad-primary shadow-glow-primary text-white'
                       : 'bg-muted hover:bg-muted/70'
                   }`}
                 >

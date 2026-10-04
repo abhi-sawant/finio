@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   buildAmortizationSchedule,
   calculateEmi,
+  groupScheduleByYear,
   loanStatus,
   maxPrepayment,
   simulatePrepaymentImpact,
@@ -166,5 +167,48 @@ describe('simulatePrepaymentImpact', () => {
     const impact = simulatePrepaymentImpact(loan, { amount: 0, date: '2026-02-05T00:00:00.000Z' });
     expect(impact.monthsSaved).toBe(0);
     expect(impact.interestSaved).toBe(0);
+  });
+});
+
+describe('groupScheduleByYear', () => {
+  // Mid-month dates keep every installment inside its calendar year in any time zone.
+  const loan: LoanScheduleInput = {
+    principal: 100000,
+    interestRate: 12,
+    tenureMonths: 24,
+    startDate: '2026-10-15T00:00:00.000Z',
+  };
+
+  it('splits installments by calendar year of the due date, in order', () => {
+    const groups = groupScheduleByYear(buildAmortizationSchedule(loan));
+    expect(groups.map((g) => g.year)).toEqual([2026, 2027, 2028]);
+    expect(groups.map((g) => g.rows.length)).toEqual([3, 12, 9]);
+    expect(groups.flatMap((g) => g.rows.map((r) => r.month))).toEqual(
+      Array.from({ length: 24 }, (_, i) => i + 1),
+    );
+  });
+
+  it('totals add up to the whole schedule', () => {
+    const schedule = buildAmortizationSchedule({
+      ...loan,
+      prepayments: [{ amount: 20000, date: '2027-03-20T00:00:00.000Z' }],
+    });
+    const groups = groupScheduleByYear(schedule);
+    const sum = (f: (g: (typeof groups)[number]) => number) => groups.reduce((s, g) => s + f(g), 0);
+    expect(sum((g) => g.totalPrincipal)).toBeCloseTo(loan.principal, 0);
+    expect(sum((g) => g.totalInterest)).toBeCloseTo(
+      schedule.reduce((s, r) => s + r.interest, 0),
+      2,
+    );
+    const y2027 = groups.find((g) => g.year === 2027)!;
+    expect(y2027.totalPaid).toBeCloseTo(
+      y2027.rows.reduce((s, r) => s + r.emi + r.prepayment, 0),
+      2,
+    );
+    expect(y2027.rows.some((r) => r.prepayment === 20000)).toBe(true);
+  });
+
+  it('is empty for an empty schedule', () => {
+    expect(groupScheduleByYear([])).toEqual([]);
   });
 });

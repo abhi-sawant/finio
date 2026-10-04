@@ -2,7 +2,7 @@ import { memo, useRef, useState } from 'react';
 import { Repeat, Copy, BookmarkPlus, CheckSquare, Trash2 } from 'lucide-react';
 import { useFinanceStore } from '@/store/useFinanceStore';
 import { useLongPress } from '@/hooks/useLongPress';
-import { formatCurrency, formatDate } from '@/utils/formatters';
+import { formatCurrency, formatDate, formatShortDate } from '@/utils/formatters';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
   DropdownMenu,
@@ -22,6 +22,8 @@ interface TransactionItemProps {
   labels?: Label[];
   /** Shows the transaction's date instead of nothing — for lists with no date-group header. */
   showDate?: boolean;
+  /** `relative` ("Today", "Fri, 2 Oct") or the canonical `short` ("2 Oct 2026"). */
+  dateStyle?: 'relative' | 'short';
   onClick?: () => void;
   /** Enables the long-press row menu (Select / Duplicate / Save as template / Delete). */
   onLongPressAction?: (action: TransactionRowAction, transaction: Transaction) => void;
@@ -34,7 +36,9 @@ export const TransactionItem = memo(function TransactionItem({
   transaction,
   categories,
   accounts,
+  labels,
   showDate = false,
+  dateStyle = 'relative',
   onClick,
   onLongPressAction,
   selectionMode = false,
@@ -96,6 +100,10 @@ export const TransactionItem = memo(function TransactionItem({
 
   const primaryText = transaction.note || splitTitle || category?.name || 'Transaction';
 
+  const rowLabels = labels
+    ? transaction.labels.map((id) => labels.find((l) => l.id === id)).filter((l): l is Label => !!l)
+    : [];
+
   const secondaryLine =
     isTransfer && toAccount
       ? `${account?.name ?? '?'} → ${toAccount.name}`
@@ -140,8 +148,33 @@ export const TransactionItem = memo(function TransactionItem({
           </p>
           <p className="text-muted-foreground truncate text-xs">
             {secondaryLine}
-            {showDate && <span> · {formatDate(transaction.date)}</span>}
+            {showDate && (
+              <span>
+                {' '}
+                ·{' '}
+                {dateStyle === 'short'
+                  ? formatShortDate(transaction.date)
+                  : formatDate(transaction.date)}
+              </span>
+            )}
           </p>
+          {rowLabels.length > 0 && (
+            <ul className="mt-1 flex flex-wrap gap-1" aria-label="Labels">
+              {rowLabels.map((l) => (
+                <li
+                  key={l.id}
+                  className="bg-muted text-foreground inline-flex max-w-[10rem] items-center gap-1 rounded-full px-1.5 py-px text-xs"
+                >
+                  <span
+                    className="size-1.5 shrink-0 rounded-full"
+                    style={{ backgroundColor: l.color }}
+                    aria-hidden="true"
+                  />
+                  <span className="truncate">{l.name}</span>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
         <p className={`text-sm font-semibold ${amountColor}`}>
           <span className="sr-only">{typeLabel}: </span>

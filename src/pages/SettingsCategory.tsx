@@ -13,12 +13,12 @@ import { NotificationsSection } from '@/components/settings/NotificationsSection
 function OrganiseLinks() {
   const navigate = useNavigate();
   const rows = [
-    { to: '/manage-categories', icon: FolderOpen, title: 'Manage Categories' },
-    { to: '/manage-labels', icon: Tag, title: 'Manage Labels' },
+    { to: '/manage-categories', icon: FolderOpen, title: 'Manage categories' },
+    { to: '/manage-labels', icon: Tag, title: 'Manage labels' },
     {
       to: '/category-rules',
       icon: Wand2,
-      title: 'Categorization Rules',
+      title: 'Categorization rules',
       hint: 'File transactions automatically from their note',
     },
   ];

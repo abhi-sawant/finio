@@ -23,7 +23,7 @@ export function Sidebar() {
         className="bg-grad-primary shadow-glow-primary mb-3 flex items-center justify-center gap-2 rounded-full py-3 text-sm font-semibold text-white transition-transform active:scale-[0.98]"
       >
         <Plus size={18} strokeWidth={2.4} />
-        Add Transaction
+        Add transaction
       </button>
 
       {/* Nav */}
@@ -51,9 +51,7 @@ export function Sidebar() {
       </nav>
 
       {/* Tools */}
-      <p className="text-muted-foreground mt-4 px-3 pb-1 text-xs font-medium">
-        Tools
-      </p>
+      <p className="text-muted-foreground mt-4 px-3 pb-1 text-xs font-medium">Tools</p>
       <nav className="flex flex-col gap-1">
         {moreNavItems.map((item) => {
           const isActive = location.pathname.startsWith(item.path);

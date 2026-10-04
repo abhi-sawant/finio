@@ -1,7 +1,7 @@
-import { useMemo, useState, useRef, useCallback, useEffect } from 'react';
+import { useMemo, useState, useRef, useCallback, useEffect, useLayoutEffect } from 'react';
 import { useNavigate } from 'react-router';
-import { Search, Filter, X, Download, Tag, Tags, Trash2 } from 'lucide-react';
-import { useVirtualizer } from '@tanstack/react-virtual';
+import { Search, Filter, X, Download, Tag, Tags, Trash2, Plus } from 'lucide-react';
+import { useWindowVirtualizer } from '@tanstack/react-virtual';
 import { toast } from 'sonner';
 import { useFinanceStore } from '@/store/useFinanceStore';
 import { cn } from '@/lib/utils';
@@ -12,6 +12,7 @@ import {
   activeAccounts,
   buildSearchIndex,
   groupTransactionsByDate,
+  isCategoryValidForType,
   miscLast,
   transactionMatchesQuery,
   transactionsToCsv,
@@ -45,9 +46,8 @@ import Header from '@/components/ui/header';
 import { HeaderIconButton } from '@/components/ui/header-icon-button';
 import Main from '@/components/ui/main';
 
-type VirtualRow =
-  | { kind: 'header'; date: string }
-  | { kind: 'tx'; tx: Transaction; groupPosition: 'only' | 'first' | 'middle' | 'last' };
+/** One virtualized item = one day: its date heading plus that day's rows in a single card. */
+type DateGroup = { date: string; transactions: Transaction[] };
 
 export default function Transactions() {
   const navigate = useNavigate();
@@ -93,6 +93,16 @@ export default function Transactions() {
   const [selectionMode, setSelectionMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
+  // Expose selection mode to the app shell (Layout hides the FAB while it's on) without a
+  // store flag: `<body data-tx-selecting>`.
+  useEffect(() => {
+    if (!selectionMode) return;
+    document.body.dataset.txSelecting = 'true';
+    return () => {
+      delete document.body.dataset.txSelecting;
+    };
+  }, [selectionMode]);
+
   // "Save as template" naming dialog.
   const [templateTx, setTemplateTx] = useState<Transaction | null>(null);
   const [templateName, setTemplateName] = useState('');
@@ -103,8 +113,10 @@ export default function Transactions() {
   const [addLabelOpen, setAddLabelOpen] = useState(false);
   const [addLabelId, setAddLabelId] = useState('');
 
-  // Ref to the scrollable <main> element for the virtualizer
-  const scrollRef = useRef<HTMLElement>(null);
+  // The window scrolls (not <main>), so the virtualizer needs the list's offset from the top
+  // of the document — everything above it (search, totals, the filter panel) is its scrollMargin.
+  const listRef = useRef<HTMLDivElement>(null);
+  const [scrollMargin, setScrollMargin] = useState(0);
 
   const filtered = useMemo(() => {
     const q = debouncedSearch.trim();
@@ -153,33 +165,60 @@ export default function Transactions() {
     return { totalIncome: income, totalExpense: expense };
   }, [filtered]);
 
-  // Flatten grouped transactions into a single array for the virtualizer
-  const virtualRows = useMemo<VirtualRow[]>(() => {
-    const groups = groupTransactionsByDate(filtered);
-    const rows: VirtualRow[] = [];
-    for (const group of groups) {
-      rows.push({ kind: 'header', date: group.date });
-      group.transactions.forEach((tx, i) => {
-        const isFirst = i === 0;
-        const isLast = i === group.transactions.length - 1;
-        const groupPosition =
-          isFirst && isLast ? 'only' : isFirst ? 'first' : isLast ? 'last' : 'middle';
-        rows.push({ kind: 'tx', tx, groupPosition });
-      });
-    }
-    return rows;
-  }, [filtered]);
+  // Each virtual item is a whole day, so a day's rows can share one glass card. Days are short
+  // (a handful of rows), so virtualizing per day keeps the DOM small at any ledger size.
+  const groups = useMemo<DateGroup[]>(() => groupTransactionsByDate(filtered), [filtered]);
 
-  // TanStack Virtual's returned functions (scrollToIndex, measure, etc.) are stable across
-  // renders by the library's own contract, so React Compiler's inability to verify that and
-  // skip memoizing this component is a known false positive, not a real staleness risk.
-  // eslint-disable-next-line react-hooks/incompatible-library
-  const virtualizer = useVirtualizer({
-    count: virtualRows.length,
-    getScrollElement: () => scrollRef.current,
-    estimateSize: (index) => (virtualRows[index].kind === 'header' ? 28 : 68),
-    overscan: 8,
+  const virtualizer = useWindowVirtualizer({
+    count: groups.length,
+    estimateSize: (index) => 40 + groups[index].transactions.length * 72,
+    overscan: 4,
+    scrollMargin,
   });
+
+  // Keep scrollMargin in step with whatever sits above the list (filter panel opening, the
+  // header growing, fonts loading). Body resizes whenever any of that moves.
+  useLayoutEffect(() => {
+    const measure = () => {
+      const el = listRef.current;
+      if (!el) return;
+      const top = Math.round(el.getBoundingClientRect().top + window.scrollY);
+      setScrollMargin((prev) => (prev === top ? prev : top));
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(document.body);
+    return () => ro.disconnect();
+  }, [groups.length, showFilters]);
+
+  // What the selection can be recategorized to. Transfers keep their Transfer category, so
+  // they're skipped; a mixed expense + income selection can only move to a neutral category.
+  const selectionCategorizable = useMemo(() => {
+    if (!recategorizeOpen) return { ids: [] as string[], skipped: 0, types: new Set<string>() };
+    const ids: string[] = [];
+    const types = new Set<string>();
+    let skipped = 0;
+    for (const t of transactions) {
+      if (!selectedIds.has(t.id)) continue;
+      if (t.type === 'transfer') {
+        skipped++;
+        continue;
+      }
+      ids.push(t.id);
+      types.add(t.type);
+    }
+    return { ids, skipped, types };
+  }, [recategorizeOpen, transactions, selectedIds]);
+
+  const recategorizeOptions = useMemo(() => {
+    const { types } = selectionCategorizable;
+    if (types.size === 0) return [];
+    return miscLast(categories).filter((c) =>
+      types.size === 1
+        ? isCategoryValidForType(c, types.has('income') ? 'income' : 'expense')
+        : isCategoryValidForType(c, 'expense') && isCategoryValidForType(c, 'income'),
+    );
+  }, [selectionCategorizable, categories]);
 
   const hasActiveFilters =
     typeFilter !== 'all' ||
@@ -194,7 +233,13 @@ export default function Transactions() {
       toast.error('No transactions to export');
       return;
     }
-    const csv = transactionsToCsv(filtered, categories, accounts);
+    // Newest first, the same order as the list on screen.
+    const sorted = [...filtered].sort(
+      (a, b) =>
+        new Date(b.date).getTime() - new Date(a.date).getTime() ||
+        b.createdAt.localeCompare(a.createdAt),
+    );
+    const csv = transactionsToCsv(sorted, categories, accounts);
     downloadBlob(`finio-transactions-${todayKey()}.csv`, csv, 'text/csv;charset=utf-8');
     toast.success(`Exported ${filtered.length} transactions`);
   };
@@ -293,9 +338,14 @@ export default function Transactions() {
 
   const handleBulkRecategorize = () => {
     if (!recategorizeCategoryId) return;
-    const count = selectedIds.size;
-    bulkRecategorize(Array.from(selectedIds), recategorizeCategoryId);
-    toast.success(`Recategorized ${count} transaction${count === 1 ? '' : 's'}`);
+    const { ids, skipped } = selectionCategorizable;
+    if (ids.length === 0) return;
+    bulkRecategorize(ids, recategorizeCategoryId);
+    const count = ids.length;
+    toast.success(
+      `Recategorized ${count} transaction${count === 1 ? '' : 's'}` +
+        (skipped > 0 ? ` · ${skipped} transfer${skipped === 1 ? '' : 's'} skipped` : ''),
+    );
     setRecategorizeOpen(false);
     setRecategorizeCategoryId('');
     exitSelectionMode();
@@ -312,6 +362,21 @@ export default function Transactions() {
   };
 
   const items = virtualizer.getVirtualItems();
+
+  const clearFilters = () => {
+    setTypeFilter('all');
+    setAccountFilter('all');
+    setCategoryFilter('all');
+    setLabelFilter('all');
+    setFromDate('');
+    setToDate('');
+  };
+
+  const clearSearchAndFilters = () => {
+    clearFilters();
+    setSearch('');
+    setDebouncedSearch('');
+  };
 
   return (
     <>
@@ -332,7 +397,8 @@ export default function Transactions() {
           </HeaderIconButton>
         </div>
       </Header>
-      <Main ref={scrollRef}>
+      {/* While selecting, leave room for the bulk toolbar so it never covers the last row. */}
+      <Main className={cn(selectionMode && 'lg:pb-24')}>
         {/* Search */}
         <div className="relative">
           <Search
@@ -341,7 +407,8 @@ export default function Transactions() {
           />
           <Input
             type="text"
-            placeholder="Search notes, categories, accounts, labels, amounts..."
+            placeholder="Search transactions"
+            aria-label="Search notes, categories, accounts, labels and amounts"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pr-4 pl-9"
@@ -373,10 +440,11 @@ export default function Transactions() {
                   <button
                     key={type}
                     onClick={() => setTypeFilter(type)}
+                    aria-pressed={typeFilter === type}
                     className={cn(
                       'rounded-full px-3 py-1.5 text-xs font-medium capitalize transition-colors',
                       typeFilter === type
-                        ? 'bg-primary text-primary-foreground'
+                        ? 'bg-grad-primary shadow-glow-primary text-white'
                         : 'bg-muted text-muted-foreground',
                     )}
                   >
@@ -392,11 +460,11 @@ export default function Transactions() {
               <Select value={accountFilter} onValueChange={(v) => setAccountFilter(v ?? 'all')}>
                 <SelectTrigger className="w-full">
                   <SelectValue>
-                    {accounts.find((a) => a.id === accountFilter)?.name || 'All Accounts'}
+                    {accounts.find((a) => a.id === accountFilter)?.name || 'All accounts'}
                   </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Accounts</SelectItem>
+                  <SelectItem value="all">All accounts</SelectItem>
                   {filterableAccounts.map((a) => (
                     <SelectItem key={a.id} value={a.id}>
                       {a.name}
@@ -413,11 +481,11 @@ export default function Transactions() {
                 <Select value={categoryFilter} onValueChange={(v) => setCategoryFilter(v ?? 'all')}>
                   <SelectTrigger className="w-full">
                     <SelectValue>
-                      {categories.find((c) => c.id === categoryFilter)?.name || 'All Categories'}
+                      {categories.find((c) => c.id === categoryFilter)?.name || 'All categories'}
                     </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All Categories</SelectItem>
+                    <SelectItem value="all">All categories</SelectItem>
                     {miscLast(categories).map((c) => (
                       <SelectItem key={c.id} value={c.id}>
                         {c.name}
@@ -433,11 +501,11 @@ export default function Transactions() {
                 <Select value={labelFilter} onValueChange={(v) => setLabelFilter(v ?? 'all')}>
                   <SelectTrigger className="w-full">
                     <SelectValue>
-                      {labels.find((l) => l.id === labelFilter)?.name || 'All Labels'}
+                      {labels.find((l) => l.id === labelFilter)?.name || 'All labels'}
                     </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All Labels</SelectItem>
+                    <SelectItem value="all">All labels</SelectItem>
                     {labels.map((l) => (
                       <SelectItem key={l.id} value={l.id}>
                         {l.name}
@@ -471,20 +539,13 @@ export default function Transactions() {
             </div>
             {isRangeInverted(fromDate, toDate) && (
               <p role="alert" className="text-destructive text-xs">
-                From date is after To date — no transactions can match.
+                The from date is after the to date — no transactions can match.
               </p>
             )}
             {hasActiveFilters && (
               <Button
                 variant="ghost"
-                onClick={() => {
-                  setTypeFilter('all');
-                  setAccountFilter('all');
-                  setCategoryFilter('all');
-                  setLabelFilter('all');
-                  setFromDate('');
-                  setToDate('');
-                }}
+                onClick={clearFilters}
                 className="text-destructive hover:text-destructive flex h-auto items-center gap-1 p-0 text-xs font-medium hover:bg-transparent"
               >
                 <X size={12} /> Clear filters
@@ -493,52 +554,69 @@ export default function Transactions() {
           </div>
         )}
 
-        {/* Transaction List */}
-        {virtualRows.length === 0 ? (
-          <div className="py-12 text-center">
-            <p className="text-muted-foreground">No transactions found</p>
-          </div>
+        {/* Transaction list */}
+        {groups.length === 0 ? (
+          transactions.length === 0 ? (
+            <div className="flex flex-col items-center gap-3 py-12 text-center">
+              <p className="font-medium">No transactions yet</p>
+              <p className="text-muted-foreground max-w-xs text-sm">
+                Log your first expense or income and it will show up here.
+              </p>
+              <Button onClick={() => navigate('/add-transaction')}>
+                <Plus /> Add transaction
+              </Button>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center gap-3 py-12 text-center">
+              <p className="font-medium">No matching transactions</p>
+              <p className="text-muted-foreground max-w-xs text-sm">
+                Nothing matches your search or filters.
+              </p>
+              <Button variant="outline" onClick={clearSearchAndFilters}>
+                <X /> Clear search and filters
+              </Button>
+            </div>
+          )
         ) : (
-          <div style={{ height: `${virtualizer.getTotalSize()}px` }} className="relative w-full">
+          <div
+            ref={listRef}
+            style={{ height: `${virtualizer.getTotalSize()}px` }}
+            className="relative w-full"
+          >
             {items.map((virtualItem) => {
-              const row = virtualRows[virtualItem.index];
+              const group = groups[virtualItem.index];
               return (
-                <div
+                <section
                   key={virtualItem.key}
                   data-index={virtualItem.index}
                   ref={virtualizer.measureElement}
-                  style={{ transform: `translateY(${virtualItem.start}px)` }}
-                  className="absolute top-0 left-0 w-full"
+                  style={{
+                    transform: `translateY(${virtualItem.start - virtualizer.options.scrollMargin}px)`,
+                  }}
+                  className="absolute top-0 left-0 w-full pb-3"
+                  aria-label={formatDate(group.date)}
                 >
-                  {row.kind === 'header' ? (
-                    <p className="text-muted-foreground mt-3 ps-2 pb-1 text-xs font-medium first:pt-0">
-                      {formatDate(row.date)}
-                    </p>
-                  ) : (
-                    <div
-                      className={cn(
-                        'bg-card border-border border-x border-b',
-                        (row.groupPosition === 'first' || row.groupPosition === 'only') &&
-                          'rounded-t-md border-t',
-                        (row.groupPosition === 'last' || row.groupPosition === 'only') &&
-                          'rounded-b-md',
-                      )}
-                    >
+                  <h2 className="text-muted-foreground ps-2 pb-1.5 text-xs font-medium">
+                    {formatDate(group.date)}
+                  </h2>
+                  <div className="card-elevated divide-border divide-y overflow-hidden rounded-md">
+                    {group.transactions.map((tx) => (
                       <TransactionItem
-                        transaction={row.tx}
+                        key={tx.id}
+                        transaction={tx}
                         categories={categories}
                         accounts={accounts}
                         labels={labels}
                         selectionMode={selectionMode}
-                        selected={selectedIds.has(row.tx.id)}
+                        selected={selectedIds.has(tx.id)}
                         onLongPressAction={handleRowLongPressAction}
                         onClick={() =>
-                          selectionMode ? toggleSelected(row.tx.id) : handleNavigate(row.tx.id)
+                          selectionMode ? toggleSelected(tx.id) : handleNavigate(tx.id)
                         }
                       />
-                    </div>
-                  )}
-                </div>
+                    ))}
+                  </div>
+                </section>
               );
             })}
           </div>
@@ -547,9 +625,15 @@ export default function Transactions() {
 
       {/* Bulk selection toolbar */}
       {selectionMode && (
-        <div className="border-border bg-card fixed inset-x-0 bottom-[calc(env(safe-area-inset-bottom,0px)+4.25rem)] z-40 flex items-center gap-2 border-t py-2.5 pr-20 pl-3 shadow-lg lg:bottom-0 lg:left-60 lg:pr-4">
-          <span className="text-sm font-medium">{selectedIds.size} selected</span>
-          <div className="ml-auto flex items-center gap-1">
+        // Mobile: a floating glass pill beside the FAB (left of it, level with it) so the coin
+        // can never cover an action. Desktop: a full-width glass bar under the content column.
+        <div
+          role="toolbar"
+          aria-label="Selected transactions"
+          className="glass-chrome fixed right-[5.25rem] bottom-[calc(env(safe-area-inset-bottom,0px)+5.5rem)] left-3 z-40 flex h-14 items-center gap-2 rounded-full border border-[var(--glass-border)] pr-1.5 pl-4 shadow-[var(--shadow-float)] lg:right-0 lg:bottom-0 lg:left-60 lg:h-auto lg:rounded-none lg:border-x-0 lg:border-b-0 lg:py-2.5 lg:pr-4 lg:shadow-[0_-12px_30px_-22px_rgb(40_26_110/0.45)]"
+        >
+          <span className="shrink-0 text-sm font-medium">{selectedIds.size} selected</span>
+          <div className="ml-auto flex items-center gap-0.5">
             <Button
               variant="ghost"
               size="icon"
@@ -613,9 +697,7 @@ export default function Transactions() {
             <Button variant="outline" onClick={() => setTemplateTx(null)}>
               Cancel
             </Button>
-            <Button onClick={handleSaveTemplate} className="bg-grad-primary text-white">
-              Save
-            </Button>
+            <Button onClick={handleSaveTemplate}>Save</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -624,22 +706,39 @@ export default function Transactions() {
       <Dialog open={recategorizeOpen} onOpenChange={setRecategorizeOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Recategorize {selectedIds.size} transactions</DialogTitle>
+            <DialogTitle>
+              Recategorize {selectionCategorizable.ids.length} transaction
+              {selectionCategorizable.ids.length === 1 ? '' : 's'}
+            </DialogTitle>
             <DialogDescription>
-              Every selected transaction moves to this category.
+              {selectionCategorizable.ids.length === 0
+                ? 'Transfers keep their Transfer category, so there is nothing here to recategorize.'
+                : selectionCategorizable.types.size > 1
+                  ? 'Your selection mixes expenses and income, so only categories that fit both are offered.'
+                  : 'Every selected transaction moves to this category.'}
             </DialogDescription>
           </DialogHeader>
+          {selectionCategorizable.skipped > 0 && (
+            <p className="bg-warning/15 text-foreground rounded-md px-3 py-2 text-xs">
+              {selectionCategorizable.skipped} transfer
+              {selectionCategorizable.skipped === 1 ? '' : 's'} in your selection will be skipped.
+            </p>
+          )}
           <Select
             value={recategorizeCategoryId}
             onValueChange={(v) => setRecategorizeCategoryId(v ?? '')}
           >
-            <SelectTrigger className="w-full">
+            <SelectTrigger
+              className="w-full"
+              disabled={recategorizeOptions.length === 0}
+              aria-label="Category"
+            >
               <SelectValue placeholder="Select category">
                 {categories.find((c) => c.id === recategorizeCategoryId)?.name}
               </SelectValue>
             </SelectTrigger>
             <SelectContent>
-              {miscLast(categories).map((c) => (
+              {recategorizeOptions.map((c) => (
                 <SelectItem key={c.id} value={c.id}>
                   {c.name}
                 </SelectItem>
@@ -652,8 +751,10 @@ export default function Transactions() {
             </Button>
             <Button
               onClick={handleBulkRecategorize}
-              disabled={!recategorizeCategoryId}
-              className="bg-grad-primary text-white"
+              disabled={
+                !recategorizeCategoryId ||
+                !recategorizeOptions.some((c) => c.id === recategorizeCategoryId)
+              }
             >
               Apply
             </Button>
@@ -665,13 +766,15 @@ export default function Transactions() {
       <Dialog open={addLabelOpen} onOpenChange={setAddLabelOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add label to {selectedIds.size} transactions</DialogTitle>
+            <DialogTitle>
+              Add label to {selectedIds.size} transaction{selectedIds.size === 1 ? '' : 's'}
+            </DialogTitle>
             <DialogDescription>
               Adds the label alongside any labels a transaction already has.
             </DialogDescription>
           </DialogHeader>
           <Select value={addLabelId} onValueChange={(v) => setAddLabelId(v ?? '')}>
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full" aria-label="Label">
               <SelectValue placeholder="Select label">
                 {labels.find((l) => l.id === addLabelId)?.name}
               </SelectValue>
@@ -688,11 +791,7 @@ export default function Transactions() {
             <Button variant="outline" onClick={() => setAddLabelOpen(false)}>
               Cancel
             </Button>
-            <Button
-              onClick={handleBulkAddLabel}
-              disabled={!addLabelId}
-              className="bg-grad-primary text-white"
-            >
+            <Button onClick={handleBulkAddLabel} disabled={!addLabelId}>
               Apply
             </Button>
           </DialogFooter>

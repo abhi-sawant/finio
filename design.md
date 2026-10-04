@@ -317,6 +317,9 @@ strongest shadow. The hero banknote alone tilts in 3D.
 - **Coin** (`inset 0 1px 1px rgb(255 255 255 / 0.6), 0 10px 24px -6px rgb(108 87 214 / 0.7)`).
 - **Tile** (`0 14px 28px -20px rgb(40 26 110 / 0.5)`): denomination note tiles.
 - **Tab bar** (`0 -12px 30px -22px rgb(40 26 110 / 0.45)`): casts upward onto content.
+- **Stock Tailwind scale** (`shadow-xs` … `shadow-2xl`, plus bare `shadow`): redefined in
+  `index.css` `@theme` from `--shadow-tint` (lavender `60 40 140` in light, black in dark), so any
+  utility shadow follows the Lavender-Shadow rule without a per-call-site token.
 
 ### Named Rules
 **The Lavender-Shadow Rule.** Shadows in light mode are tinted indigo/lavender, never neutral grey.
@@ -381,14 +384,27 @@ scaling to 95% on press. PIN dots differ by shape (solid disc vs 2px ring), not 
 wrong PIN shakes for 320ms (none under reduced motion).
 
 ### Dialogs and popovers
-Opaque card colour, 22px radius, 16px padding, 1px border ring, Float shadow, over a 15% ink scrim
-with a light backdrop blur. Titles are in Unbounded. Opaque on purpose: forms are read, not admired.
+Opaque card colour, 22px radius, 16px padding, 1px border ring, Float shadow, over the `--scrim`
+token with a light backdrop blur. The scrim always *dims* — indigo at 24% in light, near-black at 60%
+in dark — never a foreground-tinted wash that would lighten a dark page. Titles are in Unbounded,
+sentence case. Opaque on purpose: forms are read, not admired. Dialog buttons are pills; dialogs
+never override the 22px radius.
+
+### Toasts
+Sonner, top-centre, following the app theme (`theme` = the Settings value, incl. system). Each toast
+is strong glass with a white hairline, the Float shadow and a 24px blur; text is ink, descriptions
+muted. Type is carried by the icon colour only — success `positive`, error `destructive`, warning
+`warning`, info lavender — never Sonner's built-in rich colours. The Undo/action button is a 28px
+lavender-gradient pill. Toasts render above dialogs: nothing between `<body>` and the Toaster may
+create a stacking context (the background rosette sits at `z-index: -1` for that reason).
 
 ### Navigation
 - **Mobile tab bar:** strong glass, white top hairline, upward shadow. Inactive tabs muted;
   the active tab turns lavender, thickens its icon stroke (2 → 2.4) and shows a 16×4px gradient pill
   between icon and 12px 500 label.
-- **Desktop sidebar:** 240px strong glass with right hairline. Items are full-round 14px 500 rows;
+- **Desktop sidebar:** 240px strong glass with right hairline, `fixed`, present on every app route
+  — Layout routes and the full-screen ones (forms, Tools pages) via `DesktopShell`; only the auth
+  and legal pages stand alone. Items are full-round 14px 500 rows;
   active is lavender tint with lavender ink; hover is muted at 60%. Group label "Tools" is a
   sentence-case muted label.
 - **Header:** transparent at rest; glass with a hairline once scrolled. `h1` in Unbounded.
@@ -448,7 +464,9 @@ shadow, 22px radius, 16px padding, spanning the full grid width.
   threads clear of figures.
 - **Do** give every motion a reduced-motion fallback (the note tilt and PIN shake both stop).
 - **Do** design both modes: every new token needs a light value and a hand-tuned dark (UV) value.
-- **Do** offer `COLOR_PALETTE` from `src/data/colorPalette.ts` in every colour picker.
+- **Do** offer `COLOR_PALETTE` from `src/data/colorPalette.ts` (18 Mudra swatches: denomination
+  hues and deep jewel tones) in every colour picker. Accounts have no colour picker — their tint is
+  the account type's denomination.
 
 ### Don't:
 - **Don't** put a large denomination numeral on a note tile or the hero. A ghost "2000" beside a real

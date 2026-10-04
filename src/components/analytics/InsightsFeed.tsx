@@ -11,7 +11,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { useFinanceStore } from '@/store/useFinanceStore';
-import { formatCurrency, formatFullDate } from '@/utils/formatters';
+import { formatCurrency, formatShortDate } from '@/utils/formatters';
 import { buildInsights, type Insight, type SubscriptionCandidate } from '@/utils/insights';
 import { normalizeMonthStartDay, periodLabel, periodRange } from '@/utils/period';
 import { Button } from '@/components/ui/button';
@@ -27,10 +27,11 @@ const KIND_ICON = {
   'negative-balance': CircleAlert,
 } as const;
 
-const SEVERITY_STYLE = {
-  warn: { wrap: 'bg-warning/15', icon: 'text-warning' },
-  info: { wrap: 'bg-primary/15', icon: 'text-primary' },
-  good: { wrap: 'bg-primary/10', icon: 'text-primary' },
+/** Icon tone per severity — green only for genuinely good news, lavender for neutral info. */
+const SEVERITY_ICON = {
+  warn: 'text-warning',
+  info: 'text-primary',
+  good: 'text-positive',
 } as const;
 
 export function InsightsFeed() {
@@ -75,7 +76,7 @@ export function InsightsFeed() {
       startDate: candidate.nextDate,
     });
     setDismissed((prev) => [...prev, insight.id]);
-    toast.success(`Recurring rule created — next on ${formatFullDate(candidate.nextDate)}`, {
+    toast.success(`Recurring rule created — next on ${formatShortDate(candidate.nextDate)}`, {
       action: {
         label: 'Undo',
         onClick: () => {
@@ -91,9 +92,7 @@ export function InsightsFeed() {
   return (
     <section className="card-elevated rounded-md p-4">
       <div className="mb-3 flex items-center gap-2">
-        <div className="bg-grad-primary-soft flex h-6 w-6 items-center justify-center rounded-full">
-          <Lightbulb size={13} className="text-primary" />
-        </div>
+        <Lightbulb size={15} className="text-muted-foreground shrink-0" aria-hidden />
         <h3 className="text-sm font-semibold">Insights</h3>
         <span className="text-muted-foreground ml-auto text-xs font-medium">
           {periodLabel(periodRange('monthly', new Date(), monthStartDay), monthStartDay)}
@@ -103,15 +102,11 @@ export function InsightsFeed() {
       <ul className="divide-border divide-y">
         {visible.map((insight) => {
           const Icon = KIND_ICON[insight.kind];
-          const style = SEVERITY_STYLE[insight.severity];
+          const iconTone = SEVERITY_ICON[insight.severity];
           const action = insight.action;
           return (
             <li key={insight.id} className="flex gap-3 py-3 first:pt-0 last:pb-0">
-              <div
-                className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${style.wrap}`}
-              >
-                <Icon size={14} className={style.icon} />
-              </div>
+              <Icon size={16} className={`mt-0.5 shrink-0 ${iconTone}`} aria-hidden />
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-medium">{insight.title}</p>
                 <p className="text-muted-foreground mt-0.5 text-xs">{insight.detail}</p>

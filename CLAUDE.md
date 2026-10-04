@@ -309,6 +309,14 @@ Enums: `AccountType`, `TransactionType` (expense/income/transfer), `RecurrenceFr
     user colour — `noteStyle(type)` for tiles, `.note-chip` for list rows.
   - No uppercase tracked micro-labels or eyebrows above headings; labels are sentence-case
     `text-xs font-medium` muted.
+  - The Mudra classes (`card-elevated`, `glass-chrome`, `bg-grad-*`, `shadow-glow-*`, `bg-coin`,
+    `font-money`, `thread-fill`) are Tailwind `@utility`s, so variants work
+    (`data-[selected=true]:bg-grad-primary`). Don't move them into `@layer utilities` — Tailwind v4
+    silently drops variants on layer classes. Stock `shadow-*` utilities are re-tinted lavender.
+  - Never give `#root` (or any wrapper around the `<Toaster>`) a z-index/stacking context — toasts
+    must render above portalled dialogs. The background rosette is `body::before` at `z-index: -1`.
+  - Full-screen routes (forms, Tools pages) sit inside `DesktopShell` in `App.tsx`, which keeps the
+    fixed desktop Sidebar; a `fixed left-0 w-full` bar on those pages needs `lg:left-60`.
   - Every page is `<Header>` + `<Main>` from `src/components/ui/` (shared `max-w-5xl` width, and
     `Main`'s large mobile bottom padding keeps content clear of the tab bar/FAB). `Header` is
     transparent at rest and frosts on scroll; the desktop `Sidebar` is `fixed`, and the content
@@ -441,7 +449,12 @@ All page components are lazy-loaded. This keeps the initial bundle small.
   fields (via `updateLoan`) can never leave the EMI out of sync. `addLoan` also creates a linked
   `RecurringTransaction` (`Loan.recurringId`) that actually posts the EMI each month; `updateLoan`
   keeps that rule's amount and destination current, `setLoanClosed` pauses/resumes it, and
-  `deleteLoan` deletes it — but never the EMI transactions it already posted. A `LoanPrepayment` is
+  `deleteLoan` deletes it — but never the EMI transactions it already posted. A loan whose first EMI
+  date is already in the past treats the EMIs that fell due as paid outside Finio by default:
+  `addLoan` advances the rule's `occurrenceCount`/`lastRunDate` past them (the RD "fold" pattern),
+  so nothing is back-posted. `addLoan(data, { logPastEmis: true })` — the "Log past EMIs as
+  transactions" switch on Add Loan — leaves the rule's history empty and the page runs
+  `processRecurring()` to post them immediately, with an Undo toast. A `LoanPrepayment` is
   real money leaving an account, so it creates a genuine `Transaction` too (`transactionId`), the
   same convention as a settled `DebtEntry`.
 - **Merchants are a view, not an entity.** [`src/utils/merchants.ts`](src/utils/merchants.ts) groups
@@ -514,7 +527,12 @@ All page components are lazy-loaded. This keeps the initial bundle small.
 - **Goals and debts are manual ledgers, not transactions.** `GoalContribution` and `DebtEntry` sit
   beside accounts, so logging "I lent ₹500" can never corrupt a real balance. The one exception is
   **Settle up** on the Debts page, which atomically creates a real `Transaction` _and_ a balancing
-  `DebtEntry` stamped with `settledTransactionId`. Deleting a goal or a person cascades its
+  `DebtEntry` stamped with `settledTransactionId`. That pair is one event and stays in sync in
+  both directions: deleting either deletes both (Undo restores both), `updateDebtEntry` on a
+  settled entry rewrites the linked transaction's amount/date through the balance-safe
+  `replaceTransaction` path, and `updateTransaction` on the settlement carries amount, date and
+  type back to the entry (income → entry < 0, expense → entry > 0). A settled entry's direction
+  can't be edited from the Debts page. Deleting a goal or a person cascades its
   entries; deleting an account clears `Goal.linkedAccountId` rather than orphaning it.
 - **Archived is not deleted:** `Account.archivedAt` closes an account while keeping its
   transactions, balance and recurring rules. `activeAccounts()` gates every running total, and the

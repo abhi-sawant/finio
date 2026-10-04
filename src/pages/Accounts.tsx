@@ -19,6 +19,7 @@ import Header from '@/components/ui/header';
 import { HeaderIconButton } from '@/components/ui/header-icon-button';
 import Main from '@/components/ui/main';
 import { NoteCard } from '@/components/ui/note-card';
+import { noteFigureClass } from '@/components/ui/note-figure';
 
 export default function Accounts() {
   const navigate = useNavigate();
@@ -124,14 +125,20 @@ export default function Accounts() {
         {/* Summary */}
         <NoteCard>
           <p className="text-muted-foreground text-sm font-medium">Net balance</p>
-          <p className="font-money mt-1 text-[2.25rem] leading-[1.05]">
+          <p
+            className={`font-money mt-1 leading-[1.05] ${noteFigureClass(formatCurrency(totalBalance, false, hideAmounts))}`}
+          >
             {formatCurrency(totalBalance, false, hideAmounts)}
           </p>
           {creditAccounts.length > 0 && (
             <p className="text-muted-foreground mt-1.5 text-xs text-balance">
-              {formatCurrency(creditDue, false, hideAmounts)} owed on {creditAccounts.length} card
-              {creditAccounts.length === 1 ? '' : 's'} ·{' '}
-              {formatCurrency(totalBalance - creditDue, false, hideAmounts)} after dues
+              <span className="block">
+                {formatCurrency(creditDue, false, hideAmounts)} owed on {creditAccounts.length} card
+                {creditAccounts.length === 1 ? '' : 's'}
+              </span>
+              <span className="block">
+                {formatCurrency(totalBalance - creditDue, false, hideAmounts)} after dues
+              </span>
             </p>
           )}
           {depositAccounts.length > 0 && (
@@ -233,7 +240,7 @@ export default function Accounts() {
             <p className="text-muted-foreground mb-4">No accounts yet</p>
             <button
               onClick={() => navigate('/add-account')}
-              className="bg-primary text-primary-foreground rounded-full px-5 py-2.5 text-sm font-medium"
+              className="bg-grad-primary shadow-glow-primary rounded-full px-5 py-2.5 text-sm font-medium text-white"
             >
               Add Account
             </button>

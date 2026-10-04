@@ -11,13 +11,14 @@ import {
 } from 'lucide-react';
 import { useFinanceStore } from '@/store/useFinanceStore';
 import { buildYearInReview } from '@/utils/analytics';
-import { normalizeMonthStartDay } from '@/utils/period';
+import { normalizeMonthStartDay, periodRange, shiftPeriod } from '@/utils/period';
 import {
   formatCurrency,
-  formatDate,
   formatPercentChange,
+  formatShortDate,
   shouldCompactGroup,
 } from '@/utils/formatters';
+import { ChartDataTable } from '@/components/charts/ChartDataTable';
 import { HideAmountsToggle } from '@/components/HideAmountsToggle';
 import Header from '@/components/ui/header';
 import { HeaderIconButton } from '@/components/ui/header-icon-button';
@@ -38,10 +39,11 @@ function ChangeBadge({ value, invert = false }: { value: number | null; invert?:
   }
   return (
     <span
-      className={`inline-flex items-center gap-0.5 text-xs font-medium ${isGood ? 'text-primary' : 'text-destructive'}`}
+      className={`inline-flex items-center gap-0.5 text-xs font-medium ${isGood ? 'text-positive' : 'text-destructive'}`}
     >
-      <Icon size={11} />
-      {formatPercentChange(value).replace('+', '')} vs last year
+      <Icon size={11} aria-hidden />
+      <span className="sr-only">{value > 0 ? 'up ' : 'down '}</span>
+      {formatPercentChange(value).replace(/^[+-]/, '')} vs last year
     </span>
   );
 }
@@ -64,19 +66,39 @@ export default function YearInReview() {
 
   const money = (value: number) => formatCurrency(value, true, hideAmounts);
   const categoryFor = (id: string) => categories.find((c) => c.id === id);
-  const heroCompact = useMemo(
-    () => shouldCompactGroup([review.current.income, review.current.expenses, review.current.net]),
-    [review],
-  );
+  const heroCompact = shouldCompactGroup([
+    review.current.income,
+    review.current.expenses,
+    review.current.net,
+  ]);
   const busiestExpenses = review.busiestMonth?.expenses ?? 0;
+
+  // How far back the year navigation may go: the financial year holding the oldest transaction.
+  const minYearOffset = useMemo(() => {
+    if (transactions.length === 0) return 0;
+    const earliest = transactions.reduce(
+      (min, t) => (t.date < min ? t.date : min),
+      transactions[0].date,
+    );
+    const earliestTime = new Date(earliest).getTime();
+    let range = periodRange('yearly', new Date(), monthStartDay);
+    let offset = 0;
+    // Bounded — a corrupt far-past date shouldn't spin this loop.
+    while (range.start.getTime() > earliestTime && offset > -100) {
+      range = shiftPeriod(range, -1);
+      offset -= 1;
+    }
+    return offset;
+  }, [transactions, monthStartDay]);
 
   const isEmpty = review.current.transactionCount === 0 && review.previous.transactionCount === 0;
 
   const yearNav = (
     <div className="flex items-center justify-center gap-3">
       <button
-        onClick={() => setYearOffset((o) => o - 1)}
-        className="hover:bg-muted text-muted-foreground flex h-8 w-8 items-center justify-center rounded-full transition-colors"
+        onClick={() => setYearOffset((o) => Math.max(minYearOffset, o - 1))}
+        disabled={yearOffset <= minYearOffset}
+        className="hover:bg-muted text-muted-foreground flex h-8 w-8 items-center justify-center rounded-full transition-colors disabled:opacity-30"
         aria-label="Previous year"
       >
         <ChevronLeft size={16} />
@@ -99,7 +121,7 @@ export default function YearInReview() {
         <HeaderIconButton onClick={() => navigate(-1)} aria-label="Back">
           <ArrowLeft />
         </HeaderIconButton>
-        <h1 className="text-base font-semibold">Year in Review</h1>
+        <h1 className="text-base font-semibold">Year in review</h1>
         <HideAmountsToggle />
       </Header>
 
@@ -118,20 +140,16 @@ export default function YearInReview() {
             <div className="card-elevated bg-grad-surface rounded-md p-4">
               <div className="grid grid-cols-3 gap-3 text-center">
                 <div>
-                  <p className="text-muted-foreground text-xs font-medium">
-                    Income
-                  </p>
-                  <p className="text-primary text-sm font-semibold">
+                  <p className="text-muted-foreground text-xs font-medium">Income</p>
+                  <p className="text-positive font-money text-base">
                     {formatCurrency(review.current.income, true, hideAmounts, {
                       forceCompact: heroCompact,
                     })}
                   </p>
                 </div>
                 <div>
-                  <p className="text-muted-foreground text-xs font-medium">
-                    Expenses
-                  </p>
-                  <p className="text-destructive text-sm font-semibold">
+                  <p className="text-muted-foreground text-xs font-medium">Expenses</p>
+                  <p className="text-foreground font-money text-base">
                     {formatCurrency(review.current.expenses, true, hideAmounts, {
                       forceCompact: heroCompact,
                     })}
@@ -140,7 +158,7 @@ export default function YearInReview() {
                 <div>
                   <p className="text-muted-foreground text-xs font-medium">Net</p>
                   <p
-                    className={`text-sm font-semibold ${review.current.net >= 0 ? 'text-positive' : 'text-destructive'}`}
+                    className={`font-money text-base ${review.current.net >= 0 ? 'text-positive' : 'text-destructive'}`}
                   >
                     {formatCurrency(review.current.net, true, hideAmounts, {
                       forceCompact: heroCompact,
@@ -160,12 +178,10 @@ export default function YearInReview() {
 
             {/* Net worth */}
             <div className="card-elevated rounded-md p-4">
-              <h3 className="mb-3 text-sm font-semibold">Net Worth</h3>
+              <h3 className="mb-3 text-sm font-semibold">Net worth</h3>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-muted-foreground text-xs font-medium">
-                    Start of year
-                  </p>
+                  <p className="text-muted-foreground text-xs font-medium">Start of year</p>
                   <p className="text-sm font-semibold">{money(review.netWorthStart)}</p>
                 </div>
                 <ArrowRight size={16} className="text-muted-foreground shrink-0" />
@@ -186,8 +202,17 @@ export default function YearInReview() {
 
             {/* Monthly breakdown */}
             <div className="card-elevated rounded-md p-4">
-              <h3 className="mb-3 text-sm font-semibold">Spending by Month</h3>
-              <div className="flex items-end gap-1.5" style={{ height: 90 }}>
+              <h3 className="mb-3 text-sm font-semibold">Spending by month</h3>
+              <div
+                className="flex items-end gap-1.5"
+                style={{ height: 96 }}
+                role="img"
+                aria-label={`Spending by month in ${review.label}${
+                  review.busiestMonth
+                    ? `, highest in ${review.busiestMonth.label} at ${money(review.busiestMonth.expenses)}`
+                    : ''
+                }. The figures are in the data table below.`}
+              >
                 {review.monthlyBreakdown.map((month) => (
                   <div key={month.key} className="flex flex-1 flex-col items-center gap-1">
                     <div
@@ -202,22 +227,32 @@ export default function YearInReview() {
                             : 4,
                       }}
                     />
-                    <span className="text-muted-foreground text-[9px]">{month.label}</span>
+                    <span className="text-muted-foreground text-xs" aria-hidden>
+                      {month.label}
+                    </span>
                   </div>
                 ))}
               </div>
               {review.busiestMonth && (
                 <p className="text-muted-foreground mt-3 flex items-center justify-center gap-1 text-xs">
-                  <Trophy size={12} className="text-warning" />
+                  <Trophy size={12} className="text-warning" aria-hidden />
                   Biggest spend: {review.busiestMonth.label} · {money(review.busiestMonth.expenses)}
                 </p>
               )}
+              <ChartDataTable
+                caption={`Spending by month, ${review.label}`}
+                columns={['Month', 'Spent']}
+                rows={review.monthlyBreakdown.map((month) => ({
+                  key: month.key,
+                  cells: [month.label, money(month.expenses)],
+                }))}
+              />
             </div>
 
             {/* Top categories */}
             {review.topCategories.length > 0 && (
               <div className="card-elevated rounded-md p-4">
-                <h3 className="mb-3 text-sm font-semibold">Top Categories</h3>
+                <h3 className="mb-3 text-sm font-semibold">Top categories</h3>
                 <ul className="space-y-2.5">
                   {review.topCategories.map((c) => {
                     const category = categoryFor(c.categoryId);
@@ -237,7 +272,7 @@ export default function YearInReview() {
             {/* Biggest movers */}
             {review.movers.length > 0 && (
               <div className="card-elevated rounded-md p-4">
-                <h3 className="mb-3 text-sm font-semibold">Biggest Movers vs Last Year</h3>
+                <h3 className="mb-3 text-sm font-semibold">Biggest movers vs last year</h3>
                 <ul className="space-y-2.5">
                   {review.movers.map((mover) => {
                     const category = categoryFor(mover.categoryId);
@@ -248,7 +283,7 @@ export default function YearInReview() {
                           {category?.name ?? 'Uncategorized'}
                         </span>
                         <span
-                          className={`shrink-0 text-xs font-semibold ${isUp ? 'text-destructive' : 'text-primary'}`}
+                          className={`shrink-0 text-xs font-semibold ${isUp ? 'text-destructive' : 'text-positive'}`}
                         >
                           {isUp ? '+' : '−'}
                           {money(Math.abs(mover.change))}
@@ -263,7 +298,7 @@ export default function YearInReview() {
             {/* Biggest single expense */}
             {review.biggestExpense && (
               <div className="card-elevated rounded-md p-4">
-                <h3 className="mb-2 text-sm font-semibold">Biggest Single Expense</h3>
+                <h3 className="mb-2 text-sm font-semibold">Biggest single expense</h3>
                 <div className="flex items-center justify-between gap-2">
                   <div className="min-w-0">
                     <p className="truncate text-sm font-medium">
@@ -272,7 +307,7 @@ export default function YearInReview() {
                         'Expense'}
                     </p>
                     <p className="text-muted-foreground text-xs">
-                      {formatDate(review.biggestExpense.date)}
+                      {formatShortDate(review.biggestExpense.date)}
                     </p>
                   </div>
                   <p className="text-destructive shrink-0 text-sm font-semibold">

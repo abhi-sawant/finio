@@ -19,6 +19,7 @@ import {
   AlertTriangle,
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { getErrorMessage } from '@/utils/errors';
 import { useFinanceStore } from '@/store/useFinanceStore';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useBackupCryptoStore } from '@/store/useBackupCryptoStore';
@@ -101,6 +102,8 @@ export function BackupSection() {
   const [showBackupHistory, setShowBackupHistory] = useState(false);
   const [backupList, setBackupList] = useState<BackupListEntry[] | null>(null);
   const [backupListLoading, setBackupListLoading] = useState(false);
+  // Set when the list request itself failed — distinct from "loaded, and there are none".
+  const [backupListError, setBackupListError] = useState<string | null>(null);
   const [busyBackupDate, setBusyBackupDate] = useState<string | null>(null);
 
   const cryptoConfig = useBackupCryptoStore((s) => s.config);
@@ -173,7 +176,7 @@ export function BackupSection() {
           // Validate and preview first — an import rewrites every row in the app.
           setPreview({ ...validateBackup(parsed), file });
         } catch (err) {
-          toast.error(err instanceof Error ? err.message : 'Invalid backup file');
+          toast.error(getErrorMessage(err, 'Invalid backup file'));
         }
       };
       reader.onerror = () => toast.error("Couldn't read that file");
@@ -230,7 +233,7 @@ export function BackupSection() {
       await uploadBackup();
       toast.success('Backup uploaded successfully');
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Backup failed');
+      toast.error(getErrorMessage(err, 'Backup failed'));
     } finally {
       setBackingUp(false);
     }
@@ -251,25 +254,30 @@ export function BackupSection() {
       if (err instanceof PassphraseRequiredError) {
         openRestorePassphrasePrompt(null);
       } else {
-        toast.error(err instanceof Error ? err.message : 'Restore failed');
+        toast.error(getErrorMessage(err, 'Restore failed'));
       }
     } finally {
       setRestoring(false);
     }
   };
 
-  const openBackupHistory = async () => {
-    setShowBackupHistory(true);
+  const loadBackupHistory = async () => {
     setBackupListLoading(true);
+    setBackupListError(null);
     try {
       const backups = await listCloudBackups();
       setBackupList(backups);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to load backup history');
-      setBackupList([]);
+      setBackupList(null);
+      setBackupListError(getErrorMessage(err, "Couldn't load backup history"));
     } finally {
       setBackupListLoading(false);
     }
+  };
+
+  const openBackupHistory = () => {
+    setShowBackupHistory(true);
+    void loadBackupHistory();
   };
 
   const handleRestoreBackupDate = async (date: string) => {
@@ -288,7 +296,7 @@ export function BackupSection() {
       if (err instanceof PassphraseRequiredError) {
         openRestorePassphrasePrompt(date);
       } else {
-        toast.error(err instanceof Error ? err.message : 'Restore failed');
+        toast.error(getErrorMessage(err, 'Restore failed'));
       }
     } finally {
       setBusyBackupDate(null);
@@ -425,7 +433,7 @@ export function BackupSection() {
       setShowBackupHistory(false);
       toast.success('Data restored from cloud backup');
     } catch (err) {
-      setPassphraseError(err instanceof Error ? err.message : 'Restore failed');
+      setPassphraseError(getErrorMessage(err, 'Restore failed'));
     } finally {
       setPassphraseBusy(false);
     }
@@ -444,7 +452,7 @@ export function BackupSection() {
       setBackupList((list) => list?.filter((b) => b.backup_date !== date) ?? null);
       toast.success('Backup deleted');
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Delete failed');
+      toast.error(getErrorMessage(err, 'Delete failed'));
     } finally {
       setBusyBackupDate(null);
     }
@@ -458,12 +466,12 @@ export function BackupSection() {
           <button
             onClick={handleCloudBackup}
             disabled={backingUp}
-            className="flex w-full items-center gap-3 p-4 disabled:opacity-60"
+            className="hover:bg-muted/50 flex w-full items-center gap-3 p-4 transition-colors disabled:opacity-60"
           >
             <CloudUpload size={18} className="text-muted-foreground" />
             <div className="flex-1 text-left">
               <span className="block text-sm font-medium">
-                {backingUp ? 'Backing up...' : 'Backup to Cloud'}
+                {backingUp ? 'Backing up…' : 'Back up to cloud'}
               </span>
               {lastBackupAt && (
                 <span className="text-muted-foreground text-xs">
@@ -475,16 +483,19 @@ export function BackupSection() {
           <button
             onClick={handleCloudRestore}
             disabled={restoring}
-            className="flex w-full items-center gap-3 p-4 disabled:opacity-60"
+            className="hover:bg-muted/50 flex w-full items-center gap-3 p-4 transition-colors disabled:opacity-60"
           >
             <Cloud size={18} className="text-muted-foreground" />
             <span className="text-sm font-medium">
-              {restoring ? 'Restoring...' : 'Restore from Cloud'}
+              {restoring ? 'Restoring…' : 'Restore from cloud'}
             </span>
           </button>
-          <button onClick={openBackupHistory} className="flex w-full items-center gap-3 p-4">
+          <button
+            onClick={openBackupHistory}
+            className="hover:bg-muted/50 flex w-full items-center gap-3 p-4 transition-colors"
+          >
             <History size={18} className="text-muted-foreground" />
-            <span className="text-sm font-medium">Backup History</span>
+            <span className="text-sm font-medium">Backup history</span>
           </button>
         </div>
       )}
@@ -506,20 +517,20 @@ export function BackupSection() {
               {cryptoLocked && (
                 <button
                   onClick={() => openCryptoDialog('unlock')}
-                  className="flex w-full items-center gap-3 p-4"
+                  className="hover:bg-muted/50 flex w-full items-center gap-3 p-4 transition-colors"
                 >
-                  <LockKeyhole size={18} className="shrink-0 text-warning" />
+                  <LockKeyhole size={18} className="text-warning shrink-0" />
                   <div className="flex-1 text-left">
-                    <span className="block text-sm font-medium">Cloud backup locked</span>
-                    <span className="text-muted-foreground text-xs">
+                    <p className="text-sm font-medium">Cloud backup locked</p>
+                    <p className="text-muted-foreground text-xs">
                       Tap to enter your passphrase and resume automatic backups
-                    </span>
+                    </p>
                   </div>
                 </button>
               )}
               <button
                 onClick={() => openCryptoDialog('change')}
-                className="flex w-full items-center justify-between p-4"
+                className="hover:bg-muted/50 flex w-full items-center justify-between p-4 transition-colors"
               >
                 <div className="flex items-center gap-3">
                   <KeyRound size={18} className="text-muted-foreground" />
@@ -570,11 +581,12 @@ export function BackupSection() {
             placeholder={cryptoPhase === 'confirm' ? 'Confirm passphrase' : 'Passphrase'}
             onKeyDown={(e) => e.key === 'Enter' && handleCryptoPassphraseSubmit()}
             disabled={passphraseBusy}
+            aria-invalid={!!passphraseError}
           />
           <SecretDialogError message={passphraseError} />
           <Button
             size="lg"
-            className="bg-grad-primary w-full text-white"
+            className="w-full"
             disabled={passphraseBusy || passphraseEntry.length === 0}
             onClick={handleCryptoPassphraseSubmit}
           >
@@ -606,11 +618,12 @@ export function BackupSection() {
             placeholder="Passphrase"
             onKeyDown={(e) => e.key === 'Enter' && handleRestorePassphraseSubmit()}
             disabled={passphraseBusy}
+            aria-invalid={!!passphraseError}
           />
           <SecretDialogError message={passphraseError} />
           <Button
             size="lg"
-            className="bg-grad-primary w-full text-white"
+            className="w-full"
             disabled={passphraseBusy || passphraseEntry.length === 0}
             onClick={handleRestorePassphraseSubmit}
           >
@@ -633,7 +646,7 @@ export function BackupSection() {
           <div className="flex items-center gap-3 p-4">
             <Folder size={18} className="text-muted-foreground shrink-0" />
             <div className="flex-1">
-              <p className="text-sm font-medium">Backup Folder</p>
+              <p className="text-sm font-medium">Backup folder</p>
               <p className="text-muted-foreground text-xs">
                 {backupFolderName
                   ? `Saving to "${backupFolderName}" · keeps latest 10`
@@ -644,17 +657,17 @@ export function BackupSection() {
               onClick={
                 backupFolderName ? handleDisconnectBackupFolder : () => setShowFolderSetupInfo(true)
               }
-              className="bg-muted shrink-0 rounded-sm px-3 py-1.5 text-xs font-medium"
+              className="bg-muted hover:bg-muted/70 shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition-colors"
             >
-              {backupFolderName ? 'Disconnect' : 'Choose Folder'}
+              {backupFolderName ? 'Disconnect' : 'Choose folder'}
             </button>
           </div>
         )}
 
         <Dialog open={showFolderSetupInfo} onOpenChange={setShowFolderSetupInfo}>
-          <DialogContent className="bg-card top-1/3 mx-auto w-11/12 rounded-md">
+          <DialogContent className="bg-card top-1/3 mx-auto w-11/12">
             <DialogHeader>
-              <DialogTitle>Set Up Backup Folder</DialogTitle>
+              <DialogTitle>Set up backup folder</DialogTitle>
               <DialogDescription>
                 In the folder picker that opens next, create a new folder named{' '}
                 <strong className="text-foreground">"Finio"</strong> inside your Downloads folder,
@@ -664,62 +677,67 @@ export function BackupSection() {
               </DialogDescription>
             </DialogHeader>
             <div className="flex gap-2">
-              <Button
-                onClick={handleChooseBackupFolder}
-                className="bg-grad-primary shadow-glow-primary h-auto flex-1 rounded-sm py-2 text-sm font-medium text-white"
-              >
+              <Button onClick={handleChooseBackupFolder} size="lg" className="flex-1">
                 Continue
               </Button>
-              <Button
-                variant="secondary"
-                onClick={() => setShowFolderSetupInfo(false)}
-                className="bg-muted text-muted-foreground h-auto rounded-sm px-4 py-2 text-sm font-medium"
-              >
+              <Button variant="secondary" onClick={() => setShowFolderSetupInfo(false)} size="lg">
                 Cancel
               </Button>
             </div>
           </DialogContent>
         </Dialog>
-        <button onClick={handleExport} className="flex w-full items-center gap-3 p-4">
+        <button
+          onClick={handleExport}
+          className="hover:bg-muted/50 flex w-full items-center gap-3 p-4 transition-colors"
+        >
           <Download size={18} className="text-muted-foreground" />
-          <span className="text-sm font-medium">Export Data (JSON)</span>
+          <span className="text-sm font-medium">Export data (JSON)</span>
         </button>
-        <button onClick={handleImport} className="flex w-full items-center gap-3 p-4">
+        <button
+          onClick={handleImport}
+          className="hover:bg-muted/50 flex w-full items-center gap-3 p-4 transition-colors"
+        >
           <Upload size={18} className="text-muted-foreground" />
-          <span className="text-sm font-medium">Import Data</span>
+          <span className="text-sm font-medium">Import data</span>
         </button>
         <button
           onClick={() => navigate('/import-csv')}
-          className="flex w-full items-center gap-3 p-4"
+          className="hover:bg-muted/50 flex w-full items-center gap-3 p-4 transition-colors"
         >
           <FileSpreadsheet size={18} className="text-muted-foreground" />
           <div className="flex-1 text-left">
-            <p className="text-sm font-medium">Import Bank CSV</p>
+            <p className="text-sm font-medium">Import bank CSV</p>
             <p className="text-muted-foreground text-xs">
               Map columns from a bank or card statement export
             </p>
           </div>
         </button>
-        <button onClick={handleReconcile} className="flex w-full items-center gap-3 p-4">
+        <button
+          onClick={handleReconcile}
+          className="hover:bg-muted/50 flex w-full items-center gap-3 p-4 transition-colors"
+        >
           <Scale size={18} className="text-muted-foreground shrink-0" />
           <div className="flex-1 text-left">
-            <p className="text-sm font-medium">Reconcile Balances</p>
+            <p className="text-sm font-medium">Reconcile balances</p>
             <p className="text-muted-foreground text-xs">
               Rebuild every account balance from its opening balance and transactions
             </p>
           </div>
         </button>
-        <button onClick={handleReset} className="flex w-full items-center gap-3 p-4">
+        <button
+          onClick={handleReset}
+          className="hover:bg-muted/50 flex w-full items-center gap-3 p-4 transition-colors"
+        >
           <RotateCcw size={18} className="text-destructive" />
-          <span className="text-destructive text-sm font-medium">Reset to Defaults</span>
+          <span className="text-destructive text-sm font-medium">Reset to defaults</span>
         </button>
       </div>
 
       {/* Import dry-run preview */}
       <Dialog open={preview !== null} onOpenChange={(open) => !open && setPreview(null)}>
-        <DialogContent className="bg-card mx-auto max-h-[70vh] w-11/12 overflow-y-auto rounded-md sm:max-w-md">
+        <DialogContent className="bg-card mx-auto max-h-[70vh] w-11/12 overflow-y-auto sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Review Import</DialogTitle>
+            <DialogTitle>Review import</DialogTitle>
             <DialogDescription className="truncate">
               {preview?.file.name}
               {preview?.meta.exportedAt &&
@@ -760,7 +778,7 @@ export function BackupSection() {
                 <div className="bg-muted/50 space-y-1.5 rounded-sm p-3">
                   {preview.report.warnings.map((warning) => (
                     <p key={warning} className="flex gap-2 text-xs">
-                      <AlertTriangle size={14} className="mt-px shrink-0 text-warning" />
+                      <AlertTriangle size={14} className="text-warning mt-px shrink-0" />
                       <span>{warning}</span>
                     </p>
                   ))}
@@ -784,24 +802,22 @@ export function BackupSection() {
                 <Button
                   onClick={() => runImport('merge')}
                   disabled={!importable}
-                  className="bg-grad-primary shadow-glow-primary h-auto w-full rounded-sm py-2.5 text-sm font-medium text-white"
+                  size="lg"
+                  className="w-full"
                 >
                   Merge with existing data
                 </Button>
                 <div className="flex gap-2">
                   <Button
-                    variant="secondary"
+                    variant="destructive"
                     onClick={() => runImport('replace')}
                     disabled={!importable}
-                    className="text-destructive bg-muted h-auto flex-1 rounded-sm py-2.5 text-sm font-medium"
+                    size="lg"
+                    className="flex-1"
                   >
                     Replace everything
                   </Button>
-                  <Button
-                    variant="secondary"
-                    onClick={() => setPreview(null)}
-                    className="bg-muted text-muted-foreground h-auto rounded-sm px-4 py-2.5 text-sm font-medium"
-                  >
+                  <Button variant="secondary" onClick={() => setPreview(null)} size="lg">
                     Cancel
                   </Button>
                 </div>
@@ -813,14 +829,23 @@ export function BackupSection() {
 
       {/* Backup history */}
       <Dialog open={showBackupHistory} onOpenChange={setShowBackupHistory}>
-        <DialogContent className="bg-card mx-auto max-h-[70vh] w-11/12 overflow-y-auto rounded-md sm:max-w-md">
+        <DialogContent className="bg-card mx-auto max-h-[70vh] w-11/12 overflow-y-auto sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Backup History</DialogTitle>
+            <DialogTitle>Backup history</DialogTitle>
             <DialogDescription>Every backup version stored on the server.</DialogDescription>
           </DialogHeader>
 
           {backupListLoading ? (
-            <p className="text-muted-foreground py-6 text-center text-sm">Loading...</p>
+            <p className="text-muted-foreground py-6 text-center text-sm">Loading…</p>
+          ) : backupListError ? (
+            <div className="flex flex-col items-center gap-3 py-6 text-center" role="alert">
+              <AlertTriangle size={20} className="text-destructive" aria-hidden="true" />
+              <p className="text-sm font-medium">Couldn&rsquo;t load backup history</p>
+              <p className="text-muted-foreground text-xs">{backupListError}</p>
+              <Button variant="secondary" onClick={() => void loadBackupHistory()}>
+                Retry
+              </Button>
+            </div>
           ) : !backupList || backupList.length === 0 ? (
             <p className="text-muted-foreground py-6 text-center text-sm">No backups found</p>
           ) : (
@@ -838,7 +863,7 @@ export function BackupSection() {
                       variant="secondary"
                       disabled={busyBackupDate === backup.backup_date}
                       onClick={() => handleRestoreBackupDate(backup.backup_date)}
-                      className="bg-muted h-auto rounded-sm px-3 py-1.5 text-xs font-medium"
+                      size="sm"
                     >
                       Restore
                     </Button>
@@ -847,7 +872,8 @@ export function BackupSection() {
                       size="icon"
                       disabled={busyBackupDate === backup.backup_date}
                       onClick={() => handleDeleteBackupDate(backup.backup_date)}
-                      className="text-destructive h-8 w-8 rounded-sm"
+                      aria-label={`Delete backup from ${formatFullDate(backup.backup_date)}`}
+                      className="text-destructive hover:text-destructive"
                     >
                       <Trash2 size={15} />
                     </Button>

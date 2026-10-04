@@ -6,6 +6,22 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Stock Tailwind shadows, re-tinted lavender (Mudra's Lavender-Shadow rule) and dark-aware via
+   --shadow-tint, so every `shadow` / `shadow-md` / `shadow-lg` call site follows the world. */
+@theme {
+  --shadow-2xs: 0 1px 0 rgb(var(--shadow-tint) / 0.05);
+  --shadow-xs: 0 1px 2px 0 rgb(var(--shadow-tint) / 0.08);
+  --shadow-sm:
+    0 2px 6px -1px rgb(var(--shadow-tint) / 0.14), 0 1px 2px -1px rgb(var(--shadow-tint) / 0.1);
+  --shadow-md:
+    0 6px 14px -4px rgb(var(--shadow-tint) / 0.2), 0 2px 4px -2px rgb(var(--shadow-tint) / 0.12);
+  --shadow-lg:
+    0 14px 28px -10px rgb(var(--shadow-tint) / 0.28), 0 4px 8px -4px rgb(var(--shadow-tint) / 0.12);
+  --shadow-xl:
+    0 22px 44px -16px rgb(var(--shadow-tint) / 0.34), 0 8px 12px -6px rgb(var(--shadow-tint) / 0.14);
+  --shadow-2xl: 0 30px 60px -20px rgb(var(--shadow-tint) / 0.42);
+}
+
 @theme inline {
   /* Mudra: Unbounded is the banknote numeral — titles and headline money. Geist does the reading. */
   --font-heading: 'Unbounded Variable', 'Geist Variable', sans-serif;
@@ -129,6 +145,9 @@
   --thread: linear-gradient(90deg, hsl(150 70% 38%), hsl(200 78% 46%), hsl(255 70% 56%));
 
   /* Depth is lavender-tinted, never grey. */
+  --shadow-tint: 60 40 140;
+  /* Modal scrim: dims (never lightens) in both modes. */
+  --scrim: rgb(29 23 71 / 0.24);
   --shadow-card: 0 18px 36px -26px rgb(60 40 140 / 0.42);
   --shadow-float: 0 28px 56px -26px rgb(40 26 110 / 0.5);
   --shadow-primary: 0 10px 22px -10px rgb(75 54 199 / 0.65);
@@ -218,6 +237,8 @@
   --register: repeating-linear-gradient(115deg, #8f7dff 0 2px, #bdb1ff 2px 4.5px);
   --thread: linear-gradient(90deg, hsl(150 65% 52%), hsl(200 80% 60%), hsl(255 85% 75%));
 
+  --shadow-tint: 0 0 0;
+  --scrim: rgb(6 4 24 / 0.6);
   --shadow-card: 0 20px 40px -26px rgb(0 0 0 / 0.7);
   --shadow-float: 0 28px 56px -24px rgb(0 0 0 / 0.75);
   --shadow-primary: 0 10px 24px -8px rgb(108 87 214 / 0.7);
@@ -269,12 +290,9 @@
     -webkit-mask: url('/guilloche.svg') center / contain no-repeat;
     mask: url('/guilloche.svg') center / contain no-repeat;
     pointer-events: none;
-    z-index: 0;
-  }
-
-  #root {
-    position: relative;
-    z-index: 1;
+    /* Behind all content without giving #root a stacking context — a z-indexed #root would trap
+       the Toaster beneath portalled dialogs. */
+    z-index: -1;
   }
 
   html {
@@ -327,105 +345,6 @@
 }
 
 @layer utilities {
-  /* Headline money: the wide banknote numeral. Rows and body figures stay in Geist. */
-  .font-money {
-    font-family: var(--font-money);
-    letter-spacing: -0.03em;
-    font-weight: 600;
-  }
-
-  /* ₹100-note gradients — the filled-action and tint vocabulary. */
-  .bg-grad-primary {
-    background-image: var(--grad-primary);
-  }
-
-  .bg-grad-primary-soft {
-    background-image: var(--grad-primary-soft);
-  }
-
-  .bg-grad-success {
-    background-image: var(--grad-success);
-  }
-
-  .bg-grad-success-soft {
-    background-image: var(--grad-success-soft);
-  }
-
-  .bg-grad-danger {
-    background-image: var(--grad-danger);
-  }
-
-  .bg-grad-danger-soft {
-    background-image: var(--grad-danger-soft);
-  }
-
-  .bg-grad-info {
-    background-image: var(--grad-info);
-  }
-
-  .bg-grad-warning {
-    background-image: var(--grad-warning);
-  }
-
-  .bg-grad-surface {
-    background-image: var(--grad-surface);
-  }
-
-  .text-grad-primary {
-    color: var(--primary);
-  }
-
-  .shadow-glow-primary {
-    box-shadow:
-      inset 0 1px 0 rgb(255 255 255 / 0.25),
-      var(--shadow-primary);
-  }
-
-  .shadow-glow-success {
-    box-shadow:
-      inset 0 1px 0 rgb(255 255 255 / 0.25),
-      var(--shadow-success);
-  }
-
-  .shadow-glow-danger {
-    box-shadow:
-      inset 0 1px 0 rgb(255 255 255 / 0.25),
-      var(--shadow-danger);
-  }
-
-  .ring-grad-primary {
-    box-shadow:
-      0 0 0 1.5px var(--primary),
-      var(--shadow-float);
-  }
-
-  /* Frosted glass card: translucent over the note paper, white hairline, lavender-tinted lift. */
-  .card-elevated {
-    background-color: var(--glass);
-    border: 1px solid var(--glass-border);
-    box-shadow:
-      inset 0 1px 0 var(--glass-highlight),
-      var(--shadow-card);
-    -webkit-backdrop-filter: blur(18px) saturate(170%);
-    backdrop-filter: blur(18px) saturate(170%);
-  }
-
-  /* Header, tab bar, sidebar — the glass that the page scrolls under. */
-  .glass-chrome {
-    background-color: var(--glass-strong);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
-    backdrop-filter: blur(24px) saturate(180%);
-  }
-
-  /* The lavender coin — the add button's single-hue gradient. */
-  .bg-coin {
-    background-image: var(--coin);
-    color: #1d1747;
-    box-shadow:
-      inset 0 1px 1px rgb(255 255 255 / 0.6),
-      0 10px 24px -6px rgb(108 87 214 / 0.7);
-  }
-
   /* A miniature banknote in its account type's denomination tint, with the windowed thread. */
   .note-chip {
     position: relative;
@@ -449,13 +368,6 @@
     opacity: 0.4;
     -webkit-mask: repeating-linear-gradient(180deg, #000 0 3px, transparent 3px 5px);
     mask: repeating-linear-gradient(180deg, #000 0 3px, transparent 3px 5px);
-  }
-
-  /* Progress through the windowed security thread — goals and other "toward a target" bars. */
-  .thread-fill {
-    background-image: var(--thread);
-    -webkit-mask: repeating-linear-gradient(90deg, #000 0 10px, transparent 10px 13px);
-    mask: repeating-linear-gradient(90deg, #000 0 10px, transparent 10px 13px);
   }
 
   .pb-safe {
@@ -664,4 +576,165 @@
 .dark .note-card-fibres {
   opacity: 0.85;
   filter: drop-shadow(0 0 2px currentColor);
+}
+
+/* ───────────── Toasts (Sonner): frosted note-paper glass, semantic icon colours ───────────── */
+[data-sonner-toaster] {
+  --normal-bg: var(--glass-strong);
+  --normal-border: var(--glass-border);
+  --normal-text: var(--foreground);
+  --border-radius: calc(var(--radius) * 0.8);
+  font-family: var(--font-sans);
+}
+
+[data-sonner-toaster] [data-sonner-toast] {
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
+  box-shadow:
+    inset 0 1px 0 var(--glass-highlight),
+    var(--shadow-float);
+}
+
+[data-sonner-toast] [data-description] {
+  color: var(--muted-foreground);
+}
+
+[data-sonner-toast][data-type='success'] [data-icon] {
+  color: var(--positive);
+}
+
+[data-sonner-toast][data-type='error'] [data-icon] {
+  color: var(--destructive);
+}
+
+[data-sonner-toast][data-type='warning'] [data-icon] {
+  color: var(--warning);
+}
+
+[data-sonner-toast][data-type='info'] [data-icon] {
+  color: var(--primary);
+}
+
+/* Undo and other toast actions: the ₹100 lavender pill. */
+[data-sonner-toast] [data-button][data-action] {
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 9999px;
+  background-image: var(--grad-primary);
+  color: #fff;
+  font-weight: 600;
+}
+
+[data-sonner-toast] [data-close-button] {
+  background: var(--popover);
+  border-color: var(--border);
+  color: var(--muted-foreground);
+}
+
+/* ───────────── Mudra utilities — `@utility` (not @layer) so variants such as
+   `data-[x]:bg-grad-primary` or `hover:card-elevated` work. ───────────── */
+/* Headline money: the wide banknote numeral. Rows and body figures stay in Geist. */
+@utility font-money {
+  font-family: var(--font-money);
+  letter-spacing: -0.03em;
+  font-weight: 600;
+}
+
+/* ₹100-note gradients — the filled-action and tint vocabulary. */
+@utility bg-grad-primary {
+  background-image: var(--grad-primary);
+}
+
+@utility bg-grad-primary-soft {
+  background-image: var(--grad-primary-soft);
+}
+
+@utility bg-grad-success {
+  background-image: var(--grad-success);
+}
+
+@utility bg-grad-success-soft {
+  background-image: var(--grad-success-soft);
+}
+
+@utility bg-grad-danger {
+  background-image: var(--grad-danger);
+}
+
+@utility bg-grad-danger-soft {
+  background-image: var(--grad-danger-soft);
+}
+
+@utility bg-grad-info {
+  background-image: var(--grad-info);
+}
+
+@utility bg-grad-warning {
+  background-image: var(--grad-warning);
+}
+
+@utility bg-grad-surface {
+  background-image: var(--grad-surface);
+}
+
+@utility text-grad-primary {
+  color: var(--primary);
+}
+
+@utility shadow-glow-primary {
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.25),
+    var(--shadow-primary);
+}
+
+@utility shadow-glow-success {
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.25),
+    var(--shadow-success);
+}
+
+@utility shadow-glow-danger {
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.25),
+    var(--shadow-danger);
+}
+
+@utility ring-grad-primary {
+  box-shadow:
+    0 0 0 1.5px var(--primary),
+    var(--shadow-float);
+}
+
+/* Frosted glass card: translucent over the note paper, white hairline, lavender-tinted lift. */
+@utility card-elevated {
+  background-color: var(--glass);
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    inset 0 1px 0 var(--glass-highlight),
+    var(--shadow-card);
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
+  backdrop-filter: blur(18px) saturate(170%);
+}
+
+/* Header, tab bar, sidebar — the glass that the page scrolls under. */
+@utility glass-chrome {
+  background-color: var(--glass-strong);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
+}
+
+/* The lavender coin — the add button's single-hue gradient. */
+@utility bg-coin {
+  background-image: var(--coin);
+  color: #1d1747;
+  box-shadow:
+    inset 0 1px 1px rgb(255 255 255 / 0.6),
+    0 10px 24px -6px rgb(108 87 214 / 0.7);
+}
+
+/* Progress through the windowed security thread — goals and other "toward a target" bars. */
+@utility thread-fill {
+  background-image: var(--thread);
+  -webkit-mask: repeating-linear-gradient(90deg, #000 0 10px, transparent 10px 13px);
+  mask: repeating-linear-gradient(90deg, #000 0 10px, transparent 10px 13px);
 }

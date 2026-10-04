@@ -92,6 +92,11 @@ export function NotificationsSection() {
   const handleTestNotification = async () => {
     try {
       await showTestNotification();
+      // The OS notification may land somewhere easy to miss (or be silenced by Focus modes),
+      // so confirm in-app that it was sent.
+      toast.success('Test reminder sent', {
+        description: "If it didn't appear, check your device's notification settings.",
+      });
     } catch {
       toast.error('Could not show a notification');
     }
@@ -180,7 +185,8 @@ export function NotificationsSection() {
             </div>
             <button
               onClick={() => setShowLeadDaysPicker(true)}
-              className="bg-muted shrink-0 rounded-sm px-3 py-1.5 text-sm font-medium"
+              aria-label="Change how early to remind"
+              className="bg-muted hover:bg-muted/70 shrink-0 rounded-full px-3 py-1.5 text-sm font-medium transition-colors"
             >
               {settings.notifyLeadDays === 0 ? 'Same day' : `${settings.notifyLeadDays}d`}
             </button>
@@ -188,7 +194,10 @@ export function NotificationsSection() {
 
           {/* A reminder may be days out, so without this there is no way to confirm the
               pipeline actually works. */}
-          <button onClick={handleTestNotification} className="flex w-full items-center gap-3 p-4">
+          <button
+            onClick={handleTestNotification}
+            className="hover:bg-muted/50 flex w-full items-center gap-3 p-4 transition-colors"
+          >
             <BellRing size={18} className="text-muted-foreground shrink-0" />
             <span className="text-sm font-medium">Send a test reminder</span>
           </button>
@@ -196,7 +205,7 @@ export function NotificationsSection() {
       )}
 
       <Dialog open={showLeadDaysPicker} onOpenChange={setShowLeadDaysPicker}>
-        <DialogContent className="bg-card top-1/3 mx-auto w-11/12 rounded-md sm:max-w-sm">
+        <DialogContent className="bg-card top-1/3 mx-auto w-11/12 sm:max-w-sm">
           <DialogHeader>
             <DialogTitle>Remind me</DialogTitle>
             <DialogDescription>
@@ -212,9 +221,10 @@ export function NotificationsSection() {
                   refreshNotificationSchedule();
                   setShowLeadDaysPicker(false);
                 }}
-                className={`rounded-sm py-2 text-sm font-medium transition-colors ${
+                aria-pressed={days === settings.notifyLeadDays}
+                className={`rounded-full py-2 text-sm font-medium transition-colors ${
                   days === settings.notifyLeadDays
-                    ? 'bg-grad-primary text-white'
+                    ? 'bg-grad-primary shadow-glow-primary text-white'
                     : 'bg-muted hover:bg-muted/70'
                 }`}
               >

@@ -23,7 +23,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import type { CategoryRule, TransactionType } from '@/types';
+import type { Account, CategoryRule, TransactionType } from '@/types';
+import { ACCOUNT_TYPE_LABEL } from '@/components/accounts/note';
 import Main from '@/components/ui/main';
 import Header from '@/components/ui/header';
 import { HeaderIconButton, HeaderIconSpacer } from '@/components/ui/header-icon-button';
@@ -34,6 +35,7 @@ export default function AddTransaction() {
   const [searchParams] = useSearchParams();
   const transactions = useFinanceStore((s) => s.transactions);
   const accounts = useFinanceStore((s) => s.accounts);
+  const hideAmounts = useFinanceStore((s) => s.settings.hideAmounts);
   const categories = useFinanceStore((s) => s.categories);
   const labels = useFinanceStore((s) => s.labels);
   const rules = useFinanceStore((s) => s.rules);
@@ -324,8 +326,8 @@ export default function AddTransaction() {
       if (Math.abs(splitRemaining) > 0.01) {
         toast.error(
           splitRemaining > 0
-            ? `${formatCurrency(splitRemaining)} left to allocate`
-            : `${formatCurrency(-splitRemaining)} over the total`,
+            ? `${formatCurrency(splitRemaining, false, hideAmounts)} left to allocate`
+            : `${formatCurrency(-splitRemaining, false, hideAmounts)} over the total`,
         );
         return;
       }
@@ -393,7 +395,7 @@ export default function AddTransaction() {
           <ArrowLeft />
         </HeaderIconButton>
         <h1 className="text-base font-semibold">
-          {existing ? 'Edit Transaction' : 'Add Transaction'}
+          {existing ? 'Edit transaction' : 'Add transaction'}
         </h1>
         {existing ? (
           <HeaderIconButton onClick={handleDelete} aria-label="Delete" tone="destructive">
@@ -404,23 +406,25 @@ export default function AddTransaction() {
         )}
       </Header>
 
-      <Main className="lg:max-w-xl">
-        {/* Type Selector */}
-        <div className="bg-muted grid grid-cols-3 gap-2 rounded-md p-1">
+      <Main className="lg:max-w-xl lg:pb-28">
+        {/* Type selector — one lavender selected state for every type. */}
+        <div
+          className="bg-muted grid grid-cols-3 gap-1 rounded-full p-1"
+          role="group"
+          aria-label="Type"
+        >
           {(['expense', 'income', 'transfer'] as const).map((t) => {
             const isActive = type === t;
-            const grad =
-              t === 'expense'
-                ? 'bg-grad-danger'
-                : t === 'income'
-                  ? 'bg-grad-success'
-                  : 'bg-grad-info';
             return (
               <button
                 key={t}
+                type="button"
                 onClick={() => handleTypeChange(t)}
-                className={`rounded-sm py-2 text-sm font-medium capitalize transition-all ${
-                  isActive ? `${grad} text-white shadow` : 'text-muted-foreground'
+                aria-pressed={isActive}
+                className={`rounded-full py-2 text-sm font-medium capitalize transition-all ${
+                  isActive
+                    ? 'bg-grad-primary shadow-glow-primary text-white'
+                    : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
                 {t}
@@ -438,36 +442,18 @@ export default function AddTransaction() {
         {/* Account */}
         <div>
           <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">
-            {type === 'transfer' ? 'From Account' : 'Account'}
+            {type === 'transfer' ? 'From account' : 'Account'}
           </Label>
           <Select value={accountId} onValueChange={(v) => setAccountId(v ?? '')}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select account">
-                {accounts.find((a) => a.id === accountId) && (
-                  <span>
-                    {accounts.find((a) => a.id === accountId)?.name}{' '}
-                    <span className="text-muted-foreground text-xs">
-                      [
-                      {accounts
-                        .find((a) => a.id === accountId)
-                        ?.type?.charAt(0)
-                        .toUpperCase()}
-                      {accounts.find((a) => a.id === accountId)?.type?.slice(1)}]
-                    </span>
-                  </span>
-                )}
+                {accountOption(accounts.find((a) => a.id === accountId))}
               </SelectValue>
             </SelectTrigger>
             <SelectContent>
               {selectableAccounts.map((a) => (
                 <SelectItem key={a.id} value={a.id}>
-                  <span className="flex items-center gap-1">
-                    {a.name}{' '}
-                    <span className="text-muted-foreground text-xs">
-                      [{a.type?.charAt(0).toUpperCase()}
-                      {a.type?.slice(1)}]
-                    </span>
-                  </span>
+                  {accountOption(a)}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -490,24 +476,12 @@ export default function AddTransaction() {
         {type === 'transfer' && (
           <div>
             <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">
-              To Account
+              To account
             </Label>
             <Select value={toAccountId} onValueChange={(v) => setToAccountId(v ?? '')}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select account">
-                  {accounts.find((a) => a.id === toAccountId) && (
-                    <span>
-                      {accounts.find((a) => a.id === toAccountId)?.name}{' '}
-                      <span className="text-muted-foreground text-xs">
-                        [
-                        {accounts
-                          .find((a) => a.id === toAccountId)
-                          ?.type?.charAt(0)
-                          .toUpperCase()}
-                        {accounts.find((a) => a.id === toAccountId)?.type?.slice(1)}]
-                      </span>
-                    </span>
-                  )}
+                  {accountOption(accounts.find((a) => a.id === toAccountId))}
                 </SelectValue>
               </SelectTrigger>
               <SelectContent>
@@ -515,13 +489,7 @@ export default function AddTransaction() {
                   .filter((a) => a.id !== accountId)
                   .map((a) => (
                     <SelectItem key={a.id} value={a.id}>
-                      <span className="flex items-center gap-1">
-                        {a.name}{' '}
-                        <span className="text-muted-foreground text-xs">
-                          [{a.type?.charAt(0).toUpperCase()}
-                          {a.type?.slice(1)}]
-                        </span>
-                      </span>
+                      {accountOption(a)}
                     </SelectItem>
                   ))}
               </SelectContent>
@@ -538,8 +506,11 @@ export default function AddTransaction() {
                 <button
                   type="button"
                   onClick={toggleSplitMode}
-                  className={`flex items-center gap-1 rounded-full px-2 py-1 text-[11px] font-medium transition-all ${
-                    splitMode ? 'bg-grad-primary text-white' : 'bg-muted text-muted-foreground'
+                  aria-pressed={splitMode}
+                  className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium transition-all ${
+                    splitMode
+                      ? 'bg-grad-primary shadow-glow-primary text-white'
+                      : 'bg-muted text-muted-foreground'
                   }`}
                 >
                   <Split size={12} /> Split
@@ -576,7 +547,8 @@ export default function AddTransaction() {
                       step="0.01"
                       value={row.amount}
                       onChange={(e) => updateSplitRow(idx, { amount: e.target.value })}
-                      className="w-24 shrink-0"
+                      aria-label={`Split ${idx + 1} amount`}
+                      className="w-24 shrink-0 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                     />
                     <button
                       type="button"
@@ -607,8 +579,8 @@ export default function AddTransaction() {
                     : Math.abs(splitRemaining) < 0.01
                       ? 'Fully allocated'
                       : splitRemaining > 0
-                        ? `${formatCurrency(splitRemaining)} left to allocate`
-                        : `${formatCurrency(-splitRemaining)} over the total`}
+                        ? `${formatCurrency(splitRemaining, false, hideAmounts)} left to allocate`
+                        : `${formatCurrency(-splitRemaining, false, hideAmounts)} over the total`}
                 </p>
               </div>
             ) : (
@@ -645,7 +617,7 @@ export default function AddTransaction() {
         {/* Date */}
         <div>
           <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">
-            Date & Time
+            Date & time
           </Label>
           <DateTimePicker value={date} onChange={setDate} />
         </div>
@@ -660,6 +632,7 @@ export default function AddTransaction() {
             maxLength={MAX_NOTE_LENGTH}
             onChange={(e) => handleNoteChange(e.target.value)}
             list="note-suggestions"
+            className="[&::-webkit-calendar-picker-indicator]:hidden! [&::-webkit-list-button]:hidden!"
           />
           <datalist id="note-suggestions">
             {notesSuggestions.map((n) => (
@@ -694,18 +667,30 @@ export default function AddTransaction() {
                 return (
                   <button
                     key={label.id}
+                    type="button"
                     onClick={() => toggleLabel(label.id)}
-                    className={`rounded-full px-3 py-1.5 text-xs font-medium transition-all ${
-                      active ? 'text-white shadow' : 'bg-muted text-muted-foreground'
+                    aria-pressed={active}
+                    className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-all ${
+                      active
+                        ? 'text-foreground'
+                        : 'bg-muted text-muted-foreground border-transparent'
                     }`}
+                    // Selected: a soft tint of the label's own colour with ink text, so a light
+                    // user colour (yellow, mint) stays readable.
                     style={
                       active
                         ? {
-                            backgroundImage: `linear-gradient(135deg, ${label.color}, ${label.color}cc)`,
+                            backgroundColor: `color-mix(in srgb, ${label.color} 18%, transparent)`,
+                            borderColor: label.color,
                           }
                         : undefined
                     }
                   >
+                    <span
+                      className="size-2 shrink-0 rounded-full"
+                      style={{ backgroundColor: label.color }}
+                      aria-hidden="true"
+                    />
                     {label.name}
                   </button>
                 );
@@ -715,12 +700,27 @@ export default function AddTransaction() {
         )}
 
         {/* Submit */}
-        <div className="glass-chrome pb-safe fixed bottom-0 left-0 z-50 w-full border-t border-[var(--glass-border)] p-3">
-          <Button onClick={handleSubmit} className="w-full rounded-md" size="lg">
-            {existing ? 'Update Transaction' : 'Add Transaction'}
+        {/* Glass bar spans the content column (after the desktop sidebar); the button keeps
+            to the form's own width. */}
+        <div className="glass-chrome fixed right-0 bottom-0 left-0 z-50 border-t border-[var(--glass-border)] px-3 pt-3 pb-[calc(env(safe-area-inset-bottom,0px)+0.75rem)] lg:left-60">
+          <Button onClick={handleSubmit} className="mx-auto flex w-full max-w-lg" size="lg">
+            {existing ? 'Update transaction' : 'Add transaction'}
           </Button>
         </div>
       </Main>
     </>
+  );
+}
+
+/** An account in a picker: its name plus its human type name ("Credit card"), muted. */
+function accountOption(account: Account | undefined) {
+  if (!account) return null;
+  return (
+    <span className="flex min-w-0 items-center gap-1.5">
+      <span className="truncate">{account.name}</span>
+      <span className="text-muted-foreground shrink-0 text-xs">
+        {ACCOUNT_TYPE_LABEL[account.type] ?? account.type}
+      </span>
+    </span>
   );
 }

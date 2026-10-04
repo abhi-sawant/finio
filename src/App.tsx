@@ -2,6 +2,7 @@ import { lazy, Suspense, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useParams } from 'react-router';
 import { Toaster } from 'sonner';
 import { Layout } from '@/components/layout/Layout';
+import { DesktopShell } from '@/components/layout/DesktopShell';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { ConfirmProvider } from '@/components/ui/confirm';
 import { useFinanceStore } from '@/store/useFinanceStore';
@@ -34,6 +35,7 @@ const Goals = lazy(() => import('@/pages/Goals'));
 const Debts = lazy(() => import('@/pages/Debts'));
 const Loans = lazy(() => import('@/pages/Loans'));
 const AddLoan = lazy(() => import('@/pages/AddLoan'));
+const LoanSchedule = lazy(() => import('@/pages/LoanSchedule'));
 const ImportCsv = lazy(() => import('@/pages/ImportCsv'));
 const CategoryRules = lazy(() => import('@/pages/CategoryRules'));
 const Merchants = lazy(() => import('@/pages/Merchants'));
@@ -110,47 +112,58 @@ function AppRoutes() {
         <Route path="settings" element={<Settings />} />
         <Route path="settings/:category" element={<SettingsCategory />} />
       </Route>
-      <Route path="add-transaction" element={<AddTransaction />} />
-      <Route
-        path="edit-transaction/:id"
-        element={
-          <EditGuard exists={hasTransaction} fallback="/transactions">
-            <AddTransaction />
-          </EditGuard>
-        }
-      />
-      {/* Web Share Target. Must be an explicit route — the "*" catch-all below redirects to
-          "/" and would drop the shared payload's query params on the way. */}
-      <Route path="share-target" element={<AddTransaction />} />
-      <Route path="add-account" element={<AddAccount />} />
-      <Route
-        path="edit-account/:id"
-        element={
-          <EditGuard exists={hasAccount} fallback="/accounts">
-            <AddAccount />
-          </EditGuard>
-        }
-      />
-      <Route path="manage-categories" element={<ManageCategories />} />
-      <Route path="manage-labels" element={<ManageLabels />} />
-      <Route path="budgets" element={<Budgets />} />
-      <Route path="recurring" element={<Recurring />} />
-      <Route path="goals" element={<Goals />} />
-      <Route path="debts" element={<Debts />} />
-      <Route path="loans" element={<Loans />} />
-      <Route path="add-loan" element={<AddLoan />} />
-      <Route
-        path="edit-loan/:id"
-        element={
-          <EditGuard exists={hasLoan} fallback="/loans">
-            <AddLoan />
-          </EditGuard>
-        }
-      />
-      <Route path="import-csv" element={<ImportCsv />} />
-      <Route path="category-rules" element={<CategoryRules />} />
-      <Route path="merchants" element={<Merchants />} />
-      <Route path="year-in-review" element={<YearInReview />} />
+      {/* Full-screen on mobile; on desktop the sidebar stays (DesktopShell). */}
+      <Route element={<DesktopShell />}>
+        <Route path="add-transaction" element={<AddTransaction />} />
+        <Route
+          path="edit-transaction/:id"
+          element={
+            <EditGuard exists={hasTransaction} fallback="/transactions">
+              <AddTransaction />
+            </EditGuard>
+          }
+        />
+        {/* Web Share Target. Must be an explicit route — the "*" catch-all below redirects to
+            "/" and would drop the shared payload's query params on the way. */}
+        <Route path="share-target" element={<AddTransaction />} />
+        <Route path="add-account" element={<AddAccount />} />
+        <Route
+          path="edit-account/:id"
+          element={
+            <EditGuard exists={hasAccount} fallback="/accounts">
+              <AddAccount />
+            </EditGuard>
+          }
+        />
+        <Route path="manage-categories" element={<ManageCategories />} />
+        <Route path="manage-labels" element={<ManageLabels />} />
+        <Route path="budgets" element={<Budgets />} />
+        <Route path="recurring" element={<Recurring />} />
+        <Route path="goals" element={<Goals />} />
+        <Route path="debts" element={<Debts />} />
+        <Route path="loans" element={<Loans />} />
+        <Route path="add-loan" element={<AddLoan />} />
+        <Route
+          path="loan-schedule/:id"
+          element={
+            <EditGuard exists={hasLoan} fallback="/loans">
+              <LoanSchedule />
+            </EditGuard>
+          }
+        />
+        <Route
+          path="edit-loan/:id"
+          element={
+            <EditGuard exists={hasLoan} fallback="/loans">
+              <AddLoan />
+            </EditGuard>
+          }
+        />
+        <Route path="import-csv" element={<ImportCsv />} />
+        <Route path="category-rules" element={<CategoryRules />} />
+        <Route path="merchants" element={<Merchants />} />
+        <Route path="year-in-review" element={<YearInReview />} />
+      </Route>
       <Route path="login" element={<Login />} />
       <Route path="register" element={<Register />} />
       <Route path="verify-otp" element={<VerifyOtp />} />
@@ -164,6 +177,8 @@ function AppRoutes() {
 }
 
 export default function App() {
+  // Sonner renders its own light/dark palette; follow the app's setting (incl. "system").
+  const theme = useFinanceStore((s) => s.settings.theme);
   // Here rather than in AppRoutes: AppRoutes is inside <Suspense>, and a suspending lazy route
   // would tear down the visibility listener while its chunk loads. App never suspends.
   useAutoLock();
@@ -177,7 +192,7 @@ export default function App() {
           </Suspense>
           <Toaster
             position="top-center"
-            richColors
+            theme={theme}
             closeButton
             offset={{ top: 'calc(env(safe-area-inset-top, 0px) + 12px)' }}
             mobileOffset={{ top: 'calc(env(safe-area-inset-top, 0px) + 12px)' }}

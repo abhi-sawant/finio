@@ -157,7 +157,16 @@ export function Layout() {
       </div>
 
       {/* FAB — mobile only. Long-press for one-tap add from a saved template. */}
-      <Popover open={templatesOpen && !hideFab} onOpenChange={setTemplatesOpen}>
+      <Popover
+        open={templatesOpen && !hideFab}
+        onOpenChange={(open, details) => {
+          // Releasing the long-press lands on the FAB, which sits outside the popup — Base UI
+          // reads that as an outside press and would close the menu the moment it opened.
+          const target = (details?.event as Event | undefined)?.target;
+          if (!open && target instanceof Node && fabRef.current?.contains(target)) return;
+          setTemplatesOpen(open);
+        }}
+      >
         <button
           ref={fabRef}
           onClick={handleFabClick}
@@ -167,7 +176,7 @@ export function Layout() {
             setTemplatesOpen(true);
           }}
           className={cn(
-            'bg-coin fixed right-4 z-50 flex h-14 w-14 items-center justify-center rounded-full transition-transform active:scale-95 lg:hidden',
+            'bg-coin fixed right-4 z-50 flex h-14 w-14 items-center justify-center rounded-full transition-transform active:scale-95 in-data-[tx-selecting]:hidden lg:hidden',
             hideFab && 'hidden',
           )}
           style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 5.5rem)' }}
@@ -176,9 +185,7 @@ export function Layout() {
           <Plus size={26} strokeWidth={2.4} />
         </button>
         <PopoverContent anchor={fabRef} side="top" align="end" className="w-64">
-          <p className="text-muted-foreground px-1 pb-1 text-xs font-medium">
-            Templates
-          </p>
+          <p className="text-muted-foreground px-1 pb-1 text-xs font-medium">Templates</p>
           {templates.length === 0 ? (
             <p className="text-muted-foreground px-1 py-2 text-xs">
               No saved templates yet. Long-press a transaction and choose "Save as template".

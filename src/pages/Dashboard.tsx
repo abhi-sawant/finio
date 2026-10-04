@@ -35,6 +35,7 @@ import {
 import { accountDisplayValue, isDepositAccount } from '@/utils/deposit';
 import { BudgetProgressBar } from '@/components/budgets/BudgetHealthBadge';
 import { NoteCard } from '@/components/ui/note-card';
+import { noteFigureClass } from '@/components/ui/note-figure';
 import { Guilloche } from '@/components/ui/guilloche';
 import { ACCOUNT_TYPE_LABEL, noteStyle } from '@/components/accounts/note';
 import { GoalIcon } from '@/components/goals/GoalIcon';
@@ -115,10 +116,14 @@ export default function Dashboard() {
     () => allBudgetStatuses.find((s) => !s.budget.labelId && s.budget.categoryId === '') ?? null,
     [allBudgetStatuses],
   );
-  const daysLeftInMonth = useMemo(() => {
-    const range = periodRange('monthly', new Date(), monthStartDay);
+  // Days left in the overall budget's *own* period — a weekly or yearly budget must not be
+  // divided by the days left in the financial month.
+  const budgetPeriod = overallBudget?.budget.period ?? 'monthly';
+  const daysLeftInPeriod = useMemo(() => {
+    const range = periodRange(budgetPeriod, new Date(), monthStartDay);
     return Math.max(1, differenceInCalendarDays(range.end, new Date()) + 1);
-  }, [monthStartDay]);
+  }, [budgetPeriod, monthStartDay]);
+  const periodNoun = BUDGET_PERIOD_NOUN[budgetPeriod];
   // The overall budget always gets its own hero card below, so it's excluded from the
   // collapsed alert list — otherwise a near-limit overall budget would state the same fact twice.
   const nearLimitBudgets = useMemo(
@@ -148,13 +153,13 @@ export default function Dashboard() {
   const upcomingBillsTotal = useMemo(
     () =>
       upcomingRecurring
-        .filter(({ rule, daysUntil }) => rule.type === 'expense' && daysUntil < daysLeftInMonth)
+        .filter(({ rule, daysUntil }) => rule.type === 'expense' && daysUntil < daysLeftInPeriod)
         .reduce((sum, { rule }) => sum + rule.amount, 0),
-    [upcomingRecurring, daysLeftInMonth],
+    [upcomingRecurring, daysLeftInPeriod],
   );
   // Floored, never rounded: a "safe" figure that rounds up could overspend by a rupee.
   const safePerDay = overallBudget
-    ? Math.floor(Math.max(overallBudget.remaining - upcomingBillsTotal, 0) / daysLeftInMonth)
+    ? Math.floor(Math.max(overallBudget.remaining - upcomingBillsTotal, 0) / daysLeftInPeriod)
     : 0;
   const periodLabel = useMemo(() => {
     const range = periodRange('monthly', new Date(), monthStartDay);
@@ -262,8 +267,8 @@ export default function Dashboard() {
     <>
       {/* Header */}
       <Header>
-        <div>
-          <h1 className="text-2xl font-semibold">{userName}</h1>
+        <div className="min-w-0">
+          <h1 className="truncate text-2xl font-semibold">{userName}</h1>
           <p className="text-muted-foreground mt-0.5 flex items-center gap-1 text-xs">
             <ShieldCheck size={12} className="text-positive shrink-0" aria-hidden />
             {signedIn
@@ -288,7 +293,7 @@ export default function Dashboard() {
             <>
               <p className="text-muted-foreground text-sm font-medium">Safe to spend today</p>
               <p
-                className={`font-money mt-1 text-[2.75rem] leading-[1.05] ${overallBudget.isOver ? 'text-destructive' : ''}`}
+                className={`font-money mt-1 leading-[1.05] ${noteFigureClass(formatCurrency(safePerDay, false, hideAmounts, { precise: false }))} ${overallBudget.isOver ? 'text-destructive' : ''}`}
               >
                 {formatCurrency(safePerDay, false, hideAmounts, { precise: false })}
               </p>
@@ -297,7 +302,7 @@ export default function Dashboard() {
                   ? `Over budget by ${formatCurrency(Math.abs(overallBudget.remaining), false, hideAmounts)}`
                   : `${formatCurrency(overallBudget.remaining, false, hideAmounts)} left this ${BUDGET_PERIOD_NOUN[overallBudget.budget.period]}`}
                 {' · '}
-                {daysLeftInMonth} day{daysLeftInMonth === 1 ? '' : 's'} to go
+                {daysLeftInPeriod} day{daysLeftInPeriod === 1 ? '' : 's'} to go
               </p>
               {upcomingBillsTotal > 0 && !overallBudget.isOver && (
                 <p className="text-muted-foreground mt-1 text-xs">
@@ -332,7 +337,9 @@ export default function Dashboard() {
           ) : (
             <>
               <p className="text-muted-foreground text-sm font-medium">Total balance</p>
-              <p className="font-money mt-1 text-[2.75rem] leading-[1.05]">
+              <p
+                className={`font-money mt-1 leading-[1.05] ${noteFigureClass(formatCurrency(totalBalance, false, hideAmounts))}`}
+              >
                 {formatCurrency(totalBalance, false, hideAmounts)}
               </p>
               {creditOutstanding > 0 && (
@@ -344,6 +351,14 @@ export default function Dashboard() {
                 <p className="text-muted-foreground mt-1 text-xs">
                   + {formatCurrency(depositValue, false, hideAmounts)} locked in deposits
                 </p>
+              )}
+              {accounts.length === 0 && (
+                <button
+                  onClick={() => navigate('/add-account')}
+                  className="bg-grad-primary shadow-glow-primary mt-4 rounded-full px-5 py-2 text-sm font-medium text-white"
+                >
+                  Add your first account
+                </button>
               )}
               {accounts.length > 0 && (
                 <button
@@ -397,14 +412,10 @@ export default function Dashboard() {
                 <button
                   key={i}
                   onClick={() => goToAttentionItem(item)}
-                  className="border-border hover:bg-muted/40 flex w-full items-center justify-between gap-3 border-b px-4 py-3 text-left last:border-b-0"
+                  className="border-border hover:bg-muted/40 flex w-full flex-col items-start gap-0.5 border-b px-4 py-3 text-left last:border-b-0"
                 >
-                  <span className="min-w-0 flex-1 truncate text-sm font-medium">
-                    {describeAttention(item)}
-                  </span>
-                  <span className="text-muted-foreground shrink-0 text-xs">
-                    {attentionDetail(item)}
-                  </span>
+                  <span className="text-sm font-medium">{describeAttention(item)}</span>
+                  <span className="text-muted-foreground text-xs">{attentionDetail(item)}</span>
                 </button>
               ))}
             </div>
@@ -419,24 +430,24 @@ export default function Dashboard() {
             {overallBudget && (
               <dl className="space-y-2 text-sm">
                 <div className="flex justify-between gap-4">
-                  <dt className="text-muted-foreground">Budget left this month</dt>
+                  <dt className="text-muted-foreground">Budget left this {periodNoun}</dt>
                   <dd className="font-medium">
                     {formatCurrency(overallBudget.remaining, false, hideAmounts)}
                   </dd>
                 </div>
                 <div className="flex justify-between gap-4">
-                  <dt className="text-muted-foreground">Bills due before the month ends</dt>
+                  <dt className="text-muted-foreground">Bills due in the next 7 days</dt>
                   <dd className="font-medium">
                     − {formatCurrency(upcomingBillsTotal, false, hideAmounts)}
                   </dd>
                 </div>
                 <div className="flex justify-between gap-4">
                   <dt className="text-muted-foreground">Days to go</dt>
-                  <dd className="font-medium">÷ {daysLeftInMonth}</dd>
+                  <dd className="font-medium">÷ {daysLeftInPeriod}</dd>
                 </div>
                 <div className="border-border flex justify-between gap-4 border-t pt-2">
                   <dt className="font-semibold">Safe to spend each day</dt>
-                  <dd className="text-primary font-semibold">
+                  <dd className="font-semibold">
                     {formatCurrency(safePerDay, false, hideAmounts, { precise: false })}
                   </dd>
                 </div>
@@ -528,12 +539,14 @@ export default function Dashboard() {
           <section className="lg:col-start-2 lg:row-span-2 lg:row-start-1">
             <div className="mb-3 flex items-center justify-between">
               <h2 className="text-base font-semibold">Latest</h2>
-              <button
-                onClick={() => navigate('/transactions')}
-                className="text-primary -my-3 px-1 py-3.5 text-xs font-medium hover:underline"
-              >
-                See all
-              </button>
+              {recentTxns.length > 0 && (
+                <button
+                  onClick={() => navigate('/transactions')}
+                  className="text-primary -my-3 px-1 py-3.5 text-xs font-medium hover:underline"
+                >
+                  See all
+                </button>
+              )}
             </div>
             {recentTxns.length === 0 ? (
               <div className="py-8 text-center">
@@ -572,10 +585,12 @@ export default function Dashboard() {
             </div>
             <div className="card-elevated rounded-md p-4">
               {monthTxns.length > 0 ? (
-                <div className="grid grid-cols-3 gap-3 lg:grid-cols-5">
+                <div className="grid grid-cols-3 gap-x-3 gap-y-4">
                   <div>
                     <p className="text-muted-foreground text-xs font-medium">In</p>
-                    <p className="font-money mt-0.5 text-base">
+                    <p
+                      className={`font-money mt-0.5 text-base ${monthIncome > 0 ? 'text-positive' : ''}`}
+                    >
                       {formatCurrency(monthIncome, true, hideAmounts)}
                     </p>
                   </div>
@@ -615,7 +630,7 @@ export default function Dashboard() {
                 <p className="text-muted-foreground text-center text-sm">
                   {overallBudget
                     ? 'Nothing logged yet this month.'
-                    : 'Set a budget and this becomes "safe to spend"'}
+                    : 'Set a budget and this becomes “safe to spend”'}
                 </p>
               )}
               {monthTxns.length === 0 && overallBudget && prevMonthTxns.length > 0 && (
@@ -634,7 +649,7 @@ export default function Dashboard() {
                   <button onClick={() => navigate('/goals')} className="w-full p-4 text-left">
                     <div className="mb-3 flex items-center gap-2">
                       <PiggyBank size={16} className="text-primary" />
-                      <h3 className="text-sm font-semibold">Savings Goals</h3>
+                      <h3 className="text-sm font-semibold">Savings goals</h3>
                       <ChevronRight size={14} className="text-muted-foreground ml-auto" />
                     </div>
                     <div className="space-y-3">
@@ -669,7 +684,7 @@ export default function Dashboard() {
                   <button onClick={() => navigate('/debts')} className="w-full p-4 text-left">
                     <div className="mb-3 flex items-center gap-2">
                       <HandCoins size={16} className="text-primary" />
-                      <h3 className="text-sm font-semibold">Debts & Lending</h3>
+                      <h3 className="text-sm font-semibold">Debts & lending</h3>
                       <ChevronRight size={14} className="text-muted-foreground ml-auto" />
                     </div>
                     <div className="divide-border divide-y">

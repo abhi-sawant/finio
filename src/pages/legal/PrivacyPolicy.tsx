@@ -1,25 +1,25 @@
-import { useNavigate } from 'react-router';
 import { ArrowLeft } from 'lucide-react';
 import Header from '@/components/ui/header';
 import { HeaderIconButton, HeaderIconSpacer } from '@/components/ui/header-icon-button';
 import Main from '@/components/ui/main';
+import { useLegalBack } from './useLegalBack';
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="space-y-2">
       <h2 className="text-base font-semibold">{title}</h2>
-      <div className="text-muted-foreground space-y-2 text-sm leading-relaxed">{children}</div>
+      <div className="text-foreground space-y-2 text-sm leading-relaxed">{children}</div>
     </section>
   );
 }
 
 export default function PrivacyPolicy() {
-  const navigate = useNavigate();
+  const goBack = useLegalBack();
 
   return (
     <>
       <Header innerClassName="lg:max-w-2xl">
-        <HeaderIconButton onClick={() => navigate(-1)} aria-label="Back">
+        <HeaderIconButton onClick={goBack} aria-label="Back">
           <ArrowLeft />
         </HeaderIconButton>
         <h1 className="text-base font-semibold">Privacy Policy</h1>
@@ -142,7 +142,13 @@ export default function PrivacyPolicy() {
 
           <Section title="10. Contact">
             Questions about this policy, or to exercise a right not covered above, contact:{' '}
-            <span className="text-foreground font-medium">contact@finio.slowatcoding.com</span>.
+            <a
+              href="mailto:contact@finio.slowatcoding.com"
+              className="text-primary font-medium underline-offset-4 hover:underline"
+            >
+              contact@finio.slowatcoding.com
+            </a>
+            .
           </Section>
         </div>
       </Main>

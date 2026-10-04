@@ -31,6 +31,7 @@ export function ReconcileAccountDialog({
   const addTransaction = useFinanceStore((s) => s.addTransaction);
   const deleteTransaction = useFinanceStore((s) => s.deleteTransaction);
   const isCredit = account.type === 'credit';
+  const hideAmounts = useFinanceStore((s) => s.settings.hideAmounts);
 
   const [statementInput, setStatementInput] = useState('0');
   const [note, setNote] = useState('');
@@ -74,7 +75,7 @@ export function ReconcileAccountDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="bg-card mx-auto w-11/12 rounded-md">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Reconcile "{account.name}"</DialogTitle>
         </DialogHeader>
@@ -84,16 +85,18 @@ export function ReconcileAccountDialog({
             <p className="text-muted-foreground text-xs">
               Enter the balance from your {isCredit ? 'card statement' : 'bank statement'} and we'll
               show you the difference against what Finio has on record (
-              {formatCurrency(isCredit ? Math.abs(account.balance) : account.balance)}).
+              {formatCurrency(
+                isCredit ? Math.abs(account.balance) : account.balance,
+                false,
+                hideAmounts,
+              )}
+              ).
             </p>
             <Label className="text-muted-foreground block text-xs font-medium">
               {isCredit ? 'Statement due' : 'Statement balance'}
             </Label>
             <NumberPad value={statementInput} onChange={setStatementInput} />
-            <Button
-              onClick={handleCompare}
-              className="bg-grad-primary shadow-glow-primary h-auto w-full rounded-sm py-2 text-sm font-medium text-white"
-            >
+            <Button onClick={handleCompare} size="lg" className="w-full">
               Compare
             </Button>
           </div>
@@ -109,7 +112,7 @@ export function ReconcileAccountDialog({
                     className={adjustment.type === 'income' ? 'text-positive' : 'text-destructive'}
                   >
                     {adjustment.type === 'income' ? '+' : '−'}
-                    {formatCurrency(adjustment.amount)}
+                    {formatCurrency(adjustment.amount, false, hideAmounts)}
                   </span>
                   . We'll add a{' '}
                   {adjustment.type === 'income' ? 'balance-up income' : 'balance-down expense'}{' '}
@@ -126,10 +129,7 @@ export function ReconcileAccountDialog({
             )}
             <div className="flex gap-2">
               {adjustment.type !== null && (
-                <Button
-                  onClick={handleConfirm}
-                  className="bg-grad-primary shadow-glow-primary h-auto flex-1 rounded-sm py-2 text-sm font-medium text-white"
-                >
+                <Button onClick={handleConfirm} className="flex-1">
                   Add adjustment
                 </Button>
               )}
@@ -138,7 +138,6 @@ export function ReconcileAccountDialog({
                 onClick={() =>
                   adjustment.type === null ? handleOpenChange(false) : setPhase('input')
                 }
-                className="bg-muted text-muted-foreground h-auto rounded-sm px-4 py-2 text-sm font-medium"
               >
                 {adjustment.type === null ? 'Close' : 'Back'}
               </Button>

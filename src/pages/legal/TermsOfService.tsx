@@ -1,25 +1,26 @@
-import { useNavigate } from 'react-router';
+import { Link } from 'react-router';
 import { ArrowLeft } from 'lucide-react';
 import Header from '@/components/ui/header';
 import { HeaderIconButton, HeaderIconSpacer } from '@/components/ui/header-icon-button';
 import Main from '@/components/ui/main';
+import { useLegalBack } from './useLegalBack';
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="space-y-2">
       <h2 className="text-base font-semibold">{title}</h2>
-      <div className="text-muted-foreground space-y-2 text-sm leading-relaxed">{children}</div>
+      <div className="text-foreground space-y-2 text-sm leading-relaxed">{children}</div>
     </section>
   );
 }
 
 export default function TermsOfService() {
-  const navigate = useNavigate();
+  const goBack = useLegalBack();
 
   return (
     <>
       <Header innerClassName="lg:max-w-2xl">
-        <HeaderIconButton onClick={() => navigate(-1)} aria-label="Back">
+        <HeaderIconButton onClick={goBack} aria-label="Back">
           <ArrowLeft />
         </HeaderIconButton>
         <h1 className="text-base font-semibold">Terms of Service</h1>
@@ -30,7 +31,10 @@ export default function TermsOfService() {
         <div className="card-elevated space-y-6 rounded-md p-5">
           <p className="text-muted-foreground text-xs">
             Last updated: 13 August 2026. These terms cover the hosted Finio app and its optional
-            cloud backup service. See the <span className="text-foreground">Privacy Policy</span>{' '}
+            cloud backup service. See the{' '}
+            <Link to="/privacy" className="text-primary underline-offset-4 hover:underline">
+              Privacy Policy
+            </Link>{' '}
             for how your data is handled.
           </p>
 
@@ -64,7 +68,11 @@ export default function TermsOfService() {
           <Section title="4. Your data">
             You own the data you put into Finio. We don't claim any rights over it, we don't use it
             for anything other than providing the backup/restore feature you asked for, and you can
-            export or delete it at any time (see the Privacy Policy for how).
+            export or delete it at any time (see the{' '}
+            <Link to="/privacy" className="text-primary underline-offset-4 hover:underline">
+              Privacy Policy
+            </Link>{' '}
+            for how).
           </Section>
 
           <Section title="5. Acceptable use">
@@ -113,7 +121,13 @@ export default function TermsOfService() {
 
           <Section title="11. Contact">
             Questions about these terms:{' '}
-            <span className="text-foreground font-medium">contact@finio.slowatcoding.com</span>.
+            <a
+              href="mailto:contact@finio.slowatcoding.com"
+              className="text-primary font-medium underline-offset-4 hover:underline"
+            >
+              contact@finio.slowatcoding.com
+            </a>
+            .
           </Section>
         </div>
       </Main>

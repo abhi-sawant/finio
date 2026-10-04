@@ -4,6 +4,7 @@ import { useFinanceStore } from '@/store/useFinanceStore';
 import { transactionCategoryAmounts } from '@/utils/calculations';
 import { formatCurrency } from '@/utils/formatters';
 import type { Transaction } from '@/types';
+import { TOOLTIP_PROPS } from './chartTheme';
 
 interface Props {
   transactions: Transaction[];
@@ -26,7 +27,11 @@ export function SpendingDonut({ transactions }: Props) {
     return Array.from(byCategory.entries())
       .map(([catId, amount]) => {
         const cat = catMap.get(catId);
-        return { name: cat?.name ?? 'Other', value: amount, color: cat?.color ?? '#94a3b8' };
+        return {
+          name: cat?.name ?? 'Other',
+          value: amount,
+          color: cat?.color ?? 'var(--muted-foreground)',
+        };
       })
       .sort((a, b) => b.value - a.value)
       .slice(0, 8);
@@ -38,7 +43,7 @@ export function SpendingDonut({ transactions }: Props) {
 
   return (
     <div className="card-elevated rounded-md p-4">
-      <h3 className="mb-3 text-sm font-semibold">Spending by Category</h3>
+      <h3 className="mb-3 text-sm font-semibold">Spending by category</h3>
       <div className="grid items-center justify-center gap-4">
         {/* The legend below is the text alternative — the ring itself only needs a headline. */}
         <div
@@ -66,18 +71,13 @@ export function SpendingDonut({ transactions }: Props) {
                 ))}
               </Pie>
               <Tooltip
-                contentStyle={{
-                  background: 'var(--card)',
-                  border: '1px solid var(--border)',
-                  borderRadius: 12,
-                  fontSize: 12,
-                }}
+                {...TOOLTIP_PROPS}
                 formatter={(v) => formatCurrency(Number(v) || 0, false, hideAmounts)}
               />
             </PieChart>
           </ResponsiveContainer>
           <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-muted-foreground text-[10px]">Total</span>
+            <span className="text-muted-foreground text-xs">Total</span>
             <span className="text-sm font-bold">{formatCurrency(total, true, hideAmounts)}</span>
           </div>
         </div>

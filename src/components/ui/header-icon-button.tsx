@@ -27,7 +27,8 @@ function HeaderIconButton({
         "size-10 rounded-full [&_svg:not([class*='size-'])]:size-[18px]",
         tone === 'primary' && 'text-primary',
         tone === 'destructive' && 'text-destructive hover:text-destructive',
-        pressed && 'bg-grad-primary shadow-glow-primary border-transparent text-white hover:brightness-110',
+        pressed &&
+          'bg-grad-primary shadow-glow-primary border-transparent text-white hover:brightness-110',
         className,
       )}
       {...props}

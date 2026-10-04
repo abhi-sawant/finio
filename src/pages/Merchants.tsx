@@ -7,7 +7,7 @@ import {
   type MerchantSummary,
   type MerchantTransactionType,
 } from '@/utils/merchants';
-import { formatCurrency, formatDate, shouldCompactGroup } from '@/utils/formatters';
+import { formatCurrency, formatShortDate, shouldCompactGroup } from '@/utils/formatters';
 import { HideAmountsToggle } from '@/components/HideAmountsToggle';
 import { TransactionItem } from '@/components/transactions/TransactionItem';
 import Header from '@/components/ui/header';
@@ -37,17 +37,17 @@ function MerchantRow({
   const accounts = useFinanceStore((s) => s.accounts);
 
   return (
-    <div className="card-elevated overflow-hidden rounded-md">
+    <div>
       <button
         onClick={onToggle}
-        className="flex w-full items-center justify-between p-4"
+        className="hover:bg-muted/40 flex w-full items-center justify-between px-4 py-3"
         aria-expanded={expanded}
       >
         <div className="min-w-0 text-left">
           <p className="truncate text-sm font-medium">{merchant.displayName}</p>
           <p className="text-muted-foreground text-xs">
             {merchant.transactionCount} transaction{merchant.transactionCount === 1 ? '' : 's'} ·
-            last on {formatDate(merchant.lastDate)}
+            last on {formatShortDate(merchant.lastDate)}
           </p>
         </div>
         <div className="flex items-center gap-2 pl-3">
@@ -65,7 +65,7 @@ function MerchantRow({
       </button>
 
       {expanded && (
-        <div className="border-border space-y-1 border-t p-2">
+        <div className="bg-muted/30 border-border border-t px-1 pb-1">
           {merchant.transactions.map((t) => (
             <TransactionItem
               key={t.id}
@@ -73,6 +73,7 @@ function MerchantRow({
               categories={categories}
               accounts={accounts}
               showDate
+              dateStyle="short"
               onClick={() => navigate(`/edit-transaction/${t.id}`)}
             />
           ))}
@@ -82,7 +83,7 @@ function MerchantRow({
                 state: { pattern: merchant.displayName, scope: merchant.type },
               })
             }
-            className="text-primary flex w-full items-center justify-center gap-1.5 rounded-sm p-2.5 text-xs font-medium"
+            className="text-primary hover:bg-accent flex w-full items-center justify-center gap-1.5 rounded-full p-2.5 text-xs font-medium"
           >
             <Wand2 size={13} />
             Create a rule for "{merchant.displayName}"
@@ -127,8 +128,11 @@ export default function Merchants() {
                 setType(chip.value);
                 setExpandedKey(null);
               }}
+              aria-pressed={type === chip.value}
               className={`rounded-full px-4 py-1.5 text-xs font-medium transition-colors ${
-                type === chip.value ? 'bg-grad-primary text-white' : 'bg-card text-muted-foreground'
+                type === chip.value
+                  ? 'bg-grad-primary shadow-glow-primary text-white'
+                  : 'bg-muted text-muted-foreground'
               }`}
             >
               {chip.label}
@@ -136,28 +140,32 @@ export default function Merchants() {
           ))}
         </div>
 
-        <div className="card-elevated bg-grad-primary-soft rounded-md p-4">
-          <div className="mb-1 flex items-center gap-1.5">
-            <Store size={12} className="text-primary" />
-            <p className="text-muted-foreground text-xs font-medium">
-              {merchants.length} merchant{merchants.length === 1 ? '' : 's'}
-            </p>
+        {merchants.length > 0 && (
+          <div className="card-elevated rounded-md p-4">
+            <div className="mb-1 flex items-center gap-1.5">
+              <Store size={12} className="text-primary" />
+              <p className="text-muted-foreground text-xs font-medium">
+                {merchants.length} merchant{merchants.length === 1 ? '' : 's'}
+              </p>
+            </div>
+            <p className="font-money text-lg">{formatCurrency(total, true, hideAmounts)}</p>
           </div>
-          <p className="font-money text-lg">{formatCurrency(total, true, hideAmounts)}</p>
-        </div>
+        )}
 
-        <div className="space-y-2">
-          {merchants.map((merchant) => (
-            <MerchantRow
-              key={merchant.key}
-              merchant={merchant}
-              expanded={expandedKey === merchant.key}
-              onToggle={() => setExpandedKey((k) => (k === merchant.key ? null : merchant.key))}
-              compact={compact}
-              hideAmounts={hideAmounts}
-            />
-          ))}
-        </div>
+        {merchants.length > 0 && (
+          <div className="card-elevated divide-border divide-y overflow-hidden rounded-md">
+            {merchants.map((merchant) => (
+              <MerchantRow
+                key={merchant.key}
+                merchant={merchant}
+                expanded={expandedKey === merchant.key}
+                onToggle={() => setExpandedKey((k) => (k === merchant.key ? null : merchant.key))}
+                compact={compact}
+                hideAmounts={hideAmounts}
+              />
+            ))}
+          </div>
+        )}
 
         {merchants.length === 0 && (
           <p className="text-muted-foreground py-12 text-center text-sm">

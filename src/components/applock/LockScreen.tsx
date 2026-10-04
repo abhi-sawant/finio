@@ -15,6 +15,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { PinDots, PinPad } from './PinPad';
+import { pinKeyClass } from './pinKeyClass';
 
 /**
  * Rendered in place of the app while it is locked.
@@ -179,7 +180,7 @@ export function LockScreen() {
                 onClick={handleBiometric}
                 disabled={checking || inCooldown}
                 aria-label="Unlock with biometrics"
-                className="bg-card active:bg-muted flex h-14 items-center justify-center rounded-md transition-all select-none active:scale-95 disabled:opacity-40"
+                className={pinKeyClass()}
               >
                 <Fingerprint size={22} className="text-muted-foreground" />
               </button>

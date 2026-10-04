@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { ArrowLeft, Plus, Trash2, Pencil } from 'lucide-react';
+import { ArrowLeft, Lock, Plus, Trash2, Pencil } from 'lucide-react';
 import { toast } from 'sonner';
 import { CategoryIcon, CATEGORY_ICONS } from '@/components/categories/CategoryIcon';
-import { useFinanceStore } from '@/store/useFinanceStore';
+import { isProtectedCategory, useFinanceStore } from '@/store/useFinanceStore';
 import { COLOR_PALETTE } from '@/data/colorPalette';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,7 +14,7 @@ import type { CategoryType } from '@/types';
 import Header from '@/components/ui/header';
 import { HeaderIconButton } from '@/components/ui/header-icon-button';
 import Main from '@/components/ui/main';
-import { miscLast } from '@/utils/calculations';
+import { TRANSFER_CATEGORY_ID, miscLast } from '@/utils/calculations';
 import { MAX_NAME_LENGTH, cleanText, stripLeading } from '@/utils/validation';
 
 const categoryColors = COLOR_PALETTE;
@@ -113,9 +113,10 @@ export default function ManageCategories() {
             <button
               key={f}
               onClick={() => setFilter(f)}
-              className={`rounded-sm px-3 py-1.5 text-xs font-medium capitalize ${
+              aria-pressed={filter === f}
+              className={`rounded-full px-3 py-1.5 text-xs font-medium capitalize ${
                 filter === f
-                  ? 'bg-grad-primary text-white shadow'
+                  ? 'bg-grad-primary shadow-glow-primary text-white'
                   : 'bg-muted text-muted-foreground'
               }`}
             >
@@ -131,9 +132,9 @@ export default function ManageCategories() {
             if (!v) resetForm();
           }}
         >
-          <DialogContent className="bg-card mx-auto w-11/12 rounded-md">
+          <DialogContent className="bg-card mx-auto w-11/12">
             <DialogHeader>
-              <DialogTitle>{editId ? 'Edit Category' : 'Add Category'}</DialogTitle>
+              <DialogTitle>{editId ? 'Edit category' : 'Add category'}</DialogTitle>
             </DialogHeader>
             <div className="space-y-3">
               <Input
@@ -148,9 +149,10 @@ export default function ManageCategories() {
                   <button
                     key={t}
                     onClick={() => setType(t)}
-                    className={`rounded-sm px-3 py-1.5 text-xs font-medium capitalize ${
+                    aria-pressed={type === t}
+                    className={`rounded-full px-3 py-1.5 text-xs font-medium capitalize ${
                       type === t
-                        ? 'bg-grad-primary text-white shadow'
+                        ? 'bg-grad-primary shadow-glow-primary text-white'
                         : 'bg-muted text-muted-foreground'
                     }`}
                   >
@@ -167,38 +169,39 @@ export default function ManageCategories() {
                     <button
                       key={i}
                       onClick={() => setIcon(i)}
-                      className={`flex h-9 items-center justify-center rounded-sm border transition-colors ${
+                      className={`flex h-9 items-center justify-center rounded-full border transition-colors ${
                         icon === i ? 'border-primary bg-primary/10' : 'border-border bg-card'
                       }`}
-                      aria-label={i}
+                      aria-label={`Icon ${i}`}
+                      aria-pressed={icon === i}
                     >
                       <CategoryIcon icon={i} size={16} />
                     </button>
                   ))}
                 </div>
               </div>
-              <div className="flex flex-wrap gap-2">
-                {categoryColors.map((c) => (
-                  <button
-                    key={c}
-                    onClick={() => setColor(c)}
-                    className={`h-7 w-7 rounded-full ${color === c ? 'ring-primary scale-110 ring-2 ring-offset-2' : ''}`}
-                    style={{ backgroundColor: c }}
-                  />
-                ))}
+              <div>
+                <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">
+                  Color
+                </Label>
+                <div className="flex flex-wrap gap-2">
+                  {categoryColors.map((c) => (
+                    <button
+                      key={c}
+                      onClick={() => setColor(c)}
+                      className={`h-7 w-7 rounded-full ${color === c ? 'ring-primary scale-110 ring-2 ring-offset-2' : ''}`}
+                      style={{ backgroundColor: c }}
+                      aria-label={`Color ${c}`}
+                      aria-pressed={color === c}
+                    />
+                  ))}
+                </div>
               </div>
               <div className="flex gap-2">
-                <Button
-                  onClick={handleSubmit}
-                  className="bg-grad-primary shadow-glow-primary h-auto flex-1 rounded-sm py-2 text-sm font-medium text-white"
-                >
+                <Button onClick={handleSubmit} className="flex-1">
                   {editId ? 'Update' : 'Add'}
                 </Button>
-                <Button
-                  variant="secondary"
-                  onClick={resetForm}
-                  className="bg-muted text-muted-foreground h-auto rounded-sm px-4 py-2 text-sm font-medium"
-                >
+                <Button variant="secondary" onClick={resetForm}>
                   Cancel
                 </Button>
               </div>
@@ -208,40 +211,67 @@ export default function ManageCategories() {
 
         {/* List */}
         <div className="card-elevated divide-border divide-y rounded-md px-4">
-          {filtered.map((cat) => (
-            <div key={cat.id} className="flex items-center justify-between py-3">
-              <div>
-                <p className="text-sm font-medium">{cat.name}</p>
-                <p className="text-muted-foreground text-xs capitalize">{cat.type}</p>
+          {filtered.map((cat) => {
+            const isProtected = isProtectedCategory(cat.id);
+            return (
+              <div key={cat.id} className="flex items-center justify-between gap-3 py-3">
+                <div className="flex min-w-0 items-center gap-3">
+                  <span aria-hidden className="flex shrink-0">
+                    <CategoryIcon icon={cat.icon} size={16} color={cat.color} />
+                  </span>
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-medium">{cat.name}</p>
+                    <p className="text-muted-foreground text-xs">
+                      <span className="capitalize">{cat.type}</span>
+                      {isProtected &&
+                        (cat.id === TRANSFER_CATEGORY_ID
+                          ? ' · Built in, used by every transfer'
+                          : ' · Built in, the catch-all for deleted categories')}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex shrink-0 gap-1">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleEdit(cat.id)}
+                    className="h-8 w-8"
+                    aria-label={`Edit ${cat.name}`}
+                  >
+                    <Pencil size={14} className="text-muted-foreground" />
+                  </Button>
+                  {isProtected ? (
+                    <span
+                      className="text-muted-foreground flex h-8 w-8 items-center justify-center"
+                      title={`${cat.name} is built in and can't be deleted`}
+                      aria-label={`${cat.name} is built in and can't be deleted`}
+                      role="img"
+                    >
+                      <Lock size={14} />
+                    </span>
+                  ) : (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      aria-label={`Delete ${cat.name}`}
+                      onClick={async () => {
+                        const confirmed = await confirm({
+                          title: `Delete "${cat.name}"?`,
+                          description:
+                            'Transactions and recurring rules using it move to Miscellaneous, and any budget for it is removed.',
+                          confirmLabel: 'Delete category',
+                        });
+                        if (confirmed) deleteCategory(cat.id);
+                      }}
+                      className="h-8 w-8"
+                    >
+                      <Trash2 size={14} className="text-destructive" />
+                    </Button>
+                  )}
+                </div>
               </div>
-              <div className="flex gap-1">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => handleEdit(cat.id)}
-                  className="h-8 w-8"
-                >
-                  <Pencil size={14} className="text-muted-foreground" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={async () => {
-                    const confirmed = await confirm({
-                      title: `Delete "${cat.name}"?`,
-                      description:
-                        'Transactions and recurring rules using it move to Miscellaneous, and any budget for it is removed.',
-                      confirmLabel: 'Delete category',
-                    });
-                    if (confirmed) deleteCategory(cat.id);
-                  }}
-                  className="h-8 w-8"
-                >
-                  <Trash2 size={14} className="text-destructive" />
-                </Button>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </Main>
     </>

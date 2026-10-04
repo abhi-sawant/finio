@@ -42,7 +42,7 @@ export function Switch({
         'focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-3',
         'disabled:cursor-not-allowed disabled:opacity-50',
         size === 'sm' ? 'h-5 w-9' : 'h-6 w-11',
-        checked ? 'bg-primary' : 'bg-muted',
+        checked ? 'bg-grad-primary shadow-glow-primary' : 'bg-input',
         className,
       )}
       {...aria}
@@ -50,7 +50,7 @@ export function Switch({
       <span
         aria-hidden
         className={cn(
-          'pointer-events-none inline-block transform rounded-full bg-white shadow-md ring-0 transition-transform',
+          'bg-card pointer-events-none inline-block transform rounded-full shadow-md ring-0 transition-transform',
           size === 'sm' ? 'h-4 w-4' : 'h-5 w-5',
           checked ? (size === 'sm' ? 'translate-x-4' : 'translate-x-5') : 'translate-x-0',
         )}

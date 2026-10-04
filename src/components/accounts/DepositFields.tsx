@@ -228,10 +228,8 @@ export function DepositFields({
               <p className="text-sm font-semibold">{money(maturityAmount - invested)}</p>
             </div>
             <div>
-              <p className="text-muted-foreground text-xs font-medium">
-                At maturity
-              </p>
-              <p className="text-primary text-sm font-semibold">{money(maturityAmount)}</p>
+              <p className="text-muted-foreground text-xs font-medium">At maturity</p>
+              <p className="text-positive text-sm font-semibold">{money(maturityAmount)}</p>
             </div>
           </div>
           <p className="text-muted-foreground mt-3 text-center text-xs">

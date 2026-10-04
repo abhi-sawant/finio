@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { isValidEmail } from '@/utils/validation';
+import { AuthShell } from './AuthShell';
 
 export default function ForgotPassword() {
   const navigate = useNavigate();
@@ -38,47 +39,38 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col justify-center px-6 py-12">
-      <div className="mx-auto w-full max-w-sm">
-        <div className="mb-8 text-center">
-          <h1 className="text-foreground text-2xl font-bold">Forgot Password</h1>
-          <p className="text-muted-foreground mt-2">
-            Enter your email and we'll send you an OTP to reset your password.
-          </p>
-        </div>
-
-        <form onSubmit={handleSubmit} noValidate className="space-y-4">
-          <div className="relative">
-            <Mail className="text-muted-foreground absolute top-1/2 left-3 z-10 h-5 w-5 -translate-y-1/2" />
-            <Input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full pr-4 pl-11"
-              autoComplete="email"
-              inputMode="email"
-              autoCapitalize="none"
-              spellCheck={false}
-            />
-          </div>
-
-          <Button
-            type="submit"
-            disabled={loading}
-            className="bg-grad-primary shadow-glow-primary h-auto w-full rounded-sm py-3 font-semibold text-white disabled:opacity-50"
-          >
-            {loading ? 'Sending...' : 'Send OTP'}
-          </Button>
-        </form>
-
-        <p className="text-muted-foreground mt-6 text-center text-sm">
+    <AuthShell
+      heading="Forgot password"
+      description="Enter your email and we'll send you an OTP to reset your password."
+      footer={
+        <p className="text-muted-foreground">
           Remember your password?{' '}
           <Link to="/login" className="text-primary font-medium hover:underline">
             Sign in
           </Link>
         </p>
-      </div>
-    </div>
+      }
+    >
+      <form onSubmit={handleSubmit} noValidate className="space-y-4">
+        <div className="relative">
+          <Mail className="text-muted-foreground absolute top-1/2 left-3 z-10 h-5 w-5 -translate-y-1/2" />
+          <Input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full pr-4 pl-11"
+            autoComplete="email"
+            inputMode="email"
+            autoCapitalize="none"
+            spellCheck={false}
+          />
+        </div>
+
+        <Button type="submit" disabled={loading} size="lg" className="w-full">
+          {loading ? 'Sending…' : 'Send OTP'}
+        </Button>
+      </form>
+    </AuthShell>
   );
 }

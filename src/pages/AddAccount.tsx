@@ -10,7 +10,7 @@ import {
   TrendingUp,
   Wallet,
   Scale,
-  Vault,
+  LockKeyhole,
   CalendarClock,
   type LucideIcon,
 } from 'lucide-react';
@@ -45,7 +45,8 @@ const TYPE_ICONS: Record<string, LucideIcon> = {
   'credit-card': CreditCard,
   'trending-up': TrendingUp,
   wallet: Wallet,
-  vault: Vault,
+  // FD: money locked in for the term (the key stays 'vault' for stored accounts).
+  vault: LockKeyhole,
   'calendar-clock': CalendarClock,
 };
 
@@ -53,11 +54,11 @@ const accountTypes: { value: AccountType; label: string; icon: string }[] = [
   { value: 'checking', label: 'Checking', icon: 'landmark' },
   { value: 'savings', label: 'Savings', icon: 'piggy-bank' },
   { value: 'cash', label: 'Cash', icon: 'banknote' },
-  { value: 'credit', label: 'Credit Card', icon: 'credit-card' },
+  { value: 'credit', label: 'Credit card', icon: 'credit-card' },
   { value: 'investment', label: 'Investment', icon: 'trending-up' },
   { value: 'wallet', label: 'Wallet', icon: 'wallet' },
-  { value: 'fd', label: 'Fixed Deposit', icon: 'vault' },
-  { value: 'rd', label: 'Recurring Deposit', icon: 'calendar-clock' },
+  { value: 'fd', label: 'Fixed deposit', icon: 'vault' },
+  { value: 'rd', label: 'Recurring deposit', icon: 'calendar-clock' },
 ];
 
 const accountColors = COLOR_PALETTE;
@@ -83,9 +84,11 @@ export default function AddAccount() {
   const [balance, setBalance] = useState(
     existing?.type === 'credit' ? '0' : (existing?.balance?.toString() ?? '0'),
   );
-  const [due, setDue] = useState(
-    existing?.type === 'credit' ? Math.abs(existing.balance).toString() : '0',
-  );
+  // A card's balance is negative while money is owed and positive when it's in credit
+  // (overpaid). "Current due" is only the owed part — an in-credit card owes ₹0, never a
+  // mirrored positive "due" (saving that would flip the credit into debt).
+  const owedOn = (a: { balance: number }) => Math.max(-a.balance, 0).toString();
+  const [due, setDue] = useState(existing?.type === 'credit' ? owedOn(existing) : '0');
   /**
    * `balance`/`due` only hold what the user typed. Until they type, the form follows the store,
    * so a reconcile adjustment (or its Undo) posted while this screen is open is reflected —
@@ -94,8 +97,9 @@ export default function AddAccount() {
   const [balanceDirty, setBalanceDirty] = useState(false);
   const followStore = !!existing && !balanceDirty && existing.type === type;
   const shownBalance = followStore && type !== 'credit' ? existing.balance.toString() : balance;
-  const shownDue = followStore && type === 'credit' ? Math.abs(existing.balance).toString() : due;
-  const [color, setColor] = useState(existing?.color ?? accountColors[0]);
+  const shownDue = followStore && type === 'credit' ? owedOn(existing) : due;
+  // Accounts no longer pick a colour (the tint comes from the type); keep the stored one.
+  const color = existing?.color ?? accountColors[0];
   const [creditLimit, setCreditLimit] = useState(existing?.creditLimit?.toString() ?? '0');
   const [statementCloseDay, setStatementCloseDay] = useState(
     existing?.statementCloseDay?.toString() ?? '',
@@ -105,6 +109,12 @@ export default function AddAccount() {
     existing?.minimumDuePercent?.toString() ?? '',
   );
   const [showReconcile, setShowReconcile] = useState(false);
+  const [nameError, setNameError] = useState<string | null>(null);
+  // Name problems are shown on the field itself (and focus moves there), not only in a toast.
+  const showNameError = (message: string) => {
+    setNameError(message);
+    document.getElementById('accountName')?.focus();
+  };
   const [creditField, setCreditField] = useState<'due' | 'limit'>('due');
 
   // Spendable accounts only — a deposit can't fund another, and a card can't be redeemed into.
@@ -178,11 +188,11 @@ export default function AddAccount() {
   const handleSubmit = () => {
     if (submitting.current) return;
     if (!name.trim()) {
-      toast.error('Enter a name');
+      showNameError('Enter a name');
       return;
     }
     if (isDuplicateName()) {
-      toast.error('An account with this name already exists');
+      showNameError('An account with this name already exists');
       return;
     }
     if (isDepositType) {
@@ -203,7 +213,14 @@ export default function AddAccount() {
     const data = {
       name: cleanText(name, MAX_NAME_LENGTH),
       type,
-      balance: isCredit ? -(parseFloat(shownDue) || 0) : parseFloat(shownBalance) || 0,
+      // Untouched balance on an existing account is written back exactly as stored, so a save
+      // that only renames (or edits the limit) can never shift the balance or openingBalance.
+      balance:
+        followStore && existing
+          ? existing.balance
+          : isCredit
+            ? -(parseFloat(shownDue) || 0)
+            : parseFloat(shownBalance) || 0,
       color,
       icon: existing?.icon ?? accountTypes.find((t) => t.value === type)?.icon ?? 'landmark',
       creditLimit: isCredit ? parseFloat(creditLimit) || undefined : undefined,
@@ -275,7 +292,7 @@ export default function AddAccount() {
             htmlFor="accountName"
             className="text-muted-foreground mb-1.5 block text-xs font-medium"
           >
-            Account Name
+            Account name
           </Label>
           <Input
             id="accountName"
@@ -283,8 +300,18 @@ export default function AddAccount() {
             placeholder="e.g., HDFC Savings"
             value={name}
             maxLength={MAX_NAME_LENGTH}
-            onChange={(e) => setName(stripLeading(e.target.value))}
+            aria-invalid={!!nameError}
+            aria-describedby={nameError ? 'accountName-error' : undefined}
+            onChange={(e) => {
+              setName(stripLeading(e.target.value));
+              setNameError(null);
+            }}
           />
+          {nameError && (
+            <p id="accountName-error" className="text-destructive mt-1.5 text-xs font-medium">
+              {nameError}
+            </p>
+          )}
         </div>
 
         {/* Type */}
@@ -293,15 +320,17 @@ export default function AddAccount() {
             htmlFor="accountType"
             className="text-muted-foreground mb-1.5 block text-xs font-medium"
           >
-            Account Type
+            Account type
           </Label>
           <div className="grid grid-cols-3 gap-2">
             {typeOptions.map((t) => (
               <button
                 key={t.value}
                 onClick={() => setType(t.value)}
-                className={`rounded-sm border p-3 text-center transition-colors ${
-                  type === t.value ? 'border-primary bg-primary/10' : 'border-border bg-card'
+                className={`rounded-md border p-3 text-center transition-colors ${
+                  type === t.value
+                    ? 'bg-grad-primary shadow-glow-primary border-transparent text-white'
+                    : 'border-[var(--glass-border)] bg-[var(--glass-strong)]'
                 }`}
               >
                 {(() => {
@@ -330,11 +359,11 @@ export default function AddAccount() {
           />
         ) : type === 'credit' ? (
           <div className="space-y-2">
-            <div className="bg-muted grid grid-cols-2 gap-1 rounded-sm p-1">
+            <div className="bg-muted grid grid-cols-2 gap-1 rounded-full p-1">
               {(
                 [
-                  { key: 'due', label: 'Current Due', value: shownDue },
-                  { key: 'limit', label: 'Credit Limit', value: creditLimit },
+                  { key: 'due', label: 'Current due', value: shownDue },
+                  { key: 'limit', label: 'Credit limit', value: creditLimit },
                 ] as const
               ).map((f) => (
                 <button
@@ -342,13 +371,13 @@ export default function AddAccount() {
                   type="button"
                   onClick={() => setCreditField(f.key)}
                   aria-pressed={creditField === f.key}
-                  className={`rounded-sm px-2 py-1.5 text-center transition-all ${
+                  className={`rounded-full px-2 py-1.5 text-center transition-all ${
                     creditField === f.key
-                      ? 'bg-primary text-primary-foreground shadow'
+                      ? 'bg-grad-primary shadow-glow-primary text-white'
                       : 'text-muted-foreground'
                   }`}
                 >
-                  <span className="block text-[10px] font-medium">{f.label}</span>
+                  <span className="block text-xs font-medium">{f.label}</span>
                   <span className="block text-sm font-semibold">
                     {formatInputAmount(f.value) || '0'}
                   </span>
@@ -370,7 +399,7 @@ export default function AddAccount() {
         ) : (
           <div>
             <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">
-              Current Balance
+              Current balance
             </Label>
             <NumberPad
               value={shownBalance}
@@ -386,13 +415,13 @@ export default function AddAccount() {
         {type === 'credit' && (
           <div>
             <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">
-              Statement Cycle (optional)
+              Statement cycle (optional)
             </Label>
             <div className="grid grid-cols-3 gap-2">
               <div>
                 <Label
                   htmlFor="statementCloseDay"
-                  className="text-muted-foreground mb-1 block text-[10px]"
+                  className="text-muted-foreground mb-1 block text-xs"
                 >
                   Closes on
                 </Label>
@@ -410,7 +439,7 @@ export default function AddAccount() {
               <div>
                 <Label
                   htmlFor="paymentDueDays"
-                  className="text-muted-foreground mb-1 block text-[10px]"
+                  className="text-muted-foreground mb-1 block text-xs"
                 >
                   Due after (days)
                 </Label>
@@ -427,7 +456,7 @@ export default function AddAccount() {
               <div>
                 <Label
                   htmlFor="minimumDuePercent"
-                  className="text-muted-foreground mb-1 block text-[10px]"
+                  className="text-muted-foreground mb-1 block text-xs"
                 >
                   Min due %
                 </Label>
@@ -443,47 +472,23 @@ export default function AddAccount() {
                 />
               </div>
             </div>
-            <p className="text-muted-foreground mt-1.5 text-[10px]">
+            <p className="text-muted-foreground mt-1.5 text-xs">
               Set a close day and due offset to see a "payment due" reminder on the Dashboard.
             </p>
           </div>
         )}
 
-        {/* Color */}
-        <div>
-          <Label
-            htmlFor="accountColor"
-            className="text-muted-foreground mb-1.5 block text-xs font-medium"
-          >
-            Color
-          </Label>
-          <div className="flex flex-wrap gap-4">
-            {accountColors.map((c) => (
-              <button
-                key={c}
-                onClick={() => setColor(c)}
-                className={`h-8 w-8 rounded-full transition-transform ${
-                  color === c ? 'ring-primary scale-110 ring-1 ring-offset-1' : ''
-                }`}
-                style={{ backgroundColor: c }}
-              />
-            ))}
-          </div>
-        </div>
-
         {/* Submit */}
-        <Button
-          onClick={handleSubmit}
-          className="bg-grad-primary shadow-glow-primary h-auto w-full rounded-sm py-3.5 text-sm font-medium text-white"
-        >
+        <Button onClick={handleSubmit} size="lg" className="w-full">
           {existing ? 'Update Account' : 'Add Account'}
         </Button>
 
         {existing && !isDepositAccount(existing) && (
           <Button
-            variant="secondary"
+            variant="outline"
+            size="lg"
             onClick={() => setShowReconcile(true)}
-            className="bg-muted text-muted-foreground h-auto w-full gap-2 rounded-sm py-3 text-sm font-medium"
+            className="w-full gap-2"
           >
             <Scale size={16} />
             Reconcile Balance

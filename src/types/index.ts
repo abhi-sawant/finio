@@ -529,7 +529,8 @@ export interface FinanceStore {
   /** Re-insert previously deleted transactions verbatim. Same double-undo guard as `restoreTransaction`. */
   restoreTransactions: (transactions: Transaction[]) => void;
   /** Reassign every listed transaction to a single category. */
-  bulkRecategorize: (ids: string[], categoryId: string) => void;
+  /** Returns how many rows actually changed (transfers and type-invalid rows are skipped). */
+  bulkRecategorize: (ids: string[], categoryId: string) => number;
   /** Add a label to every listed transaction that doesn't already carry it. */
   bulkAddLabel: (ids: string[], labelId: string) => void;
   /** Insert many transactions at once (e.g. from a CSV import). Returns how many were added. */
@@ -588,9 +589,27 @@ export interface FinanceStore {
   deleteDebtEntry: (id: string) => DebtEntry | null;
   /** Re-insert a previously deleted entry verbatim — same id, no double-undo. */
   restoreDebtEntry: (entry: DebtEntry) => void;
+  /**
+   * Edit an entry's amount (signed), date or note. On a "Settled up" entry the amount's sign is
+   * kept (only the magnitude changes) and an amount/date edit also updates the linked
+   * transaction, balance-safely. A zero or non-finite amount is ignored. Returns false for an
+   * unknown id.
+   */
+  updateDebtEntry: (
+    id: string,
+    updates: Partial<Pick<DebtEntry, 'amount' | 'date' | 'note'>>,
+  ) => boolean;
 
   /** Also creates the recurring rule that posts its EMI every month, and links it via `recurringId`. */
-  addLoan: (loan: Omit<Loan, 'id' | 'createdAt' | 'recurringId'>) => string;
+  /**
+   * `logPastEmis` (default false): when the first EMI date is in the past, post the EMIs that
+   * already fell due as real expense transactions (via `processRecurring`) instead of treating
+   * them as paid outside Finio.
+   */
+  addLoan: (
+    loan: Omit<Loan, 'id' | 'createdAt' | 'recurringId'>,
+    options?: { logPastEmis?: boolean },
+  ) => string;
   /**
    * Editing any of `principal`/`interestRate`/`tenureMonths`/`startDate`/`accountId`/`categoryId`
    * keeps the linked recurring rule's amount and destination in sync with the recalculated EMI.

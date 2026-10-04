@@ -4,6 +4,7 @@ import {
   detectDateFormat,
   detectDateFormatInfo,
   findDuplicateRows,
+  guessColumnMapping,
   parseAmount,
   parseCsvText,
   parseDateWithFormat,
@@ -398,5 +399,49 @@ describe('debit/credit columns use absolute values', () => {
       fallbackCategoryId: 'c1',
     });
     expect(res.accepted[0].transaction).toMatchObject({ type: 'expense', amount: 250 });
+  });
+});
+
+describe('guessColumnMapping', () => {
+  it('maps date, signed amount, description and category headers', () => {
+    expect(guessColumnMapping(['Date', 'Description', 'Category', 'Amount'])).toEqual({
+      dateCol: 0,
+      amountMode: 'signed',
+      amountCol: 3,
+      noteCol: 1,
+      categoryCol: 2,
+    });
+  });
+
+  it('switches to debit/credit mode for literal Debit and Credit headers', () => {
+    expect(guessColumnMapping(['Txn Date', 'Narration', 'Debit', 'Credit'])).toEqual({
+      dateCol: 0,
+      amountMode: 'debitCredit',
+      debitCol: 2,
+      creditCol: 3,
+      noteCol: 1,
+      categoryCol: undefined,
+    });
+  });
+
+  it('treats "Withdrawal Amt." / "Deposit Amt." as debit/credit, not a single amount', () => {
+    const guess = guessColumnMapping([
+      'Date',
+      'Narration',
+      'Chq./Ref.No.',
+      'Withdrawal Amt.',
+      'Deposit Amt.',
+      'Closing Balance',
+    ]);
+    expect(guess.amountMode).toBe('debitCredit');
+    expect(guess.debitCol).toBe(3);
+    expect(guess.creditCol).toBe(4);
+  });
+
+  it('keeps a lone Debit header in signed mode and leaves unknown columns unmapped', () => {
+    const guess = guessColumnMapping(['When', 'Debit', 'Something']);
+    expect(guess.amountMode).toBe('signed');
+    expect(guess.dateCol).toBeUndefined();
+    expect(guess.amountCol).toBeUndefined();
   });
 });

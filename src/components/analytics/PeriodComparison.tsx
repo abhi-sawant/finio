@@ -21,12 +21,12 @@ const COLUMN_LABELS: Record<PeriodType, [string, string, string]> = {
 
 function ChangeBadge({ ratio, invert = false }: { ratio: number | null; invert?: boolean }) {
   if (ratio === null) {
-    return <span className="text-muted-foreground text-[10px]">—</span>;
+    return <span className="text-muted-foreground text-xs">—</span>;
   }
   const pct = Math.round(ratio * 100);
   if (pct === 0) {
     return (
-      <span className="text-muted-foreground inline-flex items-center gap-0.5 text-[10px]">
+      <span className="text-muted-foreground inline-flex items-center gap-0.5 text-xs">
         <Minus size={9} /> flat
       </span>
     );
@@ -36,10 +36,11 @@ function ChangeBadge({ ratio, invert = false }: { ratio: number | null; invert?:
   const Icon = pct > 0 ? ArrowUp : ArrowDown;
   return (
     <span
-      className={`inline-flex items-center gap-0.5 text-[10px] font-medium ${isGood ? 'text-primary' : 'text-destructive'}`}
+      className={`inline-flex items-center gap-0.5 text-xs font-medium ${isGood ? 'text-positive' : 'text-destructive'}`}
     >
       <Icon size={9} />
-      {formatPercentChange(ratio).replace('+', '')}
+      <span className="sr-only">{pct > 0 ? 'up ' : 'down '}</span>
+      {formatPercentChange(ratio).replace(/^[+-]/, '')}
     </span>
   );
 }
@@ -89,7 +90,7 @@ export function PeriodComparison() {
   return (
     <section className="card-elevated rounded-md p-4">
       <div className="mb-3 flex items-center justify-between gap-2">
-        <h3 className="text-sm font-semibold">Compare Periods</h3>
+        <h3 className="text-sm font-semibold">Compare periods</h3>
         <div className="flex gap-1">
           {PERIOD_TYPES.map((option) => (
             <Button
@@ -113,24 +114,22 @@ export function PeriodComparison() {
           const base = index === 0 ? null : comparison.current;
           return (
             <div key={heading} className="bg-muted/40 rounded-sm p-3">
-              <p className="text-muted-foreground truncate text-xs font-medium">
-                {heading}
-              </p>
-              <p className="text-muted-foreground mt-0.5 truncate text-[10px]">{summary.label}</p>
+              <p className="text-muted-foreground truncate text-xs font-medium">{heading}</p>
+              <p className="text-muted-foreground mt-0.5 truncate text-xs">{summary.label}</p>
 
               <dl className="mt-2 space-y-1.5">
                 <div>
-                  <dt className="text-muted-foreground text-[10px]">Income</dt>
+                  <dt className="text-muted-foreground text-xs">Income</dt>
                   <dd className="text-positive text-xs font-semibold">{money(summary.income)}</dd>
                 </div>
                 <div>
-                  <dt className="text-muted-foreground text-[10px]">Expenses</dt>
+                  <dt className="text-muted-foreground text-xs">Expenses</dt>
                   <dd className="text-destructive text-xs font-semibold">
                     {money(summary.expenses)}
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-muted-foreground text-[10px]">Net</dt>
+                  <dt className="text-muted-foreground text-xs">Net</dt>
                   <dd
                     className={`text-xs font-semibold ${summary.net >= 0 ? 'text-positive' : 'text-destructive'}`}
                   >
@@ -141,8 +140,8 @@ export function PeriodComparison() {
 
               {/* How the period in progress compares against this one, not the reverse. */}
               {base && (
-                <p className="mt-2 flex items-center gap-1 text-[10px]">
-                  <span className="text-muted-foreground">spend now:</span>
+                <p className="mt-2 flex items-center gap-1 text-xs">
+                  <span className="text-muted-foreground">Spend now:</span>
                   <ChangeBadge ratio={ratio(base.expenses, summary.expenses)} invert />
                 </p>
               )}
@@ -152,8 +151,8 @@ export function PeriodComparison() {
       </div>
 
       {comparison.current.isPartial && (
-        <p className="text-muted-foreground mt-2 text-[10px]">
-          {currentLabel.toLowerCase()} is still in progress — on pace for{' '}
+        <p className="text-muted-foreground mt-2 text-xs">
+          {currentLabel} is still in progress — on pace for{' '}
           {money(comparison.current.projectedExpenses)} of spending.
         </p>
       )}
@@ -169,23 +168,16 @@ export function PeriodComparison() {
               const isUp = mover.change > 0;
               return (
                 <li key={mover.categoryId} className="flex items-center gap-2.5">
-                  <div
-                    className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full"
-                    style={{
-                      backgroundColor: category?.color ?? 'var(--muted-foreground)',
-                    }}
-                  >
-                    <CategoryIcon
-                      icon={category?.icon ?? 'circle-ellipsis'}
-                      size={13}
-                      color="white"
-                    />
-                  </div>
+                  <CategoryIcon
+                    icon={category?.icon ?? 'circle-ellipsis'}
+                    size={14}
+                    color={category?.color ?? 'var(--muted-foreground)'}
+                  />
                   <span className="min-w-0 flex-1 truncate text-xs font-medium">
                     {category?.name ?? 'Uncategorized'}
                   </span>
                   <span
-                    className={`shrink-0 text-xs font-semibold ${isUp ? 'text-destructive' : 'text-primary'}`}
+                    className={`shrink-0 text-xs font-semibold ${isUp ? 'text-destructive' : 'text-positive'}`}
                   >
                     {isUp ? '+' : '−'}
                     {money(Math.abs(mover.change))}

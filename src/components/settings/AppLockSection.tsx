@@ -213,7 +213,7 @@ export function AppLockSection() {
             <>
               <button
                 onClick={() => openLockDialog('change')}
-                className="flex w-full items-center justify-between p-4"
+                className="hover:bg-muted/50 flex w-full items-center justify-between p-4 transition-colors"
               >
                 <div className="flex items-center gap-3">
                   <KeyRound size={18} className="text-muted-foreground" />
@@ -234,7 +234,8 @@ export function AppLockSection() {
                 </div>
                 <button
                   onClick={() => setShowAutoLockPicker(true)}
-                  className="bg-muted shrink-0 rounded-sm px-3 py-1.5 text-sm font-medium"
+                  aria-label="Change auto-lock delay"
+                  className="bg-muted hover:bg-muted/70 shrink-0 rounded-full px-3 py-1.5 text-sm font-medium transition-colors"
                 >
                   {lockConfig?.autoLockMinutes === 0 ? 'Now' : `${lockConfig?.autoLockMinutes}m`}
                 </button>
@@ -251,7 +252,10 @@ export function AppLockSection() {
                 />
               )}
 
-              <button onClick={lockNow} className="flex w-full items-center gap-3 p-4">
+              <button
+                onClick={lockNow}
+                className="hover:bg-muted/50 flex w-full items-center gap-3 p-4 transition-colors"
+              >
                 <LockKeyhole size={18} className="text-muted-foreground shrink-0" />
                 <span className="text-sm font-medium">Lock now</span>
               </button>
@@ -261,7 +265,7 @@ export function AppLockSection() {
       )}
 
       <Dialog open={showAutoLockPicker} onOpenChange={setShowAutoLockPicker}>
-        <DialogContent className="bg-card top-1/3 mx-auto w-11/12 rounded-md sm:max-w-sm">
+        <DialogContent className="bg-card top-1/3 mx-auto w-11/12 sm:max-w-sm">
           <DialogHeader>
             <DialogTitle>Auto-lock</DialogTitle>
             <DialogDescription>
@@ -276,9 +280,10 @@ export function AppLockSection() {
                   setAutoLockMinutes(minutes);
                   setShowAutoLockPicker(false);
                 }}
-                className={`rounded-sm px-3 py-2.5 text-left text-sm font-medium transition-colors ${
+                aria-pressed={minutes === lockConfig?.autoLockMinutes}
+                className={`rounded-full px-4 py-2.5 text-left text-sm font-medium transition-colors ${
                   minutes === lockConfig?.autoLockMinutes
-                    ? 'bg-grad-primary text-white'
+                    ? 'bg-grad-primary shadow-glow-primary text-white'
                     : 'bg-muted hover:bg-muted/70'
                 }`}
               >
@@ -322,9 +327,9 @@ export function AppLockSection() {
                   key={length}
                   onClick={() => setPinLength(length)}
                   aria-pressed={pinLength === length}
-                  className={`rounded-sm py-3 text-sm font-medium transition-colors ${
+                  className={`rounded-full py-3 text-sm font-medium transition-colors ${
                     pinLength === length
-                      ? 'bg-grad-primary text-white'
+                      ? 'bg-grad-primary shadow-glow-primary text-white'
                       : 'bg-muted hover:bg-muted/70'
                   }`}
                 >
@@ -340,11 +345,7 @@ export function AppLockSection() {
                 </button>
               </p>
             )}
-            <Button
-              size="lg"
-              className="bg-grad-primary w-full text-white"
-              onClick={() => setPinPhase('enter')}
-            >
+            <Button size="lg" className="w-full" onClick={() => setPinPhase('enter')}>
               Continue
             </Button>
           </div>
@@ -367,6 +368,7 @@ export function AppLockSection() {
               maxLength={pinPhase === 'current' ? (lockConfig?.pinLength ?? 4) : pinLength}
               onComplete={handlePinComplete}
               disabled={pinBusy}
+              surface="card"
             />
           </div>
         )}

@@ -11,11 +11,22 @@ import {
 } from 'recharts';
 import { AlertTriangle, TrendingDown, Wallet } from 'lucide-react';
 import { useFinanceStore } from '@/store/useFinanceStore';
-import { formatCurrency, formatDayMonth, formatShortDate } from '@/utils/formatters';
+import {
+  formatCurrency,
+  formatDayMonth,
+  formatShortDate,
+  shouldCompactGroup,
+} from '@/utils/formatters';
 import { buildCashFlowForecast } from '@/utils/forecast';
 import { Button } from '@/components/ui/button';
 import { ChartDataTable } from '@/components/charts/ChartDataTable';
 import { sampleForTable } from '@/utils/chartTable';
+import {
+  AXIS_PROPS,
+  GRID_PROPS,
+  TOOLTIP_PROPS,
+  formatAxisMoney,
+} from '@/components/charts/chartTheme';
 
 const HORIZONS = [
   { days: 30, label: '30d' },
@@ -48,12 +59,21 @@ export function CashFlowForecast() {
   if (forecast.isEmpty) return null;
 
   const upcoming = forecast.scheduled.slice(0, 4);
+  // The three tiles are read side by side, so they share one format: compact together once
+  // any of them is large, and never with paise — a projection isn't exact to the rupee.
+  const tilesCompact = shouldCompactGroup([
+    forecast.startBalance,
+    forecast.endBalance,
+    forecast.low?.balance ?? 0,
+  ]);
+  const tile = (value: number) =>
+    formatCurrency(value, true, hideAmounts, { forceCompact: tilesCompact, precise: false });
   const projectedTable = sampleForTable(forecast.points);
 
   return (
     <section className="card-elevated rounded-md p-4">
       <div className="mb-1 flex items-center justify-between gap-2">
-        <h3 className="text-sm font-semibold">Cash-Flow Forecast</h3>
+        <h3 className="text-sm font-semibold">Cash-flow forecast</h3>
         <div className="flex gap-1">
           {HORIZONS.map((horizon) => (
             <Button
@@ -68,7 +88,7 @@ export function CashFlowForecast() {
           ))}
         </div>
       </div>
-      <p className="text-muted-foreground mb-3 text-[10px]">
+      <p className="text-muted-foreground mb-3 text-xs">
         Liquid cash projected from your recurring rules plus your last {forecast.lookbackDays} days
         of everyday spending. Credit cards are excluded until the payment leaves an account.
       </p>
@@ -80,36 +100,24 @@ export function CashFlowForecast() {
       >
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={chartData} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" opacity={0.12} />
-            <XAxis
-              dataKey="date"
-              fontSize={10}
-              tickLine={false}
-              axisLine={false}
-              interval="preserveStartEnd"
-              minTickGap={32}
-            />
+            <CartesianGrid {...GRID_PROPS} />
+            <XAxis dataKey="date" {...AXIS_PROPS} interval="preserveStartEnd" minTickGap={32} />
             <YAxis
-              fontSize={10}
-              tickLine={false}
-              axisLine={false}
+              {...AXIS_PROPS}
               width={56}
               tickMargin={4}
-              tickFormatter={money}
+              tickFormatter={(v: number) => formatAxisMoney(v, hideAmounts)}
             />
             <Tooltip
               cursor={{ stroke: 'var(--muted-foreground)', strokeOpacity: 0.4, strokeWidth: 1 }}
-              contentStyle={{
-                background: 'var(--card)',
-                border: '1px solid var(--border)',
-                borderRadius: 12,
-                fontSize: 12,
-              }}
-              formatter={(v) => formatCurrency(Number(v) || 0, false, hideAmounts)}
-              labelStyle={{ color: 'var(--muted-foreground)' }}
+              {...TOOLTIP_PROPS}
+              formatter={(v) => [
+                formatCurrency(Number(v) || 0, false, hideAmounts, { precise: false }),
+                'Projected balance',
+              ]}
             />
             {/* Zero is the line that matters — everything below it is an overdraft. */}
-            <ReferenceLine y={0} stroke="var(--border)" strokeDasharray="4 4" />
+            <ReferenceLine y={0} stroke="var(--muted-foreground)" strokeDasharray="4 4" />
             <Area
               type="monotone"
               dataKey="balance"
@@ -141,16 +149,14 @@ export function CashFlowForecast() {
           <dt className="text-muted-foreground flex items-center gap-1 text-xs font-medium">
             <Wallet size={10} /> Today
           </dt>
-          <dd className="mt-0.5 text-xs font-semibold">{money(forecast.startBalance)}</dd>
+          <dd className="mt-0.5 text-xs font-semibold">{tile(forecast.startBalance)}</dd>
         </div>
         <div className="bg-muted/40 rounded-sm p-2.5">
-          <dt className="text-muted-foreground text-xs font-medium">
-            In {days} days
-          </dt>
+          <dt className="text-muted-foreground text-xs font-medium">In {days} days</dt>
           <dd
             className={`mt-0.5 text-xs font-semibold ${forecast.endBalance < 0 ? 'text-destructive' : ''}`}
           >
-            {money(forecast.endBalance)}
+            {tile(forecast.endBalance)}
           </dd>
         </div>
         <div className="bg-muted/40 rounded-sm p-2.5">
@@ -160,9 +166,9 @@ export function CashFlowForecast() {
           <dd
             className={`mt-0.5 text-xs font-semibold ${forecast.low && forecast.low.balance < 0 ? 'text-destructive' : ''}`}
           >
-            {forecast.low ? money(forecast.low.balance) : '—'}
+            {forecast.low ? tile(forecast.low.balance) : '—'}
             {forecast.low && (
-              <span className="text-muted-foreground ml-1 font-normal">
+              <span className="text-muted-foreground block font-normal">
                 {formatDayMonth(forecast.low.date)}
               </span>
             )}
@@ -211,7 +217,7 @@ export function CashFlowForecast() {
       )}
 
       {forecast.dailyEstimate > 0 && (
-        <p className="text-muted-foreground mt-3 text-[10px]">
+        <p className="text-muted-foreground mt-3 text-xs">
           Everyday spend estimated at {money(forecast.dailyEstimate)} a day
           {forecast.categoryAverages.length > 0 && (
             <>

@@ -54,7 +54,7 @@ export const moreNavItems = [
   {
     path: '/year-in-review',
     icon: PartyPopper,
-    label: 'Year in Review',
+    label: 'Year in review',
     description: 'Your financial year, looked back on',
   },
 ];

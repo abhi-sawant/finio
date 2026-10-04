@@ -9,8 +9,8 @@ const FIBRES = (() => {
   let seed = 7;
   const rand = () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
   return Array.from({ length: 26 }, (_, i) => {
-    // right half only — the watermark side — so no fibre ever crosses a figure
-    const x = 200 + rand() * 195;
+    // right third only — the watermark side — so no fibre reaches a figure, even at 320px
+    const x = 272 + rand() * 124;
     const y = rand() * 200;
     const a = rand() * Math.PI * 2;
     const len = 5 + rand() * 9;
@@ -60,7 +60,11 @@ export function NoteCard({
   };
 
   return (
-    <div className={cn('note-card-stage', className)} onPointerMove={onMove} onPointerLeave={onLeave}>
+    <div
+      className={cn('note-card-stage', className)}
+      onPointerMove={onMove}
+      onPointerLeave={onLeave}
+    >
       <div ref={ref} className="note-card">
         <svg
           className="note-card-fibres"
@@ -70,7 +74,16 @@ export function NoteCard({
           focusable="false"
         >
           {FIBRES.map((f, i) => (
-            <path key={i} d={f.d} stroke={f.ink} color={f.ink} strokeWidth={1.2} vectorEffect="non-scaling-stroke" fill="none" strokeLinecap="round" />
+            <path
+              key={i}
+              d={f.d}
+              stroke={f.ink}
+              color={f.ink}
+              strokeWidth={1.2}
+              vectorEffect="non-scaling-stroke"
+              fill="none"
+              strokeLinecap="round"
+            />
           ))}
         </svg>
         <Guilloche className="note-card-rosette" />

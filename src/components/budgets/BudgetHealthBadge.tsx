@@ -12,7 +12,7 @@ const PRESENTATION: Record<
     className: 'bg-warning-band text-warning-band-accent',
   },
   near: { label: 'Near limit', Icon: TrendingUp, className: 'bg-warning/15 text-warning' },
-  ok: { label: 'On track', Icon: Check, className: 'bg-primary/10 text-primary' },
+  ok: { label: 'On track', Icon: Check, className: 'bg-positive/10 text-positive' },
 };
 
 interface BudgetHealthBadgeProps {
@@ -77,7 +77,11 @@ export function BudgetProgressBar({
         style={{
           width: `${Math.min(Math.max(status.percent, 0), 100)}%`,
           background:
-            health === 'over' ? 'var(--destructive)' : health === 'near' ? 'var(--warning)' : okFill,
+            health === 'over'
+              ? 'var(--destructive)'
+              : health === 'near'
+                ? 'var(--warning)'
+                : okFill,
         }}
       />
     </div>

@@ -16,6 +16,12 @@ import { buildNetWorthSeries } from '@/utils/netWorth';
 import { normalizeMonthStartDay } from '@/utils/period';
 import { Button } from '@/components/ui/button';
 import { ChartDataTable } from '@/components/charts/ChartDataTable';
+import {
+  AXIS_PROPS,
+  GRID_PROPS,
+  TOOLTIP_PROPS,
+  formatAxisMoney,
+} from '@/components/charts/chartTheme';
 import { EmptyChart } from '@/components/charts/EmptyChart';
 
 const RANGES = [
@@ -63,7 +69,7 @@ export function NetWorthTrend() {
   return (
     <section className="card-elevated rounded-md p-4">
       <div className="mb-1 flex items-center justify-between gap-2">
-        <h3 className="text-sm font-semibold">Net Worth Over Time</h3>
+        <h3 className="text-sm font-semibold">Net worth over time</h3>
         <div className="flex gap-1">
           {RANGES.map((range) => (
             <Button
@@ -90,7 +96,7 @@ export function NetWorthTrend() {
             {changeRatio !== null && <> ({formatPercentChange(changeRatio)})</>}
           </span>
         )}
-        <span className="text-muted-foreground text-[10px]">over {months} months</span>
+        <span className="text-muted-foreground text-xs">over {months} months</span>
       </div>
 
       <div
@@ -103,33 +109,18 @@ export function NetWorthTrend() {
         ) : (
           <ResponsiveContainer width="100%" height="100%">
             <ComposedChart data={chartData} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" opacity={0.12} />
-              <XAxis
-                dataKey="month"
-                fontSize={10}
-                tickLine={false}
-                axisLine={false}
-                interval="preserveStartEnd"
-                minTickGap={24}
-              />
+              <CartesianGrid {...GRID_PROPS} />
+              <XAxis dataKey="month" {...AXIS_PROPS} interval="preserveStartEnd" minTickGap={24} />
               <YAxis
-                fontSize={10}
-                tickLine={false}
-                axisLine={false}
+                {...AXIS_PROPS}
                 width={56}
                 tickMargin={4}
-                tickFormatter={money}
+                tickFormatter={(v: number) => formatAxisMoney(v, hideAmounts)}
               />
               <Tooltip
                 cursor={{ fill: 'var(--muted)', fillOpacity: 0.5 }}
-                contentStyle={{
-                  background: 'var(--card)',
-                  border: '1px solid var(--border)',
-                  borderRadius: 12,
-                  fontSize: 12,
-                }}
+                {...TOOLTIP_PROPS}
                 formatter={(v) => formatCurrency(Math.abs(Number(v) || 0), false, hideAmounts)}
-                labelStyle={{ color: 'var(--muted-foreground)' }}
               />
               {/* Assets up, liabilities down, net worth as the line that sums them. */}
               <Bar dataKey="Assets" fill="var(--primary)" opacity={0.55} radius={[4, 4, 0, 0]} />
@@ -165,7 +156,7 @@ export function NetWorthTrend() {
         }))}
       />
 
-      <p className="text-muted-foreground mt-3 flex items-start gap-1.5 text-[10px]">
+      <p className="text-muted-foreground mt-3 flex items-start gap-1.5 text-xs">
         <Camera size={11} className="mt-0.5 shrink-0" />
         <span>
           {snapshotCount > 0

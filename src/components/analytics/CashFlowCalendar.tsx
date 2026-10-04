@@ -77,7 +77,7 @@ export function CashFlowCalendar() {
   return (
     <section className="card-elevated rounded-md p-4">
       <div className="mb-3 flex items-center justify-between gap-2">
-        <h3 className="text-sm font-semibold">Cash Flow Calendar</h3>
+        <h3 className="text-sm font-semibold">Cash-flow calendar</h3>
         <div className="flex items-center gap-1">
           <button
             onClick={() => setOffset((o) => Math.max(0, o - 1))}
@@ -106,7 +106,7 @@ export function CashFlowCalendar() {
           {WEEKDAYS.map((label, index) => (
             <span
               key={index}
-              className="text-muted-foreground text-center text-[10px] font-medium"
+              className="text-muted-foreground text-center text-xs font-medium"
               aria-hidden
             >
               {label}
@@ -136,7 +136,7 @@ export function CashFlowCalendar() {
                     key={day.key}
                     title={title}
                     aria-hidden={!day.inRange}
-                    className={`relative flex aspect-square items-center justify-center rounded-md text-[10px] font-medium ${dayClasses(day)} ${day.isToday ? 'ring-primary ring-2' : ''}`}
+                    className={`relative flex aspect-square items-center justify-center rounded-md text-xs font-medium ${dayClasses(day)} ${day.isToday ? 'ring-primary ring-2' : ''}`}
                   >
                     <span aria-hidden>{day.inRange ? format(day.date, 'd') : ''}</span>
                     {dueAccounts && (
@@ -161,12 +161,20 @@ export function CashFlowCalendar() {
         </div>
       </div>
 
-      <div className="text-muted-foreground mt-3 flex items-center justify-center gap-4 text-[10px]">
+      <div className="text-muted-foreground mt-3 flex items-center justify-center gap-4 text-xs">
         <span className="flex items-center gap-1">
-          <span className="bg-primary/50 h-2.5 w-2.5 rounded-sm" /> Money in
+          <span
+            className="bg-positive/15 ring-positive/50 h-2.5 w-2.5 rounded-[3px] ring-1"
+            aria-hidden
+          />{' '}
+          Money in
         </span>
         <span className="flex items-center gap-1">
-          <span className="bg-destructive/50 h-2.5 w-2.5 rounded-sm" /> Money out
+          <span
+            className="bg-destructive/15 ring-destructive/50 h-2.5 w-2.5 rounded-[3px] ring-1"
+            aria-hidden
+          />{' '}
+          Money out
         </span>
         <span className="flex items-center gap-1">
           <CreditCard size={10} /> Card due
