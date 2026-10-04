@@ -409,6 +409,14 @@ create a stacking context (the background rosette sits at `z-index: -1` for that
   sentence-case muted label.
 - **Header:** transparent at rest; glass with a hairline once scrolled. `h1` in Unbounded.
 
+### App icon and favicon
+A ₹100-lavender tile (radial `#a594f2 → #6c57d6 → #3d2bb0`, lit top-left like the coin) carrying
+a heavy white "F" and, down its right side, the windowed colour-shift security thread
+(`#4fe0a8 → #6fb4ff → #d8ceff`, one continuous gradient through the windows). Sizes ≥96px add
+faint white guilloche engraving at 16%; the favicon (`favicon.svg`, 48px `.ico`, 64px) drops it to
+stay crisp. The maskable and Apple icons are full-bleed with the mark inside the 80% safe zone.
+Every size is rendered from one vector source by `scripts/gen-icons.mjs`; never hand-edit a PNG.
+
 ### Note chip
 A 30×20px miniature banknote in the account type's denomination tint, with a 2px dashed thread
 near its right edge in the note's ink at 40%. Leads every account row; archived accounts show it

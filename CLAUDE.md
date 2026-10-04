@@ -154,6 +154,7 @@ Outside `src/`:
 
 ```
 scripts/gen-dummydata.mjs     # Regenerates dummydata.json (seeded PRNG — reruns are reproducible)
+scripts/gen-icons.mjs         # Renders the Mudra favicon/PWA/maskable/apple icons into public/ from one vector source
 dummydata.json                # ~1000-transaction import fixture for load/QA testing; not used by the app
 public/.htaccess              # SPA rewrite to index.html for Apache/cPanel
 public/guilloche.svg          # Procedural rosette, masked behind every screen (body::before); generated, not hand-drawn
