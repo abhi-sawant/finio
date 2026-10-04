@@ -1,6 +1,15 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { ArrowLeft, ChevronDown, Pencil, Plus, Trash2 } from 'lucide-react';
+import {
+  ArrowLeft,
+  CalendarRange,
+  ChevronDown,
+  CircleCheck,
+  Landmark,
+  Pencil,
+  Plus,
+  Trash2,
+} from 'lucide-react';
 import { toast } from 'sonner';
 import { useFinanceStore } from '@/store/useFinanceStore';
 import { loanStatus, maxPrepayment, simulatePrepaymentImpact } from '@/utils/loan';
@@ -41,6 +50,7 @@ function LoanCard({
   onAddPrepayment,
   onDeletePrepayment,
 }: LoanCardProps) {
+  const navigate = useNavigate();
   const hideAmounts = useFinanceStore((s) => s.settings.hideAmounts);
   const status = useMemo(
     () =>
@@ -77,7 +87,7 @@ function LoanCard({
             size="icon"
             onClick={onEdit}
             className="h-7 w-7"
-            aria-label="Edit"
+            aria-label={`Edit ${loan.name}`}
           >
             <Pencil size={13} className="text-muted-foreground" />
           </Button>
@@ -86,7 +96,7 @@ function LoanCard({
             size="icon"
             onClick={onDelete}
             className="h-7 w-7"
-            aria-label="Delete"
+            aria-label={`Delete ${loan.name}`}
           >
             <Trash2 size={13} className="text-destructive" />
           </Button>
@@ -100,7 +110,7 @@ function LoanCard({
             style={{ width: `${Math.min(progress * 100, 100)}%` }}
           />
         </div>
-        <p className="text-muted-foreground mt-1 text-[10px]">
+        <p className="text-muted-foreground mt-1 text-[11px]">
           {status.paidInstallments} of {status.totalMonths} installments ·{' '}
           {formatCurrency(status.outstandingBalance, true, hideAmounts)} outstanding
         </p>
@@ -108,18 +118,15 @@ function LoanCard({
 
       <div className="flex gap-2">
         <Button
+          variant="secondary"
           onClick={onAddPrepayment}
           disabled={isClosed}
-          className="bg-primary/10 text-primary h-auto flex-1 rounded-sm py-2 text-xs font-medium disabled:opacity-50"
+          className="bg-accent text-accent-foreground hover:bg-accent/80 flex-1 text-xs"
         >
-          Add Prepayment
+          Add prepayment
         </Button>
-        <Button
-          variant="secondary"
-          onClick={onToggleClosed}
-          className="bg-muted text-muted-foreground h-auto flex-1 rounded-sm py-2 text-xs font-medium"
-        >
-          {isClosed ? 'Reopen' : 'Mark Paid Off'}
+        <Button variant="secondary" onClick={onToggleClosed} className="flex-1 text-xs">
+          {isClosed ? 'Reopen' : 'Mark paid off'}
         </Button>
       </div>
 
@@ -162,6 +169,16 @@ function LoanCard({
             </div>
           </div>
 
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => navigate(`/loan-schedule/${loan.id}`)}
+            className="text-xs"
+          >
+            <CalendarRange aria-hidden />
+            Repayment schedule
+          </Button>
+
           <p className="text-muted-foreground pt-1 font-medium">Prepayments</p>
           {prepayments.length === 0 ? (
             <p className="text-muted-foreground">None logged yet.</p>
@@ -172,7 +189,7 @@ function LoanCard({
                   {formatShortDate(p.date)}
                 </span>
                 <span className="min-w-0 flex-1 truncate">{p.note}</span>
-                <span className="text-primary shrink-0 font-medium">
+                <span className="text-positive shrink-0 font-medium">
                   {formatCurrency(p.amount, true, hideAmounts)}
                 </span>
                 <button
@@ -290,7 +307,9 @@ export default function Loans() {
       return;
     }
     if (prepayOverLimit) {
-      toast.error(`Only ${formatCurrency(prepayLimit)} is still owed on this loan`);
+      toast.error(
+        `Only ${formatCurrency(prepayLimit, false, hideAmounts)} is still owed on this loan`,
+      );
       return;
     }
     addLoanPrepayment({
@@ -367,13 +386,29 @@ export default function Loans() {
 
       <Main className="lg:max-w-xl">
         {activeLoans.length > 0 && (
-          <div className="card-elevated bg-grad-primary-soft rounded-md p-4">
-            <p className="text-muted-foreground text-[10px] tracking-wide uppercase">
+          <div className="card-elevated rounded-md p-4">
+            <p className="text-muted-foreground text-xs font-medium">
               Outstanding across {activeLoans.length} loan{activeLoans.length === 1 ? '' : 's'}
             </p>
-            <p className="text-lg font-bold">
+            <p className="font-money mt-1 text-xl">
               {formatCurrency(totalOutstanding, true, hideAmounts)}
             </p>
+          </div>
+        )}
+
+        {activeLoans.length === 0 && closedLoans.length > 0 && (
+          // Every loan is paid off — say so, rather than leaving the page blank above a
+          // collapsed "Paid off" toggle.
+          <div className="py-10 text-center">
+            <CircleCheck size={28} className="text-positive mx-auto mb-3" aria-hidden />
+            <p className="font-medium">All loans paid off</p>
+            <p className="text-muted-foreground mt-1 mb-4 text-sm">
+              {closedLoans.length} loan{closedLoans.length === 1 ? '' : 's'} closed. Nothing
+              outstanding.
+            </p>
+            <Button onClick={() => navigate('/add-loan')} className="rounded-full px-5 py-2.5">
+              Add loan
+            </Button>
           </div>
         )}
 
@@ -398,13 +433,11 @@ export default function Loans() {
 
         {loans.length === 0 && (
           <div className="py-12 text-center">
+            <Landmark size={28} className="text-muted-foreground mx-auto mb-3" aria-hidden />
             <p className="text-muted-foreground mb-4">No loans yet</p>
-            <button
-              onClick={() => navigate('/add-loan')}
-              className="bg-grad-primary shadow-glow-primary rounded-sm px-5 py-2.5 text-sm font-medium text-white"
-            >
-              Add Loan
-            </button>
+            <Button onClick={() => navigate('/add-loan')} className="rounded-full px-5 py-2.5">
+              Add loan
+            </Button>
           </div>
         )}
       </Main>
@@ -415,9 +448,9 @@ export default function Loans() {
           if (!v) setPrepayLoan(null);
         }}
       >
-        <DialogContent className="bg-card mx-auto w-11/12 rounded-md">
+        <DialogContent className="bg-card mx-auto w-11/12">
           <DialogHeader>
-            <DialogTitle>Prepay "{prepayLoan?.name}"</DialogTitle>
+            <DialogTitle className="pr-8 break-words">Prepay "{prepayLoan?.name}"</DialogTitle>
           </DialogHeader>
           <div className="space-y-3">
             <NumberPad value={prepayAmount} onChange={setPrepayAmount} />
@@ -440,11 +473,11 @@ export default function Loans() {
             {prepayImpact && !prepayOverLimit && (
               <p className="text-muted-foreground text-xs">
                 This would save{' '}
-                <span className="text-primary font-medium">
+                <span className="text-positive font-medium">
                   {prepayImpact.monthsSaved} month{prepayImpact.monthsSaved === 1 ? '' : 's'}
                 </span>{' '}
                 and{' '}
-                <span className="text-primary font-medium">
+                <span className="text-positive font-medium">
                   {formatCurrency(prepayImpact.interestSaved, true, hideAmounts)}
                 </span>{' '}
                 in interest.
@@ -454,15 +487,11 @@ export default function Loans() {
               <Button
                 onClick={handlePrepaySubmit}
                 disabled={prepayOverLimit || prepayLimit <= 0}
-                className="bg-grad-primary shadow-glow-primary h-auto flex-1 rounded-sm py-2 text-sm font-medium text-white"
+                className="flex-1"
               >
-                Record Prepayment
+                Record prepayment
               </Button>
-              <Button
-                variant="secondary"
-                onClick={() => setPrepayLoan(null)}
-                className="bg-muted text-muted-foreground h-auto rounded-sm px-4 py-2 text-sm font-medium"
-              >
+              <Button variant="secondary" onClick={() => setPrepayLoan(null)}>
                 Cancel
               </Button>
             </div>

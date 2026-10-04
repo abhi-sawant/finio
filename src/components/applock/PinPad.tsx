@@ -1,6 +1,7 @@
 import { useEffect, type ReactNode } from 'react';
 import { Delete } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { pinKeyClass } from './pinKeyClass';
 
 /**
  * A PIN keypad, deliberately separate from `ui/number-pad`.
@@ -23,6 +24,12 @@ interface PinPadProps {
   disabled?: boolean;
   /** Rendered in the bottom-left key slot — the biometric button on the lock screen. */
   leadingAction?: ReactNode;
+  /**
+   * What the pad sits on. The glass keys (`background`, the lock screen) read against the
+   * lavender page wash but vanish on an opaque card/dialog, so a pad inside a dialog uses
+   * solid secondary keys with a hairline edge instead.
+   */
+  surface?: 'background' | 'card';
 }
 
 interface PinDotsProps {
@@ -58,6 +65,7 @@ export function PinPad({
   onComplete,
   disabled = false,
   leadingAction,
+  surface = 'background',
 }: PinPadProps) {
   const press = (digit: string) => {
     if (disabled || value.length >= maxLength) return;
@@ -96,8 +104,7 @@ export function PinPad({
     return () => window.removeEventListener('keydown', onKeyDown);
   });
 
-  const keyClass =
-    'bg-card active:bg-muted flex h-14 items-center justify-center rounded-md text-xl font-semibold transition-all active:scale-95 select-none disabled:opacity-40';
+  const keyClass = pinKeyClass(surface);
 
   return (
     <div className="grid grid-cols-3 gap-2">

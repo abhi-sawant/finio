@@ -29,6 +29,13 @@ export function useAutoLock(): void {
     }
 
     const onHidden = () => {
+      // A locked app must stay locked across a reload or a new tab: never stamp a fresh
+      // "backgrounded at" while locked (that would hand the next cold start a grace window).
+      // With no timestamp, `shouldLockOnResume` fails closed.
+      if (useAppLockStore.getState().isLocked) {
+        clearBackgroundedAt();
+        return;
+      }
       writeBackgroundedAt(Date.now());
       // "Immediately" flips synchronously here so the OS task-switcher snapshot has the best
       // chance of catching the lock screen rather than the user's balances.

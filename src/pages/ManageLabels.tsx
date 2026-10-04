@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { ArrowLeft, Plus, Trash2, Pencil } from 'lucide-react';
+import { ArrowLeft, Plus, Tag, Trash2, Pencil } from 'lucide-react';
+import { toast } from 'sonner';
 import { useFinanceStore } from '@/store/useFinanceStore';
 import { COLOR_PALETTE } from '@/data/colorPalette';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useConfirm } from '@/components/ui/use-confirm';
 import Header from '@/components/ui/header';
@@ -38,11 +40,23 @@ export default function ManageLabels() {
 
   const handleSubmit = () => {
     const cleanName = cleanText(name, MAX_NAME_LENGTH);
-    if (!cleanName) return;
+    if (!cleanName) {
+      toast.error('Enter a name');
+      return;
+    }
+    // Same rule as categories: names are compared case-insensitively, so "essential" can't
+    // sit beside "Essential" and leave the label picker with two indistinguishable chips.
+    const key = cleanName.toLowerCase();
+    if (labels.some((l) => l.id !== editId && l.name.trim().toLowerCase() === key)) {
+      toast.error(`A label named "${cleanName}" already exists`);
+      return;
+    }
     if (editId) {
       updateLabel(editId, { name: cleanName, color });
+      toast.success('Label updated');
     } else {
       addLabel({ name: cleanName, color });
+      toast.success('Label added');
     }
     resetForm();
   };
@@ -82,9 +96,9 @@ export default function ManageLabels() {
             if (!v) resetForm();
           }}
         >
-          <DialogContent className="bg-card mx-auto w-11/12 rounded-md">
+          <DialogContent className="bg-card mx-auto w-11/12">
             <DialogHeader>
-              <DialogTitle>{editId ? 'Edit Label' : 'Add Label'}</DialogTitle>
+              <DialogTitle>{editId ? 'Edit label' : 'Add label'}</DialogTitle>
             </DialogHeader>
             <div className="space-y-3">
               <Input
@@ -94,28 +108,28 @@ export default function ManageLabels() {
                 maxLength={MAX_NAME_LENGTH}
                 onChange={(e) => setName(stripLeading(e.target.value))}
               />
-              <div className="flex flex-wrap gap-2">
-                {labelColors.map((c) => (
-                  <button
-                    key={c}
-                    onClick={() => setColor(c)}
-                    className={`h-7 w-7 rounded-full ${color === c ? 'ring-primary scale-110 ring-2 ring-offset-2' : ''}`}
-                    style={{ backgroundColor: c }}
-                  />
-                ))}
+              <div>
+                <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">
+                  Color
+                </Label>
+                <div className="flex flex-wrap gap-2">
+                  {labelColors.map((c) => (
+                    <button
+                      key={c}
+                      onClick={() => setColor(c)}
+                      className={`h-7 w-7 rounded-full ${color === c ? 'ring-primary scale-110 ring-2 ring-offset-2' : ''}`}
+                      style={{ backgroundColor: c }}
+                      aria-label={`Color ${c}`}
+                      aria-pressed={color === c}
+                    />
+                  ))}
+                </div>
               </div>
               <div className="flex gap-2">
-                <Button
-                  onClick={handleSubmit}
-                  className="bg-grad-primary shadow-glow-primary h-auto flex-1 rounded-sm py-2 text-sm font-medium text-white"
-                >
+                <Button onClick={handleSubmit} className="flex-1">
                   {editId ? 'Update' : 'Add'}
                 </Button>
-                <Button
-                  variant="secondary"
-                  onClick={resetForm}
-                  className="bg-muted text-muted-foreground h-auto rounded-sm px-4 py-2 text-sm font-medium"
-                >
+                <Button variant="secondary" onClick={resetForm}>
                   Cancel
                 </Button>
               </div>
@@ -123,51 +137,56 @@ export default function ManageLabels() {
           </DialogContent>
         </Dialog>
 
-        {/* List */}
-        <div className="card-elevated divide-border divide-y rounded-md px-4">
-          {labels.map((label) => (
-            <div key={label.id} className="flex items-center justify-between py-3">
-              <div className="flex items-center gap-2.5">
-                <div
-                  className="h-2.5 w-2.5 rounded-full"
-                  style={{ backgroundColor: label.color }}
-                />
-                <p className="text-sm font-medium">{label.name}</p>
+        {/* List — only when there is something in it, or an empty glass card's hairline
+            sits above the empty-state message. */}
+        {labels.length > 0 && (
+          <div className="card-elevated divide-border divide-y rounded-md px-4">
+            {labels.map((label) => (
+              <div key={label.id} className="flex items-center justify-between py-3">
+                <div className="flex min-w-0 items-center gap-3">
+                  <Tag size={16} style={{ color: label.color }} className="shrink-0" aria-hidden />
+                  <p className="truncate text-sm font-medium">{label.name}</p>
+                </div>
+                <div className="flex shrink-0 gap-1">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleEdit(label.id)}
+                    className="h-8 w-8"
+                    aria-label={`Edit ${label.name}`}
+                  >
+                    <Pencil size={14} className="text-muted-foreground" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    aria-label={`Delete ${label.name}`}
+                    onClick={async () => {
+                      const confirmed = await confirm({
+                        title: `Delete "${label.name}"?`,
+                        description:
+                          'It will be removed from every transaction tagged with it, and any budget for it is removed.',
+                        confirmLabel: 'Delete label',
+                      });
+                      if (confirmed) deleteLabel(label.id);
+                    }}
+                    className="h-8 w-8"
+                  >
+                    <Trash2 size={14} className="text-destructive" />
+                  </Button>
+                </div>
               </div>
-              <div className="flex gap-1">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => handleEdit(label.id)}
-                  className="h-8 w-8"
-                >
-                  <Pencil size={14} className="text-muted-foreground" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={async () => {
-                    const confirmed = await confirm({
-                      title: `Delete "${label.name}"?`,
-                      description:
-                        'It will be removed from every transaction currently tagged with it.',
-                      confirmLabel: 'Delete label',
-                    });
-                    if (confirmed) deleteLabel(label.id);
-                  }}
-                  className="h-8 w-8"
-                >
-                  <Trash2 size={14} className="text-destructive" />
-                </Button>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         {labels.length === 0 && (
-          <p className="text-muted-foreground py-8 text-center text-sm">
-            No labels yet. Add one to tag your transactions.
-          </p>
+          <div className="py-12 text-center">
+            <Tag size={28} className="text-muted-foreground mx-auto mb-3" aria-hidden />
+            <p className="text-muted-foreground text-sm">
+              No labels yet. Add one to tag your transactions.
+            </p>
+          </div>
         )}
       </Main>
     </>

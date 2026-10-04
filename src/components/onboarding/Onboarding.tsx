@@ -30,8 +30,6 @@ const ACCOUNT_TYPES: { value: AccountType; label: string; icon: string; Icon: Lu
   { value: 'wallet', label: 'Wallet', icon: 'wallet', Icon: Wallet },
 ];
 
-const COLORS = COLOR_PALETTE.slice(0, 6);
-
 type Step = 'name' | 'account' | 'balance';
 
 const STEPS: Step[] = ['name', 'account', 'balance'];
@@ -60,7 +58,8 @@ export function Onboarding() {
   const [name, setName] = useState('');
   const [accountName, setAccountName] = useState('');
   const [accountType, setAccountType] = useState<AccountType>('savings');
-  const [color, setColor] = useState(COLORS[0]);
+  // The account's tint comes from its type; the stored colour is just a default.
+  const color = COLOR_PALETTE[0];
   const [balance, setBalance] = useState('');
 
   const trimmedName = cleanText(name, MAX_NAME_LENGTH);
@@ -192,24 +191,6 @@ export function Onboarding() {
                     <Icon size={16} />
                     {label}
                   </button>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <Label className="mb-1.5 block text-xs font-medium">Colour</Label>
-              <div className="flex gap-2">
-                {COLORS.map((c) => (
-                  <button
-                    key={c}
-                    onClick={() => setColor(c)}
-                    aria-label={`Colour ${c}`}
-                    aria-pressed={color === c}
-                    className={`h-8 w-8 rounded-full transition-transform ${
-                      color === c ? 'ring-foreground/40 scale-110 ring-2 ring-offset-2' : ''
-                    }`}
-                    style={{ backgroundColor: c }}
-                  />
                 ))}
               </div>
             </div>

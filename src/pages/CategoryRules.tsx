@@ -21,6 +21,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
@@ -175,7 +176,7 @@ export default function CategoryRules() {
         <HeaderIconButton onClick={() => navigate(-1)} aria-label="Back">
           <ArrowLeft />
         </HeaderIconButton>
-        <h1 className="text-base font-semibold">Categorization Rules</h1>
+        <h1 className="text-base font-semibold">Categorization rules</h1>
         <HeaderIconButton
           onClick={() => {
             resetForm();
@@ -205,7 +206,7 @@ export default function CategoryRules() {
               split transactions.
             </p>
 
-            <div className="space-y-2">
+            <div className="card-elevated divide-border divide-y overflow-hidden rounded-md">
               {rules.map((rule, index) => {
                 const category = categoryOf(rule.categoryId);
                 const ruleLabels = rule.labelIds
@@ -213,31 +214,28 @@ export default function CategoryRules() {
                   .filter((l) => l !== undefined);
 
                 return (
-                  <div
-                    key={rule.id}
-                    className={`card-elevated rounded-md p-3 ${rule.enabled ? '' : 'opacity-60'}`}
-                  >
+                  <div key={rule.id} className="p-3">
                     <div className="flex items-start gap-3">
                       <div className="flex flex-col">
                         <button
                           onClick={() => moveRule(rule.id, 'up')}
                           disabled={index === 0}
-                          aria-label="Move rule up"
-                          className="text-muted-foreground disabled:opacity-25"
+                          aria-label={`Move rule "${rule.pattern}" up`}
+                          className="text-muted-foreground hover:text-foreground rounded-full p-0.5 disabled:opacity-25"
                         >
                           <ChevronUp size={16} />
                         </button>
                         <button
                           onClick={() => moveRule(rule.id, 'down')}
                           disabled={index === rules.length - 1}
-                          aria-label="Move rule down"
-                          className="text-muted-foreground disabled:opacity-25"
+                          aria-label={`Move rule "${rule.pattern}" down`}
+                          className="text-muted-foreground hover:text-foreground rounded-full p-0.5 disabled:opacity-25"
                         >
                           <ChevronDown size={16} />
                         </button>
                       </div>
 
-                      <div className="min-w-0 flex-1">
+                      <div className={`min-w-0 flex-1 ${rule.enabled ? '' : 'opacity-60'}`}>
                         <p className="truncate text-sm">
                           <span className="text-muted-foreground">Note </span>
                           {MATCH_TYPE_LABELS[rule.matchType]}{' '}
@@ -246,24 +244,30 @@ export default function CategoryRules() {
                         <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
                           {category && (
                             <span
-                              className="flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium text-white"
-                              style={{ backgroundColor: category.color }}
+                              className="text-foreground flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium"
+                              style={{
+                                backgroundColor: `color-mix(in srgb, ${category.color} 16%, transparent)`,
+                              }}
                             >
-                              <CategoryIcon icon={category.icon} size={10} color="white" />
+                              <CategoryIcon icon={category.icon} size={12} color={category.color} />
                               {category.name}
                             </span>
                           )}
                           {ruleLabels.map((label) => (
                             <span
                               key={label.id}
-                              className="rounded-full px-2 py-0.5 text-[11px] font-medium text-white"
-                              style={{ backgroundColor: label.color }}
+                              className="bg-muted text-foreground flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium"
                             >
+                              <span
+                                className="size-1.5 shrink-0 rounded-full"
+                                style={{ backgroundColor: label.color }}
+                                aria-hidden="true"
+                              />
                               {label.name}
                             </span>
                           ))}
                           {rule.scope !== 'any' && (
-                            <span className="bg-muted text-muted-foreground rounded-full px-2 py-0.5 text-[11px]">
+                            <span className="bg-muted text-muted-foreground rounded-full px-2 py-0.5 text-xs">
                               {rule.scope === 'expense' ? 'Expenses' : 'Income'}
                             </span>
                           )}
@@ -282,6 +286,7 @@ export default function CategoryRules() {
                           size="icon"
                           onClick={() => handleEdit(rule)}
                           className="h-8 w-8"
+                          aria-label={`Edit rule "${rule.pattern}"`}
                         >
                           <Pencil size={14} className="text-muted-foreground" />
                         </Button>
@@ -290,6 +295,7 @@ export default function CategoryRules() {
                           size="icon"
                           onClick={() => handleDelete(rule)}
                           className="h-8 w-8"
+                          aria-label={`Delete rule "${rule.pattern}"`}
                         >
                           <Trash2 size={14} className="text-destructive" />
                         </Button>
@@ -300,12 +306,8 @@ export default function CategoryRules() {
               })}
             </div>
 
-            <Button
-              onClick={() => setReplayOpen(true)}
-              variant="secondary"
-              className="bg-muted h-auto w-full rounded-md py-3 text-sm font-medium"
-            >
-              <Wand2 size={15} className="mr-1.5" /> Apply to Existing Transactions
+            <Button onClick={() => setReplayOpen(true)} variant="secondary" className="w-full">
+              <Wand2 size={15} /> Apply to existing transactions
             </Button>
           </>
         )}
@@ -317,16 +319,17 @@ export default function CategoryRules() {
             if (!v) resetForm();
           }}
         >
-          <DialogContent className="bg-card mx-auto max-h-[80vh] w-11/12 overflow-y-auto rounded-md sm:max-w-md">
-            <DialogHeader>
-              <DialogTitle>{editId ? 'Edit Rule' : 'New Rule'}</DialogTitle>
+          {/* Header and footer stay put; only the form body scrolls on a short screen. */}
+          <DialogContent className="flex max-h-[calc(100dvh-2rem)] flex-col overflow-hidden sm:max-w-md">
+            <DialogHeader className="shrink-0 pr-8">
+              <DialogTitle>{editId ? 'Edit rule' : 'New rule'}</DialogTitle>
               <DialogDescription>
                 When a transaction's note matches, file it into a category and tag it.
               </DialogDescription>
             </DialogHeader>
 
-            <div className="space-y-3">
-              <div className="grid grid-cols-2 gap-2">
+            <div className="-mx-4 min-h-0 flex-1 space-y-3 overflow-y-auto px-4 pb-1">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-2">
                 <div>
                   <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">
                     Note
@@ -367,7 +370,14 @@ export default function CategoryRules() {
               </div>
 
               <div>
+                <Label
+                  htmlFor="rule-pattern"
+                  className="text-muted-foreground mb-1.5 block text-xs font-medium"
+                >
+                  Pattern
+                </Label>
                 <Input
+                  id="rule-pattern"
                   type="text"
                   placeholder={matchType === 'regex' ? 'e\\.g\\. uber|ola' : 'e.g. Uber'}
                   value={pattern}
@@ -410,7 +420,7 @@ export default function CategoryRules() {
                         </div>
                         <span className="line-clamp-2 text-[10px] leading-tight">{cat.name}</span>
                         {scope === 'any' && cat.type !== 'both' && (
-                          <span className="text-muted-foreground text-[9px] leading-none capitalize">
+                          <span className="text-muted-foreground text-[10px] leading-none capitalize">
                             {cat.type}
                           </span>
                         )}
@@ -431,18 +441,28 @@ export default function CategoryRules() {
                       return (
                         <button
                           key={label.id}
+                          type="button"
                           onClick={() => toggleLabel(label.id)}
-                          className={`rounded-full px-3 py-1.5 text-xs font-medium transition-all ${
-                            active ? 'text-white shadow' : 'bg-muted text-muted-foreground'
+                          aria-pressed={active}
+                          className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-all ${
+                            active
+                              ? 'text-foreground'
+                              : 'bg-muted text-muted-foreground border-transparent'
                           }`}
                           style={
                             active
                               ? {
-                                  backgroundImage: `linear-gradient(135deg, ${label.color}, ${label.color}cc)`,
+                                  backgroundColor: `color-mix(in srgb, ${label.color} 18%, transparent)`,
+                                  borderColor: label.color,
                                 }
                               : undefined
                           }
                         >
+                          <span
+                            className="size-2 shrink-0 rounded-full"
+                            style={{ backgroundColor: label.color }}
+                            aria-hidden="true"
+                          />
                           {label.name}
                         </button>
                       );
@@ -450,31 +470,22 @@ export default function CategoryRules() {
                   </div>
                 </div>
               )}
-
-              <div className="flex gap-2">
-                <Button
-                  onClick={handleSubmit}
-                  className="bg-grad-primary shadow-glow-primary h-auto flex-1 rounded-sm py-2 text-sm font-medium text-white"
-                >
-                  {editId ? 'Update Rule' : 'Add Rule'}
-                </Button>
-                <Button
-                  variant="secondary"
-                  onClick={resetForm}
-                  className="bg-muted text-muted-foreground h-auto rounded-sm px-4 py-2 text-sm font-medium"
-                >
-                  Cancel
-                </Button>
-              </div>
             </div>
+
+            <DialogFooter className="shrink-0">
+              <Button variant="outline" onClick={resetForm}>
+                Cancel
+              </Button>
+              <Button onClick={handleSubmit}>{editId ? 'Update rule' : 'Add rule'}</Button>
+            </DialogFooter>
           </DialogContent>
         </Dialog>
 
         {/* Replay over existing history */}
         <Dialog open={replayOpen} onOpenChange={setReplayOpen}>
-          <DialogContent className="bg-card mx-auto w-11/12 rounded-md sm:max-w-md">
-            <DialogHeader>
-              <DialogTitle>Apply Rules to Existing Transactions</DialogTitle>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader className="pr-8">
+              <DialogTitle>Apply rules to existing transactions</DialogTitle>
               <DialogDescription>
                 Runs every enabled rule over transactions already in your ledger. Transfers and
                 split transactions are left alone, and you can undo the whole pass.
@@ -482,17 +493,23 @@ export default function CategoryRules() {
             </DialogHeader>
 
             <div className="space-y-3">
-              <div className="bg-muted grid grid-cols-2 gap-1 rounded-sm p-1">
+              <div
+                className="bg-muted grid grid-cols-2 gap-1 rounded-full p-1"
+                role="group"
+                aria-label="Which transactions"
+              >
                 {[
                   { value: true, label: 'Uncategorized only' },
                   { value: false, label: 'All transactions' },
                 ].map((option) => (
                   <button
                     key={String(option.value)}
+                    type="button"
                     onClick={() => setOnlyUncategorized(option.value)}
-                    className={`rounded-sm py-1.5 text-xs font-medium transition-all ${
+                    aria-pressed={onlyUncategorized === option.value}
+                    className={`rounded-full py-1.5 text-xs font-medium transition-all ${
                       onlyUncategorized === option.value
-                        ? 'bg-grad-primary text-white shadow'
+                        ? 'bg-grad-primary shadow-glow-primary text-white'
                         : 'text-muted-foreground'
                     }`}
                   >
@@ -510,24 +527,16 @@ export default function CategoryRules() {
                 <span className="text-lg font-bold">{replayPlan.length}</span> transaction
                 {replayPlan.length === 1 ? '' : 's'} would change.
               </p>
-
-              <div className="flex gap-2">
-                <Button
-                  onClick={handleReplay}
-                  disabled={replayPlan.length === 0}
-                  className="bg-grad-primary shadow-glow-primary h-auto flex-1 rounded-sm py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  Apply
-                </Button>
-                <Button
-                  variant="secondary"
-                  onClick={() => setReplayOpen(false)}
-                  className="bg-muted text-muted-foreground h-auto rounded-sm px-4 py-2 text-sm font-medium"
-                >
-                  Cancel
-                </Button>
-              </div>
             </div>
+
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setReplayOpen(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleReplay} disabled={replayPlan.length === 0}>
+                Apply
+              </Button>
+            </DialogFooter>
           </DialogContent>
         </Dialog>
       </Main>

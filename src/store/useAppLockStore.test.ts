@@ -58,6 +58,14 @@ describe('lock and unlock', () => {
     expect(useAppLockStore.getState().isLocked).toBe(false);
   });
 
+  it('drops any stale backgrounded-at stamp, so a reload while locked cannot start unlocked', () => {
+    backing.set('finio-lock-bg', String(Date.now()));
+
+    useAppLockStore.getState().lock();
+
+    expect(backing.has('finio-lock-bg')).toBe(false);
+  });
+
   it('clears the failure count and cooldown on a successful unlock', () => {
     useAppLockStore.setState({ failedAttempts: 6, lockedOutUntil: NOW + 30_000 });
 

@@ -220,18 +220,16 @@ export function DepositFields({
         <div className="card-elevated rounded-md p-4">
           <div className="grid grid-cols-3 gap-2 text-center">
             <div>
-              <p className="text-muted-foreground text-[10px] tracking-wide uppercase">Invested</p>
+              <p className="text-muted-foreground text-xs font-medium">Invested</p>
               <p className="text-sm font-semibold">{money(invested)}</p>
             </div>
             <div>
-              <p className="text-muted-foreground text-[10px] tracking-wide uppercase">Interest</p>
+              <p className="text-muted-foreground text-xs font-medium">Interest</p>
               <p className="text-sm font-semibold">{money(maturityAmount - invested)}</p>
             </div>
             <div>
-              <p className="text-muted-foreground text-[10px] tracking-wide uppercase">
-                At maturity
-              </p>
-              <p className="text-primary text-sm font-semibold">{money(maturityAmount)}</p>
+              <p className="text-muted-foreground text-xs font-medium">At maturity</p>
+              <p className="text-positive text-sm font-semibold">{money(maturityAmount)}</p>
             </div>
           </div>
           <p className="text-muted-foreground mt-3 text-center text-xs">

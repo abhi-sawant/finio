@@ -47,7 +47,7 @@ export function SpendingHeatmap() {
   return (
     <section className="card-elevated rounded-md p-4">
       <div className="mb-3 flex items-center justify-between gap-2">
-        <h3 className="text-sm font-semibold">Spending Calendar</h3>
+        <h3 className="text-sm font-semibold">Spending calendar</h3>
         <div className="flex items-center gap-1">
           <button
             onClick={() => setOffset((o) => o - 1)}
@@ -74,7 +74,7 @@ export function SpendingHeatmap() {
           {WEEKDAYS.map((label, index) => (
             <span
               key={index}
-              className="text-muted-foreground text-center text-[10px] font-medium"
+              className="text-muted-foreground text-center text-xs font-medium"
               aria-hidden
             >
               {label}
@@ -96,7 +96,7 @@ export function SpendingHeatmap() {
                       : undefined
                   }
                   aria-hidden={!day.inRange}
-                  className={`relative flex aspect-square items-center justify-center rounded-md text-[10px] font-medium ${dayClasses(day)} ${day.isToday ? 'ring-primary ring-2' : ''}`}
+                  className={`relative flex aspect-square items-center justify-center rounded-md text-xs font-medium ${dayClasses(day)} ${day.isToday ? 'ring-primary ring-2' : ''}`}
                   style={
                     day.inRange && day.total > 0 && !day.isFuture
                       ? {
@@ -128,17 +128,15 @@ export function SpendingHeatmap() {
 
       <dl className="mt-3 grid grid-cols-3 gap-2 text-center">
         <div>
-          <dt className="text-muted-foreground text-[10px] tracking-wide uppercase">Total</dt>
+          <dt className="text-muted-foreground text-xs font-medium">Total</dt>
           <dd className="text-xs font-semibold">{money(calendar.total)}</dd>
         </div>
         <div>
-          <dt className="text-muted-foreground text-[10px] tracking-wide uppercase">
-            Avg / spend day
-          </dt>
+          <dt className="text-muted-foreground text-xs font-medium">Avg / spend day</dt>
           <dd className="text-xs font-semibold">{money(calendar.averagePerActiveDay)}</dd>
         </div>
         <div>
-          <dt className="text-muted-foreground text-[10px] tracking-wide uppercase">Busiest</dt>
+          <dt className="text-muted-foreground text-xs font-medium">Busiest</dt>
           <dd className="text-xs font-semibold">
             {calendar.busiest ? (
               <>

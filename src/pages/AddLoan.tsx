@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import { useFinanceStore } from '@/store/useFinanceStore';
 import { MISC_CATEGORY_ID } from '@/data/defaultData';
 import { calculateEmi } from '@/utils/loan';
+import { previewBackfill } from '@/store/recurring';
 import { activeAccounts, isCategoryValidForType, miscLast } from '@/utils/calculations';
 import { MAX_NAME_LENGTH, cleanText, stripLeading } from '@/utils/validation';
 import { formatCurrency, localDayKey } from '@/utils/formatters';
@@ -15,6 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { NumberPad } from '@/components/ui/number-pad';
 import { DatePicker } from '@/components/ui/date-picker';
+import { SwitchField } from '@/components/ui/switch';
 import {
   Select,
   SelectContent,
@@ -38,9 +40,12 @@ export default function AddLoan() {
   const accounts = useFinanceStore((s) => s.accounts);
   const categories = useFinanceStore((s) => s.categories);
   const loans = useFinanceStore((s) => s.loans);
+  const hideAmounts = useFinanceStore((s) => s.settings.hideAmounts);
   const addLoan = useFinanceStore((s) => s.addLoan);
   const updateLoan = useFinanceStore((s) => s.updateLoan);
   const deleteLoan = useFinanceStore((s) => s.deleteLoan);
+  const processRecurring = useFinanceStore((s) => s.processRecurring);
+  const bulkDeleteTransactions = useFinanceStore((s) => s.bulkDeleteTransactions);
 
   const existing = id ? loans.find((l) => l.id === id) : null;
   const openAccounts = useMemo(() => activeAccounts(accounts), [accounts]);
@@ -69,6 +74,36 @@ export default function AddLoan() {
   const parsedTenure = parseInt(tenureMonths, 10) || 0;
   const previewEmi = calculateEmi(parsedPrincipal, parsedRate, parsedTenure);
 
+  // A new loan whose first EMI date is already behind us: by default those EMIs were paid
+  // outside Finio; the switch posts them as real expenses instead (same choice FD/RD offer).
+  const [logPastEmis, setLogPastEmis] = useState(false);
+  const pastEmis = useMemo(() => {
+    if (existing || startDate === '' || parsedTenure <= 0 || previewEmi <= 0 || !accountId) {
+      return null;
+    }
+    const preview = previewBackfill(
+      {
+        id: 'draft',
+        type: 'expense',
+        amount: previewEmi,
+        accountId,
+        categoryId,
+        note: '',
+        labels: [],
+        frequency: 'monthly',
+        startDate: new Date(`${startDate}T00:00:00`).toISOString(),
+        maxOccurrences: parsedTenure,
+        occurrenceCount: 0,
+        lastRunDate: null,
+        createdAt: new Date().toISOString(),
+      },
+      [accountId],
+      new Date(),
+    );
+    return preview.count > 0 ? preview : null;
+  }, [existing, startDate, parsedTenure, previewEmi, accountId, categoryId]);
+  const accountName = openAccounts.find((a) => a.id === accountId)?.name ?? 'the account';
+
   const submitting = useRef(false);
 
   const handleSubmit = () => {
@@ -95,8 +130,20 @@ export default function AddLoan() {
       updateLoan(existing.id, data);
       toast.success('Loan updated');
     } else {
-      addLoan(data);
-      toast.success('Loan added');
+      const logPast = !!pastEmis && logPastEmis;
+      addLoan(data, { logPastEmis: logPast });
+      const posted = logPast ? processRecurring() : [];
+      if (posted.length > 0) {
+        const ids = posted.map((t) => t.id);
+        toast.success(
+          `Loan added · posted ${posted.length} past EMI${posted.length === 1 ? '' : 's'}`,
+          {
+            action: { label: 'Undo', onClick: () => bulkDeleteTransactions(ids) },
+          },
+        );
+      } else {
+        toast.success('Loan added');
+      }
     }
     navigate(-1);
   };
@@ -121,9 +168,9 @@ export default function AddLoan() {
         <HeaderIconButton onClick={() => navigate(-1)} aria-label="Back">
           <ArrowLeft />
         </HeaderIconButton>
-        <h1 className="text-base font-semibold">{existing ? 'Edit Loan' : 'Add Loan'}</h1>
+        <h1 className="text-base font-semibold">{existing ? 'Edit loan' : 'Add loan'}</h1>
         {existing ? (
-          <HeaderIconButton onClick={handleDelete} aria-label="Delete" tone="destructive">
+          <HeaderIconButton onClick={handleDelete} aria-label="Delete loan" tone="destructive">
             <Trash2 />
           </HeaderIconButton>
         ) : (
@@ -132,143 +179,162 @@ export default function AddLoan() {
       </Header>
 
       <Main className="lg:max-w-xl">
-        <div>
-          <Label
-            htmlFor="loanName"
-            className="text-muted-foreground mb-1.5 block text-xs font-medium"
-          >
-            Loan Name
-          </Label>
-          <Input
-            id="loanName"
-            type="text"
-            placeholder="e.g., Home Loan — HDFC"
-            value={name}
-            maxLength={MAX_NAME_LENGTH}
-            onChange={(e) => setName(stripLeading(e.target.value))}
-          />
-        </div>
-
-        <div>
-          <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">
-            Principal
-          </Label>
-          <NumberPad value={principal} onChange={setPrincipal} />
-        </div>
-
-        <div className="grid grid-cols-2 gap-3">
+        <div className="card-elevated space-y-4 rounded-md p-4">
           <div>
             <Label
-              htmlFor="interestRate"
+              htmlFor="loanName"
               className="text-muted-foreground mb-1.5 block text-xs font-medium"
             >
-              Interest Rate (% p.a.)
+              Loan name
             </Label>
             <Input
-              id="interestRate"
-              type="number"
-              inputMode="decimal"
-              min={0}
-              step={0.01}
-              placeholder="e.g. 8.5"
-              value={interestRate}
-              onChange={(e) => setInterestRate(e.target.value)}
+              id="loanName"
+              type="text"
+              placeholder="e.g., Home Loan — HDFC"
+              value={name}
+              maxLength={MAX_NAME_LENGTH}
+              onChange={(e) => setName(stripLeading(e.target.value))}
             />
           </div>
+
           <div>
-            <Label
-              htmlFor="tenureMonths"
-              className="text-muted-foreground mb-1.5 block text-xs font-medium"
-            >
-              Tenure (months)
+            <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">
+              Principal
             </Label>
-            <Input
-              id="tenureMonths"
-              type="number"
-              inputMode="numeric"
-              min={1}
-              placeholder="e.g. 240"
-              value={tenureMonths}
-              onChange={(e) => setTenureMonths(e.target.value)}
-            />
+            <NumberPad value={principal} onChange={setPrincipal} />
           </div>
-        </div>
 
-        {previewEmi > 0 && (
-          <div className="card-elevated bg-grad-primary-soft rounded-md p-4 text-center">
-            <p className="text-muted-foreground text-[10px] tracking-wide uppercase">
-              Estimated EMI
-            </p>
-            <p className="text-lg font-bold">{formatCurrency(previewEmi)}/month</p>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <Label
+                htmlFor="interestRate"
+                className="text-muted-foreground mb-1.5 block text-xs font-medium"
+              >
+                Interest rate (% p.a.)
+              </Label>
+              <Input
+                id="interestRate"
+                type="number"
+                inputMode="decimal"
+                min={0}
+                step={0.01}
+                placeholder="e.g. 8.5"
+                value={interestRate}
+                onChange={(e) => setInterestRate(e.target.value)}
+              />
+            </div>
+            <div>
+              <Label
+                htmlFor="tenureMonths"
+                className="text-muted-foreground mb-1.5 block text-xs font-medium"
+              >
+                Tenure (months)
+              </Label>
+              <Input
+                id="tenureMonths"
+                type="number"
+                inputMode="numeric"
+                min={1}
+                placeholder="e.g. 240"
+                value={tenureMonths}
+                onChange={(e) => setTenureMonths(e.target.value)}
+              />
+            </div>
           </div>
-        )}
 
-        <div>
-          <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">
-            First EMI Date
-          </Label>
-          <DatePicker value={startDate} onChange={setStartDate} placeholder="Pick a date" />
-        </div>
-
-        <div>
-          <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">
-            Pay EMI From
-          </Label>
-          {openAccounts.length === 0 ? (
-            <p className="text-destructive text-xs">Add an account first.</p>
-          ) : (
-            <Select value={accountId} onValueChange={(v) => setAccountId(v ?? '')}>
-              <SelectTrigger className="w-full">
-                <SelectValue>
-                  {openAccounts.find((a) => a.id === accountId)?.name ?? 'Choose account'}
-                </SelectValue>
-              </SelectTrigger>
-              <SelectContent>
-                {openAccounts.map((a) => (
-                  <SelectItem key={a.id} value={a.id}>
-                    {a.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          {previewEmi > 0 && (
+            <div className="border-border flex items-baseline justify-between gap-3 border-t pt-3">
+              <p className="text-muted-foreground text-xs font-medium">Estimated EMI</p>
+              <p className="font-money text-lg">
+                {formatCurrency(previewEmi, false, hideAmounts)}
+                <span className="text-muted-foreground font-sans text-xs font-medium">/month</span>
+              </p>
+            </div>
           )}
         </div>
 
-        <div>
-          <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">Category</Label>
-          <CategoryGrid className="max-h-40">
-            {expenseCategories.map((cat) => {
-              const selected = categoryId === cat.id;
-              return (
-                <button
-                  key={cat.id}
-                  data-selected={selected}
-                  onClick={() => setCategoryId(cat.id)}
-                  className={`flex flex-col items-center gap-1 rounded-sm border p-2 text-center transition-all ${
-                    selected
-                      ? 'ring-grad-primary border-transparent'
-                      : 'border-border bg-card hover:bg-muted'
-                  }`}
-                  style={selected ? { backgroundColor: `${cat.color}22` } : undefined}
-                >
-                  <div
-                    className="flex h-7 w-7 items-center justify-center rounded-full"
-                    style={{ backgroundColor: cat.color }}
+        <div className="card-elevated space-y-4 rounded-md p-4">
+          <div>
+            <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">
+              First EMI date
+            </Label>
+            <DatePicker value={startDate} onChange={setStartDate} placeholder="Pick a date" />
+          </div>
+
+          <div>
+            <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">
+              Pay EMI from
+            </Label>
+            {openAccounts.length === 0 ? (
+              <p className="text-destructive text-xs">Add an account first.</p>
+            ) : (
+              <Select value={accountId} onValueChange={(v) => setAccountId(v ?? '')}>
+                <SelectTrigger className="w-full">
+                  <SelectValue>
+                    {openAccounts.find((a) => a.id === accountId)?.name ?? 'Choose account'}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  {openAccounts.map((a) => (
+                    <SelectItem key={a.id} value={a.id}>
+                      {a.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          </div>
+
+          <div>
+            <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">
+              Category
+            </Label>
+            <CategoryGrid className="max-h-40">
+              {expenseCategories.map((cat) => {
+                const selected = categoryId === cat.id;
+                return (
+                  <button
+                    key={cat.id}
+                    data-selected={selected}
+                    onClick={() => setCategoryId(cat.id)}
+                    className={`flex flex-col items-center gap-1 rounded-sm border p-2 text-center transition-all ${
+                      selected
+                        ? 'ring-grad-primary border-transparent'
+                        : 'border-border bg-card hover:bg-muted'
+                    }`}
+                    style={selected ? { backgroundColor: `${cat.color}22` } : undefined}
                   >
-                    <CategoryIcon icon={cat.icon} size={14} color="white" />
-                  </div>
-                  <span className="line-clamp-2 text-[10px] leading-tight">{cat.name}</span>
-                </button>
-              );
-            })}
-          </CategoryGrid>
+                    <div
+                      className="flex h-7 w-7 items-center justify-center rounded-full"
+                      style={{ backgroundColor: cat.color }}
+                    >
+                      <CategoryIcon icon={cat.icon} size={14} color="white" />
+                    </div>
+                    <span className="line-clamp-2 text-[10px] leading-tight">{cat.name}</span>
+                  </button>
+                );
+              })}
+            </CategoryGrid>
+          </div>
         </div>
 
-        <Button
-          onClick={handleSubmit}
-          className="bg-grad-primary shadow-glow-primary h-auto w-full rounded-sm py-3.5 text-sm font-medium text-white"
-        >
-          {existing ? 'Update Loan' : 'Add Loan'}
+        {pastEmis && (
+          <div className="card-elevated rounded-md p-4">
+            <SwitchField
+              title="Log past EMIs as transactions"
+              description={
+                logPastEmis
+                  ? `${pastEmis.count} EMI${pastEmis.count === 1 ? '' : 's'} (${formatCurrency(pastEmis.total, false, hideAmounts)}) will be posted from ${accountName} and show in its history.`
+                  : `${pastEmis.count} EMI${pastEmis.count === 1 ? '' : 's'} (${formatCurrency(pastEmis.total, false, hideAmounts)}) already paid count towards the loan; ${accountName} is left untouched.`
+              }
+              checked={logPastEmis}
+              onCheckedChange={setLogPastEmis}
+            />
+          </div>
+        )}
+
+        <Button onClick={handleSubmit} size="lg" className="w-full">
+          {existing ? 'Update loan' : 'Add loan'}
         </Button>
       </Main>
     </>

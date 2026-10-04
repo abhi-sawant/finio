@@ -319,6 +319,44 @@ describe('bulkRecategorize / bulkAddLabel', () => {
     expect(t1?.splits).toBeUndefined();
   });
 
+  it('never recategorizes a transfer, and skips rows the category is not valid for', () => {
+    seed(
+      [account('a', 100), account('b', 0)],
+      [
+        tx({ id: 'exp', type: 'expense', amount: 10, accountId: 'a', categoryId: 'cat-1' }),
+        tx({ id: 'inc', type: 'income', amount: 10, accountId: 'a', categoryId: 'cat-9' }),
+        tx({
+          id: 'xfer',
+          type: 'transfer',
+          amount: 10,
+          accountId: 'a',
+          toAccountId: 'b',
+          categoryId: 'cat-13',
+        }),
+      ],
+    );
+
+    useFinanceStore.getState().bulkRecategorize(['exp', 'inc', 'xfer'], 'cat-2');
+
+    const byId = new Map(useFinanceStore.getState().transactions.map((t) => [t.id, t]));
+    expect(byId.get('exp')?.categoryId).toBe('cat-2');
+    // Transport is an expense category: the income keeps Salary, the transfer keeps Transfer.
+    expect(byId.get('inc')?.categoryId).toBe('cat-9');
+    expect(byId.get('xfer')?.categoryId).toBe('cat-13');
+
+    // Even a neutral category never lands on a transfer through a bulk move.
+    useFinanceStore.getState().bulkRecategorize(['xfer', 'inc'], 'cat-24');
+    const after = new Map(useFinanceStore.getState().transactions.map((t) => [t.id, t]));
+    expect(after.get('xfer')?.categoryId).toBe('cat-13');
+    expect(after.get('inc')?.categoryId).toBe('cat-24');
+  });
+
+  it('ignores an unknown category id', () => {
+    seed([account('a', 100)], [tx({ id: 't1', type: 'expense', amount: 10, accountId: 'a' })]);
+    useFinanceStore.getState().bulkRecategorize(['t1'], 'nope');
+    expect(useFinanceStore.getState().transactions[0].categoryId).toBe('cat-1');
+  });
+
   it('adds a label without duplicating it on a transaction that already carries it', () => {
     seed(
       [account('a', 100)],
@@ -427,6 +465,52 @@ describe('deleteCategory with split transactions', () => {
     const t1 = useFinanceStore.getState().transactions.find((t) => t.id === 't1');
     expect(t1?.splits).toBeUndefined();
     expect(t1?.categoryId).toBe('cat-24');
+  });
+});
+
+describe('deleteCategory protected categories', () => {
+  it('refuses to delete Transfer or Miscellaneous', () => {
+    const before = useFinanceStore.getState().categories.length;
+    useFinanceStore.getState().deleteCategory('cat-13');
+    useFinanceStore.getState().deleteCategory('cat-24');
+    const ids = useFinanceStore.getState().categories.map((c) => c.id);
+    expect(ids).toContain('cat-13');
+    expect(ids).toContain('cat-24');
+    expect(ids).toHaveLength(before);
+  });
+
+  it('never falls back to Transfer, even if Miscellaneous is somehow missing', () => {
+    useFinanceStore.setState((s) => ({
+      categories: s.categories.filter((c) => c.id !== 'cat-24'),
+    }));
+    seed([account('a', 100)], [tx({ id: 't1', type: 'expense', amount: 10, accountId: 'a' })]);
+
+    useFinanceStore.getState().deleteCategory('cat-1');
+
+    const t1 = useFinanceStore.getState().transactions[0];
+    expect(t1.categoryId).not.toBe('cat-13');
+    expect(t1.categoryId).toBe('cat-24');
+  });
+});
+
+describe('deleteLabel', () => {
+  it('removes budgets scoped to the deleted label, keeping the rest', () => {
+    const { addBudget } = useFinanceStore.getState();
+    addBudget({
+      categoryId: '',
+      labelId: 'lbl-1',
+      amount: 500,
+      period: 'monthly',
+      rollover: false,
+    });
+    addBudget({ categoryId: 'cat-1', amount: 900, period: 'monthly', rollover: false });
+
+    useFinanceStore.getState().deleteLabel('lbl-1');
+
+    const budgets = useFinanceStore.getState().budgets;
+    expect(budgets).toHaveLength(1);
+    expect(budgets[0].categoryId).toBe('cat-1');
+    expect(useFinanceStore.getState().labels.some((l) => l.id === 'lbl-1')).toBe(false);
   });
 });
 
@@ -867,6 +951,244 @@ describe('addDebtEntry / deleteDebtEntry / restoreDebtEntry', () => {
     useFinanceStore.getState().restoreDebtEntry(removed);
     expect(useFinanceStore.getState().debtEntries).toHaveLength(1);
   });
+  it('deleting a settled entry also deletes its transaction, and undo restores both', () => {
+    seed(
+      [account('a', 1500, 2000)],
+      [tx({ id: 'settle', type: 'expense', amount: 500, accountId: 'a' })],
+    );
+    const id = useFinanceStore.getState().addDebtEntry({
+      personId: 'person-1',
+      amount: 500,
+      date: '2026-01-05',
+      note: 'Settled up',
+      settledTransactionId: 'settle',
+    });
+
+    const removed = useFinanceStore.getState().deleteDebtEntry(id)!;
+    let state = useFinanceStore.getState();
+    expect(state.debtEntries).toEqual([]);
+    expect(state.transactions).toEqual([]);
+    expect(state.accounts[0].balance).toBe(2000);
+
+    useFinanceStore.getState().restoreDebtEntry(removed);
+    useFinanceStore.getState().restoreDebtEntry(removed);
+    state = useFinanceStore.getState();
+    expect(state.debtEntries).toHaveLength(1);
+    expect(state.transactions.map((t) => t.id)).toEqual(['settle']);
+    expect(state.accounts[0].balance).toBe(1500);
+  });
+
+  it('deleting a settlement transaction also removes its entry, and undo restores both', () => {
+    seed(
+      [account('a', 1500, 2000)],
+      [tx({ id: 'settle', type: 'expense', amount: 500, accountId: 'a' })],
+    );
+    useFinanceStore.getState().addDebtEntry({
+      personId: 'person-1',
+      amount: 500,
+      date: '2026-01-05',
+      note: 'Settled up',
+      settledTransactionId: 'settle',
+    });
+    const other = useFinanceStore
+      .getState()
+      .addDebtEntry({ personId: 'person-1', amount: 200, date: '2026-01-06', note: '' });
+
+    const removed = useFinanceStore.getState().deleteTransaction('settle')!;
+    let state = useFinanceStore.getState();
+    expect(state.debtEntries.map((e) => e.id)).toEqual([other]);
+    expect(state.accounts[0].balance).toBe(2000);
+
+    useFinanceStore.getState().restoreTransaction(removed);
+    useFinanceStore.getState().restoreTransaction(removed);
+    state = useFinanceStore.getState();
+    expect(state.debtEntries).toHaveLength(2);
+    expect(state.debtEntries.some((e) => e.settledTransactionId === 'settle')).toBe(true);
+    expect(state.accounts[0].balance).toBe(1500);
+  });
+
+  it('bulk-deleting a settlement transaction removes its entry, and bulk undo restores it', () => {
+    seed(
+      [account('a', 1500, 2000)],
+      [
+        tx({ id: 'settle', type: 'expense', amount: 500, accountId: 'a' }),
+        tx({ id: 'plain', type: 'expense', amount: 1, accountId: 'a' }),
+      ],
+    );
+    useFinanceStore.getState().addDebtEntry({
+      personId: 'person-1',
+      amount: 500,
+      date: '2026-01-05',
+      note: 'Settled up',
+      settledTransactionId: 'settle',
+    });
+
+    const removed = useFinanceStore.getState().bulkDeleteTransactions(['settle', 'plain']);
+    expect(useFinanceStore.getState().debtEntries).toEqual([]);
+
+    useFinanceStore.getState().restoreTransactions(removed);
+    expect(useFinanceStore.getState().debtEntries).toHaveLength(1);
+    expect(useFinanceStore.getState().transactions).toHaveLength(2);
+  });
+
+  it('deletes a settled entry cleanly when its transaction is already gone', () => {
+    seed([account('a', 100)]);
+    const id = useFinanceStore.getState().addDebtEntry({
+      personId: 'person-1',
+      amount: 500,
+      date: '2026-01-05',
+      note: '',
+      settledTransactionId: 'missing',
+    });
+    useFinanceStore.getState().deleteDebtEntry(id);
+    expect(useFinanceStore.getState().debtEntries).toEqual([]);
+    expect(useFinanceStore.getState().accounts[0].balance).toBe(100);
+  });
+});
+
+describe('updateDebtEntry', () => {
+  function seedSettlement() {
+    // Rahul owed you; he paid back 500 into account `a` (an income), so the entry is -500.
+    seed(
+      [account('a', 2500, 2000)],
+      [
+        tx({
+          id: 'settle',
+          type: 'income',
+          amount: 500,
+          accountId: 'a',
+          date: '2026-01-05T10:00:00.000Z',
+          note: 'Settled up with Rahul',
+        }),
+      ],
+    );
+    return useFinanceStore.getState().addDebtEntry({
+      personId: 'person-1',
+      amount: -500,
+      date: '2026-01-05T10:00:00.000Z',
+      note: 'Settled up with Rahul',
+      settledTransactionId: 'settle',
+    });
+  }
+
+  it('edits a plain entry in place, including flipping its direction', () => {
+    seed([account('a', 100)]);
+    const id = useFinanceStore
+      .getState()
+      .addDebtEntry({ personId: 'person-1', amount: 500, date: '2026-01-05', note: 'Lunch' });
+
+    expect(
+      useFinanceStore
+        .getState()
+        .updateDebtEntry(id, { amount: -750, date: '2026-01-07', note: '  Dinner ' }),
+    ).toBe(true);
+    const entry = useFinanceStore.getState().debtEntries[0];
+    expect(entry).toMatchObject({ id, amount: -750, date: '2026-01-07', note: 'Dinner' });
+    expect(useFinanceStore.getState().accounts[0].balance).toBe(100);
+  });
+
+  it('a settled edit updates the linked transaction and moves the balance by the difference', () => {
+    const id = seedSettlement();
+    useFinanceStore
+      .getState()
+      .updateDebtEntry(id, { amount: -800, date: '2026-01-09T10:00:00.000Z', note: 'Cash' });
+
+    const state = useFinanceStore.getState();
+    expect(state.debtEntries[0]).toMatchObject({
+      amount: -800,
+      date: '2026-01-09T10:00:00.000Z',
+      note: 'Cash',
+    });
+    expect(state.transactions[0]).toMatchObject({
+      id: 'settle',
+      type: 'income',
+      amount: 800,
+      date: '2026-01-09T10:00:00.000Z',
+      // The note is the entry's alone.
+      note: 'Settled up with Rahul',
+    });
+    expect(state.accounts[0].balance).toBe(2800);
+    expect(state.accounts[0].openingBalance).toBe(2000);
+  });
+
+  it("a settled entry's direction cannot flip — only its magnitude changes", () => {
+    const id = seedSettlement();
+    useFinanceStore.getState().updateDebtEntry(id, { amount: 300 });
+
+    const state = useFinanceStore.getState();
+    expect(state.debtEntries[0].amount).toBe(-300);
+    expect(state.transactions[0]).toMatchObject({ type: 'income', amount: 300 });
+    expect(state.accounts[0].balance).toBe(2300);
+  });
+
+  it('updateTransaction on a settlement carries amount and date over to its entry', () => {
+    const id = seedSettlement();
+    useFinanceStore
+      .getState()
+      .updateTransaction('settle', { amount: 650, date: '2026-01-06T09:00:00.000Z' });
+
+    const state = useFinanceStore.getState();
+    expect(state.debtEntries.find((e) => e.id === id)).toMatchObject({
+      amount: -650,
+      date: '2026-01-06T09:00:00.000Z',
+      note: 'Settled up with Rahul',
+    });
+    expect(state.accounts[0].balance).toBe(2650);
+  });
+
+  it('updateTransaction leaves entries alone when amount and date are unchanged', () => {
+    seedSettlement();
+    const before = useFinanceStore.getState().debtEntries;
+    useFinanceStore.getState().updateTransaction('settle', { note: 'Renamed' });
+    expect(useFinanceStore.getState().debtEntries).toBe(before);
+  });
+
+  it('ignores a zero amount, and an unknown id is a no-op', () => {
+    const id = seedSettlement();
+    const before = useFinanceStore.getState();
+    expect(useFinanceStore.getState().updateDebtEntry('missing', { amount: 1 })).toBe(false);
+    expect(useFinanceStore.getState()).toBe(before);
+
+    useFinanceStore.getState().updateDebtEntry(id, { amount: 0 });
+    const state = useFinanceStore.getState();
+    expect(state.debtEntries[0].amount).toBe(-500);
+    expect(state.transactions[0].amount).toBe(500);
+    expect(state.accounts[0].balance).toBe(2500);
+  });
+
+  it('edits a settled entry cleanly when its transaction is already gone', () => {
+    seed([account('a', 100)]);
+    const id = useFinanceStore.getState().addDebtEntry({
+      personId: 'person-1',
+      amount: 500,
+      date: '2026-01-05',
+      note: '',
+      settledTransactionId: 'missing',
+    });
+    useFinanceStore.getState().updateDebtEntry(id, { amount: 900 });
+    expect(useFinanceStore.getState().debtEntries[0].amount).toBe(900);
+    expect(useFinanceStore.getState().accounts[0].balance).toBe(100);
+  });
+
+  it('flips the settled entry direction when its transaction changes type', () => {
+    seed(
+      [account('a', 1500, 2000)],
+      [tx({ id: 'settle', type: 'expense', amount: 500, accountId: 'a' })],
+    );
+    useFinanceStore.getState().addDebtEntry({
+      personId: 'person-1',
+      amount: 500,
+      date: '2026-01-05',
+      note: 'Settled up',
+      settledTransactionId: 'settle',
+    });
+
+    useFinanceStore.getState().updateTransaction('settle', { type: 'income' });
+    expect(useFinanceStore.getState().debtEntries[0].amount).toBe(-500);
+
+    useFinanceStore.getState().updateTransaction('settle', { type: 'expense' });
+    expect(useFinanceStore.getState().debtEntries[0].amount).toBe(500);
+  });
 });
 
 describe('importData', () => {
@@ -919,11 +1241,42 @@ describe('importData', () => {
     expect(imported.balance).toBe(750);
   });
 
-  it('leaves untouched collections alone when a key is absent', () => {
+  it('in replace mode, empties data collections the file lacks but keeps categories/labels', () => {
     seed([account('local', 100)]);
-    const before = useFinanceStore.getState().categories;
+    useFinanceStore.getState().addGoal({
+      name: 'Old goal',
+      icon: 'target',
+      color: '#146b54',
+      targetAmount: 1000,
+    });
+    useFinanceStore.setState({
+      netWorthSnapshots: [
+        {
+          id: 'snap',
+          periodKey: '2026-03',
+          date: '2026-03-31',
+          assets: 500,
+          liabilities: 0,
+          createdAt: '2026-04-01T00:00:00.000Z',
+        },
+      ],
+    });
+    const categories = useFinanceStore.getState().categories;
+    const labels = useFinanceStore.getState().labels;
+
     useFinanceStore.getState().importData({ transactions: [] }, { mode: 'replace' });
-    expect(useFinanceStore.getState().categories).toBe(before);
+
+    const state = useFinanceStore.getState();
+    expect(state.categories).toBe(categories);
+    expect(state.labels).toBe(labels);
+    expect(state.accounts).toEqual([]);
+    expect(state.goals).toEqual([]);
+    expect(state.netWorthSnapshots).toEqual([]);
+  });
+
+  it('in merge mode, leaves collections the file lacks alone', () => {
+    seed([account('local', 100)]);
+    useFinanceStore.getState().importData({ transactions: [] }, { mode: 'merge' });
     expect(useFinanceStore.getState().accounts.map((a) => a.id)).toEqual(['local']);
   });
 
@@ -1568,6 +1921,10 @@ describe('deposits', () => {
   });
 
   it('funds an FD from its source account', () => {
+    // Pin the clock before the start date: an FD dated in the past is treated as already funded
+    // (see the past-dated cases below), so an unpinned clock made this test expire on 1 Oct 2026.
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(day('2026-09-15')));
     seed([account('bank', 100000)]);
     const id = useFinanceStore.getState().addDeposit({
       type: 'fd',
@@ -1734,6 +2091,57 @@ describe('deposits', () => {
     expect(useFinanceStore.getState().deleteAccount(id)).toBe(true);
     expect(useFinanceStore.getState().accounts[0].balance).toBe(100000);
     expect(useFinanceStore.getState().deleteAccount('bank')).toBe(true);
+  });
+});
+
+describe('addLoan with a past first EMI date', () => {
+  const day = (d: string) => new Date(`${d}T00:00:00`).toISOString();
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  const pastLoan = (logPastEmis?: boolean) => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(day('2026-10-15')));
+    seed([account('a', 100_000, 100_000)]);
+    const loanId = useFinanceStore.getState().addLoan(
+      {
+        name: 'Bike',
+        principal: 36_000,
+        interestRate: 0,
+        tenureMonths: 12,
+        startDate: day('2026-07-05'), // EMIs fell due 5 Jul, 5 Aug, 5 Sep, 5 Oct
+        accountId: 'a',
+        categoryId: 'cat-1',
+      },
+      logPastEmis === undefined ? undefined : { logPastEmis },
+    );
+    const state = useFinanceStore.getState();
+    const loan = state.loans.find((l) => l.id === loanId)!;
+    const rule = state.recurring.find((r) => r.id === loan.recurringId)!;
+    return { rule, loanId };
+  };
+
+  it('treats past EMIs as already paid by default: nothing is ever back-posted', () => {
+    const { rule } = pastLoan();
+    expect(rule.occurrenceCount).toBe(4);
+    expect(rule.lastRunDate).not.toBeNull();
+
+    const posted = useFinanceStore.getState().processRecurring();
+    expect(posted).toHaveLength(0);
+    expect(useFinanceStore.getState().accounts[0].balance).toBe(100_000);
+  });
+
+  it('posts the past EMIs as real expenses when logPastEmis is on', () => {
+    const { rule } = pastLoan(true);
+    expect(rule.occurrenceCount).toBe(0);
+    expect(rule.lastRunDate).toBeNull();
+
+    const posted = useFinanceStore.getState().processRecurring();
+    expect(posted).toHaveLength(4);
+    expect(posted.every((t) => t.type === 'expense' && t.amount === 3000)).toBe(true);
+    expect(useFinanceStore.getState().accounts[0].balance).toBe(88_000);
   });
 });
 

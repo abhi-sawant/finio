@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { MAX_NAME_LENGTH, cleanText, isValidEmail, stripLeading } from '@/utils/validation';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
+import { AuthShell } from './AuthShell';
 
 export default function Register() {
   const navigate = useNavigate();
@@ -57,64 +58,71 @@ export default function Register() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col justify-center px-6 py-12">
-      <div className="mx-auto w-full max-w-sm">
-        <div className="mb-8 text-center">
-          <h1 className="text-grad-primary text-4xl font-extrabold">Finio</h1>
-          <p className="text-muted-foreground mt-2">Create your account</p>
+    <AuthShell
+      heading="Create your account"
+      footer={
+        <p className="text-muted-foreground">
+          Already have an account?{' '}
+          <Link to="/login" className="text-primary font-medium hover:underline">
+            Sign in
+          </Link>
+        </p>
+      }
+    >
+      <form onSubmit={handleSubmit} noValidate className="space-y-4">
+        <div className="relative">
+          <User className="text-muted-foreground absolute top-1/2 left-3 z-10 h-5 w-5 -translate-y-1/2" />
+          <Input
+            type="text"
+            placeholder="Name"
+            value={name}
+            maxLength={MAX_NAME_LENGTH}
+            onChange={(e) => setName(stripLeading(e.target.value))}
+            className="w-full pr-4 pl-11"
+            autoComplete="name"
+          />
         </div>
 
-        <form onSubmit={handleSubmit} noValidate className="space-y-4">
-          <div className="relative">
-            <User className="text-muted-foreground absolute top-1/2 left-3 z-10 h-5 w-5 -translate-y-1/2" />
-            <Input
-              type="text"
-              placeholder="Name"
-              value={name}
-              maxLength={MAX_NAME_LENGTH}
-              onChange={(e) => setName(stripLeading(e.target.value))}
-              className="w-full pr-4 pl-11"
-              autoComplete="name"
-            />
-          </div>
+        <div className="relative">
+          <Mail className="text-muted-foreground absolute top-1/2 left-3 z-10 h-5 w-5 -translate-y-1/2" />
+          <Input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full pr-4 pl-11"
+            autoComplete="email"
+            inputMode="email"
+            autoCapitalize="none"
+            spellCheck={false}
+          />
+        </div>
 
-          <div className="relative">
-            <Mail className="text-muted-foreground absolute top-1/2 left-3 z-10 h-5 w-5 -translate-y-1/2" />
-            <Input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full pr-4 pl-11"
-              autoComplete="email"
-              inputMode="email"
-              autoCapitalize="none"
-              spellCheck={false}
-            />
-          </div>
+        <div className="relative">
+          <Lock className="text-muted-foreground absolute top-1/2 left-3 z-10 h-5 w-5 -translate-y-1/2" />
+          <Input
+            type={showPassword ? 'text' : 'password'}
+            placeholder="Password (min 8 characters)"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full pr-11 pl-11"
+            autoComplete="new-password"
+          />
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            onClick={() => setShowPassword(!showPassword)}
+            aria-label={showPassword ? 'Hide password' : 'Show password'}
+            className="text-muted-foreground absolute top-1/2 right-1 -translate-y-1/2 hover:bg-transparent"
+          >
+            {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+          </Button>
+        </div>
 
-          <div className="relative">
-            <Lock className="text-muted-foreground absolute top-1/2 left-3 z-10 h-5 w-5 -translate-y-1/2" />
-            <Input
-              type={showPassword ? 'text' : 'password'}
-              placeholder="Password (min 8 characters)"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full pr-11 pl-11"
-              autoComplete="new-password"
-            />
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              onClick={() => setShowPassword(!showPassword)}
-              aria-label={showPassword ? 'Hide password' : 'Show password'}
-              className="text-muted-foreground absolute top-1/2 right-1 -translate-y-1/2 hover:bg-transparent"
-            >
-              {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-            </Button>
-          </div>
-
+        <div>
+          {/* The icon is positioned against the input's own wrapper, so the mismatch message
+                below can't drag it off-centre. */}
           <div className="relative">
             <Lock className="text-muted-foreground absolute top-1/2 left-3 z-10 h-5 w-5 -translate-y-1/2" />
             <Input
@@ -125,47 +133,43 @@ export default function Register() {
               className="w-full pr-4 pl-11"
               autoComplete="new-password"
               aria-invalid={confirmPassword !== '' && confirmPassword !== password}
+              aria-describedby={
+                confirmPassword !== '' && confirmPassword !== password
+                  ? 'register-confirm-error'
+                  : undefined
+              }
             />
-            {confirmPassword !== '' && confirmPassword !== password && (
-              <p className="text-destructive mt-1 text-xs">Passwords do not match</p>
-            )}
           </div>
+          {confirmPassword !== '' && confirmPassword !== password && (
+            <p id="register-confirm-error" className="text-destructive mt-1 text-xs">
+              Passwords do not match
+            </p>
+          )}
+        </div>
 
-          <Label htmlFor="agree-terms" className="items-start gap-2 font-normal">
-            <Checkbox
-              id="agree-terms"
-              checked={agreed}
-              onCheckedChange={(checked) => setAgreed(checked === true)}
-              className="mt-0.5"
-            />
-            <span className="text-muted-foreground text-sm">
-              I confirm I am at least 16 years old and agree to the{' '}
-              <Link to="/terms" target="_blank" className="text-primary hover:underline">
-                Terms of Service
-              </Link>{' '}
-              and{' '}
-              <Link to="/privacy" target="_blank" className="text-primary hover:underline">
-                Privacy Policy
-              </Link>
-            </span>
-          </Label>
+        <Label htmlFor="agree-terms" className="items-start gap-2 font-normal">
+          <Checkbox
+            id="agree-terms"
+            checked={agreed}
+            onCheckedChange={(checked) => setAgreed(checked === true)}
+            className="mt-0.5"
+          />
+          <span className="text-muted-foreground text-sm">
+            I confirm I am at least 16 years old and agree to the{' '}
+            <Link to="/terms" target="_blank" className="text-primary hover:underline">
+              Terms of Service
+            </Link>{' '}
+            and{' '}
+            <Link to="/privacy" target="_blank" className="text-primary hover:underline">
+              Privacy Policy
+            </Link>
+          </span>
+        </Label>
 
-          <Button
-            type="submit"
-            disabled={loading || !agreed}
-            className="bg-grad-primary shadow-glow-primary h-auto w-full rounded-sm py-3 font-semibold text-white disabled:opacity-50"
-          >
-            {loading ? 'Creating account...' : 'Sign Up'}
-          </Button>
-        </form>
-
-        <p className="text-muted-foreground mt-6 text-center text-sm">
-          Already have an account?{' '}
-          <Link to="/login" className="text-primary font-medium hover:underline">
-            Sign in
-          </Link>
-        </p>
-      </div>
-    </div>
+        <Button type="submit" disabled={loading || !agreed} size="lg" className="w-full">
+          {loading ? 'Creating account…' : 'Sign up'}
+        </Button>
+      </form>
+    </AuthShell>
   );
 }

@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { toast } from 'sonner';
-import { readBackgroundedAt } from '@/services/appLockSession';
+import { clearBackgroundedAt, readBackgroundedAt } from '@/services/appLockSession';
 import { nextLockoutUntil, shouldLockOnResume } from '@/utils/appLock';
 import type { AppLockConfig } from '@/types';
 
@@ -65,6 +65,9 @@ export const useAppLockStore = create<AppLockStore>()(
         // <Toaster> is mounted above the lock gate, so an amount-bearing toast fired just before
         // backgrounding ("Added ₹250") would sit on top of the lock screen. Small, but a leak.
         toast.dismiss();
+        // Drop any earlier timestamp so a reload, or another tab, cannot start inside a stale
+        // grace window while this one is locked.
+        clearBackgroundedAt();
         set({ isLocked: true });
       },
 

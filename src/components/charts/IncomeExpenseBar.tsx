@@ -6,6 +6,9 @@ import { formatCurrency } from '@/utils/formatters';
 import { monthPeriodStart, normalizeMonthStartDay } from '@/utils/period';
 import type { Transaction } from '@/types';
 import { ChartDataTable } from './ChartDataTable';
+import { AXIS_PROPS, GRID_PROPS, TOOLTIP_PROPS, formatAxisMoney } from './chartTheme';
+
+const SERIES_NAME: Record<string, string> = { income: 'Income', expenses: 'Expenses' };
 
 interface Props {
   transactions: Transaction[];
@@ -45,7 +48,7 @@ export function IncomeExpenseBar({ transactions }: Props) {
 
   return (
     <div className="card-elevated rounded-md p-4">
-      <h3 className="mb-3 text-sm font-semibold">Income vs Expenses</h3>
+      <h3 className="mb-3 text-sm font-semibold">Income vs expenses</h3>
       <div
         className="h-48 lg:h-64"
         role="img"
@@ -55,34 +58,38 @@ export function IncomeExpenseBar({ transactions }: Props) {
       >
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} barGap={4} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" opacity={0.12} />
-            <XAxis dataKey="month" fontSize={11} tickLine={false} axisLine={false} />
+            <CartesianGrid {...GRID_PROPS} />
+            <XAxis dataKey="month" {...AXIS_PROPS} />
             <YAxis
-              fontSize={10}
-              tickLine={false}
-              axisLine={false}
+              {...AXIS_PROPS}
               width={56}
               tickMargin={4}
-              tickFormatter={money}
+              tickFormatter={(v: number) => formatAxisMoney(v, hideAmounts)}
             />
             <Tooltip
               cursor={{ fill: 'var(--muted)', fillOpacity: 0.5 }}
-              contentStyle={{
-                background: 'var(--card)',
-                border: '1px solid var(--border)',
-                borderRadius: 12,
-                fontSize: 12,
-              }}
-              formatter={(v) => formatCurrency(Number(v) || 0, false, hideAmounts)}
+              {...TOOLTIP_PROPS}
+              separator=": "
+              // Recharts sorts tooltip rows by name by default; income reads first.
+              itemSorter={(item) => (item.dataKey === 'income' ? 0 : 1)}
+              formatter={(v, name) => [
+                formatCurrency(Number(v) || 0, false, hideAmounts),
+                SERIES_NAME[String(name)] ?? String(name),
+              ]}
             />
-            <Bar dataKey="income" fill="var(--primary)" radius={[6, 6, 0, 0]} />
-            <Bar dataKey="expenses" fill="var(--destructive)" radius={[6, 6, 0, 0]} />
+            <Bar dataKey="income" name="income" fill="var(--positive)" radius={[6, 6, 0, 0]} />
+            <Bar
+              dataKey="expenses"
+              name="expenses"
+              fill="var(--destructive)"
+              radius={[6, 6, 0, 0]}
+            />
           </BarChart>
         </ResponsiveContainer>
       </div>
       <div className="mt-2 flex justify-center gap-4">
         <div className="flex items-center gap-1.5 text-xs">
-          <div className="bg-primary h-2.5 w-2.5 rounded-full" aria-hidden />
+          <div className="bg-positive h-2.5 w-2.5 rounded-full" aria-hidden />
           <span className="text-muted-foreground">Income</span>
         </div>
         <div className="flex items-center gap-1.5 text-xs">

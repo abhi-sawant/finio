@@ -64,9 +64,9 @@ export function NumberPad({ value, onChange }: NumberPadProps) {
 
   return (
     <div className="space-y-2">
-      <div className="bg-card flex min-h-16 items-center justify-center rounded-md px-4 py-3">
+      <div className="bg-grad-surface flex min-h-16 items-center justify-center rounded-md border border-[var(--glass-border)] px-4 py-3 shadow-[var(--shadow-card)]">
         <span
-          className={`font-bold tracking-tight transition-all ${
+          className={`font-money transition-all ${
             display.length > 10 ? 'text-2xl' : 'text-3xl'
           } ${!value ? 'text-muted-foreground' : ''}`}
         >
@@ -80,7 +80,7 @@ export function NumberPad({ value, onChange }: NumberPadProps) {
             key={btn}
             type="button"
             onClick={() => handlePress(btn)}
-            className="bg-card active:bg-muted flex h-14 items-center justify-center rounded-md text-xl font-semibold transition-all select-none active:scale-95"
+            className="active:bg-muted border-border flex h-14 items-center justify-center rounded-md border bg-[var(--glass-strong)] text-xl font-semibold shadow-sm transition-all select-none active:scale-95"
           >
             {btn === '⌫' ? (
               <Delete size={20} className="text-muted-foreground" />

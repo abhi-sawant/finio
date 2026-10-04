@@ -16,9 +16,9 @@ import {
   roundMoney,
   sumTransactionDeltas,
 } from './balance';
-import { lastOccurrenceOnOrBefore, planRecurring } from './recurring';
+import { lastOccurrenceOnOrBefore, planRecurring, previewBackfill } from './recurring';
 import { planRuleApplication } from '@/utils/autoCategorize';
-import { budgetScopeKey } from '@/utils/calculations';
+import { TRANSFER_CATEGORY_ID, budgetScopeKey, isCategoryValidForType } from '@/utils/calculations';
 import {
   accountDeleteBlockers,
   depositMaturityAmount,
@@ -102,6 +102,56 @@ function reassignTransactionCategory<T extends Pick<Transaction, 'categoryId' | 
     return { ...t, splits };
   }
   return t.categoryId === deletedId ? { ...t, categoryId: fallbackId } : t;
+}
+
+/**
+ * Categories the app cannot work without: Transfer (what every transfer is filed under) and
+ * Miscellaneous (the catch-all a deleted category's rows are reassigned to).
+ */
+export function isProtectedCategory(id: string): boolean {
+  return id === TRANSFER_CATEGORY_ID || id === MISC_CATEGORY_ID;
+}
+
+/**
+ * Transactions removed alongside a deleted "Settle up" debt entry, keyed by entry id, so
+ * `restoreDebtEntry` (the undo) can put both back. In-memory only: an undo never outlives the
+ * session that offered it.
+ */
+const removedSettlementTransactions = new Map<string, Transaction>();
+
+/**
+ * The reverse direction: "Settled up" debt entries removed because their transaction was deleted
+ * (from the Transactions page, a bulk delete…), keyed by transaction id, so restoring the
+ * transaction (Undo) brings its entry back too. In-memory only, like the map above.
+ */
+const removedSettlementEntries = new Map<string, DebtEntry>();
+
+/** Puts back the settlement entries stashed for these transaction ids (never duplicates). */
+function restoreSettlementEntries(entries: DebtEntry[], transactionIds: string[]): DebtEntry[] {
+  const back: DebtEntry[] = [];
+  for (const id of transactionIds) {
+    const entry = removedSettlementEntries.get(id);
+    removedSettlementEntries.delete(id);
+    if (entry && !entries.some((e) => e.id === entry.id)) back.push(entry);
+  }
+  return back.length > 0 ? [...back, ...entries] : entries;
+}
+
+/**
+ * Swap one transaction for an edited copy, reversing the original's balance delta and applying
+ * the edit's. The single balance-safe edit path — shared by `updateTransaction` and the settled
+ * branch of `updateDebtEntry`.
+ */
+function replaceTransaction(
+  state: { transactions: Transaction[]; accounts: Account[] },
+  original: Transaction,
+  updated: Transaction,
+): { transactions: Transaction[]; accounts: Account[] } {
+  const afterReverse = applyBalanceDelta(state.accounts, original, -1);
+  return {
+    transactions: state.transactions.map((t) => (t.id === original.id ? updated : t)),
+    accounts: applyBalanceDelta(afterReverse, updated, 1),
+  };
 }
 
 function generateUUID(): string {
@@ -498,12 +548,38 @@ export const useFinanceStore = create<FinanceStore>()(
           if (!originalTx) return state;
 
           const updatedTx = { ...originalTx, ...updates };
-          const afterReverse = applyBalanceDelta(state.accounts, originalTx, -1);
-          const finalAccounts = applyBalanceDelta(afterReverse, updatedTx, 1);
+          // A settlement transaction and its "Settled up" entry are one event: an edited amount
+          // or date carries over to the entry (keeping its direction) in this same `set`, so the
+          // two can never disagree — and nothing here calls back into `updateDebtEntry`.
+          const synced =
+            updatedTx.amount !== originalTx.amount ||
+            updatedTx.date !== originalTx.date ||
+            updatedTx.type !== originalTx.type;
+          const linked = synced
+            ? state.debtEntries.some((e) => e.settledTransactionId === id)
+            : false;
 
           return {
-            transactions: state.transactions.map((t) => (t.id === id ? updatedTx : t)),
-            accounts: finalAccounts,
+            ...replaceTransaction(state, originalTx, updatedTx),
+            ...(linked && {
+              debtEntries: state.debtEntries.map((e) =>
+                e.settledTransactionId === id
+                  ? {
+                      ...e,
+                      // The direction follows the money: receiving a settlement (income) closes
+                      // what they owed you (entry < 0); paying one (expense) closes what you
+                      // owed them (entry > 0). Anything else keeps the entry's own sign.
+                      amount:
+                        (updatedTx.type === 'income'
+                          ? -1
+                          : updatedTx.type === 'expense'
+                            ? 1
+                            : Math.sign(e.amount || 1)) * Math.abs(updatedTx.amount),
+                      date: updatedTx.date,
+                    }
+                  : e,
+              ),
+            }),
           };
         });
       },
@@ -512,10 +588,19 @@ export const useFinanceStore = create<FinanceStore>()(
         const tx = get().transactions.find((t) => t.id === id);
         if (!tx) return null;
 
-        set((state) => ({
-          transactions: state.transactions.filter((t) => t.id !== id),
-          accounts: applyBalanceDelta(state.accounts, tx, -1),
-        }));
+        set((state) => {
+          // A settlement transaction and its "Settled up" debt entry are one event — deleting
+          // the money must not leave the debt marked as settled.
+          const settled = state.debtEntries.filter((e) => e.settledTransactionId === id);
+          for (const e of settled) removedSettlementEntries.set(id, e);
+          return {
+            transactions: state.transactions.filter((t) => t.id !== id),
+            accounts: applyBalanceDelta(state.accounts, tx, -1),
+            ...(settled.length > 0 && {
+              debtEntries: state.debtEntries.filter((e) => e.settledTransactionId !== id),
+            }),
+          };
+        });
         return tx;
       },
 
@@ -527,6 +612,7 @@ export const useFinanceStore = create<FinanceStore>()(
           return {
             transactions: [transaction, ...state.transactions],
             accounts: applyBalanceDelta(state.accounts, transaction, 1),
+            debtEntries: restoreSettlementEntries(state.debtEntries, [transaction.id]),
           };
         });
       },
@@ -539,9 +625,17 @@ export const useFinanceStore = create<FinanceStore>()(
         set((state) => {
           let accounts = state.accounts;
           for (const tx of removed) accounts = applyBalanceDelta(accounts, tx, -1);
+          for (const e of state.debtEntries) {
+            if (e.settledTransactionId && idSet.has(e.settledTransactionId)) {
+              removedSettlementEntries.set(e.settledTransactionId, e);
+            }
+          }
           return {
             transactions: state.transactions.filter((t) => !idSet.has(t.id)),
             accounts,
+            debtEntries: state.debtEntries.filter(
+              (e) => !(e.settledTransactionId && idSet.has(e.settledTransactionId)),
+            ),
           };
         });
         return removed;
@@ -559,17 +653,34 @@ export const useFinanceStore = create<FinanceStore>()(
           return {
             transactions: [...toRestore, ...state.transactions],
             accounts,
+            debtEntries: restoreSettlementEntries(
+              state.debtEntries,
+              toRestore.map((t) => t.id),
+            ),
           };
         });
       },
 
       bulkRecategorize: (ids, categoryId) => {
         const idSet = new Set(ids);
+        const category = get().categories.find((c) => c.id === categoryId);
+        if (!category) return 0;
+        let changed = 0;
         set((state) => ({
-          transactions: state.transactions.map((t) =>
-            idSet.has(t.id) ? { ...t, categoryId, splits: undefined } : t,
-          ),
+          transactions: state.transactions.map((t) => {
+            // A transfer keeps its neutral category, and a category only lands on a row whose
+            // type it is valid for — the same guard the transaction form's picker uses, so a
+            // mixed selection can't file an income under "Groceries" or a transfer under
+            // "Food". Unlike the rule engine, an explicit bulk move does flatten a split row
+            // onto the chosen category — the user picked it for exactly those rows.
+            if (!idSet.has(t.id) || t.type === 'transfer') return t;
+            if (!isCategoryValidForType(category, t.type)) return t;
+            if (t.categoryId === categoryId && !t.splits) return t;
+            changed += 1;
+            return { ...t, categoryId, splits: undefined };
+          }),
         }));
+        return changed;
       },
 
       bulkAddLabel: (ids, labelId) => {
@@ -617,16 +728,20 @@ export const useFinanceStore = create<FinanceStore>()(
       },
 
       deleteCategory: (id) => {
+        // Transfer is what every transfer is filed under, and Miscellaneous is the catch-all
+        // every deleted category's rows fall back to — losing either leaves nowhere safe to
+        // put them, so both are permanent.
+        if (isProtectedCategory(id)) return;
         set((state) => {
           const remaining = state.categories.filter((c) => c.id !== id);
 
           // Rows pointing at a deleted category would otherwise render as "Unknown" and
-          // silently vanish from the spending charts. Reassign them to a surviving
-          // catch-all instead.
+          // silently vanish from the spending charts. Reassign them to the catch-all — never
+          // to Transfer, which is valid for transfers only.
           const fallbackId =
             remaining.find((c) => c.id === MISC_CATEGORY_ID)?.id ??
-            remaining.find((c) => c.type === 'both')?.id ??
-            '';
+            remaining.find((c) => c.type === 'both' && c.id !== TRANSFER_CATEGORY_ID)?.id ??
+            MISC_CATEGORY_ID;
 
           return {
             categories: remaining,
@@ -680,6 +795,9 @@ export const useFinanceStore = create<FinanceStore>()(
                 ? { ...r, labelIds: r.labelIds.filter((lId) => lId !== id) }
                 : r,
             ),
+            // A label-scoped budget has nothing left to measure once its label is gone — it
+            // would otherwise linger as an "Unknown label" card. Same cascade as categories.
+            budgets: state.budgets.filter((b) => b.labelId !== id),
           };
         });
       },
@@ -1011,22 +1129,91 @@ export const useFinanceStore = create<FinanceStore>()(
       deleteDebtEntry: (id) => {
         const entry = get().debtEntries.find((e) => e.id === id);
         if (!entry) return null;
-        set((state) => ({
-          debtEntries: state.debtEntries.filter((e) => e.id !== id),
-        }));
+        set((state) => {
+          // A "Settle up" entry and the real transaction it created are one event: deleting
+          // only the entry would leave the money moved but the debt re-opened, counting it
+          // twice. Remove both atomically, and stash the transaction so undo restores both.
+          const linked = entry.settledTransactionId
+            ? state.transactions.find((t) => t.id === entry.settledTransactionId)
+            : undefined;
+          if (!linked) {
+            return { debtEntries: state.debtEntries.filter((e) => e.id !== id) };
+          }
+          removedSettlementTransactions.set(entry.id, linked);
+          return {
+            debtEntries: state.debtEntries.filter((e) => e.id !== id),
+            transactions: state.transactions.filter((t) => t.id !== linked.id),
+            accounts: applyBalanceDelta(state.accounts, linked, -1),
+          };
+        });
         return entry;
+      },
+
+      updateDebtEntry: (id, updates) => {
+        let changed = false;
+        set((state) => {
+          const entry = state.debtEntries.find((e) => e.id === id);
+          if (!entry) return state;
+
+          const next: DebtEntry = { ...entry };
+          if (updates.note !== undefined) next.note = cleanText(updates.note, MAX_NOTE_LENGTH);
+          if (updates.date !== undefined && updates.date) next.date = updates.date;
+          if (
+            updates.amount !== undefined &&
+            Number.isFinite(updates.amount) &&
+            roundMoney(updates.amount) !== 0
+          ) {
+            const amount = roundMoney(updates.amount);
+            // A settled entry's direction is fixed by its transaction (income vs expense), so
+            // only its magnitude can change; a plain entry may flip between owed and owing.
+            next.amount = entry.settledTransactionId
+              ? Math.sign(entry.amount || 1) * Math.abs(amount)
+              : amount;
+          }
+          changed = true;
+
+          const linked = entry.settledTransactionId
+            ? state.transactions.find((t) => t.id === entry.settledTransactionId)
+            : undefined;
+          if (!linked) {
+            return { debtEntries: state.debtEntries.map((e) => (e.id === id ? next : e)) };
+          }
+          // The entry and its real transaction are one event — move the money in the same `set`
+          // through the same balance-safe path `updateTransaction` uses. The note stays on the
+          // entry: the transaction's note is the user's to edit on its own screen.
+          const updatedTx: Transaction = {
+            ...linked,
+            amount: Math.abs(next.amount),
+            date: next.date,
+          };
+          return {
+            debtEntries: state.debtEntries.map((e) => (e.id === id ? next : e)),
+            ...replaceTransaction(state, linked, updatedTx),
+          };
+        });
+        return changed;
       },
 
       restoreDebtEntry: (entry) => {
         set((state) => {
           // Guard against a double undo re-inserting the same row twice.
           if (state.debtEntries.some((e) => e.id === entry.id)) return state;
-          return { debtEntries: [entry, ...state.debtEntries] };
+          const linked = removedSettlementTransactions.get(entry.id);
+          removedSettlementTransactions.delete(entry.id);
+          if (!linked || state.transactions.some((t) => t.id === linked.id)) {
+            return { debtEntries: [entry, ...state.debtEntries] };
+          }
+          return {
+            debtEntries: [entry, ...state.debtEntries],
+            transactions: [linked, ...state.transactions],
+            accounts: applyBalanceDelta(state.accounts, linked, 1),
+          };
         });
       },
 
-      addLoan: (loanData) => {
-        const createdAt = new Date().toISOString();
+      addLoan: (loanData, { logPastEmis = false } = {}) => {
+        const now = new Date();
+        const createdAt = now.toISOString();
         const emi = calculateEmi(loanData.principal, loanData.interestRate, loanData.tenureMonths);
         const recurring: RecurringTransaction = {
           id: generateUUID(),
@@ -1045,6 +1232,17 @@ export const useFinanceStore = create<FinanceStore>()(
           lastRunDate: null,
           createdAt,
         };
+        // EMIs that already fell due before the loan was entered. By default they were paid
+        // outside Finio: advance the rule past them (the RD "fold" pattern) so nothing is ever
+        // back-posted. With `logPastEmis`, leave the rule's history empty and let
+        // `processRecurring` post them as real transactions from the paying account.
+        if (!logPastEmis) {
+          const past = previewBackfill(recurring, [loanData.accountId], now).count;
+          if (past > 0) {
+            recurring.occurrenceCount = past;
+            recurring.lastRunDate = lastOccurrenceOnOrBefore(recurring, now)?.toISOString() ?? null;
+          }
+        }
         const loan: Loan = {
           ...loanData,
           id: generateUUID(),
@@ -1247,21 +1445,28 @@ export const useFinanceStore = create<FinanceStore>()(
                   loanPrepayments: mergeById(state.loanPrepayments, data.loanPrepayments),
                 }
               : {
-                  accounts: (incomingAccounts ?? state.accounts) as ImportedAccount[],
-                  transactions: data.transactions ?? state.transactions,
+                  // Replace means replace: a collection the file doesn't carry becomes empty,
+                  // or the old device's goals, loans or net-worth snapshots would survive and
+                  // silently blend into the restored data (a stale snapshot rewrites the
+                  // net-worth chart). Categories and labels are the exception — they are the
+                  // reference vocabulary every row points at (default ids are stable), so a
+                  // file without them keeps the current set rather than leaving every
+                  // transaction "Unknown".
+                  accounts: (incomingAccounts ?? []) as ImportedAccount[],
+                  transactions: data.transactions ?? [],
                   categories: data.categories ?? state.categories,
                   labels: data.labels ?? state.labels,
-                  budgets: data.budgets ?? state.budgets,
-                  recurring: data.recurring ?? state.recurring,
-                  templates: data.templates ?? state.templates,
-                  rules: data.rules ?? state.rules,
-                  goals: data.goals ?? state.goals,
-                  goalContributions: data.goalContributions ?? state.goalContributions,
-                  people: data.people ?? state.people,
-                  debtEntries: data.debtEntries ?? state.debtEntries,
-                  netWorthSnapshots: data.netWorthSnapshots ?? state.netWorthSnapshots,
-                  loans: data.loans ?? state.loans,
-                  loanPrepayments: data.loanPrepayments ?? state.loanPrepayments,
+                  budgets: data.budgets ?? [],
+                  recurring: data.recurring ?? [],
+                  templates: data.templates ?? [],
+                  rules: data.rules ?? [],
+                  goals: data.goals ?? [],
+                  goalContributions: data.goalContributions ?? [],
+                  people: data.people ?? [],
+                  debtEntries: data.debtEntries ?? [],
+                  netWorthSnapshots: data.netWorthSnapshots ?? [],
+                  loans: data.loans ?? [],
+                  loanPrepayments: data.loanPrepayments ?? [],
                 };
 
           return {

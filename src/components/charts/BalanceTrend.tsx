@@ -15,6 +15,7 @@ import { formatCurrency, localDayKey } from '@/utils/formatters';
 import { getNetWorth } from '@/utils/calculations';
 import { sampleForTable } from '@/utils/chartTable';
 import { ChartDataTable } from './ChartDataTable';
+import { AXIS_PROPS, GRID_PROPS, TOOLTIP_PROPS, formatAxisMoney } from './chartTheme';
 import { EmptyChart } from './EmptyChart';
 
 interface Props {
@@ -123,7 +124,7 @@ export function BalanceTrend({ from, to }: Props) {
 
   return (
     <div className="card-elevated rounded-md p-4">
-      <h3 className="mb-3 text-sm font-semibold">Balance Trend</h3>
+      <h3 className="mb-3 text-sm font-semibold">Balance trend</h3>
       <div
         className="h-44 lg:h-64"
         role="img"
@@ -138,34 +139,24 @@ export function BalanceTrend({ from, to }: Props) {
         ) : (
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" opacity={0.12} />
+              <CartesianGrid {...GRID_PROPS} />
               <XAxis
                 dataKey="dateKey"
                 tickFormatter={(k) => labelByKey.get(String(k)) ?? String(k)}
-                fontSize={10}
-                tickLine={false}
-                axisLine={false}
+                {...AXIS_PROPS}
                 interval={xAxisInterval}
               />
               <YAxis
-                fontSize={10}
-                tickLine={false}
-                axisLine={false}
+                {...AXIS_PROPS}
                 width={56}
                 tickMargin={4}
-                tickFormatter={money}
+                tickFormatter={(v: number) => formatAxisMoney(v, hideAmounts)}
               />
               <Tooltip
                 cursor={{ stroke: 'var(--muted-foreground)', strokeOpacity: 0.4, strokeWidth: 1 }}
-                contentStyle={{
-                  background: 'var(--card)',
-                  border: '1px solid var(--border)',
-                  borderRadius: 12,
-                  fontSize: 12,
-                }}
-                formatter={(v) => formatCurrency(Number(v) || 0, false, hideAmounts)}
+                {...TOOLTIP_PROPS}
+                formatter={(v) => [formatCurrency(Number(v) || 0, false, hideAmounts), 'Balance']}
                 labelFormatter={(k) => labelByKey.get(String(k)) ?? String(k)}
-                labelStyle={{ color: 'var(--muted-foreground)' }}
               />
               <Line
                 type="monotone"

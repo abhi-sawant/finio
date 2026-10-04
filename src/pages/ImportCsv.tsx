@@ -10,13 +10,14 @@ import {
   buildTransactionsFromCsv,
   detectDateFormatInfo,
   findDuplicateRows,
+  guessColumnMapping,
   parseCsvText,
   type AmountMode,
   type CsvImportResult,
   type CsvParseResult,
   type DateFormatCode,
 } from '@/utils/csvImport';
-import { formatCurrency, formatFullDate } from '@/utils/formatters';
+import { formatCurrency, formatShortDate } from '@/utils/formatters';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -51,6 +52,7 @@ export default function ImportCsv() {
   const transactions = useFinanceStore((s) => s.transactions);
   const rules = useFinanceStore((s) => s.rules);
   const bulkAddTransactions = useFinanceStore((s) => s.bulkAddTransactions);
+  const hideAmounts = useFinanceStore((s) => s.settings.hideAmounts);
 
   const activeAccounts = useMemo(() => getActiveAccounts(accounts), [accounts]);
 
@@ -97,20 +99,24 @@ export default function ImportCsv() {
           setParsed(csv);
           setFileName(file.name);
 
-          // Best-effort auto-mapping: assume the first date-like column is the date, and the
-          // first amount-like column is the amount — the user can always override.
-          const dateGuess = csv.headers.findIndex((h) => /date/i.test(h));
-          const amountGuess = csv.headers.findIndex((h) => /amount|amt/i.test(h));
-          const noteGuess = csv.headers.findIndex((h) => /note|desc|narration|particular/i.test(h));
-          if (dateGuess >= 0) {
-            setDateCol(String(dateGuess));
-            const samples = csv.rows.map((r) => r[dateGuess] ?? '');
+          // Best-effort auto-mapping from the header names — the user can always override.
+          const guess = guessColumnMapping(csv.headers);
+          const col = (i: number | undefined) => (i === undefined ? NONE : String(i));
+          setDateCol(col(guess.dateCol));
+          setAmountMode(guess.amountMode);
+          setAmountCol(col(guess.amountCol));
+          setDebitCol(col(guess.debitCol));
+          setCreditCol(col(guess.creditCol));
+          setNoteCol(col(guess.noteCol));
+          setCategoryCol(col(guess.categoryCol));
+          setDetectedFormat(null);
+          if (guess.dateCol !== undefined) {
+            const dateIdx = guess.dateCol;
+            const samples = csv.rows.map((r) => r[dateIdx] ?? '');
             const { format: detected } = detectDateFormatInfo(samples);
             if (detected) setDateFormat(detected);
             setDetectedFormat(detected ?? null);
           }
-          if (amountGuess >= 0) setAmountCol(String(amountGuess));
-          if (noteGuess >= 0) setNoteCol(String(noteGuess));
 
           setStep('map');
         } catch {
@@ -133,11 +139,20 @@ export default function ImportCsv() {
     setDetectedFormat(detected ?? null);
   };
 
-  const canPreview =
-    parsed !== null &&
-    accountId !== '' &&
-    dateCol !== NONE &&
-    (amountMode === 'signed' ? amountCol !== NONE : debitCol !== NONE || creditCol !== NONE);
+  // Why "Preview import" is disabled, in the user's terms — null when it's ready.
+  const missingMapping =
+    accountId === ''
+      ? 'Choose an account to import into.'
+      : dateCol === NONE
+        ? 'Choose the date column.'
+        : amountMode === 'signed'
+          ? amountCol === NONE
+            ? 'Choose the amount column.'
+            : null
+          : debitCol === NONE && creditCol === NONE
+            ? 'Choose a debit or a credit column.'
+            : null;
+  const canPreview = parsed !== null && missingMapping === null;
 
   const handlePreview = () => {
     if (!parsed || !canPreview) return;
@@ -195,7 +210,7 @@ export default function ImportCsv() {
   };
 
   const stepTitle =
-    step === 'upload' ? 'Import Bank CSV' : step === 'map' ? 'Map Columns' : 'Review & Import';
+    step === 'upload' ? 'Import bank CSV' : step === 'map' ? 'Map columns' : 'Review & import';
 
   return (
     <>
@@ -216,11 +231,8 @@ export default function ImportCsv() {
                 <p className="text-muted-foreground text-xs">
                   A CSV import needs somewhere to attach the transactions.
                 </p>
-                <Button
-                  onClick={() => navigate('/add-account')}
-                  className="bg-grad-primary h-auto w-full rounded-sm py-2.5 text-sm font-medium text-white"
-                >
-                  Add Account
+                <Button onClick={() => navigate('/add-account')} className="w-full">
+                  Add account
                 </Button>
               </div>
             ) : (
@@ -247,11 +259,8 @@ export default function ImportCsv() {
                     </p>
                   </div>
                 </div>
-                <Button
-                  onClick={handleChooseFile}
-                  className="bg-grad-primary shadow-glow-primary h-auto w-full rounded-md py-3.5 text-sm font-semibold text-white"
-                >
-                  <FileUp size={16} className="mr-1.5" /> Choose CSV File
+                <Button onClick={handleChooseFile} size="lg" className="w-full">
+                  <FileUp size={16} /> Choose CSV file
                 </Button>
               </>
             )}
@@ -327,18 +336,24 @@ export default function ImportCsv() {
                 <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">
                   Amount columns
                 </Label>
-                <div className="bg-muted mb-2 grid grid-cols-2 gap-1 rounded-sm p-1">
+                <div
+                  className="bg-muted mb-2 grid grid-cols-2 gap-1 rounded-full p-1"
+                  role="group"
+                  aria-label="Amount columns"
+                >
                   {(['signed', 'debitCredit'] as const).map((mode) => (
                     <button
                       key={mode}
+                      type="button"
                       onClick={() => setAmountMode(mode)}
-                      className={`rounded-sm py-1.5 text-xs font-medium transition-all ${
+                      aria-pressed={amountMode === mode}
+                      className={`rounded-full py-1.5 text-xs font-medium transition-all ${
                         amountMode === mode
-                          ? 'bg-grad-primary text-white shadow'
+                          ? 'bg-grad-primary shadow-glow-primary text-white'
                           : 'text-muted-foreground'
                       }`}
                     >
-                      {mode === 'signed' ? 'Single (signed)' : 'Debit & Credit'}
+                      {mode === 'signed' ? 'Single (signed)' : 'Debit & credit'}
                     </button>
                   ))}
                 </div>
@@ -354,8 +369,10 @@ export default function ImportCsv() {
                       value={negativeIsExpense ? 'expense' : 'income'}
                       onValueChange={(v) => setNegativeIsExpense((v ?? 'expense') === 'expense')}
                     >
-                      <SelectTrigger className="w-full">
-                        <SelectValue />
+                      <SelectTrigger className="w-full" aria-label="Negative amounts are">
+                        <SelectValue>
+                          {negativeIsExpense ? 'Negative = expense' : 'Negative = income'}
+                        </SelectValue>
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="expense">Negative = expense</SelectItem>
@@ -366,7 +383,7 @@ export default function ImportCsv() {
                 ) : (
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <p className="text-muted-foreground mb-1 text-[11px]">Debit (money out)</p>
+                      <p className="text-muted-foreground mb-1 text-xs">Debit (money out)</p>
                       <ColumnSelect
                         headers={parsed.headers}
                         value={debitCol}
@@ -374,7 +391,7 @@ export default function ImportCsv() {
                       />
                     </div>
                     <div>
-                      <p className="text-muted-foreground mb-1 text-[11px]">Credit (money in)</p>
+                      <p className="text-muted-foreground mb-1 text-xs">Credit (money in)</p>
                       <ColumnSelect
                         headers={parsed.headers}
                         value={creditCol}
@@ -427,13 +444,22 @@ export default function ImportCsv() {
               )}
             </div>
 
-            <Button
-              onClick={handlePreview}
-              disabled={!canPreview}
-              className="bg-grad-primary shadow-glow-primary h-auto w-full rounded-md py-3.5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              Preview Import
-            </Button>
+            <div className="space-y-2">
+              <Button
+                onClick={handlePreview}
+                disabled={!canPreview}
+                size="lg"
+                className="w-full"
+                aria-describedby={missingMapping ? 'csv-missing-mapping' : undefined}
+              >
+                Preview import
+              </Button>
+              {missingMapping && (
+                <p id="csv-missing-mapping" className="text-muted-foreground text-center text-xs">
+                  {missingMapping}
+                </p>
+              )}
+            </div>
           </div>
         )}
 
@@ -442,15 +468,15 @@ export default function ImportCsv() {
             <div className="card-elevated divide-border grid grid-cols-3 divide-x rounded-md text-center">
               <div className="p-3">
                 <p className="text-lg font-bold">{result.totalRows}</p>
-                <p className="text-muted-foreground text-[11px]">Rows in file</p>
+                <p className="text-muted-foreground text-xs">Rows in file</p>
               </div>
               <div className="p-3">
                 <p className="text-lg font-bold">{result.accepted.length}</p>
-                <p className="text-muted-foreground text-[11px]">Parsed OK</p>
+                <p className="text-muted-foreground text-xs">Parsed OK</p>
               </div>
               <div className="p-3">
                 <p className="text-lg font-bold">{duplicateRows.size}</p>
-                <p className="text-muted-foreground text-[11px]">Possible duplicates</p>
+                <p className="text-muted-foreground text-xs">Possible duplicates</p>
               </div>
             </div>
 
@@ -473,10 +499,10 @@ export default function ImportCsv() {
             )}
 
             {result.issues.length > 0 && (
-              <div className="bg-muted/50 space-y-1.5 rounded-sm p-3">
+              <div className="bg-warning/15 space-y-1.5 rounded-md p-3">
                 {result.issues.map((issue) => (
                   <p key={issue} className="flex gap-2 text-xs">
-                    <AlertTriangle size={14} className="mt-px shrink-0 text-[#c79b4f]" />
+                    <AlertTriangle size={14} className="text-warning mt-px shrink-0" />
                     <span className="text-muted-foreground">{issue}</span>
                   </p>
                 ))}
@@ -502,7 +528,7 @@ export default function ImportCsv() {
                           />
                         )}
                         <span className="truncate">
-                          {formatFullDate(row.transaction.date)} ·{' '}
+                          {formatShortDate(row.transaction.date)} ·{' '}
                           {categoryName(row.transaction.categoryId)}
                           {isDup && ' · Duplicate'}
                         </span>
@@ -510,11 +536,11 @@ export default function ImportCsv() {
                     </div>
                     <span
                       className={`shrink-0 text-sm font-semibold ${
-                        row.transaction.type === 'expense' ? 'text-destructive' : 'text-primary'
+                        row.transaction.type === 'expense' ? 'text-foreground' : 'text-positive'
                       }`}
                     >
                       {row.transaction.type === 'expense' ? '-' : '+'}
-                      {formatCurrency(row.transaction.amount)}
+                      {formatCurrency(row.transaction.amount, false, hideAmounts)}
                     </span>
                   </div>
                 );
@@ -534,11 +560,12 @@ export default function ImportCsv() {
             <Button
               onClick={handleImport}
               disabled={importing || toImport.length === 0}
-              className="bg-grad-primary shadow-glow-primary h-auto w-full rounded-md py-3.5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
+              size="lg"
+              className="w-full"
             >
               {importing
                 ? 'Importing...'
-                : `Import ${toImport.length} Transaction${toImport.length === 1 ? '' : 's'}`}
+                : `Import ${toImport.length} transaction${toImport.length === 1 ? '' : 's'}`}
             </Button>
           </div>
         )}

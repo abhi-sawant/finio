@@ -11,6 +11,7 @@ export function HideAmountsToggle() {
     <HeaderIconButton
       onClick={() => updateSettings({ hideAmounts: !hideAmounts })}
       aria-label={hideAmounts ? 'Show amounts' : 'Hide amounts'}
+      pressed={hideAmounts}
       aria-pressed={hideAmounts}
     >
       {hideAmounts ? <EyeOff /> : <Eye />}

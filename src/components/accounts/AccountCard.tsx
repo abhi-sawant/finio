@@ -6,6 +6,7 @@ import { accountDisplayValue, depositCaption, isDepositAccount } from '@/utils/d
 import { cn } from '@/lib/utils';
 import type { Account } from '@/types';
 import { Trash2, Archive } from 'lucide-react';
+import { ACCOUNT_TYPE_LABEL, noteStyle } from './note';
 
 function dueLabel(daysUntilDue: number): string {
   if (daysUntilDue < 0) {
@@ -52,24 +53,35 @@ export const AccountCard = memo(function AccountCard({
   return (
     <div className="group flex w-full items-center gap-2 py-3">
       <button onClick={onClick} className="flex min-w-0 flex-1 items-center gap-3 text-left">
+        <span
+          className={cn('note-chip', isArchived && 'opacity-50 grayscale')}
+          style={noteStyle(account.type)}
+          aria-hidden
+        />
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-medium">{account.name}</p>
-          <p className="text-muted-foreground truncate text-xs">
+          <p className="text-muted-foreground line-clamp-2 text-xs">
             {isArchived
               ? `Closed · ${transactionCount} transaction${transactionCount === 1 ? '' : 's'}`
               : isDeposit
                 ? depositCaption(account)
-                : account.type}
+                : ACCOUNT_TYPE_LABEL[account.type]}
           </p>
           {dueInfo && (
             <p
               className={cn(
-                'mt-0.5 text-[11px] font-medium',
-                dueInfo.isOverdue ? 'text-destructive' : 'text-muted-foreground',
+                'mt-0.5 text-xs font-medium',
+                dueInfo.isOverdue
+                  ? 'text-destructive'
+                  : dueInfo.daysUntilDue <= 7
+                    ? 'text-warning'
+                    : 'text-muted-foreground',
               )}
             >
-              {dueLabel(dueInfo.daysUntilDue)} · Min{' '}
-              {formatCurrency(dueInfo.minimumDue, true, hideAmounts)}
+              {dueLabel(dueInfo.daysUntilDue)} ·{' '}
+              <span className="whitespace-nowrap">
+                Min {formatCurrency(dueInfo.minimumDue, true, hideAmounts)}
+              </span>
             </p>
           )}
         </div>
@@ -78,10 +90,10 @@ export const AccountCard = memo(function AccountCard({
             {formatCurrency(shownBalance, true, hideAmounts, { forceCompact })}
           </p>
           {isDeposit && !isArchived && (
-            <p className="text-muted-foreground mt-0.5 text-[11px]">Current value</p>
+            <p className="text-muted-foreground mt-0.5 text-xs">Current value</p>
           )}
           {isCredit && account.creditLimit && (
-            <p className="text-muted-foreground mt-0.5 text-[11px]">
+            <p className="text-muted-foreground mt-0.5 text-xs">
               {Math.round(utilization * 100)}% used
             </p>
           )}

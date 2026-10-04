@@ -6,6 +6,7 @@ import { getErrorMessage } from '@/utils/errors';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { AuthShell } from './AuthShell';
 
 export default function VerifyOtp() {
   const navigate = useNavigate();
@@ -84,53 +85,48 @@ export default function VerifyOtp() {
   if (!email) return <Navigate to="/register" replace />;
 
   return (
-    <div className="flex min-h-screen flex-col justify-center px-6 py-12">
-      <div className="mx-auto w-full max-w-sm">
-        <div className="mb-8 text-center">
-          <h1 className="text-foreground text-2xl font-bold">Verify Your Email</h1>
-          <p className="text-muted-foreground mt-2">Enter the 6-digit code sent to</p>
+    <AuthShell
+      heading="Verify your email"
+      description={
+        <>
+          <p>Enter the 6-digit code sent to</p>
           <p className="text-foreground font-medium">{email}</p>
+        </>
+      }
+      footer={
+        <Button
+          variant="ghost"
+          onClick={handleResend}
+          disabled={resending}
+          className="text-primary h-auto p-0 text-sm hover:bg-transparent hover:underline disabled:opacity-50"
+        >
+          {resending ? 'Sending…' : "Didn't receive the code? Resend"}
+        </Button>
+      }
+    >
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="flex justify-center gap-2" onPaste={handlePaste}>
+          {otp.map((digit, i) => (
+            <Input
+              key={i}
+              ref={(el) => {
+                inputRefs.current[i] = el;
+              }}
+              type="text"
+              inputMode="numeric"
+              maxLength={1}
+              value={digit}
+              onChange={(e) => handleChange(i, e.target.value)}
+              onKeyDown={(e) => handleKeyDown(i, e)}
+              className="h-14 w-12 text-center text-xl font-bold"
+            />
+          ))}
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="flex justify-center gap-2" onPaste={handlePaste}>
-            {otp.map((digit, i) => (
-              <Input
-                key={i}
-                ref={(el) => {
-                  inputRefs.current[i] = el;
-                }}
-                type="text"
-                inputMode="numeric"
-                maxLength={1}
-                value={digit}
-                onChange={(e) => handleChange(i, e.target.value)}
-                onKeyDown={(e) => handleKeyDown(i, e)}
-                className="h-14 w-12 text-center text-xl font-bold"
-              />
-            ))}
-          </div>
-
-          <Button
-            type="submit"
-            disabled={loading}
-            className="bg-grad-primary shadow-glow-primary h-auto w-full rounded-sm py-3 font-semibold text-white disabled:opacity-50"
-          >
-            {loading ? 'Verifying...' : 'Verify'}
-          </Button>
-        </form>
-
-        <div className="mt-6 text-center">
-          <Button
-            variant="ghost"
-            onClick={handleResend}
-            disabled={resending}
-            className="text-primary h-auto p-0 text-sm hover:bg-transparent hover:underline disabled:opacity-50"
-          >
-            {resending ? 'Sending...' : "Didn't receive the code? Resend"}
-          </Button>
-        </div>
-      </div>
-    </div>
+        <Button type="submit" disabled={loading} size="lg" className="w-full">
+          {loading ? 'Verifying…' : 'Verify'}
+        </Button>
+      </form>
+    </AuthShell>
   );
 }

@@ -28,7 +28,7 @@ export function TopMerchants({ transactions }: Props) {
   return (
     <div className="card-elevated rounded-md p-4">
       <div className="mb-3 flex items-center justify-between">
-        <h3 className="text-sm font-semibold">Top Merchants</h3>
+        <h3 className="text-sm font-semibold">Top merchants</h3>
         <button
           onClick={() => navigate('/merchants')}
           className="text-primary text-xs font-medium hover:underline"

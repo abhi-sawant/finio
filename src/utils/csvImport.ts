@@ -22,6 +22,48 @@ export function parseCsvText(text: string, skipRows = 0): CsvParseResult {
   return { headers: (headerRow ?? []).map((h) => h.trim()), rows: dataRows };
 }
 
+/** Columns the mapping step pre-selects from the header names alone. */
+export interface GuessedColumns {
+  dateCol?: number;
+  amountMode: 'signed' | 'debitCredit';
+  amountCol?: number;
+  debitCol?: number;
+  creditCol?: number;
+  noteCol?: number;
+  categoryCol?: number;
+}
+
+const DEBIT_HEADER = /\bdebit|withdraw|\bdr\b|money out|paid out/i;
+const CREDIT_HEADER = /\bcredit|deposit|\bcr\b|money in|paid in/i;
+const AMOUNT_HEADER = /amount|\bamt\b/i;
+const NOTE_HEADER = /note|desc|narration|particular|memo|details|remark|payee/i;
+const CATEGORY_HEADER = /categ/i;
+const DATE_HEADER = /date/i;
+
+/**
+ * Best-effort auto-mapping from header names — the user can always override it. Separate
+ * Debit/Credit (or Withdrawal/Deposit) headers win over a single amount column, because a
+ * header like "Withdrawal Amt." is a debit column that also happens to say "amount".
+ */
+export function guessColumnMapping(headers: string[]): GuessedColumns {
+  const find = (re: RegExp, exclude: Array<number | undefined> = []) => {
+    const i = headers.findIndex((h, idx) => re.test(h) && !exclude.includes(idx));
+    return i >= 0 ? i : undefined;
+  };
+  const dateCol = find(DATE_HEADER);
+  const debitCol = find(DEBIT_HEADER, [dateCol]);
+  const creditCol = find(CREDIT_HEADER, [dateCol, debitCol]);
+  const taken = [dateCol, debitCol, creditCol];
+  const noteCol = find(NOTE_HEADER, taken);
+  const categoryCol = find(CATEGORY_HEADER, [...taken, noteCol]);
+
+  if (debitCol !== undefined && creditCol !== undefined) {
+    return { dateCol, amountMode: 'debitCredit', debitCol, creditCol, noteCol, categoryCol };
+  }
+  const amountCol = find(AMOUNT_HEADER, [dateCol, noteCol, categoryCol]);
+  return { dateCol, amountMode: 'signed', amountCol, noteCol, categoryCol };
+}
+
 export type DateFormatCode =
   | 'YYYY-MM-DD'
   | 'DD/MM/YYYY'

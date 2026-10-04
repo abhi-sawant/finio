@@ -2,11 +2,30 @@
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
 @import '@fontsource-variable/geist';
+@import '@fontsource-variable/unbounded';
 
 @custom-variant dark (&:is(.dark *));
 
+/* Stock Tailwind shadows, re-tinted lavender (Mudra's Lavender-Shadow rule) and dark-aware via
+   --shadow-tint, so every `shadow` / `shadow-md` / `shadow-lg` call site follows the world. */
+@theme {
+  --shadow-2xs: 0 1px 0 rgb(var(--shadow-tint) / 0.05);
+  --shadow-xs: 0 1px 2px 0 rgb(var(--shadow-tint) / 0.08);
+  --shadow-sm:
+    0 2px 6px -1px rgb(var(--shadow-tint) / 0.14), 0 1px 2px -1px rgb(var(--shadow-tint) / 0.1);
+  --shadow-md:
+    0 6px 14px -4px rgb(var(--shadow-tint) / 0.2), 0 2px 4px -2px rgb(var(--shadow-tint) / 0.12);
+  --shadow-lg:
+    0 14px 28px -10px rgb(var(--shadow-tint) / 0.28), 0 4px 8px -4px rgb(var(--shadow-tint) / 0.12);
+  --shadow-xl:
+    0 22px 44px -16px rgb(var(--shadow-tint) / 0.34), 0 8px 12px -6px rgb(var(--shadow-tint) / 0.14);
+  --shadow-2xl: 0 30px 60px -20px rgb(var(--shadow-tint) / 0.42);
+}
+
 @theme inline {
-  --font-heading: var(--font-sans);
+  /* Mudra: Unbounded is the banknote numeral — titles and headline money. Geist does the reading. */
+  --font-heading: 'Unbounded Variable', 'Geist Variable', sans-serif;
+  --font-money: 'Unbounded Variable', 'Geist Variable', sans-serif;
   --font-sans: 'Geist Variable', sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -26,6 +45,8 @@
   --color-border: var(--border);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-positive: var(--positive);
+  --color-warning: var(--warning);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
@@ -53,115 +74,193 @@
 }
 
 :root {
-  /* Focus palette (light) — warm paper on cream, one deep-green accent */
-  --background: #f7f5f1;
-  --foreground: #1b1a17;
-  --card: #fffdf9;
-  --card-foreground: #1b1a17;
-  --popover: #fffdf9;
-  --popover-foreground: #1b1a17;
-  --primary: #146b54;
-  --primary-foreground: #fffdf9;
-  --secondary: #f0ece3;
-  --secondary-foreground: #1b1a17;
-  --muted: #f0ece3;
-  --muted-foreground: #6e695f;
-  --accent: #e9f1ec;
-  --accent-foreground: #0f4c3d;
-  --destructive: #b3421f;
-  --destructive-foreground: #fffdf9;
-  --border: #eae5db;
-  --input: #eae5db;
-  --ring: #146b54;
-  --chart-1: #146b54;
-  --chart-2: #b3421f;
-  --chart-3: #c79b4f;
-  --chart-4: #6ba292;
-  --chart-5: #6e8fb0;
-  --radius: 1rem;
-  --sidebar: #fffdf9;
-  --sidebar-foreground: #1b1a17;
-  --sidebar-primary: #146b54;
-  --sidebar-primary-foreground: #fffdf9;
-  --sidebar-accent: #e9f1ec;
-  --sidebar-accent-foreground: #0f4c3d;
-  --sidebar-border: #eae5db;
-  --sidebar-ring: #146b54;
+  /* Mudra, light — note paper in daylight. Indigo ink, ₹100 lavender as the one accent. */
+  --background: #f1eefb;
+  --foreground: #1d1747;
+  --card: #fdfcff;
+  --card-foreground: #1d1747;
+  --popover: #fdfcff;
+  --popover-foreground: #1d1747;
+  --primary: #4b36c7;
+  --primary-foreground: #ffffff;
+  --secondary: #ebe7f8;
+  --secondary-foreground: #1d1747;
+  --muted: #ebe7f8;
+  --muted-foreground: #5b5689;
+  --accent: #e9e4ff;
+  --accent-foreground: #3b2a96;
+  --destructive: #b0125f;
+  --destructive-foreground: #ffffff;
+  --positive: #0b7a55;
+  --warning: #9a6a00;
+  --border: rgb(29 23 71 / 0.1);
+  --input: rgb(29 23 71 / 0.16);
+  --ring: #4b36c7;
+  --chart-1: #4b36c7;
+  --chart-2: #c2185b;
+  --chart-3: #c48a12;
+  --chart-4: #0f8f6a;
+  --chart-5: #2f7fd1;
+  --radius: 1.375rem;
+  --sidebar: rgb(255 255 255 / 0.5);
+  --sidebar-foreground: #1d1747;
+  --sidebar-primary: #4b36c7;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #e9e4ff;
+  --sidebar-accent-foreground: #3b2a96;
+  --sidebar-border: rgb(255 255 255 / 0.85);
+  --sidebar-ring: #4b36c7;
 
-  /* The single collapsed-alert "warm band" — distinct from destructive */
-  --warning-band: #fbede6;
-  --warning-band-foreground: #7a2e13;
-  --warning-band-accent: #b3421f;
+  /* The one collapsed-alert band — the ₹2000 magenta, as a soft tint. */
+  --warning-band: #ffe1ef;
+  --warning-band-foreground: #5c0d38;
+  --warning-band-accent: #b0125f;
 
-  /* Flat accent fills — kept as the same custom-property names the app already
-     used for gradients, but resolved to solid colors under the Focus system
-     (no gradients/glows). See the bg-grad and shadow-glow utilities below. */
-  --grad-primary: #146b54;
-  --grad-primary-soft: #e9f1ec;
-  --grad-success: #146b54;
-  --grad-success-soft: #e9f1ec;
-  --grad-danger: #b3421f;
-  --grad-danger-soft: #f7e6de;
-  --grad-info: #6e8fb0;
-  --grad-warning: #c79b4f;
-  --grad-surface: #fffdf9;
+  /* Note paper: lavender to mint to peach, fixed behind every screen. */
+  --paper: linear-gradient(172deg, #f1edff 0%, #ebf6f1 50%, #fff1e3 100%);
+  /* Faint guilloche engraving, masked from /guilloche.svg. */
+  --engraving: rgb(90 70 190 / 0.075);
 
-  /* Soft, warm, neutral elevation — no colored glows */
-  --shadow-card: 0 1px 2px rgba(27, 26, 23, 0.05);
-  --shadow-float: 0 18px 40px -20px rgba(27, 26, 23, 0.35);
+  /* Frosted glass — every card and the chrome. */
+  --glass: rgb(255 255 255 / 0.6);
+  --glass-strong: rgb(255 255 255 / 0.78);
+  --glass-border: rgb(255 255 255 / 0.9);
+  --glass-highlight: rgb(255 255 255 / 0.95);
+
+  /* ₹100 lavender — the filled-action gradient. Deep enough for white text in both modes. */
+  --grad-primary: linear-gradient(135deg, #7562ec 0%, #4b36c7 100%);
+  --grad-primary-soft: linear-gradient(135deg, #f1edff 0%, #e4defe 100%);
+  --grad-success: linear-gradient(135deg, #17a777 0%, #0b7a55 100%);
+  --grad-success-soft: linear-gradient(135deg, #e6f7f0 0%, #d3f0e4 100%);
+  --grad-danger: linear-gradient(135deg, #e0418f 0%, #b0125f 100%);
+  --grad-danger-soft: linear-gradient(135deg, #ffeef6 0%, #ffdcec 100%);
+  --grad-info: linear-gradient(135deg, #5aa2ec 0%, #2f7fd1 100%);
+  --grad-warning: linear-gradient(135deg, #e3ac2f 0%, #b07b05 100%);
+  --grad-surface: linear-gradient(135deg, #fefdff 0%, #efe9ff 55%, #e2f3ec 100%);
+  /* The add button: a single-hue lavender coin, lit from the top-left. */
+  --coin: radial-gradient(circle at 30% 25%, #f8f5ff 0 8%, #d8ceff 30%, #a594f2 68%, #6c57d6);
+
+  /* Budget "register": an engraved hatch, not a flat fill. Goal "thread": the colour-shift band. */
+  --register: repeating-linear-gradient(115deg, #3d2bb8 0 2px, #6b58e8 2px 4.5px);
+  --thread: linear-gradient(90deg, hsl(150 70% 38%), hsl(200 78% 46%), hsl(255 70% 56%));
+
+  /* Depth is lavender-tinted, never grey. */
+  --shadow-tint: 60 40 140;
+  /* Modal scrim: dims (never lightens) in both modes. */
+  --scrim: rgb(29 23 71 / 0.24);
+  --shadow-card: 0 18px 36px -26px rgb(60 40 140 / 0.42);
+  --shadow-float: 0 28px 56px -26px rgb(40 26 110 / 0.5);
+  --shadow-primary: 0 10px 22px -10px rgb(75 54 199 / 0.65);
+  --shadow-danger: 0 10px 22px -10px rgb(176 18 95 / 0.55);
+  --shadow-success: 0 10px 22px -10px rgb(11 122 85 / 0.5);
+
+  /* Denomination tints — an account's note colour is decided by its type (see NoteChip). */
+  --note-100: linear-gradient(135deg, #ece6ff 0%, #d9cffc 100%);
+  --note-100-ink: #3b2a86;
+  --note-500: linear-gradient(135deg, #eef0e6 0%, #d8dccb 100%);
+  --note-500-ink: #3d4630;
+  --note-2000: linear-gradient(135deg, #ffe3f1 0%, #fbc6e0 100%);
+  --note-2000-ink: #8a1550;
+  --note-200: linear-gradient(135deg, #fff4c4 0%, #ffe48a 100%);
+  --note-200-ink: #6b4d00;
+  --note-10: linear-gradient(135deg, #f6e8dc 0%, #e6c9b0 100%);
+  --note-10-ink: #5a3215;
+  --note-50: linear-gradient(135deg, #e0f6fb 0%, #b8e8f2 100%);
+  --note-50-ink: #0d4f60;
+  --note-20: linear-gradient(135deg, #f2f8d8 0%, #dcebaa 100%);
+  --note-20-ink: #485a0c;
+
+  color-scheme: light;
 }
 
 .dark {
-  /* Focus palette (dark) — warm dark paper, same single accent, brightened for contrast */
-  --background: #211e1a;
-  --foreground: #f3efe7;
-  --card: #2a2521;
-  --card-foreground: #f3efe7;
-  --popover: #2a2521;
-  --popover-foreground: #f3efe7;
-  --primary: #34a582;
-  --primary-foreground: #0b1f19;
-  --secondary: #35302a;
-  --secondary-foreground: #f3efe7;
-  --muted: #35302a;
-  --muted-foreground: #b0a99c;
-  --accent: #24352e;
-  --accent-foreground: #8fcbb3;
-  --destructive: #e0714a;
-  --destructive-foreground: #241008;
-  --border: rgba(243, 239, 231, 0.1);
-  --input: rgba(243, 239, 231, 0.14);
-  --ring: #34a582;
-  --chart-1: #34a582;
-  --chart-2: #e0714a;
-  --chart-3: #d9b36b;
-  --chart-4: #7fb8a4;
-  --chart-5: #86a9c4;
-  --sidebar: #211e1a;
-  --sidebar-foreground: #f3efe7;
-  --sidebar-primary: #34a582;
-  --sidebar-primary-foreground: #0b1f19;
-  --sidebar-accent: #24352e;
-  --sidebar-accent-foreground: #8fcbb3;
-  --sidebar-border: rgba(243, 239, 231, 0.1);
-  --sidebar-ring: #34a582;
+  /* Mudra, dark — the same note under a UV lamp. Indigo field, engraving lit in lavender. */
+  --background: #161236;
+  --foreground: #eeeaff;
+  --card: #221d4d;
+  --card-foreground: #eeeaff;
+  --popover: #221d4d;
+  --popover-foreground: #eeeaff;
+  --primary: #b9adff;
+  --primary-foreground: #15103d;
+  --secondary: #2b2559;
+  --secondary-foreground: #eeeaff;
+  --muted: #2b2559;
+  --muted-foreground: #aaa4d8;
+  --accent: #302874;
+  --accent-foreground: #ddd6ff;
+  --destructive: #ff7ab8;
+  --destructive-foreground: #3a0820;
+  --positive: #5fe0ae;
+  --warning: #f2c55c;
+  --border: rgb(238 234 255 / 0.1);
+  --input: rgb(238 234 255 / 0.16);
+  --ring: #b9adff;
+  --chart-1: #a495ff;
+  --chart-2: #ff6fae;
+  --chart-3: #f2c55c;
+  --chart-4: #4fd6a2;
+  --chart-5: #6fb4ff;
+  --sidebar: rgb(255 255 255 / 0.04);
+  --sidebar-foreground: #eeeaff;
+  --sidebar-primary: #b9adff;
+  --sidebar-primary-foreground: #15103d;
+  --sidebar-accent: #302874;
+  --sidebar-accent-foreground: #ddd6ff;
+  --sidebar-border: rgb(255 255 255 / 0.1);
+  --sidebar-ring: #b9adff;
 
-  --warning-band: #3a2a20;
-  --warning-band-foreground: #e8c9b8;
-  --warning-band-accent: #e57a55;
+  --warning-band: #4a1534;
+  --warning-band-foreground: #ffe1ee;
+  --warning-band-accent: #ff8cc2;
 
-  --grad-primary: #34a582;
-  --grad-primary-soft: #1d3129;
-  --grad-success: #34a582;
-  --grad-success-soft: #1d3129;
-  --grad-danger: #e0714a;
-  --grad-danger-soft: #3a2419;
-  --grad-info: #86a9c4;
-  --grad-warning: #d9b36b;
-  --grad-surface: #2a2521;
+  /* Indigo field throughout; a low maroon UV glow only at the very bottom edge. */
+  --paper: linear-gradient(172deg, #1b1546 0%, #15113a 55%, #171238 85%, #22143a 100%);
+  --engraving: rgb(170 150 255 / 0.09);
 
-  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --shadow-float: 0 18px 40px -20px rgba(0, 0, 0, 0.6);
+  --glass: rgb(255 255 255 / 0.06);
+  --glass-strong: rgb(30 24 70 / 0.72);
+  --glass-border: rgb(255 255 255 / 0.11);
+  --glass-highlight: rgb(255 255 255 / 0.12);
+
+  --grad-primary: linear-gradient(135deg, #7d6af2 0%, #4b36c7 100%);
+  --grad-primary-soft: linear-gradient(135deg, #2c2468 0%, #241e57 100%);
+  --grad-success: linear-gradient(135deg, #17a777 0%, #0b7a55 100%);
+  --grad-success-soft: linear-gradient(135deg, #123b33 0%, #0f2f29 100%);
+  --grad-danger: linear-gradient(135deg, #e0418f 0%, #a8105a 100%);
+  --grad-danger-soft: linear-gradient(135deg, #4a1534 0%, #3a1029 100%);
+  --grad-info: linear-gradient(135deg, #4d8fdb 0%, #2a6bb5 100%);
+  --grad-warning: linear-gradient(135deg, #d9a227 0%, #9c6c00 100%);
+  --grad-surface: linear-gradient(135deg, #2c2468 0%, #1e1a4c 52%, #12302a 100%);
+  --coin: radial-gradient(circle at 30% 25%, #f8f5ff 0 8%, #d8ceff 30%, #a594f2 68%, #6c57d6);
+
+  --register: repeating-linear-gradient(115deg, #8f7dff 0 2px, #bdb1ff 2px 4.5px);
+  --thread: linear-gradient(90deg, hsl(150 65% 52%), hsl(200 80% 60%), hsl(255 85% 75%));
+
+  --shadow-tint: 0 0 0;
+  --scrim: rgb(6 4 24 / 0.6);
+  --shadow-card: 0 20px 40px -26px rgb(0 0 0 / 0.7);
+  --shadow-float: 0 28px 56px -24px rgb(0 0 0 / 0.75);
+  --shadow-primary: 0 10px 24px -8px rgb(108 87 214 / 0.7);
+  --shadow-danger: 0 10px 24px -8px rgb(224 65 143 / 0.5);
+  --shadow-success: 0 10px 24px -8px rgb(23 167 119 / 0.45);
+
+  --note-100: linear-gradient(135deg, #3a2f86 0%, #251c5c 100%);
+  --note-100-ink: #dcd3ff;
+  --note-500: linear-gradient(135deg, #3a4030 0%, #262a1f 100%);
+  --note-500-ink: #e2e6d2;
+  --note-2000: linear-gradient(135deg, #6a1846 0%, #43102d 100%);
+  --note-2000-ink: #ffd0e6;
+  --note-200: linear-gradient(135deg, #5e4a0c 0%, #3c2f07 100%);
+  --note-200-ink: #ffe9a3;
+  --note-10: linear-gradient(135deg, #4a2c18 0%, #2f1c0f 100%);
+  --note-10-ink: #f6d9c0;
+  --note-50: linear-gradient(135deg, #0f4652 0%, #0a2f37 100%);
+  --note-50-ink: #c4f1fa;
+  --note-20: linear-gradient(135deg, #3f4c0f 0%, #29320a 100%);
+  --note-20-ink: #e8f5b8;
+
+  color-scheme: dark;
 }
 
 @layer base {
@@ -170,15 +269,57 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
+    background-color: var(--background);
+    background-image: var(--paper);
+    background-attachment: fixed;
     -webkit-tap-highlight-color: transparent;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
+  /* The engraved rosette that sits behind every screen, like a note's watermark field. */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -200px;
+    right: -240px;
+    width: 560px;
+    height: 560px;
+    background-color: var(--engraving);
+    -webkit-mask: url('/guilloche.svg') center / contain no-repeat;
+    mask: url('/guilloche.svg') center / contain no-repeat;
+    pointer-events: none;
+    /* Behind all content without giving #root a stacking context — a z-indexed #root would trap
+       the Toaster beneath portalled dialogs. */
+    z-index: -1;
+  }
+
   html {
     @apply font-sans;
     overscroll-behavior: none;
+  }
+
+  /* Page titles are set in the banknote face. */
+  h1 {
+    font-family: var(--font-heading);
+    letter-spacing: -0.02em;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--primary) 28%, transparent);
+  }
+
+  /* Browser surfaces carry the world too: caret, native controls, desktop scrollbars. */
+  html {
+    caret-color: var(--primary);
+    accent-color: var(--primary);
+    scrollbar-color: color-mix(in srgb, var(--primary) 35%, transparent) transparent;
+  }
+
+  /* Tabular figures everywhere money is listed */
+  body {
+    font-variant-numeric: tabular-nums;
   }
 }
 
@@ -203,70 +344,30 @@
   }
 }
 
-/* Flat-fill utilities (kept under their original bg-grad and shadow-glow
-   names — old call sites are unaffected — but every one resolves to a solid
-   Focus-palette color rather than a gradient) */
 @layer utilities {
-  .bg-grad-primary {
-    background-color: var(--grad-primary);
-  }
-
-  .bg-grad-primary-soft {
-    background-color: var(--grad-primary-soft);
-  }
-
-  .bg-grad-success {
-    background-color: var(--grad-success);
-  }
-
-  .bg-grad-success-soft {
-    background-color: var(--grad-success-soft);
-  }
-
-  .bg-grad-danger {
-    background-color: var(--grad-danger);
-  }
-
-  .bg-grad-danger-soft {
-    background-color: var(--grad-danger-soft);
-  }
-
-  .bg-grad-info {
-    background-color: var(--grad-info);
-  }
-
-  .bg-grad-warning {
-    background-color: var(--grad-warning);
-  }
-
-  .bg-grad-surface {
-    background-color: var(--grad-surface);
-  }
-
-  .text-grad-primary {
-    color: var(--grad-primary);
-  }
-
-  .shadow-glow-primary,
-  .shadow-glow-success {
-    box-shadow: var(--shadow-float);
-  }
-
-  .shadow-glow-danger {
-    box-shadow: var(--shadow-float);
-  }
-
-  .ring-grad-primary {
+  /* A miniature banknote in its account type's denomination tint, with the windowed thread. */
+  .note-chip {
+    position: relative;
+    flex-shrink: 0;
+    width: 30px;
+    height: 20px;
+    border-radius: 5px;
     box-shadow:
-      0 0 0 1px var(--primary),
-      var(--shadow-float);
+      inset 0 0 0 1px rgb(255 255 255 / 0.55),
+      0 3px 8px -4px rgb(40 26 110 / 0.45);
   }
 
-  /* Paper card — opaque, hairline border, soft neutral lift (no frosted blur) */
-  .card-elevated {
-    background-color: var(--card);
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow-card);
+  .note-chip::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 8px;
+    width: 2px;
+    background: currentColor;
+    opacity: 0.4;
+    -webkit-mask: repeating-linear-gradient(180deg, #000 0 3px, transparent 3px 5px);
+    mask: repeating-linear-gradient(180deg, #000 0 3px, transparent 3px 5px);
   }
 
   .pb-safe {
@@ -302,4 +403,338 @@
       animation: none;
     }
   }
+}
+
+/* ───────────── NoteCard: the Dashboard's banknote hero (components/ui/note-card.tsx) ───────────── */
+.note-card-stage {
+  perspective: 900px;
+}
+
+.note-card {
+  --shift: 0deg;
+  --rx: 0deg;
+  --ry: 0deg;
+  position: relative;
+  overflow: hidden;
+  border-radius: calc(var(--radius) * 1.15);
+  padding: 22px 22px 34px;
+  background-image: var(--grad-surface);
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    inset 0 1px 0 var(--glass-highlight),
+    var(--shadow-float);
+  transform: rotateX(var(--rx)) rotateY(var(--ry));
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Thin-film sheen across the whole note, turning with the pointer. */
+.note-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: conic-gradient(
+    from calc(200deg + var(--shift)) at 70% 30%,
+    rgb(120 255 210 / 0.35),
+    rgb(120 160 255 / 0.3),
+    rgb(240 140 255 / 0.3),
+    rgb(255 230 140 / 0.3),
+    rgb(120 255 210 / 0.35)
+  );
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+}
+
+.dark .note-card::after {
+  mix-blend-mode: screen;
+  opacity: 0.3;
+}
+
+.note-card-rosette {
+  position: absolute;
+  top: -50px;
+  right: -60px;
+  width: 250px;
+  color: color-mix(in srgb, var(--primary) 26%, transparent);
+  pointer-events: none;
+}
+
+.note-card-thread {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 56px;
+  width: 9px;
+  background: linear-gradient(
+    180deg,
+    hsl(calc(150deg + var(--shift)) 70% 42%),
+    hsl(calc(200deg + var(--shift)) 78% 50%),
+    hsl(calc(255deg + var(--shift)) 70% 58%)
+  );
+  -webkit-mask: repeating-linear-gradient(180deg, #000 0 16px, transparent 16px 26px);
+  mask: repeating-linear-gradient(180deg, #000 0 16px, transparent 16px 26px);
+  opacity: 0.85;
+}
+
+.note-card-microprint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 10px;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 6px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: color-mix(in srgb, var(--foreground) 36%, transparent);
+  pointer-events: none;
+}
+
+/* On a wide note the rosette becomes the watermark window on the right half. */
+@media (min-width: 1024px) {
+  .note-card {
+    padding: 28px 32px 40px;
+  }
+
+  .note-card-rosette {
+    top: -90px;
+    right: 40px;
+    width: 380px;
+  }
+
+  .note-card-thread {
+    right: 30px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .note-card {
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ───────────── Account note tiles: each account printed as its type's denomination ───────────── */
+.note-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 108px;
+  padding: 14px 34px 14px 14px;
+  overflow: hidden;
+  text-align: left;
+  border-radius: calc(var(--radius) * 0.8);
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    inset 0 1px 0 var(--glass-highlight),
+    0 14px 28px -20px rgb(40 26 110 / 0.5);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.note-tile:active {
+  transform: scale(0.97);
+}
+
+.note-tile:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.note-tile-rosette {
+  position: absolute;
+  right: -64px;
+  bottom: -78px;
+  width: 150px;
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+/* Every tile carries its own windowed security thread, in the tile's ink. */
+.note-tile::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 14px;
+  width: 4px;
+  background: currentColor;
+  opacity: 0.35;
+  -webkit-mask: repeating-linear-gradient(180deg, #000 0 9px, transparent 9px 15px);
+  mask: repeating-linear-gradient(180deg, #000 0 9px, transparent 9px 15px);
+  pointer-events: none;
+}
+
+/* UV fibres: invisible on the daylight note, fluorescing under the dark-mode "UV lamp". */
+.note-card-fibres {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.dark .note-card-fibres {
+  opacity: 0.85;
+  filter: drop-shadow(0 0 2px currentColor);
+}
+
+/* ───────────── Toasts (Sonner): frosted note-paper glass, semantic icon colours ───────────── */
+[data-sonner-toaster] {
+  --normal-bg: var(--glass-strong);
+  --normal-border: var(--glass-border);
+  --normal-text: var(--foreground);
+  --border-radius: calc(var(--radius) * 0.8);
+  font-family: var(--font-sans);
+}
+
+[data-sonner-toaster] [data-sonner-toast] {
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
+  box-shadow:
+    inset 0 1px 0 var(--glass-highlight),
+    var(--shadow-float);
+}
+
+[data-sonner-toast] [data-description] {
+  color: var(--muted-foreground);
+}
+
+[data-sonner-toast][data-type='success'] [data-icon] {
+  color: var(--positive);
+}
+
+[data-sonner-toast][data-type='error'] [data-icon] {
+  color: var(--destructive);
+}
+
+[data-sonner-toast][data-type='warning'] [data-icon] {
+  color: var(--warning);
+}
+
+[data-sonner-toast][data-type='info'] [data-icon] {
+  color: var(--primary);
+}
+
+/* Undo and other toast actions: the ₹100 lavender pill. */
+[data-sonner-toast] [data-button][data-action] {
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 9999px;
+  background-image: var(--grad-primary);
+  color: #fff;
+  font-weight: 600;
+}
+
+[data-sonner-toast] [data-close-button] {
+  background: var(--popover);
+  border-color: var(--border);
+  color: var(--muted-foreground);
+}
+
+/* ───────────── Mudra utilities — `@utility` (not @layer) so variants such as
+   `data-[x]:bg-grad-primary` or `hover:card-elevated` work. ───────────── */
+/* Headline money: the wide banknote numeral. Rows and body figures stay in Geist. */
+@utility font-money {
+  font-family: var(--font-money);
+  letter-spacing: -0.03em;
+  font-weight: 600;
+}
+
+/* ₹100-note gradients — the filled-action and tint vocabulary. */
+@utility bg-grad-primary {
+  background-image: var(--grad-primary);
+}
+
+@utility bg-grad-primary-soft {
+  background-image: var(--grad-primary-soft);
+}
+
+@utility bg-grad-success {
+  background-image: var(--grad-success);
+}
+
+@utility bg-grad-success-soft {
+  background-image: var(--grad-success-soft);
+}
+
+@utility bg-grad-danger {
+  background-image: var(--grad-danger);
+}
+
+@utility bg-grad-danger-soft {
+  background-image: var(--grad-danger-soft);
+}
+
+@utility bg-grad-info {
+  background-image: var(--grad-info);
+}
+
+@utility bg-grad-warning {
+  background-image: var(--grad-warning);
+}
+
+@utility bg-grad-surface {
+  background-image: var(--grad-surface);
+}
+
+@utility text-grad-primary {
+  color: var(--primary);
+}
+
+@utility shadow-glow-primary {
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.25),
+    var(--shadow-primary);
+}
+
+@utility shadow-glow-success {
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.25),
+    var(--shadow-success);
+}
+
+@utility shadow-glow-danger {
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.25),
+    var(--shadow-danger);
+}
+
+@utility ring-grad-primary {
+  box-shadow:
+    0 0 0 1.5px var(--primary),
+    var(--shadow-float);
+}
+
+/* Frosted glass card: translucent over the note paper, white hairline, lavender-tinted lift. */
+@utility card-elevated {
+  background-color: var(--glass);
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    inset 0 1px 0 var(--glass-highlight),
+    var(--shadow-card);
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
+  backdrop-filter: blur(18px) saturate(170%);
+}
+
+/* Header, tab bar, sidebar — the glass that the page scrolls under. */
+@utility glass-chrome {
+  background-color: var(--glass-strong);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
+}
+
+/* The lavender coin — the add button's single-hue gradient. */
+@utility bg-coin {
+  background-image: var(--coin);
+  color: #1d1747;
+  box-shadow:
+    inset 0 1px 1px rgb(255 255 255 / 0.6),
+    0 10px 24px -6px rgb(108 87 214 / 0.7);
+}
+
+/* Progress through the windowed security thread — goals and other "toward a target" bars. */
+@utility thread-fill {
+  background-image: var(--thread);
+  -webkit-mask: repeating-linear-gradient(90deg, #000 0 10px, transparent 10px 13px);
+  mask: repeating-linear-gradient(90deg, #000 0 10px, transparent 10px 13px);
 }

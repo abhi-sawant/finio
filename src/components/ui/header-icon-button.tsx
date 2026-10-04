@@ -24,10 +24,11 @@ function HeaderIconButton({
       variant="outline"
       size="icon"
       className={cn(
-        "bg-card hover:bg-muted size-10 rounded-full [&_svg:not([class*='size-'])]:size-[18px]",
+        "size-10 rounded-full [&_svg:not([class*='size-'])]:size-[18px]",
         tone === 'primary' && 'text-primary',
         tone === 'destructive' && 'text-destructive hover:text-destructive',
-        pressed && 'bg-primary text-primary-foreground hover:bg-primary/90 border-primary',
+        pressed &&
+          'bg-grad-primary shadow-glow-primary border-transparent text-white hover:brightness-110',
         className,
       )}
       {...props}

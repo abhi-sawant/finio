@@ -201,3 +201,36 @@ export function simulatePrepaymentImpact(
     newPayoffDate: withExtra[withExtra.length - 1]?.date ?? null,
   };
 }
+
+export interface ScheduleYearGroup {
+  /** Calendar year (local time) of the installments' due dates. */
+  year: number;
+  rows: AmortizationRow[];
+  /** Sum of every EMI plus any prepayment due in this year. */
+  totalPaid: number;
+  /** Sum of the interest portion of this year's EMIs. */
+  totalInterest: number;
+  /** Sum of the principal portion of this year's EMIs, prepayments included. */
+  totalPrincipal: number;
+}
+
+/**
+ * Groups an amortization schedule by the calendar year each installment falls due in, keeping
+ * schedule order. Rows are assumed sorted by date (as `buildAmortizationSchedule` returns them).
+ */
+export function groupScheduleByYear(schedule: AmortizationRow[]): ScheduleYearGroup[] {
+  const groups: ScheduleYearGroup[] = [];
+  for (const row of schedule) {
+    const year = parseISO(row.date).getFullYear();
+    let group = groups[groups.length - 1];
+    if (!group || group.year !== year) {
+      group = { year, rows: [], totalPaid: 0, totalInterest: 0, totalPrincipal: 0 };
+      groups.push(group);
+    }
+    group.rows.push(row);
+    group.totalPaid = roundMoney(group.totalPaid + row.emi + row.prepayment);
+    group.totalInterest = roundMoney(group.totalInterest + row.interest);
+    group.totalPrincipal = roundMoney(group.totalPrincipal + row.principal + row.prepayment);
+  }
+  return groups;
+}

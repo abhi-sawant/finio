@@ -190,7 +190,7 @@ export default function Goals() {
     if (contributionGoal.mode === 'withdraw' && parsed > withdrawLimit + 0.005) {
       toast.error(
         withdrawLimit > 0
-          ? `Only ${formatCurrency(withdrawLimit)} is saved in this goal`
+          ? `Only ${formatCurrency(withdrawLimit, false, hideAmounts)} is saved in this goal`
           : 'Nothing saved in this goal to withdraw',
       );
       return;
@@ -213,7 +213,7 @@ export default function Goals() {
         <HeaderIconButton onClick={() => navigate(-1)} aria-label="Back">
           <ArrowLeft />
         </HeaderIconButton>
-        <h1 className="text-base font-semibold">Savings Goals</h1>
+        <h1 className="text-base font-semibold">Savings goals</h1>
         <div className="flex gap-2">
           <HideAmountsToggle />
           <HeaderIconButton
@@ -231,7 +231,7 @@ export default function Goals() {
           <div className="card-elevated space-y-3 rounded-md p-4">
             <div>
               <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">
-                Goal Name
+                Goal name
               </Label>
               <Input
                 type="text"
@@ -249,10 +249,11 @@ export default function Goals() {
                   <button
                     key={i}
                     onClick={() => setIcon(i)}
-                    className={`flex h-9 items-center justify-center rounded-sm border transition-colors ${
+                    className={`flex h-9 items-center justify-center rounded-full border transition-colors ${
                       icon === i ? 'border-primary bg-primary/10' : 'border-border bg-card'
                     }`}
-                    aria-label={i}
+                    aria-label={`Icon ${i}`}
+                    aria-pressed={icon === i}
                   >
                     <GoalIcon icon={i} size={16} />
                   </button>
@@ -273,6 +274,8 @@ export default function Goals() {
                       color === c ? 'ring-primary scale-110 ring-2 ring-offset-2' : ''
                     }`}
                     style={{ backgroundColor: c }}
+                    aria-label={`Color ${c}`}
+                    aria-pressed={color === c}
                   />
                 ))}
               </div>
@@ -280,14 +283,14 @@ export default function Goals() {
 
             <div>
               <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">
-                Target Amount
+                Target amount
               </Label>
               <NumberPad value={targetAmount} onChange={setTargetAmount} />
             </div>
 
             <div>
               <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">
-                Target Date (optional)
+                Target date (optional)
               </Label>
               <div className="flex gap-2">
                 <DatePicker
@@ -298,11 +301,7 @@ export default function Goals() {
                   className="flex-1"
                 />
                 {targetDate && (
-                  <Button
-                    variant="secondary"
-                    onClick={() => setTargetDate('')}
-                    className="bg-muted text-muted-foreground h-auto rounded-sm px-3 py-2 text-xs font-medium"
-                  >
+                  <Button variant="secondary" onClick={() => setTargetDate('')} className="text-xs">
                     Clear
                   </Button>
                 )}
@@ -312,7 +311,7 @@ export default function Goals() {
             {openAccounts.length > 0 && (
               <div>
                 <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">
-                  Linked Account (optional)
+                  Linked account (optional)
                 </Label>
                 <Select
                   value={linkedAccountId}
@@ -341,17 +340,10 @@ export default function Goals() {
             )}
 
             <div className="flex gap-2">
-              <Button
-                onClick={handleSubmit}
-                className="bg-grad-primary shadow-glow-primary h-auto flex-1 rounded-sm py-2 text-sm font-medium text-white"
-              >
-                {editingId ? 'Save Changes' : 'Save'}
+              <Button onClick={handleSubmit} className="flex-1">
+                {editingId ? 'Save changes' : 'Save'}
               </Button>
-              <Button
-                variant="secondary"
-                onClick={resetForm}
-                className="bg-muted text-muted-foreground h-auto rounded-sm px-4 py-2 text-sm font-medium"
-              >
+              <Button variant="secondary" onClick={resetForm}>
                 Cancel
               </Button>
             </div>
@@ -360,14 +352,9 @@ export default function Goals() {
 
         {sortedStatuses.length === 0 ? (
           <div className="py-12 text-center">
-            <div className="bg-grad-primary-soft mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full">
-              <PiggyBank size={22} className="text-primary" />
-            </div>
+            <PiggyBank size={28} className="text-muted-foreground mx-auto mb-3" aria-hidden />
             <p className="text-muted-foreground mb-4">No savings goals yet</p>
-            <Button
-              onClick={startCreate}
-              className="bg-grad-primary shadow-glow-primary h-auto rounded-sm px-5 py-2.5 text-sm font-medium text-white"
-            >
+            <Button onClick={startCreate} className="rounded-full px-5 py-2.5">
               Create your first goal
             </Button>
           </div>
@@ -419,9 +406,10 @@ export default function Goals() {
           if (!v) setContributionGoal(null);
         }}
       >
-        <DialogContent className="bg-card mx-auto w-11/12 rounded-md">
+        <DialogContent className="bg-card mx-auto w-11/12">
           <DialogHeader>
-            <DialogTitle>
+            {/* Right padding keeps a long goal name wrapping clear of the close button. */}
+            <DialogTitle className="pr-8 break-words">
               {contributionGoal?.mode === 'withdraw' ? 'Withdraw from' : 'Add funds to'}{' '}
               {contributionGoal?.goal.name}
             </DialogTitle>
@@ -442,17 +430,10 @@ export default function Goals() {
               onChange={(e) => setContributionNote(stripLeading(e.target.value))}
             />
             <div className="flex gap-2">
-              <Button
-                onClick={handleContributionSubmit}
-                className="bg-grad-primary shadow-glow-primary h-auto flex-1 rounded-sm py-2 text-sm font-medium text-white"
-              >
+              <Button onClick={handleContributionSubmit} className="flex-1">
                 {contributionGoal?.mode === 'withdraw' ? 'Withdraw' : 'Add'}
               </Button>
-              <Button
-                variant="secondary"
-                onClick={() => setContributionGoal(null)}
-                className="bg-muted text-muted-foreground h-auto rounded-sm px-4 py-2 text-sm font-medium"
-              >
+              <Button variant="secondary" onClick={() => setContributionGoal(null)}>
                 Cancel
               </Button>
             </div>
@@ -507,7 +488,7 @@ function GoalCard({
             size="icon"
             onClick={onEdit}
             className="h-7 w-7"
-            aria-label="Edit"
+            aria-label={`Edit ${goal.name}`}
           >
             <Pencil size={13} className="text-muted-foreground" />
           </Button>
@@ -516,7 +497,7 @@ function GoalCard({
             size="icon"
             onClick={onDelete}
             className="h-7 w-7"
-            aria-label="Delete"
+            aria-label={`Delete ${goal.name}`}
           >
             <Trash2 size={13} className="text-destructive" />
           </Button>
@@ -524,30 +505,25 @@ function GoalCard({
       </div>
 
       <div className="mb-1.5 flex justify-between text-xs">
-        <span className={status.isComplete ? 'text-primary font-medium' : 'text-muted-foreground'}>
+        <span className={status.isComplete ? 'text-positive font-medium' : 'text-muted-foreground'}>
           {formatCurrency(status.current, false, hideAmounts)} of{' '}
           {formatCurrency(goal.targetAmount, false, hideAmounts)}
         </span>
         <span
-          className={`font-medium ${status.isComplete ? 'text-primary' : 'text-muted-foreground'}`}
+          className={`font-medium ${status.isComplete ? 'text-positive' : 'text-muted-foreground'}`}
         >
           {Math.round(status.percent)}%
         </span>
       </div>
       <div className="bg-muted h-2 overflow-hidden rounded-full">
         <div
-          className="h-full rounded-full transition-all"
-          style={{
-            width: `${Math.min(Math.max(status.percent, 0), 100)}%`,
-            backgroundImage: status.isComplete
-              ? 'linear-gradient(90deg, var(--primary), var(--primary))'
-              : `linear-gradient(90deg, ${goal.color}, ${goal.color}cc)`,
-          }}
+          className="thread-fill h-full transition-all"
+          style={{ width: `${Math.min(Math.max(status.percent, 0), 100)}%` }}
         />
       </div>
       <p className="text-muted-foreground mt-1.5 text-[11px]">
         {status.isComplete
-          ? 'Goal reached! 🎉'
+          ? 'Goal reached'
           : `${formatCurrency(status.remaining, false, hideAmounts)} to go`}
         {!status.isComplete && status.projectedDate && (
           <> · at this pace, by {formatShortDate(status.projectedDate.toISOString())}</>
@@ -556,16 +532,13 @@ function GoalCard({
 
       <div className="mt-3 flex gap-2">
         <Button
+          variant="secondary"
           onClick={onAddFunds}
-          className="bg-grad-success h-auto flex-1 rounded-sm py-2 text-xs font-medium text-white"
+          className="bg-positive/10 text-positive hover:bg-positive/15 flex-1 text-xs"
         >
           <Plus size={13} className="mr-1" /> Add funds
         </Button>
-        <Button
-          variant="secondary"
-          onClick={onWithdraw}
-          className="bg-muted text-muted-foreground h-auto flex-1 rounded-sm py-2 text-xs font-medium"
-        >
+        <Button variant="secondary" onClick={onWithdraw} className="flex-1 text-xs">
           <Minus size={13} className="mr-1" /> Withdraw
         </Button>
       </div>
@@ -597,7 +570,7 @@ function GoalCard({
                   {c.note || (c.amount < 0 ? 'Withdrawal' : 'Contribution')}
                 </span>
                 <span
-                  className={`shrink-0 font-medium ${c.amount < 0 ? 'text-destructive' : 'text-primary'}`}
+                  className={`shrink-0 font-medium ${c.amount < 0 ? 'text-destructive' : 'text-positive'}`}
                 >
                   {c.amount < 0 ? '-' : '+'}
                   {formatCurrency(Math.abs(c.amount), true, hideAmounts)}

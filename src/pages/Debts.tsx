@@ -14,7 +14,12 @@ import { toast } from 'sonner';
 import { useFinanceStore } from '@/store/useFinanceStore';
 import { MISC_CATEGORY_ID } from '@/data/defaultData';
 import { COLOR_PALETTE } from '@/data/colorPalette';
-import { formatCurrency, formatDayMonth, formatShortDate } from '@/utils/formatters';
+import {
+  formatCurrency,
+  formatDayMonth,
+  formatShortDate,
+  toLocalDateTimeInputValue,
+} from '@/utils/formatters';
 import { MAX_NAME_LENGTH, MAX_NOTE_LENGTH, cleanText, stripLeading } from '@/utils/validation';
 import { HideAmountsToggle } from '@/components/HideAmountsToggle';
 import { PersonIcon } from '@/components/people/PersonIcon';
@@ -23,6 +28,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { NumberPad } from '@/components/ui/number-pad';
+import { DateTimePicker } from '@/components/ui/date-time-picker';
 import { useConfirm } from '@/components/ui/use-confirm';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import {
@@ -46,12 +52,14 @@ export default function Debts() {
   const people = useFinanceStore((s) => s.people);
   const debtEntries = useFinanceStore((s) => s.debtEntries);
   const accounts = useFinanceStore((s) => s.accounts);
+  const hideAmounts = useFinanceStore((s) => s.settings.hideAmounts);
   const addPerson = useFinanceStore((s) => s.addPerson);
   const updatePerson = useFinanceStore((s) => s.updatePerson);
   const deletePerson = useFinanceStore((s) => s.deletePerson);
   const addDebtEntry = useFinanceStore((s) => s.addDebtEntry);
   const deleteDebtEntry = useFinanceStore((s) => s.deleteDebtEntry);
   const restoreDebtEntry = useFinanceStore((s) => s.restoreDebtEntry);
+  const updateDebtEntry = useFinanceStore((s) => s.updateDebtEntry);
   const addTransaction = useFinanceStore((s) => s.addTransaction);
   const deleteTransaction = useFinanceStore((s) => s.deleteTransaction);
 
@@ -62,12 +70,15 @@ export default function Debts() {
   const [color, setColor] = useState(personColors[0]);
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
+  // One dialog for logging a new entry and editing an existing one (`editing` set).
   const [entryPerson, setEntryPerson] = useState<{
     person: Person;
     mode: 'lend' | 'borrow';
+    editing?: DebtEntry;
   } | null>(null);
   const [entryAmount, setEntryAmount] = useState('');
   const [entryNote, setEntryNote] = useState('');
+  const [entryDate, setEntryDate] = useState('');
 
   const [settlePerson, setSettlePerson] = useState<PersonBalance | null>(null);
   const [settleAmount, setSettleAmount] = useState('');
@@ -136,6 +147,14 @@ export default function Debts() {
     setEntryPerson({ person, mode });
     setEntryAmount('');
     setEntryNote('');
+    setEntryDate(toLocalDateTimeInputValue(new Date()));
+  };
+
+  const openEditEntry = (person: Person, entry: DebtEntry) => {
+    setEntryPerson({ person, mode: entry.amount < 0 ? 'borrow' : 'lend', editing: entry });
+    setEntryAmount(String(Math.abs(entry.amount)));
+    setEntryNote(entry.note);
+    setEntryDate(toLocalDateTimeInputValue(entry.date));
   };
 
   const handleEntrySubmit = () => {
@@ -145,12 +164,41 @@ export default function Debts() {
       toast.error('Enter a valid amount');
       return;
     }
+    const when = new Date(entryDate);
+    if (Number.isNaN(when.getTime())) {
+      toast.error('Choose a date');
+      return;
+    }
+
+    const { editing } = entryPerson;
+    if (editing) {
+      const previous = { amount: editing.amount, date: editing.date, note: editing.note };
+      // A settled entry keeps its direction (the store enforces it too); a plain one can flip.
+      const negative = editing.settledTransactionId
+        ? editing.amount < 0
+        : entryPerson.mode === 'borrow';
+      updateDebtEntry(editing.id, {
+        amount: negative ? -parsed : parsed,
+        // The picker is minute-precise: an untouched field keeps the stored timestamp exactly,
+        // so a note-only edit never nudges the linked transaction's date.
+        date:
+          entryDate === toLocalDateTimeInputValue(editing.date) ? editing.date : when.toISOString(),
+        note: cleanText(entryNote, MAX_NOTE_LENGTH),
+      });
+      // Writing the old values back restores the linked transaction through the same sync.
+      toast.success('Entry updated', {
+        action: { label: 'Undo', onClick: () => updateDebtEntry(editing.id, previous) },
+      });
+      setEntryPerson(null);
+      return;
+    }
+
     addDebtEntry({
       personId: entryPerson.person.id,
       // Lending them money (or something they owe you for) increases what they owe you;
       // borrowing from them increases what you owe them.
       amount: entryPerson.mode === 'borrow' ? -parsed : parsed,
-      date: new Date().toISOString(),
+      date: when.toISOString(),
       note: cleanText(entryNote, MAX_NOTE_LENGTH),
     });
     toast.success(entryPerson.mode === 'borrow' ? 'Borrowing logged' : 'Lending logged');
@@ -176,7 +224,7 @@ export default function Debts() {
       return;
     }
     if (settleOverLimit) {
-      toast.error(`Only ${formatCurrency(settleLimit)} is outstanding`);
+      toast.error(`Only ${formatCurrency(settleLimit, false, hideAmounts)} is outstanding`);
       return;
     }
     if (!settleAccountId) {
@@ -208,10 +256,11 @@ export default function Debts() {
       settledTransactionId: transactionId,
     });
 
-    toast.success(`Settled ${formatCurrency(parsed)} with ${person.name}`, {
+    toast.success(`Settled ${formatCurrency(parsed, false, hideAmounts)} with ${person.name}`, {
       action: {
         label: 'Undo',
         onClick: () => {
+          // Transaction first, so deleting the entry has no settlement left to stash.
           deleteTransaction(transactionId);
           deleteDebtEntry(entryId);
         },
@@ -226,7 +275,7 @@ export default function Debts() {
         <HeaderIconButton onClick={() => navigate(-1)} aria-label="Back">
           <ArrowLeft />
         </HeaderIconButton>
-        <h1 className="text-base font-semibold">Debts & Lending</h1>
+        <h1 className="text-base font-semibold">Debts & lending</h1>
         <div className="flex gap-2">
           <HideAmountsToggle />
           <HeaderIconButton
@@ -260,10 +309,11 @@ export default function Debts() {
                   <button
                     key={i}
                     onClick={() => setIcon(i)}
-                    className={`flex h-9 items-center justify-center rounded-sm border transition-colors ${
+                    className={`flex h-9 items-center justify-center rounded-full border transition-colors ${
                       icon === i ? 'border-primary bg-primary/10' : 'border-border bg-card'
                     }`}
-                    aria-label={i}
+                    aria-label={`Icon ${i}`}
+                    aria-pressed={icon === i}
                   >
                     <PersonIcon icon={i} size={16} />
                   </button>
@@ -284,23 +334,18 @@ export default function Debts() {
                       color === c ? 'ring-primary scale-110 ring-2 ring-offset-2' : ''
                     }`}
                     style={{ backgroundColor: c }}
+                    aria-label={`Color ${c}`}
+                    aria-pressed={color === c}
                   />
                 ))}
               </div>
             </div>
 
             <div className="flex gap-2">
-              <Button
-                onClick={handleSubmit}
-                className="bg-grad-primary shadow-glow-primary h-auto flex-1 rounded-sm py-2 text-sm font-medium text-white"
-              >
-                {editingId ? 'Save Changes' : 'Save'}
+              <Button onClick={handleSubmit} className="flex-1">
+                {editingId ? 'Save changes' : 'Save'}
               </Button>
-              <Button
-                variant="secondary"
-                onClick={resetForm}
-                className="bg-muted text-muted-foreground h-auto rounded-sm px-4 py-2 text-sm font-medium"
-              >
+              <Button variant="secondary" onClick={resetForm}>
                 Cancel
               </Button>
             </div>
@@ -309,14 +354,9 @@ export default function Debts() {
 
         {sortedBalances.length === 0 ? (
           <div className="py-12 text-center">
-            <div className="bg-grad-primary-soft mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full">
-              <HandCoins size={22} className="text-primary" />
-            </div>
+            <HandCoins size={28} className="text-muted-foreground mx-auto mb-3" aria-hidden />
             <p className="text-muted-foreground mb-4">No one on your ledger yet</p>
-            <Button
-              onClick={startCreate}
-              className="bg-grad-primary shadow-glow-primary h-auto rounded-sm px-5 py-2.5 text-sm font-medium text-white"
-            >
+            <Button onClick={startCreate} className="rounded-full px-5 py-2.5">
               Add your first person
             </Button>
           </div>
@@ -344,10 +384,15 @@ export default function Debts() {
                   });
                   if (confirmed) deletePerson(status.person.id);
                 }}
+                onEditEntry={(entry) => openEditEntry(status.person, entry)}
                 onDeleteEntry={(id) => {
                   const removed = deleteDebtEntry(id);
                   if (!removed) return;
-                  toast.success('Entry removed', {
+                  // A settle-up entry takes the real transaction it created with it.
+                  const message = removed.settledTransactionId
+                    ? 'Settlement and its transaction removed'
+                    : 'Entry removed';
+                  toast.success(message, {
                     action: { label: 'Undo', onClick: () => restoreDebtEntry(removed) },
                   });
                 }}
@@ -364,15 +409,61 @@ export default function Debts() {
           if (!v) setEntryPerson(null);
         }}
       >
-        <DialogContent className="bg-card mx-auto w-11/12 rounded-md">
+        <DialogContent className="bg-card mx-auto w-11/12">
           <DialogHeader>
             <DialogTitle>
-              {entryPerson?.mode === 'borrow' ? 'Borrowed from' : 'Lent to'}{' '}
-              {entryPerson?.person.name}
+              {entryPerson?.editing
+                ? 'Edit entry'
+                : `${entryPerson?.mode === 'borrow' ? 'Borrowed from' : 'Lent to'} ${entryPerson?.person.name ?? ''}`}
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-3">
+            {entryPerson?.editing?.settledTransactionId ? (
+              <div className="space-y-1">
+                <p className="text-sm font-medium">
+                  Settled up ·{' '}
+                  {entryPerson.editing.amount < 0
+                    ? `received from ${entryPerson.person.name}`
+                    : `paid to ${entryPerson.person.name}`}
+                </p>
+                <p className="text-muted-foreground text-xs">
+                  Changing the amount or date also updates the linked transaction.
+                </p>
+              </div>
+            ) : (
+              entryPerson?.editing && (
+                <div
+                  role="radiogroup"
+                  aria-label="Direction"
+                  className="bg-muted flex gap-1 rounded-full p-1"
+                >
+                  {(
+                    [
+                      ['lend', 'They owe me', 'text-positive'],
+                      ['borrow', 'I owe them', 'text-destructive'],
+                    ] as const
+                  ).map(([mode, label, tone]) => {
+                    const selected = entryPerson.mode === mode;
+                    return (
+                      <button
+                        key={mode}
+                        type="button"
+                        role="radio"
+                        aria-checked={selected}
+                        onClick={() => setEntryPerson({ ...entryPerson, mode })}
+                        className={`h-8 flex-1 rounded-full text-xs font-medium transition-colors ${
+                          selected ? `bg-card shadow-sm ${tone}` : 'text-muted-foreground'
+                        }`}
+                      >
+                        {label}
+                      </button>
+                    );
+                  })}
+                </div>
+              )
+            )}
             <NumberPad value={entryAmount} onChange={setEntryAmount} />
+            <DateTimePicker value={entryDate} onChange={setEntryDate} />
             <Input
               type="text"
               placeholder="Note (optional)"
@@ -381,17 +472,10 @@ export default function Debts() {
               onChange={(e) => setEntryNote(stripLeading(e.target.value))}
             />
             <div className="flex gap-2">
-              <Button
-                onClick={handleEntrySubmit}
-                className="bg-grad-primary shadow-glow-primary h-auto flex-1 rounded-sm py-2 text-sm font-medium text-white"
-              >
-                Save
+              <Button onClick={handleEntrySubmit} className="flex-1">
+                {entryPerson?.editing ? 'Save changes' : 'Save'}
               </Button>
-              <Button
-                variant="secondary"
-                onClick={() => setEntryPerson(null)}
-                className="bg-muted text-muted-foreground h-auto rounded-sm px-4 py-2 text-sm font-medium"
-              >
+              <Button variant="secondary" onClick={() => setEntryPerson(null)}>
                 Cancel
               </Button>
             </div>
@@ -406,20 +490,20 @@ export default function Debts() {
           if (!v) setSettlePerson(null);
         }}
       >
-        <DialogContent className="bg-card mx-auto w-11/12 rounded-md">
+        <DialogContent className="bg-card mx-auto w-11/12">
           <DialogHeader>
             <DialogTitle>Settle up with {settlePerson?.person.name}</DialogTitle>
           </DialogHeader>
           <div className="space-y-3">
             <p className="text-muted-foreground text-xs">
               {settlePerson && settlePerson.balance > 0
-                ? `They owe you ${formatCurrency(settlePerson.balance)}. Record what they paid you back.`
-                : `You owe ${formatCurrency(Math.abs(settlePerson?.balance ?? 0))}. Record what you paid them.`}
+                ? `They owe you ${formatCurrency(settlePerson.balance, false, hideAmounts)}. Record what they paid you back.`
+                : `You owe ${formatCurrency(Math.abs(settlePerson?.balance ?? 0), false, hideAmounts)}. Record what you paid them.`}
             </p>
             <NumberPad value={settleAmount} onChange={setSettleAmount} />
             {settleOverLimit && (
               <p className="text-destructive text-xs">
-                That's more than the {formatCurrency(settleLimit)} outstanding.
+                That's more than the {formatCurrency(settleLimit, false, hideAmounts)} outstanding.
               </p>
             )}
 
@@ -455,15 +539,11 @@ export default function Debts() {
               <Button
                 onClick={handleSettleSubmit}
                 disabled={openAccounts.length === 0 || settleOverLimit}
-                className="bg-grad-primary shadow-glow-primary h-auto flex-1 rounded-sm py-2 text-sm font-medium text-white"
+                className="flex-1"
               >
                 Settle
               </Button>
-              <Button
-                variant="secondary"
-                onClick={() => setSettlePerson(null)}
-                className="bg-muted text-muted-foreground h-auto rounded-sm px-4 py-2 text-sm font-medium"
-              >
+              <Button variant="secondary" onClick={() => setSettlePerson(null)}>
                 Cancel
               </Button>
             </div>
@@ -484,6 +564,7 @@ interface PersonCardProps {
   onSettle: () => void;
   onEdit: () => void;
   onDelete: () => void;
+  onEditEntry: (entry: DebtEntry) => void;
   onDeleteEntry: (id: string) => void;
 }
 
@@ -497,6 +578,7 @@ function PersonCard({
   onSettle,
   onEdit,
   onDelete,
+  onEditEntry,
   onDeleteEntry,
 }: PersonCardProps) {
   const hideAmounts = useFinanceStore((s) => s.settings.hideAmounts);
@@ -519,7 +601,7 @@ function PersonCard({
             size="icon"
             onClick={onEdit}
             className="h-7 w-7"
-            aria-label="Edit"
+            aria-label={`Edit ${person.name}`}
           >
             <Pencil size={13} className="text-muted-foreground" />
           </Button>
@@ -528,7 +610,7 @@ function PersonCard({
             size="icon"
             onClick={onDelete}
             className="h-7 w-7"
-            aria-label="Delete"
+            aria-label={`Delete ${person.name}`}
           >
             <Trash2 size={13} className="text-destructive" />
           </Button>
@@ -537,7 +619,7 @@ function PersonCard({
 
       <p
         className={`mb-3 text-sm font-medium ${
-          isSettled ? 'text-muted-foreground' : theyOweYou ? 'text-primary' : 'text-destructive'
+          isSettled ? 'text-muted-foreground' : theyOweYou ? 'text-positive' : 'text-destructive'
         }`}
       >
         {isSettled
@@ -549,16 +631,13 @@ function PersonCard({
 
       <div className="flex gap-2">
         <Button
+          variant="secondary"
           onClick={onLend}
-          className="bg-grad-success h-auto flex-1 rounded-sm py-2 text-xs font-medium text-white"
+          className="bg-positive/10 text-positive hover:bg-positive/15 flex-1 text-xs"
         >
           <Plus size={13} className="mr-1" /> They owe me
         </Button>
-        <Button
-          variant="secondary"
-          onClick={onBorrow}
-          className="bg-muted text-muted-foreground h-auto flex-1 rounded-sm py-2 text-xs font-medium"
-        >
+        <Button variant="secondary" onClick={onBorrow} className="flex-1 text-xs">
           <Minus size={13} className="mr-1" /> I owe them
         </Button>
       </div>
@@ -566,7 +645,7 @@ function PersonCard({
         <Button
           variant="secondary"
           onClick={onSettle}
-          className="bg-primary/10 text-primary mt-2 h-auto w-full rounded-sm py-2 text-xs font-medium"
+          className="bg-accent text-accent-foreground hover:bg-accent/80 mt-2 w-full text-xs"
         >
           Settle up
         </Button>
@@ -604,15 +683,22 @@ function PersonCard({
                         : 'They owe more')}
                 </span>
                 <span
-                  className={`shrink-0 font-medium ${e.amount < 0 ? 'text-destructive' : 'text-primary'}`}
+                  className={`shrink-0 font-medium ${e.amount < 0 ? 'text-destructive' : 'text-positive'}`}
                 >
                   {e.amount < 0 ? '-' : '+'}
                   {formatCurrency(Math.abs(e.amount), true, hideAmounts)}
                 </span>
                 <button
+                  onClick={() => onEditEntry(e)}
+                  aria-label="Edit entry"
+                  className="text-muted-foreground hover:bg-muted -my-1 shrink-0 rounded-full p-1"
+                >
+                  <Pencil size={12} />
+                </button>
+                <button
                   onClick={() => onDeleteEntry(e.id)}
                   aria-label="Delete entry"
-                  className="text-muted-foreground shrink-0"
+                  className="text-muted-foreground hover:bg-muted -my-1 shrink-0 rounded-full p-1"
                 >
                   <Trash2 size={12} />
                 </button>

@@ -127,11 +127,14 @@ export default function Budgets() {
   const describe = (budget: Pick<Budget, 'categoryId' | 'labelId'>) => {
     if (budget.labelId) {
       const label = labels.find((l) => l.id === budget.labelId);
-      return { name: label?.name ?? 'Unknown label', color: label?.color ?? '#94a3b8' };
+      return {
+        name: label?.name ?? 'Unknown label',
+        color: label?.color ?? 'var(--muted-foreground)',
+      };
     }
-    if (budget.categoryId === '') return { name: 'Overall Expenses', color: '#146b54' };
+    if (budget.categoryId === '') return { name: 'Overall expenses', color: 'var(--primary)' };
     const cat = categories.find((c) => c.id === budget.categoryId);
-    return { name: cat?.name ?? 'Unknown', color: cat?.color ?? '#94a3b8' };
+    return { name: cat?.name ?? 'Unknown', color: cat?.color ?? 'var(--muted-foreground)' };
   };
 
   const resetForm = () => {
@@ -258,13 +261,22 @@ export default function Budgets() {
               <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">
                 Period
               </Label>
-              <div className="bg-muted grid grid-cols-3 gap-2 rounded-sm p-1">
+              <div
+                role="radiogroup"
+                aria-label="Budget period"
+                className="bg-muted grid grid-cols-3 gap-1 rounded-full p-1"
+              >
                 {PERIOD_TYPES.map((p) => (
                   <button
                     key={p}
+                    type="button"
+                    role="radio"
+                    aria-checked={period === p}
                     onClick={() => setPeriod(p)}
-                    className={`rounded-sm py-2 text-xs font-medium transition-colors ${
-                      period === p ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'
+                    className={`rounded-full py-2 text-xs font-medium transition-colors ${
+                      period === p
+                        ? 'bg-grad-primary shadow-glow-primary text-white'
+                        : 'text-muted-foreground'
                     }`}
                   >
                     {PERIOD_LABELS[p]}
@@ -275,7 +287,7 @@ export default function Budgets() {
 
             <div>
               <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">
-                {PERIOD_LABELS[period]} Limit
+                {PERIOD_LABELS[period]} limit
               </Label>
               <NumberPad value={amount} onChange={setAmount} />
             </div>
@@ -288,17 +300,10 @@ export default function Budgets() {
             />
 
             <div className="flex gap-2">
-              <Button
-                onClick={handleSubmit}
-                className="bg-grad-primary shadow-glow-primary h-auto flex-1 rounded-sm py-2 text-sm font-medium text-white"
-              >
-                {editingId ? 'Save Changes' : 'Save'}
+              <Button onClick={handleSubmit} className="flex-1">
+                {editingId ? 'Save changes' : 'Save'}
               </Button>
-              <Button
-                variant="secondary"
-                onClick={resetForm}
-                className="bg-muted text-muted-foreground h-auto rounded-sm px-4 py-2 text-sm font-medium"
-              >
+              <Button variant="outline" onClick={resetForm} className="px-4">
                 Cancel
               </Button>
             </div>
@@ -307,7 +312,7 @@ export default function Budgets() {
 
         {sortedStatuses.length === 0 ? (
           <div className="py-12 text-center">
-            <Target size={28} className="text-primary mx-auto mb-3" />
+            <Target size={28} className="text-muted-foreground mx-auto mb-3" aria-hidden />
             <p className="text-muted-foreground mb-4">No budgets yet</p>
             <Button onClick={startCreate} className="rounded-full px-5 py-2.5">
               Create your first budget
@@ -342,6 +347,16 @@ export default function Budgets() {
       </Main>
     </>
   );
+}
+
+/**
+ * The "on track" fill. The overall budget wears the register hatch (as on the Dashboard);
+ * a scoped one its own colour. `color-mix` rather than appending a hex alpha suffix, so a
+ * token such as `var(--muted-foreground)` stays a valid colour instead of dropping the fill.
+ */
+function budgetFill(budget: Pick<Budget, 'categoryId' | 'labelId'>, color: string): string {
+  if (!budget.labelId && budget.categoryId === '') return 'var(--register)';
+  return `linear-gradient(90deg, ${color}, color-mix(in srgb, ${color} 80%, transparent))`;
 }
 
 interface BudgetCardProps {
@@ -389,7 +404,7 @@ function BudgetCard({
             size="icon"
             onClick={onEdit}
             className="h-7 w-7"
-            aria-label="Edit"
+            aria-label={`Edit budget for ${scopeName}`}
           >
             <Pencil size={13} className="text-muted-foreground" />
           </Button>
@@ -398,7 +413,7 @@ function BudgetCard({
             size="icon"
             onClick={onDelete}
             className="h-7 w-7"
-            aria-label="Delete"
+            aria-label={`Delete budget for ${scopeName}`}
           >
             <Trash2 size={13} className="text-destructive" />
           </Button>
@@ -421,7 +436,7 @@ function BudgetCard({
       </div>
       <BudgetProgressBar
         status={status}
-        okFill={`linear-gradient(90deg, ${scopeColor}, ${scopeColor}cc)`}
+        okFill={budgetFill(budget, scopeColor)}
         valueText={`${formatCurrency(status.spent, false, hideAmounts)} of ${formatCurrency(
           status.limit,
           false,
@@ -434,7 +449,7 @@ function BudgetCard({
           : `${formatCurrency(status.remaining, false, hideAmounts)} left ${PERIOD_NOUN[budget.period]}`}
       </p>
       {budget.rollover && status.carryover !== 0 && (
-        <p className="text-[11px] text-[#c79b4f]">
+        <p className="text-warning text-[11px]">
           {status.carryover > 0
             ? `Includes ${formatCurrency(status.carryover, false, hideAmounts)} rolled over`
             : `Includes ${formatCurrency(-status.carryover, false, hideAmounts)} overspend carried in`}

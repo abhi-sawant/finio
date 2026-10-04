@@ -37,7 +37,7 @@ export function LabelSpendingBar({ transactions }: Props) {
 
   return (
     <div className="card-elevated rounded-md p-4">
-      <h3 className="mb-3 text-sm font-semibold">Spending by Label</h3>
+      <h3 className="mb-3 text-sm font-semibold">Spending by label</h3>
       {/* The amount is already spelled out next to every label, so the bars are decorative. */}
       <ul className="space-y-2">
         {data.map((item) => {

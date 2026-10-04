@@ -11,8 +11,8 @@ const PRESENTATION: Record<
     Icon: AlertTriangle,
     className: 'bg-warning-band text-warning-band-accent',
   },
-  near: { label: 'Near limit', Icon: TrendingUp, className: 'bg-[#c79b4f]/15 text-[#c79b4f]' },
-  ok: { label: 'On track', Icon: Check, className: 'bg-primary/10 text-primary' },
+  near: { label: 'Near limit', Icon: TrendingUp, className: 'bg-warning/15 text-warning' },
+  ok: { label: 'On track', Icon: Check, className: 'bg-positive/10 text-positive' },
 };
 
 interface BudgetHealthBadgeProps {
@@ -76,8 +76,12 @@ export function BudgetProgressBar({
         className="h-full rounded-full transition-all"
         style={{
           width: `${Math.min(Math.max(status.percent, 0), 100)}%`,
-          backgroundColor:
-            health === 'over' ? 'var(--destructive)' : health === 'near' ? '#c79b4f' : okFill,
+          background:
+            health === 'over'
+              ? 'var(--destructive)'
+              : health === 'near'
+                ? 'var(--warning)'
+                : okFill,
         }}
       />
     </div>

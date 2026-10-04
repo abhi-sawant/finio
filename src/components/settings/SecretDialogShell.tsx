@@ -34,7 +34,12 @@ export function SecretDialogShell({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className={cn('bg-card top-1/3 mx-auto w-11/12 rounded-md sm:max-w-sm', className)}
+        // Anchored by its top edge, not centred: the PIN/passphrase phases differ in height,
+        // and a centred (−50%) dialog would jump vertically on every phase change.
+        className={cn(
+          'bg-card top-[max(1rem,12dvh)] mx-auto w-11/12 translate-y-0 sm:max-w-sm',
+          className,
+        )}
       >
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
