@@ -10,15 +10,14 @@ import type { FixtureBuilder } from './golden';
 const UPDATE = process.env.UPDATE_FIXTURES === '1';
 const OUT_DIR = fileURLToPath(new URL('../../../spec/fixtures/', import.meta.url));
 
-const builders = import.meta.glob<{ default: FixtureBuilder }>('./fixtures/*.fixture.ts', {
-  eager: true,
-});
+// Lazy, so `vitest run src/spec -t <module>` only loads that one builder.
+const builders = import.meta.glob<{ default: FixtureBuilder }>('./fixtures/*.fixture.ts');
 
 describe('golden fixtures', () => {
-  for (const [path, mod] of Object.entries(builders)) {
+  for (const [path, load] of Object.entries(builders)) {
     const name = path.replace('./fixtures/', '').replace('.fixture.ts', '');
     it(`${name} is current`, async () => {
-      const cases = await mod.default();
+      const cases = await (await load()).default();
       const json =
         JSON.stringify({ module: name, tz: process.env.TZ, cases }, null, 2) + '\n';
       const file = `${OUT_DIR}${name}.json`;

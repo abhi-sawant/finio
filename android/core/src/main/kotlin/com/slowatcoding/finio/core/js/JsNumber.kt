@@ -16,15 +16,8 @@ fun jsRound(x: Double): Double {
 /** `Math.trunc`. */
 fun jsTrunc(x: Double): Double = if (x < 0) -floor(-x) else floor(x)
 
-/** `String(n)` / template-literal formatting of a JS number: 15000 → "15000", 0.1 → "0.1". */
-fun jsNumberToString(x: Double): String {
-    if (x.isNaN()) return "NaN"
-    if (x.isInfinite()) return if (x > 0) "Infinity" else "-Infinity"
-    if (x == 0.0) return "0"
-    if (x == floor(x) && abs(x) < 1e21) return BigDecimal(x).toPlainString()
-    val plain = BigDecimal(x.toString()).stripTrailingZeros().toPlainString()
-    return plain
-}
+/** `String(n)` / template-literal formatting of a JS number: 15000 → "15000", 1e21 → "1e+21". */
+fun jsNumberToString(x: Double): String = com.slowatcoding.finio.core.crypto.jsNumberString(x)
 
 /** `n.toFixed(digits)` — JS rounds the exact binary value half-up, as BigDecimal does here. */
 fun jsToFixed(x: Double, digits: Int): String =

@@ -1,0 +1,3347 @@
+{
+  "module": "shareTarget",
+  "tz": "Asia/Kolkata",
+  "cases": [
+    {
+      "fn": "constants",
+      "args": [],
+      "out": {
+        "NOTE_MAX_LENGTH": 140
+      }
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        ""
+      ],
+      "out": null
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        ""
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "Coffee with Sam"
+      ],
+      "out": null
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "Coffee with Sam"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "Rs. 1,234.56 debited"
+      ],
+      "out": 1234.56
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "Rs. 1,234.56 debited"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "Rs.1,234.56 debited"
+      ],
+      "out": 1234.56
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "Rs.1,234.56 debited"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "Rs1234"
+      ],
+      "out": 1234
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "Rs1234"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "rs 75 spent"
+      ],
+      "out": 75
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "rs 75 spent"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "RS 75 SPENT"
+      ],
+      "out": 75
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "RS 75 SPENT"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "inr 75 spent"
+      ],
+      "out": 75
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "inr 75 spent"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "₹500"
+      ],
+      "out": 500
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "₹500"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "₹ 500.5"
+      ],
+      "out": 500.5
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "₹ 500.5"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "₹500.555"
+      ],
+      "out": 500.55
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "₹500.555"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "₹.50"
+      ],
+      "out": null
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "₹.50"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "₹,"
+      ],
+      "out": null
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "₹,"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "₹,,,"
+      ],
+      "out": null
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "₹,,,"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "₹ ,5"
+      ],
+      "out": 5
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "₹ ,5"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "450 ₹"
+      ],
+      "out": 450
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "450 ₹"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "1,200 INR was spent"
+      ],
+      "out": 1200
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "1,200 INR was spent"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "1,200INR"
+      ],
+      "out": null
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "1,200INR"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "1200 inr"
+      ],
+      "out": 1200
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "1200 inr"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "Paid INR 250 to Swiggy"
+      ],
+      "out": 250
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "Paid INR 250 to Swiggy"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "INR 1,23,456.78 credited"
+      ],
+      "out": 123456.78
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "INR 1,23,456.78 credited"
+      ],
+      "out": "income"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "INR1,23,456.78"
+      ],
+      "out": null
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "INR1,23,456.78"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "XINR 50"
+      ],
+      "out": null
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "XINR 50"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "INRX 50"
+      ],
+      "out": null
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "INRX 50"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "MRs 50"
+      ],
+      "out": null
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "MRs 50"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "Mrs 50 paid"
+      ],
+      "out": null
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "Mrs 50 paid"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "Sent 250 to Ravi"
+      ],
+      "out": null
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "Sent 250 to Ravi"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "Order 4821 confirmed"
+      ],
+      "out": null
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "Order 4821 confirmed"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "A/c XX1234 debited by Rs 99.00 at SWIGGY"
+      ],
+      "out": 99
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "A/c XX1234 debited by Rs 99.00 at SWIGGY"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "A/c XX1234 credited with INR 5,000.00 on 05-10-26. Avl bal INR 12,345.67"
+      ],
+      "out": 5000
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "A/c XX1234 credited with INR 5,000.00 on 05-10-26. Avl bal INR 12,345.67"
+      ],
+      "out": "income"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "Rs 0"
+      ],
+      "out": null
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "Rs 0"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "Rs 0.00 charged"
+      ],
+      "out": null
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "Rs 0.00 charged"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "Rs 0.004"
+      ],
+      "out": null
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "Rs 0.004"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "Rs 0.01"
+      ],
+      "out": 0.01
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "Rs 0.01"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "Rs 9,999,999,999"
+      ],
+      "out": null
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "Rs 9,999,999,999"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "Rs 1,000,000,000"
+      ],
+      "out": 1000000000
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "Rs 1,000,000,000"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "Rs 1,000,000,000.01"
+      ],
+      "out": null
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "Rs 1,000,000,000.01"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "Rs 999999999.99"
+      ],
+      "out": 999999999.99
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "Rs 999999999.99"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "Rs 12.3456"
+      ],
+      "out": 12.34
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "Rs 12.3456"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "Rs    40"
+      ],
+      "out": 40
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "Rs    40"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "Rs 40"
+      ],
+      "out": 40
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "Rs 40"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "Rs\n40"
+      ],
+      "out": 40
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "Rs\n40"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "Rs﻿40"
+      ],
+      "out": 40
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "Rs﻿40"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "éRs 50"
+      ],
+      "out": 50
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "éRs 50"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "_Rs 50"
+      ],
+      "out": null
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "_Rs 50"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "9Rs 50"
+      ],
+      "out": null
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "9Rs 50"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "5₹"
+      ],
+      "out": 5
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "5₹"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "Amount: 5 INR."
+      ],
+      "out": 5
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "Amount: 5 INR."
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "Rs 1.005"
+      ],
+      "out": 1
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "Rs 1.005"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "Rs 2.675"
+      ],
+      "out": 2.67
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "Rs 2.675"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "Rs 0.1"
+      ],
+      "out": 0.1
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "Rs 0.1"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "You spent Rs 340"
+      ],
+      "out": 340
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "You spent Rs 340"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "Rs 5000 credited to your account"
+      ],
+      "out": 5000
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "Rs 5000 credited to your account"
+      ],
+      "out": "income"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "Refund of Rs 200 received"
+      ],
+      "out": 200
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "Refund of Rs 200 received"
+      ],
+      "out": "income"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "Refunded Rs 200"
+      ],
+      "out": 200
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "Refunded Rs 200"
+      ],
+      "out": "income"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "refunds Rs 200"
+      ],
+      "out": 200
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "refunds Rs 200"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "Salary for June"
+      ],
+      "out": null
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "Salary for June"
+      ],
+      "out": "income"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "Your SALARY of INR 85,000 is CREDITED"
+      ],
+      "out": 85000
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "Your SALARY of INR 85,000 is CREDITED"
+      ],
+      "out": "income"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "Cashback ₹25"
+      ],
+      "out": 25
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "Cashback ₹25"
+      ],
+      "out": "income"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "cashback-₹25"
+      ],
+      "out": 25
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "cashback-₹25"
+      ],
+      "out": "income"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "Rs 99 debited at SWIGGY"
+      ],
+      "out": 99
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "Rs 99 debited at SWIGGY"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "deposited"
+      ],
+      "out": null
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "deposited"
+      ],
+      "out": "income"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "predeposited"
+      ],
+      "out": null
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "predeposited"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "credited_"
+      ],
+      "out": null
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "credited_"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "credit"
+      ],
+      "out": null
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "credit"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "Rs 120"
+      ],
+      "out": 120
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "Rs 120"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "extractAmount",
+      "args": [
+        "https://www.swiggy.com/order/123"
+      ],
+      "out": null
+    },
+    {
+      "fn": "inferTransactionType",
+      "args": [
+        "https://www.swiggy.com/order/123"
+      ],
+      "out": "expense"
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {}
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "title": "Swiggy",
+          "text": "Rs 99 debited"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "99",
+        "note": "Swiggy Rs 99 debited"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "Rs 1,234.50 debited"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "1234.5",
+        "note": "Rs 1,234.50 debited"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "Lunch with Sam"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "Lunch with Sam"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "https://zomato.com/x"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "zomato.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "  https://zomato.com/x  "
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "zomato.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "title": "Order",
+          "text": "https://zomato.com/x"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "Order https://zomato.com/x"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "https://zomato.com/x extra"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "https://zomato.com/x extra"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "Rs 5000 credited",
+          "type": "expense"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "5000",
+        "note": "Rs 5000 credited"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "Rs 10 debited",
+          "type": "nonsense"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "10",
+        "note": "Rs 10 debited"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "Rs 10 credited",
+          "type": ""
+        }
+      ],
+      "out": {
+        "type": "income",
+        "amount": "10",
+        "note": "Rs 10 credited"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "Rs 10 debited",
+          "type": "income"
+        }
+      ],
+      "out": {
+        "type": "income",
+        "amount": "10",
+        "note": "Rs 10 debited"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "Rs 10 debited",
+          "type": "transfer"
+        }
+      ],
+      "out": {
+        "type": "transfer",
+        "amount": "10",
+        "note": "Rs 10 debited"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "Rs 10 debited",
+          "type": "Income"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "10",
+        "note": "Rs 10 debited"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa bcd"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa😀tail"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\ud83d"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "title": "   ",
+          "text": "   ",
+          "url": "   "
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "title": null,
+          "text": null,
+          "url": null,
+          "type": null
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "title": "﻿Swiggy﻿",
+          "text": " Rs 40　"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "40",
+        "note": "Swiggy Rs 40"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "title": "Swiggy",
+          "text": "Rs 40",
+          "url": "https://www.swiggy.com/o/1"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "40",
+        "note": "Swiggy Rs 40"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "title": "Swiggy\n",
+          "text": "\nRs 40"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "40",
+        "note": "Swiggy Rs 40"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "title": "Salary",
+          "url": "https://bank.example/credit?amt=Rs%20500"
+        }
+      ],
+      "out": {
+        "type": "income",
+        "amount": "",
+        "note": "Salary"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "https://bank.example/x Rs 500"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "500",
+        "note": "bank.example"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "title": "Rs 25",
+          "url": "not a url"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "25",
+        "note": "Rs 25"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "https://www.swiggy.com/order/123"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "swiggy.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "https://www.swiggy.com/order/123"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "swiggy.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "https://zomato.com/x"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "zomato.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "https://zomato.com/x"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "zomato.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "HTTPS://WWW.Example.COM"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "example.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "HTTPS://WWW.Example.COM"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "example.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "http://user:pw@host.com:8080/p"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "host.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "http://user:pw@host.com:8080/p"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "host.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "http://www.www.x.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "www.x.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "http://www.www.x.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "www.x.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "https://xn--nxasmq6b.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "xn--nxasmq6b.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "https://xn--nxasmq6b.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "xn--nxasmq6b.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "https://münchen.de/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "xn--mnchen-3ya.de"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "https://münchen.de/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "xn--mnchen-3ya.de"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "https://www.例え.jp"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "xn--r8jz45g.jp"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "https://www.例え.jp"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "xn--r8jz45g.jp"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "http://192.168.0.1/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "192.168.0.1"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "http://192.168.0.1/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "192.168.0.1"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "http://0x7f.1/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "127.0.0.1"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "http://0x7f.1/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "127.0.0.1"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "http://[::1]:80/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "[::1]"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "http://[::1]:80/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "[::1]"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "http://[2001:DB8:0:0:0:0:0:1]/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "[2001:db8::1]"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "http://[2001:DB8:0:0:0:0:0:1]/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "[2001:db8::1]"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "http://[::ffff:1.2.3.4]/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "[::ffff:102:304]"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "http://[::ffff:1.2.3.4]/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "[::ffff:102:304]"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "http://[1:0:0:2:0:0:0:3]/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "[1:0:0:2::3]"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "http://[1:0:0:2:0:0:0:3]/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "[1:0:0:2::3]"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "http://[0:0:1::]/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "[0:0:1::]"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "http://[0:0:1::]/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "[0:0:1::]"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "ftp://files.example.org/x"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "files.example.org"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "ftp://files.example.org/x"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "ftp://files.example.org/x"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "ws://a.b"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "a.b"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "ws://a.b"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "ws://a.b"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "file:///etc/passwd"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "file:///etc/passwd"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "file:///etc/passwd"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "file://server/share"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "server"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "file://server/share"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "file://server/share"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "file://localhost/x"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "file://localhost/x"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "file://localhost/x"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "file://C:/x"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "file://C:/x"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "file://C:/x"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "mailto:a@b.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "mailto:a@b.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "mailto:a@b.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "foo://Host.Example/x"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "Host.Example"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "foo://Host.Example/x"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "foo://Host.Example/x"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "foo://Höst/x"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "H%C3%B6st"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "foo://Höst/x"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "foo://Höst/x"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "foo://www.Host/x"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "Host"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "foo://www.Host/x"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "foo://www.Host/x"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "foo:bar"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "foo:bar"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "foo:bar"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "not a url"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "not a url"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "not a url"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "https://"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "https://"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "https://"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "http:example.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "example.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "http:example.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "http:example.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "http:\\\\example.com\\x"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "example.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "http:\\\\example.com\\x"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "http:\\\\example.com\\x"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "  https://example.com  "
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "example.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "  https://example.com  "
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "example.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "https://exa mple.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "https://exa mple.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "https://exa mple.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "https://ex%41mple.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "example.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "https://ex%41mple.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "example.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "https://ex%zzmple.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "https://ex%zzmple.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "https://example.com."
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "example.com."
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "https://example.com."
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "example.com."
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "http://1.2.3.4.5/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "http://1.2.3.4.5/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "http://256.1.1.1/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "http://256.1.1.1/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "http://1.2.3/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "1.2.0.3"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "http://1.2.3/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "1.2.0.3"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "http://4294967295/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "255.255.255.255"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "http://4294967295/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "255.255.255.255"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "http://4294967296/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "http://4294967296/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "http://0/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "0.0.0.0"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "http://0/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "0.0.0.0"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "http://08/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "http://08/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "http://0x/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "0.0.0.0"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "http://0x/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "0.0.0.0"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "http://1.0x/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "1.0.0.0"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "http://1.0x/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "1.0.0.0"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "http://010.0.0.1/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "8.0.0.1"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "http://010.0.0.1/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "8.0.0.1"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "http://1.2.3.4./"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "1.2.3.4"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "http://1.2.3.4./"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "1.2.3.4"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "javascript:alert(1)"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "javascript:alert(1)"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "javascript:alert(1)"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "www.example.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "www.example.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "www.example.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "//example.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "//example.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "//example.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "https://a@b@c.com/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "c.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "https://a@b@c.com/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "c.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "https://example.com:99999/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "https://example.com:99999/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "https://example.com:65535/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "example.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "https://example.com:65535/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "example.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "https://example.com:/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "example.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "https://example.com:/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "example.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "https://example.com:abc/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "https://example.com:abc/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "https://ＥＸＡＭＰＬＥ．com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "example.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "https://ＥＸＡＭＰＬＥ．com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "example.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "http://EXAMPLE.com#frag"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "example.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "http://EXAMPLE.com#frag"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "example.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "http://example.com?q"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "example.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "http://example.com?q"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "example.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "http://-x.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "-x.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "http://-x.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "-x.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "http://x_y.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "x_y.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "http://x_y.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "x_y.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "https://www./"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "https://www./"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "https://www."
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "https://www."
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "data:text/plain,hi"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "data:text/plain,hi"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "data:text/plain,hi"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "android-app://com.x/y"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "com.x"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "android-app://com.x/y"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "android-app://com.x/y"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "intent://scan/#Intent;scheme=zxing;end"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "scan"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "intent://scan/#Intent;scheme=zxing;end"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "intent://scan/#Intent;scheme=zxing;end"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "https://exa\tmple.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "example.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "https://exa\tmple.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "https://exa\tmple.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "https://@x.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "x.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "https://@x.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "x.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "https://x.com@"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "https://x.com@"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "http://a:b@/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "http://a:b@/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "https://x..com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "x..com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "https://x..com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "x..com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "http://[1:2]/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "http://[1:2]/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "http://[::1/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "http://[::1/"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "https://ex<ample.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "https://ex<ample.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "https://ex^ample.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "https://ex^ample.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "https://ex ample.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "https://ex ample.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "https://ex ample.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "https://a​b.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "ab.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "https://a​b.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "ab.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "https://Ⅷ.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "viii.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "https://Ⅷ.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "viii.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "sc:\\x"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "sc:\\x"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "sc:\\x"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "1http://x.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": ""
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "1http://x.com"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "1http://x.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "url": "h+t-t.p://x.com/y"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "x.com"
+      }
+    },
+    {
+      "fn": "parseSharePayload",
+      "args": [
+        {
+          "text": "h+t-t.p://x.com/y"
+        }
+      ],
+      "out": {
+        "type": "expense",
+        "amount": "",
+        "note": "h+t-t.p://x.com/y"
+      }
+    }
+  ]
+}

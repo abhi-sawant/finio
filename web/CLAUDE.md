@@ -132,7 +132,7 @@ src/
 │   └── formatters.ts         # Currency (INR), date, number formatting
 ├── lib/utils.ts              # shadcn cn() helper
 └── data/
-    ├── defaultData.ts        # Default categories (36), labels (9), and settings
+    ├── defaultData.ts        # Default categories (35), labels (9), and settings
     ├── colorPalette.ts       # COLOR_PALETTE — the single 18-swatch list every color picker offers
     └── sampleData.ts         # Deterministic demo dataset offered in onboarding (also a QA fixture)
 ```

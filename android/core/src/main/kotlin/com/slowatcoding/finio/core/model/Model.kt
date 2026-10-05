@@ -224,7 +224,7 @@ data class Settings(
     val notifyBudgets: Boolean = true,
     val notifyCreditDue: Boolean = true,
     val notifyLeadDays: Int = 2,
-    val notifyDailyLog: Boolean = false,
+    val notifyDailyLog: Boolean = true,
 )
 
 /** App lock. Deliberately *not* in [Settings]: settings travel in every backup. */
