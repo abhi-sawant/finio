@@ -1,0 +1,4173 @@
+{
+  "module": "merchants",
+  "tz": "Asia/Kolkata",
+  "cases": [
+    {
+      "fn": "ledger",
+      "args": [],
+      "out": {
+        "accounts": [
+          {
+            "id": "acc-bank",
+            "name": "HDFC Salary",
+            "type": "checking",
+            "color": "#4b36c7",
+            "icon": "landmark",
+            "balance": 349052,
+            "openingBalance": 50000,
+            "createdAt": "2025-10-01T04:30:00.000Z"
+          },
+          {
+            "id": "acc-savings",
+            "name": "SBI Savings",
+            "type": "savings",
+            "color": "#4b36c7",
+            "icon": "landmark",
+            "balance": 281649.48,
+            "openingBalance": 200000,
+            "createdAt": "2025-10-01T04:30:00.000Z"
+          },
+          {
+            "id": "acc-cash",
+            "name": "Cash",
+            "type": "cash",
+            "color": "#4b36c7",
+            "icon": "landmark",
+            "balance": 1689.7,
+            "openingBalance": 3000,
+            "createdAt": "2025-10-01T04:30:00.000Z"
+          },
+          {
+            "id": "acc-card",
+            "name": "Amex Platinum",
+            "type": "credit",
+            "color": "#4b36c7",
+            "icon": "landmark",
+            "balance": -5170,
+            "openingBalance": 0,
+            "createdAt": "2025-10-01T04:30:00.000Z",
+            "creditLimit": 150000,
+            "statementCloseDay": 20,
+            "paymentDueDays": 18
+          },
+          {
+            "id": "acc-card2",
+            "name": "ICICI Coral",
+            "type": "credit",
+            "color": "#4b36c7",
+            "icon": "landmark",
+            "balance": -4200,
+            "openingBalance": -4200,
+            "createdAt": "2025-10-01T04:30:00.000Z",
+            "creditLimit": 50000,
+            "statementCloseDay": 5,
+            "paymentDueDays": 20,
+            "minimumDuePercent": 3.5
+          },
+          {
+            "id": "acc-wallet",
+            "name": "Paytm Wallet",
+            "type": "wallet",
+            "color": "#4b36c7",
+            "icon": "landmark",
+            "balance": -250,
+            "openingBalance": 100,
+            "createdAt": "2025-10-01T04:30:00.000Z"
+          },
+          {
+            "id": "acc-fd",
+            "name": "HDFC FD",
+            "type": "fd",
+            "color": "#4b36c7",
+            "icon": "landmark",
+            "balance": 100000,
+            "openingBalance": 100000,
+            "createdAt": "2025-10-01T04:30:00.000Z",
+            "deposit": {
+              "amount": 100000,
+              "interestRate": 7.1,
+              "startDate": "2025-08-31T18:30:00.000Z",
+              "maturityDate": "2027-08-31T18:30:00.000Z",
+              "compounding": "quarterly",
+              "linkedAccountId": "acc-bank"
+            }
+          },
+          {
+            "id": "acc-rd",
+            "name": "SBI RD",
+            "type": "rd",
+            "color": "#4b36c7",
+            "icon": "landmark",
+            "balance": 40000,
+            "openingBalance": 0,
+            "createdAt": "2025-10-01T04:30:00.000Z",
+            "deposit": {
+              "amount": 5000,
+              "interestRate": 6.5,
+              "startDate": "2025-11-09T18:30:00.000Z",
+              "tenureMonths": 24,
+              "linkedAccountId": "acc-bank",
+              "recurringId": "rec-rd"
+            }
+          },
+          {
+            "id": "acc-old",
+            "name": "Old Axis",
+            "type": "checking",
+            "color": "#4b36c7",
+            "icon": "landmark",
+            "balance": 3800,
+            "openingBalance": 5000,
+            "createdAt": "2025-10-01T04:30:00.000Z",
+            "archivedAt": "2026-02-01T04:30:00.000Z"
+          }
+        ],
+        "transactions": [
+          {
+            "id": "sal-202511",
+            "type": "income",
+            "amount": 85000,
+            "accountId": "acc-bank",
+            "categoryId": "cat-9",
+            "date": "2025-10-25T03:30:00.000Z",
+            "note": "Salary ACME Corp",
+            "labels": [],
+            "createdAt": "2025-10-25T03:30:00.000Z"
+          },
+          {
+            "id": "rent-202511",
+            "type": "expense",
+            "amount": 22000,
+            "accountId": "acc-bank",
+            "categoryId": "cat-28",
+            "date": "2025-11-01T03:30:00.000Z",
+            "note": "Rent 202511",
+            "labels": [
+              "lbl-1",
+              "lbl-5"
+            ],
+            "createdAt": "2025-11-01T03:30:00.000Z"
+          },
+          {
+            "id": "xsav-202511",
+            "type": "transfer",
+            "amount": 10000,
+            "accountId": "acc-bank",
+            "categoryId": "cat-13",
+            "date": "2025-11-02T02:30:00.000Z",
+            "note": "To savings",
+            "labels": [],
+            "createdAt": "2025-11-02T02:30:00.000Z",
+            "toAccountId": "acc-savings"
+          },
+          {
+            "id": "food-202511-0",
+            "type": "expense",
+            "amount": 650,
+            "accountId": "acc-card",
+            "categoryId": "cat-1",
+            "date": "2025-11-03T14:45:00.000Z",
+            "note": "Swiggy/9921",
+            "labels": [],
+            "createdAt": "2025-11-03T14:45:00.000Z"
+          },
+          {
+            "id": "food-202511-1",
+            "type": "expense",
+            "amount": 763.5,
+            "accountId": "acc-bank",
+            "categoryId": "cat-1",
+            "date": "2025-11-09T14:45:00.000Z",
+            "note": "Swiggy 449",
+            "labels": [
+              "lbl-2"
+            ],
+            "createdAt": "2025-11-09T14:45:00.000Z"
+          },
+          {
+            "id": "food-202511-2",
+            "type": "expense",
+            "amount": 877,
+            "accountId": "acc-card",
+            "categoryId": "cat-1",
+            "date": "2025-11-14T14:45:00.000Z",
+            "note": "Zomato order #4471",
+            "labels": [],
+            "createdAt": "2025-11-14T14:45:00.000Z"
+          },
+          {
+            "id": "food-202511-3",
+            "type": "expense",
+            "amount": 990.5,
+            "accountId": "acc-bank",
+            "categoryId": "cat-25",
+            "date": "2025-11-20T14:45:00.000Z",
+            "note": "BigBasket",
+            "labels": [],
+            "createdAt": "2025-11-20T14:45:00.000Z"
+          },
+          {
+            "id": "netflix-202511",
+            "type": "expense",
+            "amount": 649,
+            "accountId": "acc-card",
+            "categoryId": "cat-18",
+            "date": "2025-11-07T00:30:00.000Z",
+            "note": "NETFLIX.COM 8812",
+            "labels": [
+              "lbl-3"
+            ],
+            "createdAt": "2025-11-07T00:30:00.000Z"
+          },
+          {
+            "id": "spotify-202511",
+            "type": "expense",
+            "amount": 119,
+            "accountId": "acc-card",
+            "categoryId": "cat-18",
+            "date": "2025-11-15T00:30:00.000Z",
+            "note": "Spotify",
+            "labels": [],
+            "createdAt": "2025-11-15T00:30:00.000Z"
+          },
+          {
+            "id": "hotstar-202511",
+            "type": "expense",
+            "amount": 299,
+            "accountId": "acc-card",
+            "categoryId": "cat-18",
+            "date": "2025-11-16T00:30:00.000Z",
+            "note": "Hotstar 299",
+            "labels": [],
+            "createdAt": "2025-11-16T00:30:00.000Z"
+          },
+          {
+            "id": "elec-202511",
+            "type": "expense",
+            "amount": 1100,
+            "accountId": "acc-bank",
+            "categoryId": "cat-5",
+            "date": "2025-11-12T05:30:00.000Z",
+            "note": "BESCOM electricity",
+            "labels": [],
+            "createdAt": "2025-11-12T05:30:00.000Z"
+          },
+          {
+            "id": "uber-202511",
+            "type": "expense",
+            "amount": 340.75,
+            "accountId": "acc-cash",
+            "categoryId": "cat-2",
+            "date": "2025-11-11T13:30:00.000Z",
+            "note": "Uber trip",
+            "labels": [
+              "lbl-2"
+            ],
+            "createdAt": "2025-11-11T13:30:00.000Z"
+          },
+          {
+            "id": "rd-202511",
+            "type": "transfer",
+            "amount": 5000,
+            "accountId": "acc-bank",
+            "categoryId": "cat-13",
+            "date": "2025-11-09T18:30:00.000Z",
+            "note": "RD installment",
+            "labels": [],
+            "createdAt": "2025-11-09T18:30:00.000Z",
+            "toAccountId": "acc-rd",
+            "recurringId": "rec-rd"
+          },
+          {
+            "id": "split-202511",
+            "type": "expense",
+            "amount": 3000.5,
+            "accountId": "acc-card",
+            "categoryId": "",
+            "date": "2025-11-17T12:30:00.000Z",
+            "note": "DMart Ready",
+            "labels": [
+              "lbl-1"
+            ],
+            "createdAt": "2025-11-17T12:30:00.000Z",
+            "splits": [
+              {
+                "categoryId": "cat-25",
+                "amount": 2000.25
+              },
+              {
+                "categoryId": "cat-32",
+                "amount": 1000.25
+              }
+            ]
+          },
+          {
+            "id": "cardpay-202511",
+            "type": "transfer",
+            "amount": 9000,
+            "accountId": "acc-bank",
+            "categoryId": "cat-13",
+            "date": "2025-11-22T04:30:00.000Z",
+            "note": "Amex bill payment",
+            "labels": [],
+            "createdAt": "2025-11-22T04:30:00.000Z",
+            "toAccountId": "acc-card"
+          },
+          {
+            "id": "sal-202512",
+            "type": "income",
+            "amount": 85000,
+            "accountId": "acc-bank",
+            "categoryId": "cat-9",
+            "date": "2025-11-25T03:30:00.000Z",
+            "note": "Salary ACME Corp",
+            "labels": [],
+            "createdAt": "2025-11-25T03:30:00.000Z"
+          },
+          {
+            "id": "rent-202512",
+            "type": "expense",
+            "amount": 22000,
+            "accountId": "acc-bank",
+            "categoryId": "cat-28",
+            "date": "2025-12-01T03:30:00.000Z",
+            "note": "Rent 202512",
+            "labels": [
+              "lbl-1",
+              "lbl-5"
+            ],
+            "createdAt": "2025-12-01T03:30:00.000Z"
+          },
+          {
+            "id": "xsav-202512",
+            "type": "transfer",
+            "amount": 10000,
+            "accountId": "acc-bank",
+            "categoryId": "cat-13",
+            "date": "2025-12-02T02:30:00.000Z",
+            "note": "To savings",
+            "labels": [],
+            "createdAt": "2025-12-02T02:30:00.000Z",
+            "toAccountId": "acc-savings"
+          },
+          {
+            "id": "food-202512-0",
+            "type": "expense",
+            "amount": 687,
+            "accountId": "acc-card",
+            "categoryId": "cat-1",
+            "date": "2025-12-03T14:45:00.000Z",
+            "note": "Swiggy 449",
+            "labels": [],
+            "createdAt": "2025-12-03T14:45:00.000Z"
+          },
+          {
+            "id": "food-202512-1",
+            "type": "expense",
+            "amount": 800.5,
+            "accountId": "acc-bank",
+            "categoryId": "cat-1",
+            "date": "2025-12-09T14:45:00.000Z",
+            "note": "Zomato order #4471",
+            "labels": [
+              "lbl-2"
+            ],
+            "createdAt": "2025-12-09T14:45:00.000Z"
+          },
+          {
+            "id": "food-202512-2",
+            "type": "expense",
+            "amount": 914,
+            "accountId": "acc-card",
+            "categoryId": "cat-25",
+            "date": "2025-12-14T14:45:00.000Z",
+            "note": "BigBasket",
+            "labels": [],
+            "createdAt": "2025-12-14T14:45:00.000Z"
+          },
+          {
+            "id": "food-202512-3",
+            "type": "expense",
+            "amount": 1027.5,
+            "accountId": "acc-bank",
+            "categoryId": "cat-1",
+            "date": "2025-12-20T14:45:00.000Z",
+            "note": "Swiggy/9921",
+            "labels": [],
+            "createdAt": "2025-12-20T14:45:00.000Z"
+          },
+          {
+            "id": "netflix-202512",
+            "type": "expense",
+            "amount": 649,
+            "accountId": "acc-card",
+            "categoryId": "cat-18",
+            "date": "2025-12-07T00:30:00.000Z",
+            "note": "NETFLIX.COM 8812",
+            "labels": [
+              "lbl-3"
+            ],
+            "createdAt": "2025-12-07T00:30:00.000Z"
+          },
+          {
+            "id": "spotify-202512",
+            "type": "expense",
+            "amount": 119,
+            "accountId": "acc-card",
+            "categoryId": "cat-18",
+            "date": "2025-12-15T00:30:00.000Z",
+            "note": "Spotify",
+            "labels": [],
+            "createdAt": "2025-12-15T00:30:00.000Z"
+          },
+          {
+            "id": "hotstar-202512",
+            "type": "expense",
+            "amount": 299,
+            "accountId": "acc-card",
+            "categoryId": "cat-18",
+            "date": "2025-12-16T00:30:00.000Z",
+            "note": "Hotstar 299",
+            "labels": [],
+            "createdAt": "2025-12-16T00:30:00.000Z"
+          },
+          {
+            "id": "elec-202512",
+            "type": "expense",
+            "amount": 1273,
+            "accountId": "acc-bank",
+            "categoryId": "cat-5",
+            "date": "2025-12-12T05:30:00.000Z",
+            "note": "BESCOM electricity",
+            "labels": [],
+            "createdAt": "2025-12-12T05:30:00.000Z"
+          },
+          {
+            "id": "uber-202512",
+            "type": "expense",
+            "amount": 340.75,
+            "accountId": "acc-cash",
+            "categoryId": "cat-2",
+            "date": "2025-12-11T13:30:00.000Z",
+            "note": "Uber trip",
+            "labels": [
+              "lbl-2"
+            ],
+            "createdAt": "2025-12-11T13:30:00.000Z"
+          },
+          {
+            "id": "rd-202512",
+            "type": "transfer",
+            "amount": 5000,
+            "accountId": "acc-bank",
+            "categoryId": "cat-13",
+            "date": "2025-12-09T18:30:00.000Z",
+            "note": "RD installment",
+            "labels": [],
+            "createdAt": "2025-12-09T18:30:00.000Z",
+            "toAccountId": "acc-rd",
+            "recurringId": "rec-rd"
+          },
+          {
+            "id": "split-202512",
+            "type": "expense",
+            "amount": 3000.5,
+            "accountId": "acc-card",
+            "categoryId": "",
+            "date": "2025-12-17T12:30:00.000Z",
+            "note": "DMart Ready",
+            "labels": [
+              "lbl-1"
+            ],
+            "createdAt": "2025-12-17T12:30:00.000Z",
+            "splits": [
+              {
+                "categoryId": "cat-25",
+                "amount": 2000.25
+              },
+              {
+                "categoryId": "cat-32",
+                "amount": 1000.25
+              }
+            ]
+          },
+          {
+            "id": "cardpay-202512",
+            "type": "transfer",
+            "amount": 9250,
+            "accountId": "acc-bank",
+            "categoryId": "cat-13",
+            "date": "2025-12-22T04:30:00.000Z",
+            "note": "Amex bill payment",
+            "labels": [],
+            "createdAt": "2025-12-22T04:30:00.000Z",
+            "toAccountId": "acc-card"
+          },
+          {
+            "id": "int-202512",
+            "type": "income",
+            "amount": 412.37,
+            "accountId": "acc-savings",
+            "categoryId": "cat-23",
+            "date": "2025-12-28T18:29:00.000Z",
+            "note": "Interest",
+            "labels": [],
+            "createdAt": "2025-12-28T18:29:00.000Z"
+          },
+          {
+            "id": "sal-202601",
+            "type": "income",
+            "amount": 85000,
+            "accountId": "acc-bank",
+            "categoryId": "cat-9",
+            "date": "2025-12-25T03:30:00.000Z",
+            "note": "Salary ACME Corp",
+            "labels": [],
+            "createdAt": "2025-12-25T03:30:00.000Z"
+          },
+          {
+            "id": "rent-202601",
+            "type": "expense",
+            "amount": 22000,
+            "accountId": "acc-bank",
+            "categoryId": "cat-28",
+            "date": "2026-01-01T03:30:00.000Z",
+            "note": "Rent 202601",
+            "labels": [
+              "lbl-1",
+              "lbl-5"
+            ],
+            "createdAt": "2026-01-01T03:30:00.000Z"
+          },
+          {
+            "id": "xsav-202601",
+            "type": "transfer",
+            "amount": 10000,
+            "accountId": "acc-bank",
+            "categoryId": "cat-13",
+            "date": "2026-01-02T02:30:00.000Z",
+            "note": "To savings",
+            "labels": [],
+            "createdAt": "2026-01-02T02:30:00.000Z",
+            "toAccountId": "acc-savings"
+          },
+          {
+            "id": "food-202601-0",
+            "type": "expense",
+            "amount": 724,
+            "accountId": "acc-card",
+            "categoryId": "cat-1",
+            "date": "2026-01-03T14:45:00.000Z",
+            "note": "Zomato order #4471",
+            "labels": [],
+            "createdAt": "2026-01-03T14:45:00.000Z"
+          },
+          {
+            "id": "food-202601-1",
+            "type": "expense",
+            "amount": 837.5,
+            "accountId": "acc-bank",
+            "categoryId": "cat-25",
+            "date": "2026-01-09T14:45:00.000Z",
+            "note": "BigBasket",
+            "labels": [
+              "lbl-2"
+            ],
+            "createdAt": "2026-01-09T14:45:00.000Z"
+          },
+          {
+            "id": "food-202601-2",
+            "type": "expense",
+            "amount": 951,
+            "accountId": "acc-card",
+            "categoryId": "cat-1",
+            "date": "2026-01-14T14:45:00.000Z",
+            "note": "Swiggy/9921",
+            "labels": [],
+            "createdAt": "2026-01-14T14:45:00.000Z"
+          },
+          {
+            "id": "food-202601-3",
+            "type": "expense",
+            "amount": 1064.5,
+            "accountId": "acc-bank",
+            "categoryId": "cat-1",
+            "date": "2026-01-20T14:45:00.000Z",
+            "note": "Swiggy 449",
+            "labels": [],
+            "createdAt": "2026-01-20T14:45:00.000Z"
+          },
+          {
+            "id": "netflix-202601",
+            "type": "expense",
+            "amount": 649,
+            "accountId": "acc-card",
+            "categoryId": "cat-18",
+            "date": "2026-01-07T00:30:00.000Z",
+            "note": "NETFLIX.COM 8812",
+            "labels": [
+              "lbl-3"
+            ],
+            "createdAt": "2026-01-07T00:30:00.000Z"
+          },
+          {
+            "id": "spotify-202601",
+            "type": "expense",
+            "amount": 119,
+            "accountId": "acc-card",
+            "categoryId": "cat-18",
+            "date": "2026-01-15T00:30:00.000Z",
+            "note": "Spotify",
+            "labels": [],
+            "createdAt": "2026-01-15T00:30:00.000Z"
+          },
+          {
+            "id": "hotstar-202601",
+            "type": "expense",
+            "amount": 299,
+            "accountId": "acc-card",
+            "categoryId": "cat-18",
+            "date": "2026-01-16T00:30:00.000Z",
+            "note": "Hotstar 299",
+            "labels": [],
+            "createdAt": "2026-01-16T00:30:00.000Z"
+          },
+          {
+            "id": "elec-202601",
+            "type": "expense",
+            "amount": 1446,
+            "accountId": "acc-bank",
+            "categoryId": "cat-5",
+            "date": "2026-01-12T05:30:00.000Z",
+            "note": "BESCOM electricity",
+            "labels": [],
+            "createdAt": "2026-01-12T05:30:00.000Z"
+          },
+          {
+            "id": "uber-202601",
+            "type": "expense",
+            "amount": 340.75,
+            "accountId": "acc-cash",
+            "categoryId": "cat-2",
+            "date": "2026-01-11T13:30:00.000Z",
+            "note": "Uber trip",
+            "labels": [
+              "lbl-2"
+            ],
+            "createdAt": "2026-01-11T13:30:00.000Z"
+          },
+          {
+            "id": "rd-202601",
+            "type": "transfer",
+            "amount": 5000,
+            "accountId": "acc-bank",
+            "categoryId": "cat-13",
+            "date": "2026-01-09T18:30:00.000Z",
+            "note": "RD installment",
+            "labels": [],
+            "createdAt": "2026-01-09T18:30:00.000Z",
+            "toAccountId": "acc-rd",
+            "recurringId": "rec-rd"
+          },
+          {
+            "id": "split-202601",
+            "type": "expense",
+            "amount": 3000.5,
+            "accountId": "acc-card",
+            "categoryId": "",
+            "date": "2026-01-17T12:30:00.000Z",
+            "note": "DMart Ready",
+            "labels": [
+              "lbl-1"
+            ],
+            "createdAt": "2026-01-17T12:30:00.000Z",
+            "splits": [
+              {
+                "categoryId": "cat-25",
+                "amount": 2000.25
+              },
+              {
+                "categoryId": "cat-32",
+                "amount": 1000.25
+              }
+            ]
+          },
+          {
+            "id": "cardpay-202601",
+            "type": "transfer",
+            "amount": 9500,
+            "accountId": "acc-bank",
+            "categoryId": "cat-13",
+            "date": "2026-01-22T04:30:00.000Z",
+            "note": "Amex bill payment",
+            "labels": [],
+            "createdAt": "2026-01-22T04:30:00.000Z",
+            "toAccountId": "acc-card"
+          },
+          {
+            "id": "sal-202602",
+            "type": "income",
+            "amount": 85000,
+            "accountId": "acc-bank",
+            "categoryId": "cat-9",
+            "date": "2026-01-25T03:30:00.000Z",
+            "note": "Salary ACME Corp",
+            "labels": [],
+            "createdAt": "2026-01-25T03:30:00.000Z"
+          },
+          {
+            "id": "rent-202602",
+            "type": "expense",
+            "amount": 22000,
+            "accountId": "acc-bank",
+            "categoryId": "cat-28",
+            "date": "2026-02-01T03:30:00.000Z",
+            "note": "Rent 202602",
+            "labels": [
+              "lbl-1",
+              "lbl-5"
+            ],
+            "createdAt": "2026-02-01T03:30:00.000Z"
+          },
+          {
+            "id": "xsav-202602",
+            "type": "transfer",
+            "amount": 10000,
+            "accountId": "acc-bank",
+            "categoryId": "cat-13",
+            "date": "2026-02-02T02:30:00.000Z",
+            "note": "To savings",
+            "labels": [],
+            "createdAt": "2026-02-02T02:30:00.000Z",
+            "toAccountId": "acc-savings"
+          },
+          {
+            "id": "food-202602-0",
+            "type": "expense",
+            "amount": 761,
+            "accountId": "acc-card",
+            "categoryId": "cat-25",
+            "date": "2026-02-03T14:45:00.000Z",
+            "note": "BigBasket",
+            "labels": [],
+            "createdAt": "2026-02-03T14:45:00.000Z"
+          },
+          {
+            "id": "food-202602-1",
+            "type": "expense",
+            "amount": 874.5,
+            "accountId": "acc-bank",
+            "categoryId": "cat-1",
+            "date": "2026-02-09T14:45:00.000Z",
+            "note": "Swiggy/9921",
+            "labels": [
+              "lbl-2"
+            ],
+            "createdAt": "2026-02-09T14:45:00.000Z"
+          },
+          {
+            "id": "food-202602-2",
+            "type": "expense",
+            "amount": 988,
+            "accountId": "acc-card",
+            "categoryId": "cat-1",
+            "date": "2026-02-14T14:45:00.000Z",
+            "note": "Swiggy 449",
+            "labels": [],
+            "createdAt": "2026-02-14T14:45:00.000Z"
+          },
+          {
+            "id": "food-202602-3",
+            "type": "expense",
+            "amount": 1101.5,
+            "accountId": "acc-bank",
+            "categoryId": "cat-1",
+            "date": "2026-02-20T14:45:00.000Z",
+            "note": "Zomato order #4471",
+            "labels": [],
+            "createdAt": "2026-02-20T14:45:00.000Z"
+          },
+          {
+            "id": "netflix-202602",
+            "type": "expense",
+            "amount": 649,
+            "accountId": "acc-card",
+            "categoryId": "cat-18",
+            "date": "2026-02-07T00:30:00.000Z",
+            "note": "NETFLIX.COM 8812",
+            "labels": [
+              "lbl-3"
+            ],
+            "createdAt": "2026-02-07T00:30:00.000Z"
+          },
+          {
+            "id": "spotify-202602",
+            "type": "expense",
+            "amount": 119,
+            "accountId": "acc-card",
+            "categoryId": "cat-18",
+            "date": "2026-02-15T00:30:00.000Z",
+            "note": "Spotify",
+            "labels": [],
+            "createdAt": "2026-02-15T00:30:00.000Z"
+          },
+          {
+            "id": "hotstar-202602",
+            "type": "expense",
+            "amount": 299,
+            "accountId": "acc-card",
+            "categoryId": "cat-18",
+            "date": "2026-02-16T00:30:00.000Z",
+            "note": "Hotstar 299",
+            "labels": [],
+            "createdAt": "2026-02-16T00:30:00.000Z"
+          },
+          {
+            "id": "elec-202602",
+            "type": "expense",
+            "amount": 1619,
+            "accountId": "acc-bank",
+            "categoryId": "cat-5",
+            "date": "2026-02-12T05:30:00.000Z",
+            "note": "BESCOM electricity",
+            "labels": [],
+            "createdAt": "2026-02-12T05:30:00.000Z"
+          },
+          {
+            "id": "uber-202602",
+            "type": "expense",
+            "amount": 340.75,
+            "accountId": "acc-cash",
+            "categoryId": "cat-2",
+            "date": "2026-02-11T13:30:00.000Z",
+            "note": "Uber trip",
+            "labels": [
+              "lbl-2"
+            ],
+            "createdAt": "2026-02-11T13:30:00.000Z"
+          },
+          {
+            "id": "rd-202602",
+            "type": "transfer",
+            "amount": 5000,
+            "accountId": "acc-bank",
+            "categoryId": "cat-13",
+            "date": "2026-02-09T18:30:00.000Z",
+            "note": "RD installment",
+            "labels": [],
+            "createdAt": "2026-02-09T18:30:00.000Z",
+            "toAccountId": "acc-rd",
+            "recurringId": "rec-rd"
+          },
+          {
+            "id": "split-202602",
+            "type": "expense",
+            "amount": 3000.5,
+            "accountId": "acc-card",
+            "categoryId": "",
+            "date": "2026-02-17T12:30:00.000Z",
+            "note": "DMart Ready",
+            "labels": [
+              "lbl-1"
+            ],
+            "createdAt": "2026-02-17T12:30:00.000Z",
+            "splits": [
+              {
+                "categoryId": "cat-25",
+                "amount": 2000.25
+              },
+              {
+                "categoryId": "cat-32",
+                "amount": 1000.25
+              }
+            ]
+          },
+          {
+            "id": "cardpay-202602",
+            "type": "transfer",
+            "amount": 9750,
+            "accountId": "acc-bank",
+            "categoryId": "cat-13",
+            "date": "2026-02-22T04:30:00.000Z",
+            "note": "Amex bill payment",
+            "labels": [],
+            "createdAt": "2026-02-22T04:30:00.000Z",
+            "toAccountId": "acc-card"
+          },
+          {
+            "id": "int-202602",
+            "type": "income",
+            "amount": 412.37,
+            "accountId": "acc-savings",
+            "categoryId": "cat-23",
+            "date": "2026-02-28T18:29:00.000Z",
+            "note": "Interest",
+            "labels": [],
+            "createdAt": "2026-02-28T18:29:00.000Z"
+          },
+          {
+            "id": "sal-202603",
+            "type": "income",
+            "amount": 85000,
+            "accountId": "acc-bank",
+            "categoryId": "cat-9",
+            "date": "2026-02-25T03:30:00.000Z",
+            "note": "Salary ACME Corp",
+            "labels": [],
+            "createdAt": "2026-02-25T03:30:00.000Z"
+          },
+          {
+            "id": "rent-202603",
+            "type": "expense",
+            "amount": 22000,
+            "accountId": "acc-bank",
+            "categoryId": "cat-28",
+            "date": "2026-03-01T03:30:00.000Z",
+            "note": "Rent 202603",
+            "labels": [
+              "lbl-1",
+              "lbl-5"
+            ],
+            "createdAt": "2026-03-01T03:30:00.000Z"
+          },
+          {
+            "id": "xsav-202603",
+            "type": "transfer",
+            "amount": 10000,
+            "accountId": "acc-bank",
+            "categoryId": "cat-13",
+            "date": "2026-03-02T02:30:00.000Z",
+            "note": "To savings",
+            "labels": [],
+            "createdAt": "2026-03-02T02:30:00.000Z",
+            "toAccountId": "acc-savings"
+          },
+          {
+            "id": "food-202603-0",
+            "type": "expense",
+            "amount": 798,
+            "accountId": "acc-card",
+            "categoryId": "cat-1",
+            "date": "2026-03-03T14:45:00.000Z",
+            "note": "Swiggy/9921",
+            "labels": [],
+            "createdAt": "2026-03-03T14:45:00.000Z"
+          },
+          {
+            "id": "food-202603-1",
+            "type": "expense",
+            "amount": 911.5,
+            "accountId": "acc-bank",
+            "categoryId": "cat-1",
+            "date": "2026-03-09T14:45:00.000Z",
+            "note": "Swiggy 449",
+            "labels": [
+              "lbl-2"
+            ],
+            "createdAt": "2026-03-09T14:45:00.000Z"
+          },
+          {
+            "id": "food-202603-2",
+            "type": "expense",
+            "amount": 1025,
+            "accountId": "acc-card",
+            "categoryId": "cat-1",
+            "date": "2026-03-14T14:45:00.000Z",
+            "note": "Zomato order #4471",
+            "labels": [],
+            "createdAt": "2026-03-14T14:45:00.000Z"
+          },
+          {
+            "id": "food-202603-3",
+            "type": "expense",
+            "amount": 1138.5,
+            "accountId": "acc-bank",
+            "categoryId": "cat-25",
+            "date": "2026-03-20T14:45:00.000Z",
+            "note": "BigBasket",
+            "labels": [],
+            "createdAt": "2026-03-20T14:45:00.000Z"
+          },
+          {
+            "id": "netflix-202603",
+            "type": "expense",
+            "amount": 649,
+            "accountId": "acc-card",
+            "categoryId": "cat-18",
+            "date": "2026-03-07T00:30:00.000Z",
+            "note": "NETFLIX.COM 8812",
+            "labels": [
+              "lbl-3"
+            ],
+            "createdAt": "2026-03-07T00:30:00.000Z"
+          },
+          {
+            "id": "spotify-202603",
+            "type": "expense",
+            "amount": 119,
+            "accountId": "acc-card",
+            "categoryId": "cat-18",
+            "date": "2026-03-15T00:30:00.000Z",
+            "note": "Spotify",
+            "labels": [],
+            "createdAt": "2026-03-15T00:30:00.000Z"
+          },
+          {
+            "id": "hotstar-202603",
+            "type": "expense",
+            "amount": 299,
+            "accountId": "acc-card",
+            "categoryId": "cat-18",
+            "date": "2026-03-16T00:30:00.000Z",
+            "note": "Hotstar 299",
+            "labels": [],
+            "createdAt": "2026-03-16T00:30:00.000Z"
+          },
+          {
+            "id": "elec-202603",
+            "type": "expense",
+            "amount": 1792,
+            "accountId": "acc-bank",
+            "categoryId": "cat-5",
+            "date": "2026-03-12T05:30:00.000Z",
+            "note": "BESCOM electricity",
+            "labels": [],
+            "createdAt": "2026-03-12T05:30:00.000Z"
+          },
+          {
+            "id": "uber-202603",
+            "type": "expense",
+            "amount": 340.75,
+            "accountId": "acc-cash",
+            "categoryId": "cat-2",
+            "date": "2026-03-11T13:30:00.000Z",
+            "note": "Uber trip",
+            "labels": [
+              "lbl-2"
+            ],
+            "createdAt": "2026-03-11T13:30:00.000Z"
+          },
+          {
+            "id": "rd-202603",
+            "type": "transfer",
+            "amount": 5000,
+            "accountId": "acc-bank",
+            "categoryId": "cat-13",
+            "date": "2026-03-09T18:30:00.000Z",
+            "note": "RD installment",
+            "labels": [],
+            "createdAt": "2026-03-09T18:30:00.000Z",
+            "toAccountId": "acc-rd",
+            "recurringId": "rec-rd"
+          },
+          {
+            "id": "split-202603",
+            "type": "expense",
+            "amount": 3000.5,
+            "accountId": "acc-card",
+            "categoryId": "",
+            "date": "2026-03-17T12:30:00.000Z",
+            "note": "DMart Ready",
+            "labels": [
+              "lbl-1"
+            ],
+            "createdAt": "2026-03-17T12:30:00.000Z",
+            "splits": [
+              {
+                "categoryId": "cat-25",
+                "amount": 2000.25
+              },
+              {
+                "categoryId": "cat-32",
+                "amount": 1000.25
+              }
+            ]
+          },
+          {
+            "id": "cardpay-202603",
+            "type": "transfer",
+            "amount": 10000,
+            "accountId": "acc-bank",
+            "categoryId": "cat-13",
+            "date": "2026-03-22T04:30:00.000Z",
+            "note": "Amex bill payment",
+            "labels": [],
+            "createdAt": "2026-03-22T04:30:00.000Z",
+            "toAccountId": "acc-card"
+          },
+          {
+            "id": "sal-202604",
+            "type": "income",
+            "amount": 85000,
+            "accountId": "acc-bank",
+            "categoryId": "cat-9",
+            "date": "2026-03-25T03:30:00.000Z",
+            "note": "Salary ACME Corp",
+            "labels": [],
+            "createdAt": "2026-03-25T03:30:00.000Z"
+          },
+          {
+            "id": "rent-202604",
+            "type": "expense",
+            "amount": 22000,
+            "accountId": "acc-bank",
+            "categoryId": "cat-28",
+            "date": "2026-04-01T03:30:00.000Z",
+            "note": "Rent 202604",
+            "labels": [
+              "lbl-1",
+              "lbl-5"
+            ],
+            "createdAt": "2026-04-01T03:30:00.000Z"
+          },
+          {
+            "id": "xsav-202604",
+            "type": "transfer",
+            "amount": 10000,
+            "accountId": "acc-bank",
+            "categoryId": "cat-13",
+            "date": "2026-04-02T02:30:00.000Z",
+            "note": "To savings",
+            "labels": [],
+            "createdAt": "2026-04-02T02:30:00.000Z",
+            "toAccountId": "acc-savings"
+          },
+          {
+            "id": "food-202604-0",
+            "type": "expense",
+            "amount": 835,
+            "accountId": "acc-card",
+            "categoryId": "cat-1",
+            "date": "2026-04-03T14:45:00.000Z",
+            "note": "Swiggy 449",
+            "labels": [],
+            "createdAt": "2026-04-03T14:45:00.000Z"
+          },
+          {
+            "id": "food-202604-1",
+            "type": "expense",
+            "amount": 948.5,
+            "accountId": "acc-bank",
+            "categoryId": "cat-1",
+            "date": "2026-04-09T14:45:00.000Z",
+            "note": "Zomato order #4471",
+            "labels": [
+              "lbl-2"
+            ],
+            "createdAt": "2026-04-09T14:45:00.000Z"
+          },
+          {
+            "id": "food-202604-2",
+            "type": "expense",
+            "amount": 1062,
+            "accountId": "acc-card",
+            "categoryId": "cat-25",
+            "date": "2026-04-14T14:45:00.000Z",
+            "note": "BigBasket",
+            "labels": [],
+            "createdAt": "2026-04-14T14:45:00.000Z"
+          },
+          {
+            "id": "food-202604-3",
+            "type": "expense",
+            "amount": 1175.5,
+            "accountId": "acc-bank",
+            "categoryId": "cat-1",
+            "date": "2026-04-20T14:45:00.000Z",
+            "note": "Swiggy/9921",
+            "labels": [],
+            "createdAt": "2026-04-20T14:45:00.000Z"
+          },
+          {
+            "id": "netflix-202604",
+            "type": "expense",
+            "amount": 649,
+            "accountId": "acc-card",
+            "categoryId": "cat-18",
+            "date": "2026-04-07T00:30:00.000Z",
+            "note": "NETFLIX.COM 8812",
+            "labels": [
+              "lbl-3"
+            ],
+            "createdAt": "2026-04-07T00:30:00.000Z"
+          },
+          {
+            "id": "spotify-202604",
+            "type": "expense",
+            "amount": 121,
+            "accountId": "acc-card",
+            "categoryId": "cat-18",
+            "date": "2026-04-15T00:30:00.000Z",
+            "note": "Spotify",
+            "labels": [],
+            "createdAt": "2026-04-15T00:30:00.000Z"
+          },
+          {
+            "id": "hotstar-202604",
+            "type": "expense",
+            "amount": 299,
+            "accountId": "acc-card",
+            "categoryId": "cat-18",
+            "date": "2026-04-16T00:30:00.000Z",
+            "note": "Hotstar 299",
+            "labels": [],
+            "createdAt": "2026-04-16T00:30:00.000Z"
+          },
+          {
+            "id": "elec-202604",
+            "type": "expense",
+            "amount": 1965,
+            "accountId": "acc-bank",
+            "categoryId": "cat-5",
+            "date": "2026-04-12T05:30:00.000Z",
+            "note": "BESCOM electricity",
+            "labels": [],
+            "createdAt": "2026-04-12T05:30:00.000Z"
+          },
+          {
+            "id": "uber-202604",
+            "type": "expense",
+            "amount": 340.75,
+            "accountId": "acc-cash",
+            "categoryId": "cat-2",
+            "date": "2026-04-11T13:30:00.000Z",
+            "note": "Uber trip",
+            "labels": [
+              "lbl-2"
+            ],
+            "createdAt": "2026-04-11T13:30:00.000Z"
+          },
+          {
+            "id": "rd-202604",
+            "type": "transfer",
+            "amount": 5000,
+            "accountId": "acc-bank",
+            "categoryId": "cat-13",
+            "date": "2026-04-09T18:30:00.000Z",
+            "note": "RD installment",
+            "labels": [],
+            "createdAt": "2026-04-09T18:30:00.000Z",
+            "toAccountId": "acc-rd",
+            "recurringId": "rec-rd"
+          },
+          {
+            "id": "split-202604",
+            "type": "expense",
+            "amount": 3000.5,
+            "accountId": "acc-card",
+            "categoryId": "",
+            "date": "2026-04-17T12:30:00.000Z",
+            "note": "DMart Ready",
+            "labels": [
+              "lbl-1"
+            ],
+            "createdAt": "2026-04-17T12:30:00.000Z",
+            "splits": [
+              {
+                "categoryId": "cat-25",
+                "amount": 2000.25
+              },
+              {
+                "categoryId": "cat-32",
+                "amount": 1000.25
+              }
+            ]
+          },
+          {
+            "id": "cardpay-202604",
+            "type": "transfer",
+            "amount": 10250,
+            "accountId": "acc-bank",
+            "categoryId": "cat-13",
+            "date": "2026-04-22T04:30:00.000Z",
+            "note": "Amex bill payment",
+            "labels": [],
+            "createdAt": "2026-04-22T04:30:00.000Z",
+            "toAccountId": "acc-card"
+          },
+          {
+            "id": "int-202604",
+            "type": "income",
+            "amount": 412.37,
+            "accountId": "acc-savings",
+            "categoryId": "cat-23",
+            "date": "2026-04-28T18:29:00.000Z",
+            "note": "Interest",
+            "labels": [],
+            "createdAt": "2026-04-28T18:29:00.000Z"
+          },
+          {
+            "id": "sal-202605",
+            "type": "income",
+            "amount": 85000,
+            "accountId": "acc-bank",
+            "categoryId": "cat-9",
+            "date": "2026-04-25T03:30:00.000Z",
+            "note": "Salary ACME Corp",
+            "labels": [],
+            "createdAt": "2026-04-25T03:30:00.000Z"
+          },
+          {
+            "id": "rent-202605",
+            "type": "expense",
+            "amount": 22000,
+            "accountId": "acc-bank",
+            "categoryId": "cat-28",
+            "date": "2026-05-01T03:30:00.000Z",
+            "note": "Rent 202605",
+            "labels": [
+              "lbl-1",
+              "lbl-5"
+            ],
+            "createdAt": "2026-05-01T03:30:00.000Z"
+          },
+          {
+            "id": "xsav-202605",
+            "type": "transfer",
+            "amount": 10000,
+            "accountId": "acc-bank",
+            "categoryId": "cat-13",
+            "date": "2026-05-02T02:30:00.000Z",
+            "note": "To savings",
+            "labels": [],
+            "createdAt": "2026-05-02T02:30:00.000Z",
+            "toAccountId": "acc-savings"
+          },
+          {
+            "id": "food-202605-0",
+            "type": "expense",
+            "amount": 872,
+            "accountId": "acc-card",
+            "categoryId": "cat-1",
+            "date": "2026-05-03T14:45:00.000Z",
+            "note": "Zomato order #4471",
+            "labels": [],
+            "createdAt": "2026-05-03T14:45:00.000Z"
+          },
+          {
+            "id": "food-202605-1",
+            "type": "expense",
+            "amount": 985.5,
+            "accountId": "acc-bank",
+            "categoryId": "cat-25",
+            "date": "2026-05-09T14:45:00.000Z",
+            "note": "BigBasket",
+            "labels": [
+              "lbl-2"
+            ],
+            "createdAt": "2026-05-09T14:45:00.000Z"
+          },
+          {
+            "id": "food-202605-2",
+            "type": "expense",
+            "amount": 1099,
+            "accountId": "acc-card",
+            "categoryId": "cat-1",
+            "date": "2026-05-14T14:45:00.000Z",
+            "note": "Swiggy/9921",
+            "labels": [],
+            "createdAt": "2026-05-14T14:45:00.000Z"
+          },
+          {
+            "id": "food-202605-3",
+            "type": "expense",
+            "amount": 1212.5,
+            "accountId": "acc-bank",
+            "categoryId": "cat-1",
+            "date": "2026-05-20T14:45:00.000Z",
+            "note": "Swiggy 449",
+            "labels": [],
+            "createdAt": "2026-05-20T14:45:00.000Z"
+          },
+          {
+            "id": "netflix-202605",
+            "type": "expense",
+            "amount": 649,
+            "accountId": "acc-card",
+            "categoryId": "cat-18",
+            "date": "2026-05-07T00:30:00.000Z",
+            "note": "NETFLIX.COM 8812",
+            "labels": [
+              "lbl-3"
+            ],
+            "createdAt": "2026-05-07T00:30:00.000Z"
+          },
+          {
+            "id": "spotify-202605",
+            "type": "expense",
+            "amount": 119,
+            "accountId": "acc-card",
+            "categoryId": "cat-18",
+            "date": "2026-05-15T00:30:00.000Z",
+            "note": "Spotify",
+            "labels": [],
+            "createdAt": "2026-05-15T00:30:00.000Z"
+          },
+          {
+            "id": "hotstar-202605",
+            "type": "expense",
+            "amount": 299,
+            "accountId": "acc-card",
+            "categoryId": "cat-18",
+            "date": "2026-05-16T00:30:00.000Z",
+            "note": "Hotstar 299",
+            "labels": [],
+            "createdAt": "2026-05-16T00:30:00.000Z"
+          },
+          {
+            "id": "elec-202605",
+            "type": "expense",
+            "amount": 1238,
+            "accountId": "acc-bank",
+            "categoryId": "cat-5",
+            "date": "2026-05-12T05:30:00.000Z",
+            "note": "BESCOM electricity",
+            "labels": [],
+            "createdAt": "2026-05-12T05:30:00.000Z"
+          },
+          {
+            "id": "uber-202605",
+            "type": "expense",
+            "amount": 340.75,
+            "accountId": "acc-cash",
+            "categoryId": "cat-2",
+            "date": "2026-05-11T13:30:00.000Z",
+            "note": "Uber trip",
+            "labels": [
+              "lbl-2"
+            ],
+            "createdAt": "2026-05-11T13:30:00.000Z"
+          },
+          {
+            "id": "rd-202605",
+            "type": "transfer",
+            "amount": 5000,
+            "accountId": "acc-bank",
+            "categoryId": "cat-13",
+            "date": "2026-05-09T18:30:00.000Z",
+            "note": "RD installment",
+            "labels": [],
+            "createdAt": "2026-05-09T18:30:00.000Z",
+            "toAccountId": "acc-rd",
+            "recurringId": "rec-rd"
+          },
+          {
+            "id": "split-202605",
+            "type": "expense",
+            "amount": 3000.5,
+            "accountId": "acc-card",
+            "categoryId": "",
+            "date": "2026-05-17T12:30:00.000Z",
+            "note": "DMart Ready",
+            "labels": [
+              "lbl-1"
+            ],
+            "createdAt": "2026-05-17T12:30:00.000Z",
+            "splits": [
+              {
+                "categoryId": "cat-25",
+                "amount": 2000.25
+              },
+              {
+                "categoryId": "cat-32",
+                "amount": 1000.25
+              }
+            ]
+          },
+          {
+            "id": "cardpay-202605",
+            "type": "transfer",
+            "amount": 10500,
+            "accountId": "acc-bank",
+            "categoryId": "cat-13",
+            "date": "2026-05-22T04:30:00.000Z",
+            "note": "Amex bill payment",
+            "labels": [],
+            "createdAt": "2026-05-22T04:30:00.000Z",
+            "toAccountId": "acc-card"
+          },
+          {
+            "id": "sal-202606",
+            "type": "income",
+            "amount": 85000,
+            "accountId": "acc-bank",
+            "categoryId": "cat-9",
+            "date": "2026-05-25T03:30:00.000Z",
+            "note": "Salary ACME Corp",
+            "labels": [],
+            "createdAt": "2026-05-25T03:30:00.000Z"
+          },
+          {
+            "id": "rent-202606",
+            "type": "expense",
+            "amount": 22000,
+            "accountId": "acc-bank",
+            "categoryId": "cat-28",
+            "date": "2026-06-01T03:30:00.000Z",
+            "note": "Rent 202606",
+            "labels": [
+              "lbl-1",
+              "lbl-5"
+            ],
+            "createdAt": "2026-06-01T03:30:00.000Z"
+          },
+          {
+            "id": "xsav-202606",
+            "type": "transfer",
+            "amount": 10000,
+            "accountId": "acc-bank",
+            "categoryId": "cat-13",
+            "date": "2026-06-02T02:30:00.000Z",
+            "note": "To savings",
+            "labels": [],
+            "createdAt": "2026-06-02T02:30:00.000Z",
+            "toAccountId": "acc-savings"
+          },
+          {
+            "id": "food-202606-0",
+            "type": "expense",
+            "amount": 909,
+            "accountId": "acc-card",
+            "categoryId": "cat-25",
+            "date": "2026-06-03T14:45:00.000Z",
+            "note": "BigBasket",
+            "labels": [],
+            "createdAt": "2026-06-03T14:45:00.000Z"
+          },
+          {
+            "id": "food-202606-1",
+            "type": "expense",
+            "amount": 1022.5,
+            "accountId": "acc-bank",
+            "categoryId": "cat-1",
+            "date": "2026-06-09T14:45:00.000Z",
+            "note": "Swiggy/9921",
+            "labels": [
+              "lbl-2"
+            ],
+            "createdAt": "2026-06-09T14:45:00.000Z"
+          },
+          {
+            "id": "food-202606-2",
+            "type": "expense",
+            "amount": 1136,
+            "accountId": "acc-card",
+            "categoryId": "cat-1",
+            "date": "2026-06-14T14:45:00.000Z",
+            "note": "Swiggy 449",
+            "labels": [],
+            "createdAt": "2026-06-14T14:45:00.000Z"
+          },
+          {
+            "id": "netflix-202606",
+            "type": "expense",
+            "amount": 649,
+            "accountId": "acc-card",
+            "categoryId": "cat-18",
+            "date": "2026-06-07T00:30:00.000Z",
+            "note": "NETFLIX.COM 8812",
+            "labels": [
+              "lbl-3"
+            ],
+            "createdAt": "2026-06-07T00:30:00.000Z"
+          },
+          {
+            "id": "spotify-202606",
+            "type": "expense",
+            "amount": 119,
+            "accountId": "acc-card",
+            "categoryId": "cat-18",
+            "date": "2026-06-15T00:30:00.000Z",
+            "note": "Spotify",
+            "labels": [],
+            "createdAt": "2026-06-15T00:30:00.000Z"
+          },
+          {
+            "id": "hotstar-202606",
+            "type": "expense",
+            "amount": 299,
+            "accountId": "acc-card",
+            "categoryId": "cat-18",
+            "date": "2026-06-16T00:30:00.000Z",
+            "note": "Hotstar 299",
+            "labels": [],
+            "createdAt": "2026-06-16T00:30:00.000Z"
+          },
+          {
+            "id": "elec-202606",
+            "type": "expense",
+            "amount": 1411,
+            "accountId": "acc-bank",
+            "categoryId": "cat-5",
+            "date": "2026-06-12T05:30:00.000Z",
+            "note": "BESCOM electricity",
+            "labels": [],
+            "createdAt": "2026-06-12T05:30:00.000Z"
+          },
+          {
+            "id": "uber-202606",
+            "type": "expense",
+            "amount": 340.75,
+            "accountId": "acc-cash",
+            "categoryId": "cat-2",
+            "date": "2026-06-11T13:30:00.000Z",
+            "note": "Uber trip",
+            "labels": [
+              "lbl-2"
+            ],
+            "createdAt": "2026-06-11T13:30:00.000Z"
+          },
+          {
+            "id": "rd-202606",
+            "type": "transfer",
+            "amount": 5000,
+            "accountId": "acc-bank",
+            "categoryId": "cat-13",
+            "date": "2026-06-09T18:30:00.000Z",
+            "note": "RD installment",
+            "labels": [],
+            "createdAt": "2026-06-09T18:30:00.000Z",
+            "toAccountId": "acc-rd",
+            "recurringId": "rec-rd"
+          },
+          {
+            "id": "split-202606",
+            "type": "expense",
+            "amount": 3000.5,
+            "accountId": "acc-card",
+            "categoryId": "",
+            "date": "2026-06-17T12:30:00.000Z",
+            "note": "DMart Ready",
+            "labels": [
+              "lbl-1"
+            ],
+            "createdAt": "2026-06-17T12:30:00.000Z",
+            "splits": [
+              {
+                "categoryId": "cat-25",
+                "amount": 2000.25
+              },
+              {
+                "categoryId": "cat-32",
+                "amount": 1000.25
+              }
+            ]
+          },
+          {
+            "id": "int-202606",
+            "type": "income",
+            "amount": 412.37,
+            "accountId": "acc-savings",
+            "categoryId": "cat-23",
+            "date": "2026-06-28T18:29:00.000Z",
+            "note": "Interest",
+            "labels": [],
+            "createdAt": "2026-06-28T18:29:00.000Z"
+          },
+          {
+            "id": "gym-0",
+            "type": "expense",
+            "amount": 299,
+            "accountId": "acc-card",
+            "categoryId": "cat-29",
+            "date": "2026-04-06T01:30:00.000Z",
+            "note": "Cult.fit class",
+            "labels": [],
+            "createdAt": "2026-04-06T01:30:00.000Z"
+          },
+          {
+            "id": "gym-1",
+            "type": "expense",
+            "amount": 299,
+            "accountId": "acc-card",
+            "categoryId": "cat-29",
+            "date": "2026-04-13T01:30:00.000Z",
+            "note": "Cult.fit class",
+            "labels": [],
+            "createdAt": "2026-04-13T01:30:00.000Z"
+          },
+          {
+            "id": "gym-2",
+            "type": "expense",
+            "amount": 299,
+            "accountId": "acc-card",
+            "categoryId": "cat-29",
+            "date": "2026-04-20T01:30:00.000Z",
+            "note": "Cult.fit class",
+            "labels": [],
+            "createdAt": "2026-04-20T01:30:00.000Z"
+          },
+          {
+            "id": "gym-3",
+            "type": "expense",
+            "amount": 299,
+            "accountId": "acc-card",
+            "categoryId": "cat-29",
+            "date": "2026-04-27T01:30:00.000Z",
+            "note": "Cult.fit class",
+            "labels": [],
+            "createdAt": "2026-04-27T01:30:00.000Z"
+          },
+          {
+            "id": "gym-4",
+            "type": "expense",
+            "amount": 299,
+            "accountId": "acc-card",
+            "categoryId": "cat-29",
+            "date": "2026-05-04T01:30:00.000Z",
+            "note": "Cult.fit class",
+            "labels": [],
+            "createdAt": "2026-05-04T01:30:00.000Z"
+          },
+          {
+            "id": "gym-5",
+            "type": "expense",
+            "amount": 299,
+            "accountId": "acc-card",
+            "categoryId": "cat-29",
+            "date": "2026-05-11T01:30:00.000Z",
+            "note": "Cult.fit class",
+            "labels": [],
+            "createdAt": "2026-05-11T01:30:00.000Z"
+          },
+          {
+            "id": "gym-6",
+            "type": "expense",
+            "amount": 299,
+            "accountId": "acc-card",
+            "categoryId": "cat-29",
+            "date": "2026-05-18T01:30:00.000Z",
+            "note": "Cult.fit class",
+            "labels": [],
+            "createdAt": "2026-05-18T01:30:00.000Z"
+          },
+          {
+            "id": "gym-7",
+            "type": "expense",
+            "amount": 299,
+            "accountId": "acc-card",
+            "categoryId": "cat-29",
+            "date": "2026-05-25T01:30:00.000Z",
+            "note": "Cult.fit class",
+            "labels": [],
+            "createdAt": "2026-05-25T01:30:00.000Z"
+          },
+          {
+            "id": "gym-8",
+            "type": "expense",
+            "amount": 299,
+            "accountId": "acc-card",
+            "categoryId": "cat-29",
+            "date": "2026-06-01T01:30:00.000Z",
+            "note": "Cult.fit class",
+            "labels": [],
+            "createdAt": "2026-06-01T01:30:00.000Z"
+          },
+          {
+            "id": "gym-9",
+            "type": "expense",
+            "amount": 299,
+            "accountId": "acc-card",
+            "categoryId": "cat-29",
+            "date": "2026-06-08T01:30:00.000Z",
+            "note": "Cult.fit class",
+            "labels": [],
+            "createdAt": "2026-06-08T01:30:00.000Z"
+          },
+          {
+            "id": "gym-10",
+            "type": "expense",
+            "amount": 299,
+            "accountId": "acc-card",
+            "categoryId": "cat-29",
+            "date": "2026-06-15T01:30:00.000Z",
+            "note": "Cult.fit class",
+            "labels": [],
+            "createdAt": "2026-06-15T01:30:00.000Z"
+          },
+          {
+            "id": "trip-mar",
+            "type": "expense",
+            "amount": 18000,
+            "accountId": "acc-card",
+            "categoryId": "cat-15",
+            "date": "2026-03-05T08:30:00.000Z",
+            "note": "IndiGo 6E-221",
+            "labels": [
+              "lbl-2"
+            ],
+            "createdAt": "2026-03-05T08:30:00.000Z"
+          },
+          {
+            "id": "party-jun",
+            "type": "expense",
+            "amount": 6500,
+            "accountId": "acc-card",
+            "categoryId": "cat-1",
+            "date": "2026-06-13T16:30:00.000Z",
+            "note": "Swiggy party",
+            "labels": [],
+            "createdAt": "2026-06-13T16:30:00.000Z"
+          },
+          {
+            "id": "fl-jun",
+            "type": "income",
+            "amount": 32000.5,
+            "accountId": "acc-bank",
+            "categoryId": "cat-10",
+            "date": "2026-06-10T06:30:00.000Z",
+            "note": "Upwork payout",
+            "labels": [],
+            "createdAt": "2026-06-10T06:30:00.000Z"
+          },
+          {
+            "id": "gift-dec",
+            "type": "income",
+            "amount": 2500,
+            "accountId": "acc-cash",
+            "categoryId": "cat-21",
+            "date": "2025-12-25T06:30:00.000Z",
+            "note": "Gift from Mom",
+            "labels": [],
+            "createdAt": "2025-12-25T06:30:00.000Z"
+          },
+          {
+            "id": "wallet-1",
+            "type": "expense",
+            "amount": 350,
+            "accountId": "acc-wallet",
+            "categoryId": "cat-1",
+            "date": "2026-05-06T07:30:00.000Z",
+            "note": "Chai Point",
+            "labels": [],
+            "createdAt": "2026-05-06T07:30:00.000Z"
+          },
+          {
+            "id": "old-1",
+            "type": "expense",
+            "amount": 1200,
+            "accountId": "acc-old",
+            "categoryId": "cat-3",
+            "date": "2025-12-04T06:30:00.000Z",
+            "note": "Myntra",
+            "labels": [],
+            "createdAt": "2025-12-04T06:30:00.000Z"
+          },
+          {
+            "id": "chai-dateonly",
+            "type": "expense",
+            "amount": 99,
+            "accountId": "acc-cash",
+            "categoryId": "cat-1",
+            "date": "2026-05-31",
+            "note": "Chai",
+            "labels": [],
+            "createdAt": "2026-05-31"
+          },
+          {
+            "id": "midnight-jun",
+            "type": "expense",
+            "amount": 180,
+            "accountId": "acc-cash",
+            "categoryId": "cat-1",
+            "date": "2026-05-31T18:30:00.000Z",
+            "note": "Midnight snack",
+            "labels": [],
+            "createdAt": "2026-05-31T18:30:00.000Z"
+          },
+          {
+            "id": "lastms-may",
+            "type": "expense",
+            "amount": 220,
+            "accountId": "acc-cash",
+            "categoryId": "cat-1",
+            "date": "2026-05-31T18:29:59.999Z",
+            "note": "Late dinner",
+            "labels": [],
+            "createdAt": "2026-05-31T18:29:59.999Z"
+          },
+          {
+            "id": "cyc-start",
+            "type": "expense",
+            "amount": 75,
+            "accountId": "acc-cash",
+            "categoryId": "cat-2",
+            "date": "2026-05-24T18:30:00.000Z",
+            "note": "Auto 25th",
+            "labels": [],
+            "createdAt": "2026-05-24T18:30:00.000Z"
+          },
+          {
+            "id": "cyc-end",
+            "type": "expense",
+            "amount": 60,
+            "accountId": "acc-cash",
+            "categoryId": "cat-2",
+            "date": "2026-05-24T18:29:00.000Z",
+            "note": "Auto 24th",
+            "labels": [],
+            "createdAt": "2026-05-24T18:29:00.000Z"
+          },
+          {
+            "id": "future-rent",
+            "type": "expense",
+            "amount": 22000,
+            "accountId": "acc-bank",
+            "categoryId": "cat-28",
+            "date": "2026-06-25T03:30:00.000Z",
+            "note": "Rent advance",
+            "labels": [],
+            "createdAt": "2026-06-25T03:30:00.000Z"
+          },
+          {
+            "id": "paise",
+            "type": "expense",
+            "amount": 0.30000000000000004,
+            "accountId": "acc-cash",
+            "categoryId": "cat-24",
+            "date": "2026-06-04T03:30:00.000Z",
+            "note": "+91 tip",
+            "labels": [
+              "lbl-2",
+              "lbl-9"
+            ],
+            "createdAt": "2026-06-04T03:30:00.000Z"
+          },
+          {
+            "id": "unknown-cat",
+            "type": "expense",
+            "amount": 450,
+            "accountId": "acc-cash",
+            "categoryId": "cat-404",
+            "date": "2026-06-05T03:30:00.000Z",
+            "note": "=cmd|calc",
+            "labels": [],
+            "createdAt": "2026-06-05T03:30:00.000Z"
+          },
+          {
+            "id": "empty-splits",
+            "type": "expense",
+            "amount": 800,
+            "accountId": "acc-card",
+            "categoryId": "cat-3",
+            "date": "2026-06-06T03:30:00.000Z",
+            "note": "Amazon order",
+            "labels": [],
+            "createdAt": "2026-06-06T03:30:00.000Z",
+            "splits": []
+          },
+          {
+            "id": "refund",
+            "type": "income",
+            "amount": 1999,
+            "accountId": "acc-card",
+            "categoryId": "cat-3",
+            "date": "2026-06-08T03:30:00.000Z",
+            "note": "Amazon refund",
+            "labels": [],
+            "createdAt": "2026-06-08T03:30:00.000Z"
+          }
+        ],
+        "categories": [
+          {
+            "id": "cat-1",
+            "name": "Food",
+            "icon": "utensils",
+            "color": "#ef4444",
+            "type": "expense"
+          },
+          {
+            "id": "cat-2",
+            "name": "Transport",
+            "icon": "car",
+            "color": "#f97316",
+            "type": "expense"
+          },
+          {
+            "id": "cat-3",
+            "name": "Shopping",
+            "icon": "shopping-bag",
+            "color": "#8b5cf6",
+            "type": "expense"
+          },
+          {
+            "id": "cat-4",
+            "name": "Entertainment",
+            "icon": "film",
+            "color": "#ec4899",
+            "type": "expense"
+          },
+          {
+            "id": "cat-5",
+            "name": "Utilities",
+            "icon": "zap",
+            "color": "#06b6d4",
+            "type": "expense"
+          },
+          {
+            "id": "cat-6",
+            "name": "Healthcare",
+            "icon": "heart-pulse",
+            "color": "#10b981",
+            "type": "expense"
+          },
+          {
+            "id": "cat-7",
+            "name": "Education",
+            "icon": "book-open",
+            "color": "#3b82f6",
+            "type": "expense"
+          },
+          {
+            "id": "cat-8",
+            "name": "Housing",
+            "icon": "home",
+            "color": "#64748b",
+            "type": "expense"
+          },
+          {
+            "id": "cat-15",
+            "name": "Travel",
+            "icon": "plane",
+            "color": "#ef4444",
+            "type": "expense"
+          },
+          {
+            "id": "cat-16",
+            "name": "Gifts",
+            "icon": "gift",
+            "color": "#f97316",
+            "type": "expense"
+          },
+          {
+            "id": "cat-17",
+            "name": "Personal Care",
+            "icon": "scissors",
+            "color": "#8b5cf6",
+            "type": "expense"
+          },
+          {
+            "id": "cat-18",
+            "name": "Subscriptions",
+            "icon": "repeat",
+            "color": "#ec4899",
+            "type": "expense"
+          },
+          {
+            "id": "cat-19",
+            "name": "Vehicles",
+            "icon": "truck",
+            "color": "#06b6d4",
+            "type": "expense"
+          },
+          {
+            "id": "cat-20",
+            "name": "Financial",
+            "icon": "dollar-sign",
+            "color": "#10b981",
+            "type": "expense"
+          },
+          {
+            "id": "cat-11",
+            "name": "Investments",
+            "icon": "trending-up",
+            "color": "#f59e0b",
+            "type": "expense"
+          },
+          {
+            "id": "cat-9",
+            "name": "Salary",
+            "icon": "briefcase",
+            "color": "#22c55e",
+            "type": "income"
+          },
+          {
+            "id": "cat-10",
+            "name": "Freelance",
+            "icon": "laptop",
+            "color": "#146b54",
+            "type": "income"
+          },
+          {
+            "id": "cat-12",
+            "name": "Business",
+            "icon": "building-2",
+            "color": "#a855f7",
+            "type": "income"
+          },
+          {
+            "id": "cat-21",
+            "name": "Gifts",
+            "icon": "gift",
+            "color": "#f97316",
+            "type": "income"
+          },
+          {
+            "id": "cat-22",
+            "name": "Rent",
+            "icon": "home",
+            "color": "#3b82f6",
+            "type": "income"
+          },
+          {
+            "id": "cat-23",
+            "name": "Interest",
+            "icon": "dollar-sign",
+            "color": "#10b981",
+            "type": "income"
+          },
+          {
+            "id": "cat-13",
+            "name": "Transfer",
+            "icon": "repeat",
+            "color": "#3b82f6",
+            "type": "both"
+          },
+          {
+            "id": "cat-24",
+            "name": "Miscellaneous",
+            "icon": "circle-ellipsis",
+            "color": "#94a3b8",
+            "type": "both"
+          },
+          {
+            "id": "cat-25",
+            "name": "Groceries",
+            "icon": "shopping-cart",
+            "color": "#22c55e",
+            "type": "expense"
+          },
+          {
+            "id": "cat-26",
+            "name": "Insurance",
+            "icon": "umbrella",
+            "color": "#0ea5e9",
+            "type": "expense"
+          },
+          {
+            "id": "cat-27",
+            "name": "Loan / EMI",
+            "icon": "banknote",
+            "color": "#f43f5e",
+            "type": "expense"
+          },
+          {
+            "id": "cat-28",
+            "name": "Rent",
+            "icon": "building-2",
+            "color": "#78716c",
+            "type": "expense"
+          },
+          {
+            "id": "cat-29",
+            "name": "Fitness & Wellness",
+            "icon": "dumbbell",
+            "color": "#14b8a6",
+            "type": "expense"
+          },
+          {
+            "id": "cat-30",
+            "name": "Pets",
+            "icon": "paw-print",
+            "color": "#f59e0b",
+            "type": "expense"
+          },
+          {
+            "id": "cat-31",
+            "name": "Childcare",
+            "icon": "baby",
+            "color": "#fb923c",
+            "type": "expense"
+          },
+          {
+            "id": "cat-32",
+            "name": "Home Maintenance",
+            "icon": "wrench",
+            "color": "#6b7280",
+            "type": "expense"
+          },
+          {
+            "id": "cat-33",
+            "name": "Bonus",
+            "icon": "sparkles",
+            "color": "#fbbf24",
+            "type": "income"
+          },
+          {
+            "id": "cat-34",
+            "name": "Dividends",
+            "icon": "piggy-bank",
+            "color": "#10b981",
+            "type": "income"
+          },
+          {
+            "id": "cat-35",
+            "name": "Lending",
+            "icon": "hand-coins",
+            "color": "#ec4899",
+            "type": "expense"
+          },
+          {
+            "id": "cat-36",
+            "name": "Lending",
+            "icon": "hand-coins",
+            "color": "#ec4899",
+            "type": "income"
+          },
+          {
+            "id": "cat-x",
+            "name": "Side hustle",
+            "icon": "tag",
+            "color": "#000",
+            "type": "both"
+          }
+        ],
+        "labels": [
+          {
+            "id": "lbl-1",
+            "name": "Essential",
+            "color": "#22c55e"
+          },
+          {
+            "id": "lbl-2",
+            "name": "Discretionary",
+            "color": "#f59e0b"
+          },
+          {
+            "id": "lbl-3",
+            "name": "Recurring",
+            "color": "#3b82f6"
+          },
+          {
+            "id": "lbl-4",
+            "name": "Tax",
+            "color": "#ef4444"
+          },
+          {
+            "id": "lbl-5",
+            "name": "Obligation",
+            "color": "#10b981"
+          },
+          {
+            "id": "lbl-6",
+            "name": "Investment",
+            "color": "#8b5cf6"
+          },
+          {
+            "id": "lbl-7",
+            "name": "Lending",
+            "color": "#ec4899"
+          },
+          {
+            "id": "lbl-8",
+            "name": "For Self",
+            "color": "#64748b"
+          },
+          {
+            "id": "lbl-9",
+            "name": "For Others",
+            "color": "#06b6d4"
+          }
+        ],
+        "budgets": [
+          {
+            "id": "b-overall",
+            "categoryId": "",
+            "amount": 60000,
+            "period": "monthly",
+            "rollover": false,
+            "createdAt": "2025-11-01T04:30:00.000Z"
+          },
+          {
+            "id": "b-food",
+            "categoryId": "cat-1",
+            "amount": 5000,
+            "period": "monthly",
+            "rollover": true,
+            "createdAt": "2026-01-15T04:30:00.000Z"
+          },
+          {
+            "id": "b-groc",
+            "categoryId": "cat-25",
+            "amount": 3000,
+            "period": "monthly",
+            "rollover": true,
+            "createdAt": "2025-10-01T04:30:00.000Z"
+          },
+          {
+            "id": "b-disc",
+            "categoryId": "",
+            "amount": 4000,
+            "period": "monthly",
+            "rollover": false,
+            "createdAt": "2025-11-01T04:30:00.000Z",
+            "labelId": "lbl-2"
+          },
+          {
+            "id": "b-gym",
+            "categoryId": "cat-29",
+            "amount": 500,
+            "period": "weekly",
+            "rollover": true,
+            "createdAt": "2026-05-01T04:30:00.000Z"
+          },
+          {
+            "id": "b-travel",
+            "categoryId": "cat-15",
+            "amount": 25000,
+            "period": "yearly",
+            "rollover": true,
+            "createdAt": "2025-01-01T04:30:00.000Z"
+          },
+          {
+            "id": "b-ent",
+            "categoryId": "cat-4",
+            "amount": 0,
+            "period": "monthly",
+            "rollover": false,
+            "createdAt": "2025-11-01T04:30:00.000Z"
+          },
+          {
+            "id": "b-transport",
+            "categoryId": "cat-2",
+            "amount": 2000,
+            "period": "monthly",
+            "rollover": true,
+            "createdAt": "2026-09-01T04:30:00.000Z"
+          },
+          {
+            "id": "b-util",
+            "categoryId": "cat-5",
+            "amount": 1500,
+            "period": "monthly",
+            "rollover": true,
+            "createdAt": "not a date"
+          },
+          {
+            "id": "b-home",
+            "categoryId": "cat-32",
+            "amount": 900,
+            "period": "monthly",
+            "rollover": false,
+            "createdAt": "2025-11-01T04:30:00.000Z"
+          },
+          {
+            "id": "b-subs",
+            "categoryId": "cat-18",
+            "amount": 800,
+            "period": "monthly",
+            "rollover": true,
+            "createdAt": "2025-11-01T04:30:00.000Z"
+          },
+          {
+            "id": "b-emptylabel",
+            "categoryId": "cat-28",
+            "amount": 21000,
+            "period": "monthly",
+            "rollover": false,
+            "createdAt": "2025-11-01T04:30:00.000Z",
+            "labelId": ""
+          }
+        ],
+        "recurring": [
+          {
+            "id": "rec-rd",
+            "type": "transfer",
+            "amount": 5000,
+            "accountId": "acc-bank",
+            "toAccountId": "acc-rd",
+            "categoryId": "cat-13",
+            "note": "RD installment",
+            "labels": [],
+            "frequency": "monthly",
+            "startDate": "2025-11-09T18:30:00.000Z",
+            "occurrenceCount": 8,
+            "lastRunDate": "2026-06-09T18:30:00.000Z",
+            "createdAt": "2025-11-01T04:30:00.000Z"
+          },
+          {
+            "id": "rec-hotstar",
+            "type": "expense",
+            "amount": 299,
+            "accountId": "acc-card",
+            "categoryId": "cat-18",
+            "note": "Hotstar",
+            "labels": [],
+            "frequency": "monthly",
+            "startDate": "2025-11-16T00:30:00.000Z",
+            "occurrenceCount": 0,
+            "lastRunDate": null,
+            "createdAt": "2025-11-01T04:30:00.000Z"
+          }
+        ],
+        "snapshots": [
+          {
+            "id": "s1",
+            "periodKey": "2026-01",
+            "date": "2026-01-31T18:29:59.999Z",
+            "assets": 400000,
+            "liabilities": 12000.5,
+            "createdAt": "2026-02-01T04:30:00.000Z"
+          },
+          {
+            "id": "s2",
+            "periodKey": "2026-03",
+            "date": "2026-04-02T02:30:00.000Z",
+            "assets": 410123.45,
+            "liabilities": 30000,
+            "createdAt": "2026-04-02T02:30:00.000Z"
+          },
+          {
+            "id": "s-current",
+            "periodKey": "2026-06",
+            "date": "2026-06-10T04:30:00.000Z",
+            "assets": 1,
+            "liabilities": 1,
+            "createdAt": "2026-06-10T04:30:00.000Z"
+          },
+          {
+            "id": "s-cycle",
+            "periodKey": "2026-04",
+            "date": "2026-05-24T18:29:59.999Z",
+            "assets": 420000,
+            "liabilities": 15000,
+            "createdAt": "2026-05-25T04:30:00.000Z"
+          }
+        ]
+      }
+    },
+    {
+      "fn": "summarizeMerchants",
+      "args": [
+        "@ledger.transactions",
+        "expense"
+      ],
+      "out": [
+        {
+          "key": "rent",
+          "displayName": "Rent 202606",
+          "type": "expense",
+          "totalAmount": 176000,
+          "transactionCount": 8,
+          "lastDate": "2026-06-01T03:30:00.000Z",
+          "transactions": [
+            "rent-202606",
+            "rent-202605",
+            "rent-202604",
+            "rent-202603",
+            "rent-202602",
+            "rent-202601",
+            "rent-202512",
+            "rent-202511"
+          ]
+        },
+        {
+          "key": "dmart ready",
+          "displayName": "DMart Ready",
+          "type": "expense",
+          "totalAmount": 24004,
+          "transactionCount": 8,
+          "lastDate": "2026-06-17T12:30:00.000Z",
+          "transactions": [
+            "split-202606",
+            "split-202605",
+            "split-202604",
+            "split-202603",
+            "split-202602",
+            "split-202601",
+            "split-202512",
+            "split-202511"
+          ]
+        },
+        {
+          "key": "rent advance",
+          "displayName": "Rent advance",
+          "type": "expense",
+          "totalAmount": 22000,
+          "transactionCount": 1,
+          "lastDate": "2026-06-25T03:30:00.000Z",
+          "transactions": [
+            "future-rent"
+          ]
+        },
+        {
+          "key": "indigo e",
+          "displayName": "IndiGo 6E-221",
+          "type": "expense",
+          "totalAmount": 18000,
+          "transactionCount": 1,
+          "lastDate": "2026-03-05T08:30:00.000Z",
+          "transactions": [
+            "trip-mar"
+          ]
+        },
+        {
+          "key": "swiggy",
+          "displayName": "Swiggy 449",
+          "type": "expense",
+          "totalAmount": 15196,
+          "transactionCount": 16,
+          "lastDate": "2026-06-14T14:45:00.000Z",
+          "transactions": [
+            "food-202606-2",
+            "food-202606-1",
+            "food-202605-3",
+            "food-202605-2",
+            "food-202604-3",
+            "food-202604-0",
+            "food-202603-1",
+            "food-202603-0",
+            "food-202602-2",
+            "food-202602-1",
+            "food-202601-3",
+            "food-202601-2",
+            "food-202512-3",
+            "food-202512-0",
+            "food-202511-1",
+            "food-202511-0"
+          ]
+        },
+        {
+          "key": "bescom electricity",
+          "displayName": "BESCOM electricity",
+          "type": "expense",
+          "totalAmount": 11844,
+          "transactionCount": 8,
+          "lastDate": "2026-06-12T05:30:00.000Z",
+          "transactions": [
+            "elec-202606",
+            "elec-202605",
+            "elec-202604",
+            "elec-202603",
+            "elec-202602",
+            "elec-202601",
+            "elec-202512",
+            "elec-202511"
+          ]
+        },
+        {
+          "key": "bigbasket",
+          "displayName": "BigBasket",
+          "type": "expense",
+          "totalAmount": 7598,
+          "transactionCount": 8,
+          "lastDate": "2026-06-03T14:45:00.000Z",
+          "transactions": [
+            "food-202606-0",
+            "food-202605-1",
+            "food-202604-2",
+            "food-202603-3",
+            "food-202602-0",
+            "food-202601-1",
+            "food-202512-2",
+            "food-202511-3"
+          ]
+        },
+        {
+          "key": "swiggy party",
+          "displayName": "Swiggy party",
+          "type": "expense",
+          "totalAmount": 6500,
+          "transactionCount": 1,
+          "lastDate": "2026-06-13T16:30:00.000Z",
+          "transactions": [
+            "party-jun"
+          ]
+        },
+        {
+          "key": "zomato order",
+          "displayName": "Zomato order #4471",
+          "type": "expense",
+          "totalAmount": 6348.5,
+          "transactionCount": 7,
+          "lastDate": "2026-05-03T14:45:00.000Z",
+          "transactions": [
+            "food-202605-0",
+            "food-202604-1",
+            "food-202603-2",
+            "food-202602-3",
+            "food-202601-0",
+            "food-202512-1",
+            "food-202511-2"
+          ]
+        },
+        {
+          "key": "netflix com",
+          "displayName": "NETFLIX.COM 8812",
+          "type": "expense",
+          "totalAmount": 5192,
+          "transactionCount": 8,
+          "lastDate": "2026-06-07T00:30:00.000Z",
+          "transactions": [
+            "netflix-202606",
+            "netflix-202605",
+            "netflix-202604",
+            "netflix-202603",
+            "netflix-202602",
+            "netflix-202601",
+            "netflix-202512",
+            "netflix-202511"
+          ]
+        },
+        {
+          "key": "cult fit class",
+          "displayName": "Cult.fit class",
+          "type": "expense",
+          "totalAmount": 3289,
+          "transactionCount": 11,
+          "lastDate": "2026-06-15T01:30:00.000Z",
+          "transactions": [
+            "gym-10",
+            "gym-9",
+            "gym-8",
+            "gym-7",
+            "gym-6",
+            "gym-5",
+            "gym-4",
+            "gym-3",
+            "gym-2",
+            "gym-1",
+            "gym-0"
+          ]
+        },
+        {
+          "key": "uber trip",
+          "displayName": "Uber trip",
+          "type": "expense",
+          "totalAmount": 2726,
+          "transactionCount": 8,
+          "lastDate": "2026-06-11T13:30:00.000Z",
+          "transactions": [
+            "uber-202606",
+            "uber-202605",
+            "uber-202604",
+            "uber-202603",
+            "uber-202602",
+            "uber-202601",
+            "uber-202512",
+            "uber-202511"
+          ]
+        },
+        {
+          "key": "hotstar",
+          "displayName": "Hotstar 299",
+          "type": "expense",
+          "totalAmount": 2392,
+          "transactionCount": 8,
+          "lastDate": "2026-06-16T00:30:00.000Z",
+          "transactions": [
+            "hotstar-202606",
+            "hotstar-202605",
+            "hotstar-202604",
+            "hotstar-202603",
+            "hotstar-202602",
+            "hotstar-202601",
+            "hotstar-202512",
+            "hotstar-202511"
+          ]
+        },
+        {
+          "key": "myntra",
+          "displayName": "Myntra",
+          "type": "expense",
+          "totalAmount": 1200,
+          "transactionCount": 1,
+          "lastDate": "2025-12-04T06:30:00.000Z",
+          "transactions": [
+            "old-1"
+          ]
+        },
+        {
+          "key": "spotify",
+          "displayName": "Spotify",
+          "type": "expense",
+          "totalAmount": 954,
+          "transactionCount": 8,
+          "lastDate": "2026-06-15T00:30:00.000Z",
+          "transactions": [
+            "spotify-202606",
+            "spotify-202605",
+            "spotify-202604",
+            "spotify-202603",
+            "spotify-202602",
+            "spotify-202601",
+            "spotify-202512",
+            "spotify-202511"
+          ]
+        },
+        {
+          "key": "amazon order",
+          "displayName": "Amazon order",
+          "type": "expense",
+          "totalAmount": 800,
+          "transactionCount": 1,
+          "lastDate": "2026-06-06T03:30:00.000Z",
+          "transactions": [
+            "empty-splits"
+          ]
+        },
+        {
+          "key": "cmd calc",
+          "displayName": "=cmd|calc",
+          "type": "expense",
+          "totalAmount": 450,
+          "transactionCount": 1,
+          "lastDate": "2026-06-05T03:30:00.000Z",
+          "transactions": [
+            "unknown-cat"
+          ]
+        },
+        {
+          "key": "chai point",
+          "displayName": "Chai Point",
+          "type": "expense",
+          "totalAmount": 350,
+          "transactionCount": 1,
+          "lastDate": "2026-05-06T07:30:00.000Z",
+          "transactions": [
+            "wallet-1"
+          ]
+        },
+        {
+          "key": "late dinner",
+          "displayName": "Late dinner",
+          "type": "expense",
+          "totalAmount": 220,
+          "transactionCount": 1,
+          "lastDate": "2026-05-31T18:29:59.999Z",
+          "transactions": [
+            "lastms-may"
+          ]
+        },
+        {
+          "key": "midnight snack",
+          "displayName": "Midnight snack",
+          "type": "expense",
+          "totalAmount": 180,
+          "transactionCount": 1,
+          "lastDate": "2026-05-31T18:30:00.000Z",
+          "transactions": [
+            "midnight-jun"
+          ]
+        },
+        {
+          "key": "auto th",
+          "displayName": "Auto 25th",
+          "type": "expense",
+          "totalAmount": 135,
+          "transactionCount": 2,
+          "lastDate": "2026-05-24T18:30:00.000Z",
+          "transactions": [
+            "cyc-start",
+            "cyc-end"
+          ]
+        },
+        {
+          "key": "chai",
+          "displayName": "Chai",
+          "type": "expense",
+          "totalAmount": 99,
+          "transactionCount": 1,
+          "lastDate": "2026-05-31",
+          "transactions": [
+            "chai-dateonly"
+          ]
+        },
+        {
+          "key": "tip",
+          "displayName": "+91 tip",
+          "type": "expense",
+          "totalAmount": 0.3,
+          "transactionCount": 1,
+          "lastDate": "2026-06-04T03:30:00.000Z",
+          "transactions": [
+            "paise"
+          ]
+        }
+      ]
+    },
+    {
+      "fn": "summarizeMerchants",
+      "args": [
+        "@ledger.transactions",
+        "income"
+      ],
+      "out": [
+        {
+          "key": "salary acme corp",
+          "displayName": "Salary ACME Corp",
+          "type": "income",
+          "totalAmount": 680000,
+          "transactionCount": 8,
+          "lastDate": "2026-05-25T03:30:00.000Z",
+          "transactions": [
+            "sal-202606",
+            "sal-202605",
+            "sal-202604",
+            "sal-202603",
+            "sal-202602",
+            "sal-202601",
+            "sal-202512",
+            "sal-202511"
+          ]
+        },
+        {
+          "key": "upwork payout",
+          "displayName": "Upwork payout",
+          "type": "income",
+          "totalAmount": 32000.5,
+          "transactionCount": 1,
+          "lastDate": "2026-06-10T06:30:00.000Z",
+          "transactions": [
+            "fl-jun"
+          ]
+        },
+        {
+          "key": "gift from mom",
+          "displayName": "Gift from Mom",
+          "type": "income",
+          "totalAmount": 2500,
+          "transactionCount": 1,
+          "lastDate": "2025-12-25T06:30:00.000Z",
+          "transactions": [
+            "gift-dec"
+          ]
+        },
+        {
+          "key": "amazon refund",
+          "displayName": "Amazon refund",
+          "type": "income",
+          "totalAmount": 1999,
+          "transactionCount": 1,
+          "lastDate": "2026-06-08T03:30:00.000Z",
+          "transactions": [
+            "refund"
+          ]
+        },
+        {
+          "key": "interest",
+          "displayName": "Interest",
+          "type": "income",
+          "totalAmount": 1649.48,
+          "transactionCount": 4,
+          "lastDate": "2026-06-28T18:29:00.000Z",
+          "transactions": [
+            "int-202606",
+            "int-202604",
+            "int-202602",
+            "int-202512"
+          ]
+        }
+      ]
+    },
+    {
+      "fn": "topMerchants",
+      "args": [
+        "@ledger.transactions",
+        0,
+        "expense"
+      ],
+      "out": []
+    },
+    {
+      "fn": "topMerchants",
+      "args": [
+        "@ledger.transactions",
+        3,
+        "expense"
+      ],
+      "out": [
+        {
+          "key": "rent",
+          "displayName": "Rent 202606",
+          "type": "expense",
+          "totalAmount": 176000,
+          "transactionCount": 8,
+          "lastDate": "2026-06-01T03:30:00.000Z",
+          "transactions": [
+            "rent-202606",
+            "rent-202605",
+            "rent-202604",
+            "rent-202603",
+            "rent-202602",
+            "rent-202601",
+            "rent-202512",
+            "rent-202511"
+          ]
+        },
+        {
+          "key": "dmart ready",
+          "displayName": "DMart Ready",
+          "type": "expense",
+          "totalAmount": 24004,
+          "transactionCount": 8,
+          "lastDate": "2026-06-17T12:30:00.000Z",
+          "transactions": [
+            "split-202606",
+            "split-202605",
+            "split-202604",
+            "split-202603",
+            "split-202602",
+            "split-202601",
+            "split-202512",
+            "split-202511"
+          ]
+        },
+        {
+          "key": "rent advance",
+          "displayName": "Rent advance",
+          "type": "expense",
+          "totalAmount": 22000,
+          "transactionCount": 1,
+          "lastDate": "2026-06-25T03:30:00.000Z",
+          "transactions": [
+            "future-rent"
+          ]
+        }
+      ]
+    },
+    {
+      "fn": "topMerchants",
+      "args": [
+        "@ledger.transactions",
+        100,
+        "expense"
+      ],
+      "out": [
+        {
+          "key": "rent",
+          "displayName": "Rent 202606",
+          "type": "expense",
+          "totalAmount": 176000,
+          "transactionCount": 8,
+          "lastDate": "2026-06-01T03:30:00.000Z",
+          "transactions": [
+            "rent-202606",
+            "rent-202605",
+            "rent-202604",
+            "rent-202603",
+            "rent-202602",
+            "rent-202601",
+            "rent-202512",
+            "rent-202511"
+          ]
+        },
+        {
+          "key": "dmart ready",
+          "displayName": "DMart Ready",
+          "type": "expense",
+          "totalAmount": 24004,
+          "transactionCount": 8,
+          "lastDate": "2026-06-17T12:30:00.000Z",
+          "transactions": [
+            "split-202606",
+            "split-202605",
+            "split-202604",
+            "split-202603",
+            "split-202602",
+            "split-202601",
+            "split-202512",
+            "split-202511"
+          ]
+        },
+        {
+          "key": "rent advance",
+          "displayName": "Rent advance",
+          "type": "expense",
+          "totalAmount": 22000,
+          "transactionCount": 1,
+          "lastDate": "2026-06-25T03:30:00.000Z",
+          "transactions": [
+            "future-rent"
+          ]
+        },
+        {
+          "key": "indigo e",
+          "displayName": "IndiGo 6E-221",
+          "type": "expense",
+          "totalAmount": 18000,
+          "transactionCount": 1,
+          "lastDate": "2026-03-05T08:30:00.000Z",
+          "transactions": [
+            "trip-mar"
+          ]
+        },
+        {
+          "key": "swiggy",
+          "displayName": "Swiggy 449",
+          "type": "expense",
+          "totalAmount": 15196,
+          "transactionCount": 16,
+          "lastDate": "2026-06-14T14:45:00.000Z",
+          "transactions": [
+            "food-202606-2",
+            "food-202606-1",
+            "food-202605-3",
+            "food-202605-2",
+            "food-202604-3",
+            "food-202604-0",
+            "food-202603-1",
+            "food-202603-0",
+            "food-202602-2",
+            "food-202602-1",
+            "food-202601-3",
+            "food-202601-2",
+            "food-202512-3",
+            "food-202512-0",
+            "food-202511-1",
+            "food-202511-0"
+          ]
+        },
+        {
+          "key": "bescom electricity",
+          "displayName": "BESCOM electricity",
+          "type": "expense",
+          "totalAmount": 11844,
+          "transactionCount": 8,
+          "lastDate": "2026-06-12T05:30:00.000Z",
+          "transactions": [
+            "elec-202606",
+            "elec-202605",
+            "elec-202604",
+            "elec-202603",
+            "elec-202602",
+            "elec-202601",
+            "elec-202512",
+            "elec-202511"
+          ]
+        },
+        {
+          "key": "bigbasket",
+          "displayName": "BigBasket",
+          "type": "expense",
+          "totalAmount": 7598,
+          "transactionCount": 8,
+          "lastDate": "2026-06-03T14:45:00.000Z",
+          "transactions": [
+            "food-202606-0",
+            "food-202605-1",
+            "food-202604-2",
+            "food-202603-3",
+            "food-202602-0",
+            "food-202601-1",
+            "food-202512-2",
+            "food-202511-3"
+          ]
+        },
+        {
+          "key": "swiggy party",
+          "displayName": "Swiggy party",
+          "type": "expense",
+          "totalAmount": 6500,
+          "transactionCount": 1,
+          "lastDate": "2026-06-13T16:30:00.000Z",
+          "transactions": [
+            "party-jun"
+          ]
+        },
+        {
+          "key": "zomato order",
+          "displayName": "Zomato order #4471",
+          "type": "expense",
+          "totalAmount": 6348.5,
+          "transactionCount": 7,
+          "lastDate": "2026-05-03T14:45:00.000Z",
+          "transactions": [
+            "food-202605-0",
+            "food-202604-1",
+            "food-202603-2",
+            "food-202602-3",
+            "food-202601-0",
+            "food-202512-1",
+            "food-202511-2"
+          ]
+        },
+        {
+          "key": "netflix com",
+          "displayName": "NETFLIX.COM 8812",
+          "type": "expense",
+          "totalAmount": 5192,
+          "transactionCount": 8,
+          "lastDate": "2026-06-07T00:30:00.000Z",
+          "transactions": [
+            "netflix-202606",
+            "netflix-202605",
+            "netflix-202604",
+            "netflix-202603",
+            "netflix-202602",
+            "netflix-202601",
+            "netflix-202512",
+            "netflix-202511"
+          ]
+        },
+        {
+          "key": "cult fit class",
+          "displayName": "Cult.fit class",
+          "type": "expense",
+          "totalAmount": 3289,
+          "transactionCount": 11,
+          "lastDate": "2026-06-15T01:30:00.000Z",
+          "transactions": [
+            "gym-10",
+            "gym-9",
+            "gym-8",
+            "gym-7",
+            "gym-6",
+            "gym-5",
+            "gym-4",
+            "gym-3",
+            "gym-2",
+            "gym-1",
+            "gym-0"
+          ]
+        },
+        {
+          "key": "uber trip",
+          "displayName": "Uber trip",
+          "type": "expense",
+          "totalAmount": 2726,
+          "transactionCount": 8,
+          "lastDate": "2026-06-11T13:30:00.000Z",
+          "transactions": [
+            "uber-202606",
+            "uber-202605",
+            "uber-202604",
+            "uber-202603",
+            "uber-202602",
+            "uber-202601",
+            "uber-202512",
+            "uber-202511"
+          ]
+        },
+        {
+          "key": "hotstar",
+          "displayName": "Hotstar 299",
+          "type": "expense",
+          "totalAmount": 2392,
+          "transactionCount": 8,
+          "lastDate": "2026-06-16T00:30:00.000Z",
+          "transactions": [
+            "hotstar-202606",
+            "hotstar-202605",
+            "hotstar-202604",
+            "hotstar-202603",
+            "hotstar-202602",
+            "hotstar-202601",
+            "hotstar-202512",
+            "hotstar-202511"
+          ]
+        },
+        {
+          "key": "myntra",
+          "displayName": "Myntra",
+          "type": "expense",
+          "totalAmount": 1200,
+          "transactionCount": 1,
+          "lastDate": "2025-12-04T06:30:00.000Z",
+          "transactions": [
+            "old-1"
+          ]
+        },
+        {
+          "key": "spotify",
+          "displayName": "Spotify",
+          "type": "expense",
+          "totalAmount": 954,
+          "transactionCount": 8,
+          "lastDate": "2026-06-15T00:30:00.000Z",
+          "transactions": [
+            "spotify-202606",
+            "spotify-202605",
+            "spotify-202604",
+            "spotify-202603",
+            "spotify-202602",
+            "spotify-202601",
+            "spotify-202512",
+            "spotify-202511"
+          ]
+        },
+        {
+          "key": "amazon order",
+          "displayName": "Amazon order",
+          "type": "expense",
+          "totalAmount": 800,
+          "transactionCount": 1,
+          "lastDate": "2026-06-06T03:30:00.000Z",
+          "transactions": [
+            "empty-splits"
+          ]
+        },
+        {
+          "key": "cmd calc",
+          "displayName": "=cmd|calc",
+          "type": "expense",
+          "totalAmount": 450,
+          "transactionCount": 1,
+          "lastDate": "2026-06-05T03:30:00.000Z",
+          "transactions": [
+            "unknown-cat"
+          ]
+        },
+        {
+          "key": "chai point",
+          "displayName": "Chai Point",
+          "type": "expense",
+          "totalAmount": 350,
+          "transactionCount": 1,
+          "lastDate": "2026-05-06T07:30:00.000Z",
+          "transactions": [
+            "wallet-1"
+          ]
+        },
+        {
+          "key": "late dinner",
+          "displayName": "Late dinner",
+          "type": "expense",
+          "totalAmount": 220,
+          "transactionCount": 1,
+          "lastDate": "2026-05-31T18:29:59.999Z",
+          "transactions": [
+            "lastms-may"
+          ]
+        },
+        {
+          "key": "midnight snack",
+          "displayName": "Midnight snack",
+          "type": "expense",
+          "totalAmount": 180,
+          "transactionCount": 1,
+          "lastDate": "2026-05-31T18:30:00.000Z",
+          "transactions": [
+            "midnight-jun"
+          ]
+        },
+        {
+          "key": "auto th",
+          "displayName": "Auto 25th",
+          "type": "expense",
+          "totalAmount": 135,
+          "transactionCount": 2,
+          "lastDate": "2026-05-24T18:30:00.000Z",
+          "transactions": [
+            "cyc-start",
+            "cyc-end"
+          ]
+        },
+        {
+          "key": "chai",
+          "displayName": "Chai",
+          "type": "expense",
+          "totalAmount": 99,
+          "transactionCount": 1,
+          "lastDate": "2026-05-31",
+          "transactions": [
+            "chai-dateonly"
+          ]
+        },
+        {
+          "key": "tip",
+          "displayName": "+91 tip",
+          "type": "expense",
+          "totalAmount": 0.3,
+          "transactionCount": 1,
+          "lastDate": "2026-06-04T03:30:00.000Z",
+          "transactions": [
+            "paise"
+          ]
+        }
+      ]
+    },
+    {
+      "fn": "topMerchants",
+      "args": [
+        "@ledger.transactions",
+        -2,
+        "expense"
+      ],
+      "out": [
+        {
+          "key": "rent",
+          "displayName": "Rent 202606",
+          "type": "expense",
+          "totalAmount": 176000,
+          "transactionCount": 8,
+          "lastDate": "2026-06-01T03:30:00.000Z",
+          "transactions": [
+            "rent-202606",
+            "rent-202605",
+            "rent-202604",
+            "rent-202603",
+            "rent-202602",
+            "rent-202601",
+            "rent-202512",
+            "rent-202511"
+          ]
+        },
+        {
+          "key": "dmart ready",
+          "displayName": "DMart Ready",
+          "type": "expense",
+          "totalAmount": 24004,
+          "transactionCount": 8,
+          "lastDate": "2026-06-17T12:30:00.000Z",
+          "transactions": [
+            "split-202606",
+            "split-202605",
+            "split-202604",
+            "split-202603",
+            "split-202602",
+            "split-202601",
+            "split-202512",
+            "split-202511"
+          ]
+        },
+        {
+          "key": "rent advance",
+          "displayName": "Rent advance",
+          "type": "expense",
+          "totalAmount": 22000,
+          "transactionCount": 1,
+          "lastDate": "2026-06-25T03:30:00.000Z",
+          "transactions": [
+            "future-rent"
+          ]
+        },
+        {
+          "key": "indigo e",
+          "displayName": "IndiGo 6E-221",
+          "type": "expense",
+          "totalAmount": 18000,
+          "transactionCount": 1,
+          "lastDate": "2026-03-05T08:30:00.000Z",
+          "transactions": [
+            "trip-mar"
+          ]
+        },
+        {
+          "key": "swiggy",
+          "displayName": "Swiggy 449",
+          "type": "expense",
+          "totalAmount": 15196,
+          "transactionCount": 16,
+          "lastDate": "2026-06-14T14:45:00.000Z",
+          "transactions": [
+            "food-202606-2",
+            "food-202606-1",
+            "food-202605-3",
+            "food-202605-2",
+            "food-202604-3",
+            "food-202604-0",
+            "food-202603-1",
+            "food-202603-0",
+            "food-202602-2",
+            "food-202602-1",
+            "food-202601-3",
+            "food-202601-2",
+            "food-202512-3",
+            "food-202512-0",
+            "food-202511-1",
+            "food-202511-0"
+          ]
+        },
+        {
+          "key": "bescom electricity",
+          "displayName": "BESCOM electricity",
+          "type": "expense",
+          "totalAmount": 11844,
+          "transactionCount": 8,
+          "lastDate": "2026-06-12T05:30:00.000Z",
+          "transactions": [
+            "elec-202606",
+            "elec-202605",
+            "elec-202604",
+            "elec-202603",
+            "elec-202602",
+            "elec-202601",
+            "elec-202512",
+            "elec-202511"
+          ]
+        },
+        {
+          "key": "bigbasket",
+          "displayName": "BigBasket",
+          "type": "expense",
+          "totalAmount": 7598,
+          "transactionCount": 8,
+          "lastDate": "2026-06-03T14:45:00.000Z",
+          "transactions": [
+            "food-202606-0",
+            "food-202605-1",
+            "food-202604-2",
+            "food-202603-3",
+            "food-202602-0",
+            "food-202601-1",
+            "food-202512-2",
+            "food-202511-3"
+          ]
+        },
+        {
+          "key": "swiggy party",
+          "displayName": "Swiggy party",
+          "type": "expense",
+          "totalAmount": 6500,
+          "transactionCount": 1,
+          "lastDate": "2026-06-13T16:30:00.000Z",
+          "transactions": [
+            "party-jun"
+          ]
+        },
+        {
+          "key": "zomato order",
+          "displayName": "Zomato order #4471",
+          "type": "expense",
+          "totalAmount": 6348.5,
+          "transactionCount": 7,
+          "lastDate": "2026-05-03T14:45:00.000Z",
+          "transactions": [
+            "food-202605-0",
+            "food-202604-1",
+            "food-202603-2",
+            "food-202602-3",
+            "food-202601-0",
+            "food-202512-1",
+            "food-202511-2"
+          ]
+        },
+        {
+          "key": "netflix com",
+          "displayName": "NETFLIX.COM 8812",
+          "type": "expense",
+          "totalAmount": 5192,
+          "transactionCount": 8,
+          "lastDate": "2026-06-07T00:30:00.000Z",
+          "transactions": [
+            "netflix-202606",
+            "netflix-202605",
+            "netflix-202604",
+            "netflix-202603",
+            "netflix-202602",
+            "netflix-202601",
+            "netflix-202512",
+            "netflix-202511"
+          ]
+        },
+        {
+          "key": "cult fit class",
+          "displayName": "Cult.fit class",
+          "type": "expense",
+          "totalAmount": 3289,
+          "transactionCount": 11,
+          "lastDate": "2026-06-15T01:30:00.000Z",
+          "transactions": [
+            "gym-10",
+            "gym-9",
+            "gym-8",
+            "gym-7",
+            "gym-6",
+            "gym-5",
+            "gym-4",
+            "gym-3",
+            "gym-2",
+            "gym-1",
+            "gym-0"
+          ]
+        },
+        {
+          "key": "uber trip",
+          "displayName": "Uber trip",
+          "type": "expense",
+          "totalAmount": 2726,
+          "transactionCount": 8,
+          "lastDate": "2026-06-11T13:30:00.000Z",
+          "transactions": [
+            "uber-202606",
+            "uber-202605",
+            "uber-202604",
+            "uber-202603",
+            "uber-202602",
+            "uber-202601",
+            "uber-202512",
+            "uber-202511"
+          ]
+        },
+        {
+          "key": "hotstar",
+          "displayName": "Hotstar 299",
+          "type": "expense",
+          "totalAmount": 2392,
+          "transactionCount": 8,
+          "lastDate": "2026-06-16T00:30:00.000Z",
+          "transactions": [
+            "hotstar-202606",
+            "hotstar-202605",
+            "hotstar-202604",
+            "hotstar-202603",
+            "hotstar-202602",
+            "hotstar-202601",
+            "hotstar-202512",
+            "hotstar-202511"
+          ]
+        },
+        {
+          "key": "myntra",
+          "displayName": "Myntra",
+          "type": "expense",
+          "totalAmount": 1200,
+          "transactionCount": 1,
+          "lastDate": "2025-12-04T06:30:00.000Z",
+          "transactions": [
+            "old-1"
+          ]
+        },
+        {
+          "key": "spotify",
+          "displayName": "Spotify",
+          "type": "expense",
+          "totalAmount": 954,
+          "transactionCount": 8,
+          "lastDate": "2026-06-15T00:30:00.000Z",
+          "transactions": [
+            "spotify-202606",
+            "spotify-202605",
+            "spotify-202604",
+            "spotify-202603",
+            "spotify-202602",
+            "spotify-202601",
+            "spotify-202512",
+            "spotify-202511"
+          ]
+        },
+        {
+          "key": "amazon order",
+          "displayName": "Amazon order",
+          "type": "expense",
+          "totalAmount": 800,
+          "transactionCount": 1,
+          "lastDate": "2026-06-06T03:30:00.000Z",
+          "transactions": [
+            "empty-splits"
+          ]
+        },
+        {
+          "key": "cmd calc",
+          "displayName": "=cmd|calc",
+          "type": "expense",
+          "totalAmount": 450,
+          "transactionCount": 1,
+          "lastDate": "2026-06-05T03:30:00.000Z",
+          "transactions": [
+            "unknown-cat"
+          ]
+        },
+        {
+          "key": "chai point",
+          "displayName": "Chai Point",
+          "type": "expense",
+          "totalAmount": 350,
+          "transactionCount": 1,
+          "lastDate": "2026-05-06T07:30:00.000Z",
+          "transactions": [
+            "wallet-1"
+          ]
+        },
+        {
+          "key": "late dinner",
+          "displayName": "Late dinner",
+          "type": "expense",
+          "totalAmount": 220,
+          "transactionCount": 1,
+          "lastDate": "2026-05-31T18:29:59.999Z",
+          "transactions": [
+            "lastms-may"
+          ]
+        },
+        {
+          "key": "midnight snack",
+          "displayName": "Midnight snack",
+          "type": "expense",
+          "totalAmount": 180,
+          "transactionCount": 1,
+          "lastDate": "2026-05-31T18:30:00.000Z",
+          "transactions": [
+            "midnight-jun"
+          ]
+        },
+        {
+          "key": "auto th",
+          "displayName": "Auto 25th",
+          "type": "expense",
+          "totalAmount": 135,
+          "transactionCount": 2,
+          "lastDate": "2026-05-24T18:30:00.000Z",
+          "transactions": [
+            "cyc-start",
+            "cyc-end"
+          ]
+        }
+      ]
+    },
+    {
+      "fn": "summarizeMerchants",
+      "args": [
+        [
+          {
+            "id": "a",
+            "type": "expense",
+            "amount": 300,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-01T10:00:00.000Z",
+            "note": "Swiggy/9921",
+            "labels": [],
+            "createdAt": "2026-06-01T10:00:00.000Z"
+          },
+          {
+            "id": "b",
+            "type": "expense",
+            "amount": 449,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-03T10:00:00.000Z",
+            "note": "Swiggy 449",
+            "labels": [],
+            "createdAt": "2026-06-03T10:00:00.000Z"
+          },
+          {
+            "id": "c",
+            "type": "expense",
+            "amount": 120.1,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-02T10:00:00.000Z",
+            "note": "  Swiggy 449 ",
+            "labels": [],
+            "createdAt": "2026-06-02T10:00:00.000Z"
+          },
+          {
+            "id": "d",
+            "type": "expense",
+            "amount": 0.2,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-02T10:00:00.000Z",
+            "note": "swiggy",
+            "labels": [],
+            "createdAt": "2026-06-02T10:00:00.000Z"
+          },
+          {
+            "id": "e",
+            "type": "expense",
+            "amount": 99,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-04T10:00:00.000Z",
+            "note": "UPI/Swiggy/9921",
+            "labels": [],
+            "createdAt": "2026-06-04T10:00:00.000Z"
+          },
+          {
+            "id": "f",
+            "type": "income",
+            "amount": 10,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-03",
+            "note": "Swiggy 449",
+            "labels": [],
+            "createdAt": "2026-06-03"
+          },
+          {
+            "id": "g",
+            "type": "expense",
+            "amount": 500,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-05T10:00:00.000Z",
+            "note": "",
+            "labels": [],
+            "createdAt": "2026-06-05T10:00:00.000Z"
+          },
+          {
+            "id": "h",
+            "type": "expense",
+            "amount": 500,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-05T10:00:00.000Z",
+            "note": "1234 / ##",
+            "labels": [],
+            "createdAt": "2026-06-05T10:00:00.000Z"
+          },
+          {
+            "id": "i",
+            "type": "transfer",
+            "amount": 22000,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-01T10:00:00.000Z",
+            "note": "Rent",
+            "labels": [],
+            "createdAt": "2026-06-01T10:00:00.000Z"
+          },
+          {
+            "id": "j",
+            "type": "expense",
+            "amount": 250.25,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-06T10:00:00.000Z",
+            "note": "Café Coffee Day",
+            "labels": [],
+            "createdAt": "2026-06-06T10:00:00.000Z"
+          },
+          {
+            "id": "k",
+            "type": "expense",
+            "amount": 249.75,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-06T10:00:00.000Z",
+            "note": "Cafe Coffee Day",
+            "labels": [],
+            "createdAt": "2026-06-06T10:00:00.000Z"
+          },
+          {
+            "id": "l",
+            "type": "expense",
+            "amount": 100,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-01T10:00:00.000Z",
+            "note": "Tie A",
+            "labels": [],
+            "createdAt": "2026-06-01T10:00:00.000Z"
+          },
+          {
+            "id": "m",
+            "type": "expense",
+            "amount": 100,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-01T10:00:00.000Z",
+            "note": "Tie-A",
+            "labels": [],
+            "createdAt": "2026-06-01T10:00:00.000Z"
+          }
+        ],
+        "expense"
+      ],
+      "out": [
+        {
+          "key": "swiggy",
+          "displayName": "Swiggy 449",
+          "type": "expense",
+          "totalAmount": 869.3,
+          "transactionCount": 4,
+          "lastDate": "2026-06-03T10:00:00.000Z",
+          "transactions": [
+            "b",
+            "c",
+            "d",
+            "a"
+          ]
+        },
+        {
+          "key": "caf coffee day",
+          "displayName": "Café Coffee Day",
+          "type": "expense",
+          "totalAmount": 250.25,
+          "transactionCount": 1,
+          "lastDate": "2026-06-06T10:00:00.000Z",
+          "transactions": [
+            "j"
+          ]
+        },
+        {
+          "key": "cafe coffee day",
+          "displayName": "Cafe Coffee Day",
+          "type": "expense",
+          "totalAmount": 249.75,
+          "transactionCount": 1,
+          "lastDate": "2026-06-06T10:00:00.000Z",
+          "transactions": [
+            "k"
+          ]
+        },
+        {
+          "key": "tie a",
+          "displayName": "Tie A",
+          "type": "expense",
+          "totalAmount": 200,
+          "transactionCount": 2,
+          "lastDate": "2026-06-01T10:00:00.000Z",
+          "transactions": [
+            "l",
+            "m"
+          ]
+        },
+        {
+          "key": "upi swiggy",
+          "displayName": "UPI/Swiggy/9921",
+          "type": "expense",
+          "totalAmount": 99,
+          "transactionCount": 1,
+          "lastDate": "2026-06-04T10:00:00.000Z",
+          "transactions": [
+            "e"
+          ]
+        }
+      ]
+    },
+    {
+      "fn": "summarizeMerchants",
+      "args": [
+        [
+          {
+            "id": "a",
+            "type": "expense",
+            "amount": 300,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-01T10:00:00.000Z",
+            "note": "Swiggy/9921",
+            "labels": [],
+            "createdAt": "2026-06-01T10:00:00.000Z"
+          },
+          {
+            "id": "b",
+            "type": "expense",
+            "amount": 449,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-03T10:00:00.000Z",
+            "note": "Swiggy 449",
+            "labels": [],
+            "createdAt": "2026-06-03T10:00:00.000Z"
+          },
+          {
+            "id": "c",
+            "type": "expense",
+            "amount": 120.1,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-02T10:00:00.000Z",
+            "note": "  Swiggy 449 ",
+            "labels": [],
+            "createdAt": "2026-06-02T10:00:00.000Z"
+          },
+          {
+            "id": "d",
+            "type": "expense",
+            "amount": 0.2,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-02T10:00:00.000Z",
+            "note": "swiggy",
+            "labels": [],
+            "createdAt": "2026-06-02T10:00:00.000Z"
+          },
+          {
+            "id": "e",
+            "type": "expense",
+            "amount": 99,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-04T10:00:00.000Z",
+            "note": "UPI/Swiggy/9921",
+            "labels": [],
+            "createdAt": "2026-06-04T10:00:00.000Z"
+          },
+          {
+            "id": "f",
+            "type": "income",
+            "amount": 10,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-03",
+            "note": "Swiggy 449",
+            "labels": [],
+            "createdAt": "2026-06-03"
+          },
+          {
+            "id": "g",
+            "type": "expense",
+            "amount": 500,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-05T10:00:00.000Z",
+            "note": "",
+            "labels": [],
+            "createdAt": "2026-06-05T10:00:00.000Z"
+          },
+          {
+            "id": "h",
+            "type": "expense",
+            "amount": 500,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-05T10:00:00.000Z",
+            "note": "1234 / ##",
+            "labels": [],
+            "createdAt": "2026-06-05T10:00:00.000Z"
+          },
+          {
+            "id": "i",
+            "type": "transfer",
+            "amount": 22000,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-01T10:00:00.000Z",
+            "note": "Rent",
+            "labels": [],
+            "createdAt": "2026-06-01T10:00:00.000Z"
+          },
+          {
+            "id": "j",
+            "type": "expense",
+            "amount": 250.25,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-06T10:00:00.000Z",
+            "note": "Café Coffee Day",
+            "labels": [],
+            "createdAt": "2026-06-06T10:00:00.000Z"
+          },
+          {
+            "id": "k",
+            "type": "expense",
+            "amount": 249.75,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-06T10:00:00.000Z",
+            "note": "Cafe Coffee Day",
+            "labels": [],
+            "createdAt": "2026-06-06T10:00:00.000Z"
+          },
+          {
+            "id": "l",
+            "type": "expense",
+            "amount": 100,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-01T10:00:00.000Z",
+            "note": "Tie A",
+            "labels": [],
+            "createdAt": "2026-06-01T10:00:00.000Z"
+          },
+          {
+            "id": "m",
+            "type": "expense",
+            "amount": 100,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-01T10:00:00.000Z",
+            "note": "Tie-A",
+            "labels": [],
+            "createdAt": "2026-06-01T10:00:00.000Z"
+          }
+        ],
+        "income"
+      ],
+      "out": [
+        {
+          "key": "swiggy",
+          "displayName": "Swiggy 449",
+          "type": "income",
+          "totalAmount": 10,
+          "transactionCount": 1,
+          "lastDate": "2026-06-03",
+          "transactions": [
+            "f"
+          ]
+        }
+      ]
+    },
+    {
+      "fn": "summarizeMerchants",
+      "args": [
+        [],
+        "expense"
+      ],
+      "out": []
+    },
+    {
+      "fn": "topMerchants",
+      "args": [
+        [
+          {
+            "id": "a",
+            "type": "expense",
+            "amount": 300,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-01T10:00:00.000Z",
+            "note": "Swiggy/9921",
+            "labels": [],
+            "createdAt": "2026-06-01T10:00:00.000Z"
+          },
+          {
+            "id": "b",
+            "type": "expense",
+            "amount": 449,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-03T10:00:00.000Z",
+            "note": "Swiggy 449",
+            "labels": [],
+            "createdAt": "2026-06-03T10:00:00.000Z"
+          },
+          {
+            "id": "c",
+            "type": "expense",
+            "amount": 120.1,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-02T10:00:00.000Z",
+            "note": "  Swiggy 449 ",
+            "labels": [],
+            "createdAt": "2026-06-02T10:00:00.000Z"
+          },
+          {
+            "id": "d",
+            "type": "expense",
+            "amount": 0.2,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-02T10:00:00.000Z",
+            "note": "swiggy",
+            "labels": [],
+            "createdAt": "2026-06-02T10:00:00.000Z"
+          },
+          {
+            "id": "e",
+            "type": "expense",
+            "amount": 99,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-04T10:00:00.000Z",
+            "note": "UPI/Swiggy/9921",
+            "labels": [],
+            "createdAt": "2026-06-04T10:00:00.000Z"
+          },
+          {
+            "id": "f",
+            "type": "income",
+            "amount": 10,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-03",
+            "note": "Swiggy 449",
+            "labels": [],
+            "createdAt": "2026-06-03"
+          },
+          {
+            "id": "g",
+            "type": "expense",
+            "amount": 500,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-05T10:00:00.000Z",
+            "note": "",
+            "labels": [],
+            "createdAt": "2026-06-05T10:00:00.000Z"
+          },
+          {
+            "id": "h",
+            "type": "expense",
+            "amount": 500,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-05T10:00:00.000Z",
+            "note": "1234 / ##",
+            "labels": [],
+            "createdAt": "2026-06-05T10:00:00.000Z"
+          },
+          {
+            "id": "i",
+            "type": "transfer",
+            "amount": 22000,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-01T10:00:00.000Z",
+            "note": "Rent",
+            "labels": [],
+            "createdAt": "2026-06-01T10:00:00.000Z"
+          },
+          {
+            "id": "j",
+            "type": "expense",
+            "amount": 250.25,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-06T10:00:00.000Z",
+            "note": "Café Coffee Day",
+            "labels": [],
+            "createdAt": "2026-06-06T10:00:00.000Z"
+          },
+          {
+            "id": "k",
+            "type": "expense",
+            "amount": 249.75,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-06T10:00:00.000Z",
+            "note": "Cafe Coffee Day",
+            "labels": [],
+            "createdAt": "2026-06-06T10:00:00.000Z"
+          },
+          {
+            "id": "l",
+            "type": "expense",
+            "amount": 100,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-01T10:00:00.000Z",
+            "note": "Tie A",
+            "labels": [],
+            "createdAt": "2026-06-01T10:00:00.000Z"
+          },
+          {
+            "id": "m",
+            "type": "expense",
+            "amount": 100,
+            "accountId": "acc-1",
+            "categoryId": "cat-1",
+            "date": "2026-06-01T10:00:00.000Z",
+            "note": "Tie-A",
+            "labels": [],
+            "createdAt": "2026-06-01T10:00:00.000Z"
+          }
+        ],
+        2,
+        "expense"
+      ],
+      "out": [
+        {
+          "key": "swiggy",
+          "displayName": "Swiggy 449",
+          "type": "expense",
+          "totalAmount": 869.3,
+          "transactionCount": 4,
+          "lastDate": "2026-06-03T10:00:00.000Z",
+          "transactions": [
+            "b",
+            "c",
+            "d",
+            "a"
+          ]
+        },
+        {
+          "key": "caf coffee day",
+          "displayName": "Café Coffee Day",
+          "type": "expense",
+          "totalAmount": 250.25,
+          "transactionCount": 1,
+          "lastDate": "2026-06-06T10:00:00.000Z",
+          "transactions": [
+            "j"
+          ]
+        }
+      ]
+    }
+  ]
+}
