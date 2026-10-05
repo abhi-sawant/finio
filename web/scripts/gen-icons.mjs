@@ -2,7 +2,7 @@
 // vector source: a ₹100-lavender tile, a heavy white "F", and a windowed colour-shift security
 // thread; larger sizes add faint guilloche engraving.
 //
-//   npx -y -p playwright-core node scripts/gen-icons.mjs public
+//   (from web/) npx -y -p playwright-core node scripts/gen-icons.mjs public
 //
 // Rasterises with a locally installed Chrome (override with CHROME_PATH). favicon.ico is the 48px
 // render converted with ffmpeg: `ffmpeg -i favicon-48.png public/favicon.ico`.

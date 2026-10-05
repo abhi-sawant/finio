@@ -29,3 +29,14 @@ flow-docs/
 
 # Impeccable review captures (regenerated each review round)
 .impeccable/review/
+
+# Android (android/)
+android/.gradle/
+android/.kotlin/
+android/**/build/
+android/build/
+android/local.properties
+android/captures/
+*.iml
+*.jks
+*.keystore

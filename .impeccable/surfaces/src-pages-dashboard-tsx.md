@@ -1,8 +1,8 @@
 ---
 version: 1
 slug: "src-pages-dashboard-tsx"
-primary_target: "src/pages/Dashboard.tsx"
-related_targets: ["src/components/layout/Layout.tsx","src/index.css"]
+primary_target: "web/src/pages/Dashboard.tsx"
+related_targets: ["web/src/components/layout/Layout.tsx","web/src/index.css"]
 ---
 
 # App shell + Dashboard (Mudra redesign)

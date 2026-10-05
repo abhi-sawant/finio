@@ -152,7 +152,7 @@ components:
 
 # Design System: Finio
 
-Tokens live in [`src/index.css`](src/index.css) (`:root` for light, `.dark` for dark). Every value
+Tokens live in [`web/src/index.css`](web/src/index.css) (`:root` for light, `.dark` for dark). Every value
 in this file is taken from the shipped build; where a token is a gradient, the frontmatter records
 its key stops and the full CSS value is in `.impeccable/design.json`.
 
@@ -206,7 +206,7 @@ Dark-mode pairs carry the `uv-` prefix in the frontmatter.
   one collapsed-alert band on a screen, a soft ₹2000 tint.
 
 ### Tertiary — denomination tints
-Each account type is printed as a rupee note (`src/components/accounts/note.ts`). Tints are
+Each account type is printed as a rupee note (`web/src/components/accounts/note.ts`). Tints are
 135deg gradients with a matching ink; full light and dark values are in `--note-<value>` and the
 sidecar.
 
@@ -472,7 +472,7 @@ shadow, 22px radius, 16px padding, spanning the full grid width.
   threads clear of figures.
 - **Do** give every motion a reduced-motion fallback (the note tilt and PIN shake both stop).
 - **Do** design both modes: every new token needs a light value and a hand-tuned dark (UV) value.
-- **Do** offer `COLOR_PALETTE` from `src/data/colorPalette.ts` (18 Mudra swatches: denomination
+- **Do** offer `COLOR_PALETTE` from `web/src/data/colorPalette.ts` (18 Mudra swatches: denomination
   hues and deep jewel tones) in every colour picker. Accounts have no colour picker — their tint is
   the account type's denomination.
 
