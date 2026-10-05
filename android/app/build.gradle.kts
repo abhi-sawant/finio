@@ -16,6 +16,10 @@ android {
         targetSdk = 37
         versionCode = 1
         versionName = "1.0.0"
+
+        // Mirrors web's VITE_API_URL: override with -PfinioApiUrl=https://api.example.com.
+        val apiUrl = (project.findProperty("finioApiUrl") as String?) ?: "https://api.finio.slowatcoding.com"
+        buildConfigField("String", "API_URL", "\"$apiUrl\"")
     }
 
     buildTypes {
@@ -28,6 +32,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     compileOptions {
@@ -63,4 +68,5 @@ dependencies {
     implementation(libs.okhttp)
 
     testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
 }

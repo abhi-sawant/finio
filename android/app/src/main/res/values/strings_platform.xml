@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Strings owned by com.slowatcoding.finio.platform (channels, shortcuts, prompts). -->
+<resources>
+    <!-- Notification channels: one per reminder kind, so each can be silenced on its own. -->
+    <string name="notify_channel_bills">Bill reminders</string>
+    <string name="notify_channel_bills_desc">Upcoming recurring bills and loan EMIs</string>
+    <string name="notify_channel_budgets">Budget alerts</string>
+    <string name="notify_channel_budgets_desc">When a budget is close to or over its limit</string>
+    <string name="notify_channel_credit">Card payment due</string>
+    <string name="notify_channel_credit_desc">Credit card bills coming due</string>
+    <string name="notify_channel_daily">Daily log reminder</string>
+    <string name="notify_channel_daily_desc">An evening nudge on days nothing was logged</string>
+    <string name="notify_test_title">Reminders are on</string>
+    <string name="notify_test_body">This is how Finio will remind you about bills, budgets and card dues.</string>
+
+    <!-- Launcher shortcuts (mirror the PWA manifest's `shortcuts`). -->
+    <string name="shortcut_add_expense_short">Expense</string>
+    <string name="shortcut_add_expense_long">Add Expense</string>
+    <string name="shortcut_add_income_short">Income</string>
+    <string name="shortcut_add_income_long">Add Income</string>
+    <string name="shortcut_transactions_short">History</string>
+    <string name="shortcut_transactions_long">Transactions</string>
+    <string name="shortcut_budgets_short">Budgets</string>
+    <string name="shortcut_budgets_long">Budgets</string>
+
+    <!-- App lock biometric prompt. -->
+    <string name="biometric_unlock_title">Unlock Finio</string>
+    <string name="biometric_unlock_subtitle">Confirm it\'s you</string>
+    <string name="biometric_unlock_negative">Use PIN</string>
+
+    <string name="share_export_chooser">Share export</string>
+</resources>
