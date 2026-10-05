@@ -1,0 +1,11 @@
+<resources>
+    <!-- Compose owns all colour; this theme only carries what the platform needs before the
+         first frame. Bars are transparent because MainActivity draws edge to edge. -->
+    <style name="Theme.Finio" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/paper_window</item>
+        <item name="android:colorBackground">@color/paper_background</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+</resources>
