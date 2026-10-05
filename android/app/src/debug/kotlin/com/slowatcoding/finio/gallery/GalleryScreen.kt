@@ -100,7 +100,11 @@ import java.time.LocalDateTime
  * Android counterpart of eyeballing the PWA. Not part of the real navigation shell.
  */
 @Composable
-fun GalleryScreen() {
+/**
+ * [embedded]: rendered inside the app shell (Routes.DebugGallery), which already hosts the
+ * toaster — skip this screen's own toast host so toasts don't render twice.
+ */
+fun GalleryScreen(embedded: Boolean = false) {
     var dark by remember { mutableStateOf(false) }
     FinioTheme(dark = dark) {
         ConfirmHost {
@@ -129,7 +133,7 @@ fun GalleryScreen() {
                         .windowInsetsPadding(WindowInsets.navigationBars)
                         .padding(end = 16.dp, bottom = 88.dp),
                 )
-                FinioToastHost()
+                if (!embedded) FinioToastHost()
             }
         }
     }
