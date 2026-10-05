@@ -1,0 +1,1450 @@
+{
+  "module": "balance",
+  "tz": "Asia/Kolkata",
+  "cases": [
+    {
+      "fn": "roundMoney",
+      "args": [
+        0
+      ],
+      "out": 0
+    },
+    {
+      "fn": "roundMoney",
+      "args": [
+        1.005
+      ],
+      "out": 1
+    },
+    {
+      "fn": "roundMoney",
+      "args": [
+        2.675
+      ],
+      "out": 2.68
+    },
+    {
+      "fn": "roundMoney",
+      "args": [
+        -2.5
+      ],
+      "out": -2.5
+    },
+    {
+      "fn": "roundMoney",
+      "args": [
+        -0.125
+      ],
+      "out": -0.12
+    },
+    {
+      "fn": "roundMoney",
+      "args": [
+        0.30000000000000004
+      ],
+      "out": 0.3
+    },
+    {
+      "fn": "roundMoney",
+      "args": [
+        123456.785
+      ],
+      "out": 123456.79
+    },
+    {
+      "fn": "roundMoney",
+      "args": [
+        -1234.5649
+      ],
+      "out": -1234.56
+    },
+    {
+      "fn": "roundMoney",
+      "args": [
+        1e-7
+      ],
+      "out": 0
+    },
+    {
+      "fn": "applyBalanceDelta",
+      "args": [
+        [
+          {
+            "id": "a",
+            "name": "a",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": 1000,
+            "openingBalance": 1000,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          {
+            "id": "b",
+            "name": "b",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": 0,
+            "openingBalance": 0,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          {
+            "id": "c",
+            "name": "c",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": -500,
+            "openingBalance": -500,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          }
+        ],
+        {
+          "type": "expense",
+          "accountId": "a",
+          "amount": 120.35
+        },
+        1
+      ],
+      "out": [
+        {
+          "id": "a",
+          "name": "a",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": 879.65,
+          "openingBalance": 1000,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        },
+        {
+          "id": "b",
+          "name": "b",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": 0,
+          "openingBalance": 0,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        },
+        {
+          "id": "c",
+          "name": "c",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": -500,
+          "openingBalance": -500,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "fn": "applyBalanceDelta",
+      "args": [
+        [
+          {
+            "id": "a",
+            "name": "a",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": 1000,
+            "openingBalance": 1000,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          {
+            "id": "b",
+            "name": "b",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": 0,
+            "openingBalance": 0,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          {
+            "id": "c",
+            "name": "c",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": -500,
+            "openingBalance": -500,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          }
+        ],
+        {
+          "type": "expense",
+          "accountId": "a",
+          "amount": 120.35
+        },
+        -1
+      ],
+      "out": [
+        {
+          "id": "a",
+          "name": "a",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": 1120.35,
+          "openingBalance": 1000,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        },
+        {
+          "id": "b",
+          "name": "b",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": 0,
+          "openingBalance": 0,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        },
+        {
+          "id": "c",
+          "name": "c",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": -500,
+          "openingBalance": -500,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "fn": "applyBalanceDelta",
+      "args": [
+        [
+          {
+            "id": "a",
+            "name": "a",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": 1000,
+            "openingBalance": 1000,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          {
+            "id": "b",
+            "name": "b",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": 0,
+            "openingBalance": 0,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          {
+            "id": "c",
+            "name": "c",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": -500,
+            "openingBalance": -500,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          }
+        ],
+        {
+          "type": "income",
+          "accountId": "a",
+          "amount": 50000
+        },
+        1
+      ],
+      "out": [
+        {
+          "id": "a",
+          "name": "a",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": 51000,
+          "openingBalance": 1000,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        },
+        {
+          "id": "b",
+          "name": "b",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": 0,
+          "openingBalance": 0,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        },
+        {
+          "id": "c",
+          "name": "c",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": -500,
+          "openingBalance": -500,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "fn": "applyBalanceDelta",
+      "args": [
+        [
+          {
+            "id": "a",
+            "name": "a",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": 1000,
+            "openingBalance": 1000,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          {
+            "id": "b",
+            "name": "b",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": 0,
+            "openingBalance": 0,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          {
+            "id": "c",
+            "name": "c",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": -500,
+            "openingBalance": -500,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          }
+        ],
+        {
+          "type": "income",
+          "accountId": "a",
+          "amount": 50000
+        },
+        -1
+      ],
+      "out": [
+        {
+          "id": "a",
+          "name": "a",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": -49000,
+          "openingBalance": 1000,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        },
+        {
+          "id": "b",
+          "name": "b",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": 0,
+          "openingBalance": 0,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        },
+        {
+          "id": "c",
+          "name": "c",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": -500,
+          "openingBalance": -500,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "fn": "applyBalanceDelta",
+      "args": [
+        [
+          {
+            "id": "a",
+            "name": "a",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": 1000,
+            "openingBalance": 1000,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          {
+            "id": "b",
+            "name": "b",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": 0,
+            "openingBalance": 0,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          {
+            "id": "c",
+            "name": "c",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": -500,
+            "openingBalance": -500,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          }
+        ],
+        {
+          "type": "transfer",
+          "accountId": "a",
+          "toAccountId": "b",
+          "amount": 0.1
+        },
+        1
+      ],
+      "out": [
+        {
+          "id": "a",
+          "name": "a",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": 999.9,
+          "openingBalance": 1000,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        },
+        {
+          "id": "b",
+          "name": "b",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": 0.1,
+          "openingBalance": 0,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        },
+        {
+          "id": "c",
+          "name": "c",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": -500,
+          "openingBalance": -500,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "fn": "applyBalanceDelta",
+      "args": [
+        [
+          {
+            "id": "a",
+            "name": "a",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": 1000,
+            "openingBalance": 1000,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          {
+            "id": "b",
+            "name": "b",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": 0,
+            "openingBalance": 0,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          {
+            "id": "c",
+            "name": "c",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": -500,
+            "openingBalance": -500,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          }
+        ],
+        {
+          "type": "transfer",
+          "accountId": "a",
+          "toAccountId": "b",
+          "amount": 0.1
+        },
+        -1
+      ],
+      "out": [
+        {
+          "id": "a",
+          "name": "a",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": 1000.1,
+          "openingBalance": 1000,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        },
+        {
+          "id": "b",
+          "name": "b",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": -0.1,
+          "openingBalance": 0,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        },
+        {
+          "id": "c",
+          "name": "c",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": -500,
+          "openingBalance": -500,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "fn": "applyBalanceDelta",
+      "args": [
+        [
+          {
+            "id": "a",
+            "name": "a",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": 1000,
+            "openingBalance": 1000,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          {
+            "id": "b",
+            "name": "b",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": 0,
+            "openingBalance": 0,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          {
+            "id": "c",
+            "name": "c",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": -500,
+            "openingBalance": -500,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          }
+        ],
+        {
+          "type": "transfer",
+          "accountId": "b",
+          "toAccountId": "c",
+          "amount": 0.2
+        },
+        1
+      ],
+      "out": [
+        {
+          "id": "a",
+          "name": "a",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": 1000,
+          "openingBalance": 1000,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        },
+        {
+          "id": "b",
+          "name": "b",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": -0.2,
+          "openingBalance": 0,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        },
+        {
+          "id": "c",
+          "name": "c",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": -499.8,
+          "openingBalance": -500,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "fn": "applyBalanceDelta",
+      "args": [
+        [
+          {
+            "id": "a",
+            "name": "a",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": 1000,
+            "openingBalance": 1000,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          {
+            "id": "b",
+            "name": "b",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": 0,
+            "openingBalance": 0,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          {
+            "id": "c",
+            "name": "c",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": -500,
+            "openingBalance": -500,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          }
+        ],
+        {
+          "type": "transfer",
+          "accountId": "b",
+          "toAccountId": "c",
+          "amount": 0.2
+        },
+        -1
+      ],
+      "out": [
+        {
+          "id": "a",
+          "name": "a",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": 1000,
+          "openingBalance": 1000,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        },
+        {
+          "id": "b",
+          "name": "b",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": 0.2,
+          "openingBalance": 0,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        },
+        {
+          "id": "c",
+          "name": "c",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": -500.2,
+          "openingBalance": -500,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "fn": "applyBalanceDelta",
+      "args": [
+        [
+          {
+            "id": "a",
+            "name": "a",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": 1000,
+            "openingBalance": 1000,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          {
+            "id": "b",
+            "name": "b",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": 0,
+            "openingBalance": 0,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          {
+            "id": "c",
+            "name": "c",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": -500,
+            "openingBalance": -500,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          }
+        ],
+        {
+          "type": "expense",
+          "accountId": "c",
+          "amount": 33.333
+        },
+        1
+      ],
+      "out": [
+        {
+          "id": "a",
+          "name": "a",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": 1000,
+          "openingBalance": 1000,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        },
+        {
+          "id": "b",
+          "name": "b",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": 0,
+          "openingBalance": 0,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        },
+        {
+          "id": "c",
+          "name": "c",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": -533.33,
+          "openingBalance": -500,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "fn": "applyBalanceDelta",
+      "args": [
+        [
+          {
+            "id": "a",
+            "name": "a",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": 1000,
+            "openingBalance": 1000,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          {
+            "id": "b",
+            "name": "b",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": 0,
+            "openingBalance": 0,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          {
+            "id": "c",
+            "name": "c",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": -500,
+            "openingBalance": -500,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          }
+        ],
+        {
+          "type": "expense",
+          "accountId": "c",
+          "amount": 33.333
+        },
+        -1
+      ],
+      "out": [
+        {
+          "id": "a",
+          "name": "a",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": 1000,
+          "openingBalance": 1000,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        },
+        {
+          "id": "b",
+          "name": "b",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": 0,
+          "openingBalance": 0,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        },
+        {
+          "id": "c",
+          "name": "c",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": -466.67,
+          "openingBalance": -500,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "fn": "applyBalanceDelta",
+      "args": [
+        [
+          {
+            "id": "a",
+            "name": "a",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": 1000,
+            "openingBalance": 1000,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          {
+            "id": "b",
+            "name": "b",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": 0,
+            "openingBalance": 0,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          {
+            "id": "c",
+            "name": "c",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": -500,
+            "openingBalance": -500,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          }
+        ],
+        {
+          "type": "income",
+          "accountId": "b",
+          "amount": 0.001
+        },
+        1
+      ],
+      "out": [
+        {
+          "id": "a",
+          "name": "a",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": 1000,
+          "openingBalance": 1000,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        },
+        {
+          "id": "b",
+          "name": "b",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": 0,
+          "openingBalance": 0,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        },
+        {
+          "id": "c",
+          "name": "c",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": -500,
+          "openingBalance": -500,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "fn": "applyBalanceDelta",
+      "args": [
+        [
+          {
+            "id": "a",
+            "name": "a",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": 1000,
+            "openingBalance": 1000,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          {
+            "id": "b",
+            "name": "b",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": 0,
+            "openingBalance": 0,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          {
+            "id": "c",
+            "name": "c",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": -500,
+            "openingBalance": -500,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          }
+        ],
+        {
+          "type": "income",
+          "accountId": "b",
+          "amount": 0.001
+        },
+        -1
+      ],
+      "out": [
+        {
+          "id": "a",
+          "name": "a",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": 1000,
+          "openingBalance": 1000,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        },
+        {
+          "id": "b",
+          "name": "b",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": 0,
+          "openingBalance": 0,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        },
+        {
+          "id": "c",
+          "name": "c",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": -500,
+          "openingBalance": -500,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "fn": "sumTransactionDeltas",
+      "args": [
+        [
+          {
+            "type": "expense",
+            "accountId": "a",
+            "amount": 120.35
+          },
+          {
+            "type": "income",
+            "accountId": "a",
+            "amount": 50000
+          },
+          {
+            "type": "transfer",
+            "accountId": "a",
+            "toAccountId": "b",
+            "amount": 0.1
+          },
+          {
+            "type": "transfer",
+            "accountId": "b",
+            "toAccountId": "c",
+            "amount": 0.2
+          },
+          {
+            "type": "expense",
+            "accountId": "c",
+            "amount": 33.333
+          },
+          {
+            "type": "income",
+            "accountId": "b",
+            "amount": 0.001
+          }
+        ]
+      ],
+      "out": {
+        "a": 49879.55,
+        "b": -0.099,
+        "c": -33.132999999999996
+      }
+    },
+    {
+      "fn": "backfillOpeningBalances",
+      "args": [
+        [
+          {
+            "id": "a",
+            "name": "a",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": 49879.55,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          {
+            "id": "b",
+            "name": "b",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": 0.1,
+            "openingBalance": 0,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          {
+            "id": "c",
+            "name": "c",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": 99.7,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          }
+        ],
+        [
+          {
+            "type": "expense",
+            "accountId": "a",
+            "amount": 120.35
+          },
+          {
+            "type": "income",
+            "accountId": "a",
+            "amount": 50000
+          },
+          {
+            "type": "transfer",
+            "accountId": "a",
+            "toAccountId": "b",
+            "amount": 0.1
+          },
+          {
+            "type": "transfer",
+            "accountId": "b",
+            "toAccountId": "c",
+            "amount": 0.2
+          },
+          {
+            "type": "expense",
+            "accountId": "c",
+            "amount": 33.333
+          },
+          {
+            "type": "income",
+            "accountId": "b",
+            "amount": 0.001
+          }
+        ]
+      ],
+      "out": [
+        {
+          "id": "a",
+          "name": "a",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": 49879.55,
+          "createdAt": "2026-01-01T00:00:00.000Z",
+          "openingBalance": 0
+        },
+        {
+          "id": "b",
+          "name": "b",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": 0.1,
+          "openingBalance": 0,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        },
+        {
+          "id": "c",
+          "name": "c",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": 99.7,
+          "createdAt": "2026-01-01T00:00:00.000Z",
+          "openingBalance": 132.83
+        }
+      ]
+    },
+    {
+      "fn": "recomputeAccountBalances",
+      "args": [
+        [
+          {
+            "id": "a",
+            "name": "a",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": 49879.55,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          {
+            "id": "b",
+            "name": "b",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": 0.1,
+            "openingBalance": 0,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          {
+            "id": "c",
+            "name": "c",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": 99.7,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          }
+        ],
+        [
+          {
+            "type": "expense",
+            "accountId": "a",
+            "amount": 120.35
+          },
+          {
+            "type": "income",
+            "accountId": "a",
+            "amount": 50000
+          },
+          {
+            "type": "transfer",
+            "accountId": "a",
+            "toAccountId": "b",
+            "amount": 0.1
+          },
+          {
+            "type": "transfer",
+            "accountId": "b",
+            "toAccountId": "c",
+            "amount": 0.2
+          },
+          {
+            "type": "expense",
+            "accountId": "c",
+            "amount": 33.333
+          },
+          {
+            "type": "income",
+            "accountId": "b",
+            "amount": 0.001
+          }
+        ]
+      ],
+      "out": [
+        {
+          "id": "a",
+          "name": "a",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": 49879.55,
+          "createdAt": "2026-01-01T00:00:00.000Z",
+          "openingBalance": 0
+        },
+        {
+          "id": "b",
+          "name": "b",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": -0.1,
+          "openingBalance": 0,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        },
+        {
+          "id": "c",
+          "name": "c",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": 99.7,
+          "createdAt": "2026-01-01T00:00:00.000Z",
+          "openingBalance": 132.83
+        }
+      ]
+    },
+    {
+      "fn": "recomputeAccountBalances",
+      "args": [
+        [
+          {
+            "id": "a",
+            "name": "a",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": 1000,
+            "openingBalance": 1000,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          {
+            "id": "b",
+            "name": "b",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": 0,
+            "openingBalance": 0,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          {
+            "id": "c",
+            "name": "c",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": -500,
+            "openingBalance": -500,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          }
+        ],
+        [
+          {
+            "type": "expense",
+            "accountId": "a",
+            "amount": 120.35
+          },
+          {
+            "type": "income",
+            "accountId": "a",
+            "amount": 50000
+          },
+          {
+            "type": "transfer",
+            "accountId": "a",
+            "toAccountId": "b",
+            "amount": 0.1
+          },
+          {
+            "type": "transfer",
+            "accountId": "b",
+            "toAccountId": "c",
+            "amount": 0.2
+          },
+          {
+            "type": "expense",
+            "accountId": "c",
+            "amount": 33.333
+          },
+          {
+            "type": "income",
+            "accountId": "b",
+            "amount": 0.001
+          }
+        ]
+      ],
+      "out": [
+        {
+          "id": "a",
+          "name": "a",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": 50879.55,
+          "openingBalance": 1000,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        },
+        {
+          "id": "b",
+          "name": "b",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": -0.1,
+          "openingBalance": 0,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        },
+        {
+          "id": "c",
+          "name": "c",
+          "type": "checking",
+          "color": "#000000",
+          "icon": "landmark",
+          "balance": -533.13,
+          "openingBalance": -500,
+          "createdAt": "2026-01-01T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "fn": "reconciliationAdjustment",
+      "args": [
+        100,
+        100
+      ],
+      "out": {
+        "type": null,
+        "amount": 0
+      }
+    },
+    {
+      "fn": "reconciliationAdjustment",
+      "args": [
+        100,
+        150.25
+      ],
+      "out": {
+        "type": "income",
+        "amount": 50.25
+      }
+    },
+    {
+      "fn": "reconciliationAdjustment",
+      "args": [
+        100,
+        99.995
+      ],
+      "out": {
+        "type": null,
+        "amount": 0
+      }
+    },
+    {
+      "fn": "reconciliationAdjustment",
+      "args": [
+        -2500,
+        -2400.1
+      ],
+      "out": {
+        "type": "income",
+        "amount": 99.9
+      }
+    },
+    {
+      "fn": "reconciliationAdjustment",
+      "args": [
+        0.30000000000000004,
+        0.3
+      ],
+      "out": {
+        "type": null,
+        "amount": 0
+      }
+    },
+    {
+      "fn": "diffBalances",
+      "args": [
+        [
+          {
+            "id": "a",
+            "name": "a",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": 1000,
+            "openingBalance": 1000,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          {
+            "id": "b",
+            "name": "b",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": 0,
+            "openingBalance": 0,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          {
+            "id": "c",
+            "name": "c",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": -500,
+            "openingBalance": -500,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          }
+        ],
+        [
+          {
+            "id": "a",
+            "name": "a",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": 50879.55,
+            "openingBalance": 1000,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          {
+            "id": "b",
+            "name": "b",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": -0.1,
+            "openingBalance": 0,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          {
+            "id": "c",
+            "name": "c",
+            "type": "checking",
+            "color": "#000000",
+            "icon": "landmark",
+            "balance": -533.13,
+            "openingBalance": -500,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          }
+        ]
+      ],
+      "out": {
+        "changed": 3,
+        "totalDrift": 49846.32
+      }
+    }
+  ]
+}
