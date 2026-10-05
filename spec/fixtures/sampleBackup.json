@@ -1,0 +1,1153 @@
+{
+  "module": "sampleBackup",
+  "tz": "Asia/Kolkata",
+  "cases": [
+    {
+      "fn": "sampleBackup",
+      "args": [
+        "2026-06-15T12:00:00.000Z"
+      ],
+      "out": {
+        "version": 1,
+        "exportedAt": "2026-06-15T12:00:00.000Z",
+        "accounts": [
+          {
+            "name": "HDFC Checking",
+            "type": "checking",
+            "color": "#146b54",
+            "icon": "landmark",
+            "balance": 125075,
+            "openingBalance": 15000,
+            "id": "00000000-0000-4000-8000-000000000001",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "name": "Savings",
+            "type": "savings",
+            "color": "#22c55e",
+            "icon": "piggy-bank",
+            "balance": 40000,
+            "openingBalance": 40000,
+            "id": "00000000-0000-4000-8000-000000000002",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "name": "Credit Card",
+            "type": "credit",
+            "color": "#ef4444",
+            "icon": "credit-card",
+            "balance": 1903,
+            "creditLimit": 100000,
+            "statementCloseDay": 28,
+            "paymentDueDays": 18,
+            "openingBalance": 0,
+            "id": "00000000-0000-4000-8000-000000000003",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          }
+        ],
+        "transactions": [
+          {
+            "type": "income",
+            "amount": 65000,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-9",
+            "date": "2026-03-01T06:30:00.000Z",
+            "note": "Monthly salary",
+            "labels": [],
+            "id": "00000000-0000-4000-8000-000000000014",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "income",
+            "amount": 65000,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-9",
+            "date": "2026-04-01T06:30:00.000Z",
+            "note": "Monthly salary",
+            "labels": [],
+            "id": "00000000-0000-4000-8000-000000000015",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "income",
+            "amount": 65000,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-9",
+            "date": "2026-05-01T06:30:00.000Z",
+            "note": "Monthly salary",
+            "labels": [],
+            "id": "00000000-0000-4000-8000-000000000016",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "income",
+            "amount": 12000,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-10",
+            "date": "2026-04-15T06:30:00.000Z",
+            "note": "Freelance project",
+            "labels": [],
+            "id": "00000000-0000-4000-8000-000000000017",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 15000,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-8",
+            "date": "2026-03-02T06:30:00.000Z",
+            "note": "Monthly rent",
+            "labels": [
+              "lbl-1"
+            ],
+            "id": "00000000-0000-4000-8000-000000000018",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 15000,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-8",
+            "date": "2026-04-02T06:30:00.000Z",
+            "note": "Monthly rent",
+            "labels": [
+              "lbl-1"
+            ],
+            "id": "00000000-0000-4000-8000-000000000019",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 15000,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-8",
+            "date": "2026-05-02T06:30:00.000Z",
+            "note": "Monthly rent",
+            "labels": [
+              "lbl-1"
+            ],
+            "id": "00000000-0000-4000-8000-000000000020",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 1800,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-25",
+            "date": "2026-03-03T06:30:00.000Z",
+            "note": "Groceries",
+            "labels": [
+              "lbl-1"
+            ],
+            "id": "00000000-0000-4000-8000-000000000021",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 2200,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-25",
+            "date": "2026-03-10T06:30:00.000Z",
+            "note": "Groceries",
+            "labels": [
+              "lbl-1"
+            ],
+            "id": "00000000-0000-4000-8000-000000000022",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 1500,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-25",
+            "date": "2026-03-17T06:30:00.000Z",
+            "note": "Groceries",
+            "labels": [
+              "lbl-1"
+            ],
+            "id": "00000000-0000-4000-8000-000000000023",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 2000,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-25",
+            "date": "2026-03-24T06:30:00.000Z",
+            "note": "Groceries",
+            "labels": [
+              "lbl-1"
+            ],
+            "id": "00000000-0000-4000-8000-000000000024",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 350,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-1",
+            "date": "2026-03-02T06:30:00.000Z",
+            "note": "Lunch with friends",
+            "labels": [
+              "lbl-2"
+            ],
+            "id": "00000000-0000-4000-8000-000000000025",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 620,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-1",
+            "date": "2026-03-06T06:30:00.000Z",
+            "note": "Zomato order",
+            "labels": [
+              "lbl-2"
+            ],
+            "id": "00000000-0000-4000-8000-000000000026",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 480,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-1",
+            "date": "2026-03-13T06:30:00.000Z",
+            "note": "Lunch with friends",
+            "labels": [
+              "lbl-2"
+            ],
+            "id": "00000000-0000-4000-8000-000000000027",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 900,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-1",
+            "date": "2026-03-20T06:30:00.000Z",
+            "note": "Zomato order",
+            "labels": [
+              "lbl-2"
+            ],
+            "id": "00000000-0000-4000-8000-000000000028",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 275,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-1",
+            "date": "2026-03-27T06:30:00.000Z",
+            "note": "Lunch with friends",
+            "labels": [
+              "lbl-2"
+            ],
+            "id": "00000000-0000-4000-8000-000000000029",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 1800,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-25",
+            "date": "2026-04-03T06:30:00.000Z",
+            "note": "Groceries",
+            "labels": [
+              "lbl-1"
+            ],
+            "id": "00000000-0000-4000-8000-000000000030",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 2200,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-25",
+            "date": "2026-04-10T06:30:00.000Z",
+            "note": "Groceries",
+            "labels": [
+              "lbl-1"
+            ],
+            "id": "00000000-0000-4000-8000-000000000031",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 1500,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-25",
+            "date": "2026-04-17T06:30:00.000Z",
+            "note": "Groceries",
+            "labels": [
+              "lbl-1"
+            ],
+            "id": "00000000-0000-4000-8000-000000000032",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 2000,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-25",
+            "date": "2026-04-24T06:30:00.000Z",
+            "note": "Groceries",
+            "labels": [
+              "lbl-1"
+            ],
+            "id": "00000000-0000-4000-8000-000000000033",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 350,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-1",
+            "date": "2026-04-02T06:30:00.000Z",
+            "note": "Lunch with friends",
+            "labels": [
+              "lbl-2"
+            ],
+            "id": "00000000-0000-4000-8000-000000000034",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 620,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-1",
+            "date": "2026-04-06T06:30:00.000Z",
+            "note": "Zomato order",
+            "labels": [
+              "lbl-2"
+            ],
+            "id": "00000000-0000-4000-8000-000000000035",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 480,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-1",
+            "date": "2026-04-13T06:30:00.000Z",
+            "note": "Lunch with friends",
+            "labels": [
+              "lbl-2"
+            ],
+            "id": "00000000-0000-4000-8000-000000000036",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 900,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-1",
+            "date": "2026-04-20T06:30:00.000Z",
+            "note": "Zomato order",
+            "labels": [
+              "lbl-2"
+            ],
+            "id": "00000000-0000-4000-8000-000000000037",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 275,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-1",
+            "date": "2026-04-27T06:30:00.000Z",
+            "note": "Lunch with friends",
+            "labels": [
+              "lbl-2"
+            ],
+            "id": "00000000-0000-4000-8000-000000000038",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 1800,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-25",
+            "date": "2026-05-03T06:30:00.000Z",
+            "note": "Groceries",
+            "labels": [
+              "lbl-1"
+            ],
+            "id": "00000000-0000-4000-8000-000000000039",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 2200,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-25",
+            "date": "2026-05-10T06:30:00.000Z",
+            "note": "Groceries",
+            "labels": [
+              "lbl-1"
+            ],
+            "id": "00000000-0000-4000-8000-000000000040",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 1500,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-25",
+            "date": "2026-05-17T06:30:00.000Z",
+            "note": "Groceries",
+            "labels": [
+              "lbl-1"
+            ],
+            "id": "00000000-0000-4000-8000-000000000041",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 2000,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-25",
+            "date": "2026-05-24T06:30:00.000Z",
+            "note": "Groceries",
+            "labels": [
+              "lbl-1"
+            ],
+            "id": "00000000-0000-4000-8000-000000000042",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 350,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-1",
+            "date": "2026-05-02T06:30:00.000Z",
+            "note": "Lunch with friends",
+            "labels": [
+              "lbl-2"
+            ],
+            "id": "00000000-0000-4000-8000-000000000043",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 620,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-1",
+            "date": "2026-05-06T06:30:00.000Z",
+            "note": "Zomato order",
+            "labels": [
+              "lbl-2"
+            ],
+            "id": "00000000-0000-4000-8000-000000000044",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 480,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-1",
+            "date": "2026-05-13T06:30:00.000Z",
+            "note": "Lunch with friends",
+            "labels": [
+              "lbl-2"
+            ],
+            "id": "00000000-0000-4000-8000-000000000045",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 900,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-1",
+            "date": "2026-05-20T06:30:00.000Z",
+            "note": "Zomato order",
+            "labels": [
+              "lbl-2"
+            ],
+            "id": "00000000-0000-4000-8000-000000000046",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 275,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-1",
+            "date": "2026-05-27T06:30:00.000Z",
+            "note": "Lunch with friends",
+            "labels": [
+              "lbl-2"
+            ],
+            "id": "00000000-0000-4000-8000-000000000047",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 1200,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-2",
+            "date": "2026-03-08T06:30:00.000Z",
+            "note": "Fuel",
+            "labels": [],
+            "id": "00000000-0000-4000-8000-000000000048",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 450,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-2",
+            "date": "2026-03-22T06:30:00.000Z",
+            "note": "Cab rides",
+            "labels": [],
+            "id": "00000000-0000-4000-8000-000000000049",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 1200,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-2",
+            "date": "2026-04-08T06:30:00.000Z",
+            "note": "Fuel",
+            "labels": [],
+            "id": "00000000-0000-4000-8000-000000000050",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 450,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-2",
+            "date": "2026-04-22T06:30:00.000Z",
+            "note": "Cab rides",
+            "labels": [],
+            "id": "00000000-0000-4000-8000-000000000051",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 1200,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-2",
+            "date": "2026-05-08T06:30:00.000Z",
+            "note": "Fuel",
+            "labels": [],
+            "id": "00000000-0000-4000-8000-000000000052",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 450,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-2",
+            "date": "2026-05-22T06:30:00.000Z",
+            "note": "Cab rides",
+            "labels": [],
+            "id": "00000000-0000-4000-8000-000000000053",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 499,
+            "accountId": "00000000-0000-4000-8000-000000000003",
+            "categoryId": "cat-18",
+            "date": "2026-03-05T06:30:00.000Z",
+            "note": "Netflix",
+            "labels": [
+              "lbl-3"
+            ],
+            "id": "00000000-0000-4000-8000-000000000054",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 1400,
+            "accountId": "00000000-0000-4000-8000-000000000003",
+            "categoryId": "cat-3",
+            "date": "2026-03-14T06:30:00.000Z",
+            "note": "Online shopping",
+            "labels": [
+              "lbl-2"
+            ],
+            "id": "00000000-0000-4000-8000-000000000055",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 800,
+            "accountId": "00000000-0000-4000-8000-000000000003",
+            "categoryId": "cat-4",
+            "date": "2026-03-19T06:30:00.000Z",
+            "note": "Movie night",
+            "labels": [
+              "lbl-2"
+            ],
+            "id": "00000000-0000-4000-8000-000000000056",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 499,
+            "accountId": "00000000-0000-4000-8000-000000000003",
+            "categoryId": "cat-18",
+            "date": "2026-04-05T06:30:00.000Z",
+            "note": "Netflix",
+            "labels": [
+              "lbl-3"
+            ],
+            "id": "00000000-0000-4000-8000-000000000057",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 1400,
+            "accountId": "00000000-0000-4000-8000-000000000003",
+            "categoryId": "cat-3",
+            "date": "2026-04-14T06:30:00.000Z",
+            "note": "Online shopping",
+            "labels": [
+              "lbl-2"
+            ],
+            "id": "00000000-0000-4000-8000-000000000058",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 800,
+            "accountId": "00000000-0000-4000-8000-000000000003",
+            "categoryId": "cat-4",
+            "date": "2026-04-19T06:30:00.000Z",
+            "note": "Movie night",
+            "labels": [
+              "lbl-2"
+            ],
+            "id": "00000000-0000-4000-8000-000000000059",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 499,
+            "accountId": "00000000-0000-4000-8000-000000000003",
+            "categoryId": "cat-18",
+            "date": "2026-05-05T06:30:00.000Z",
+            "note": "Netflix",
+            "labels": [
+              "lbl-3"
+            ],
+            "id": "00000000-0000-4000-8000-000000000060",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 1400,
+            "accountId": "00000000-0000-4000-8000-000000000003",
+            "categoryId": "cat-3",
+            "date": "2026-05-14T06:30:00.000Z",
+            "note": "Online shopping",
+            "labels": [
+              "lbl-2"
+            ],
+            "id": "00000000-0000-4000-8000-000000000061",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 800,
+            "accountId": "00000000-0000-4000-8000-000000000003",
+            "categoryId": "cat-4",
+            "date": "2026-05-19T06:30:00.000Z",
+            "note": "Movie night",
+            "labels": [
+              "lbl-2"
+            ],
+            "id": "00000000-0000-4000-8000-000000000062",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 2200,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-5",
+            "date": "2026-03-12T06:30:00.000Z",
+            "note": "Electricity bill",
+            "labels": [
+              "lbl-1"
+            ],
+            "id": "00000000-0000-4000-8000-000000000063",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 2200,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-5",
+            "date": "2026-04-12T06:30:00.000Z",
+            "note": "Electricity bill",
+            "labels": [
+              "lbl-1"
+            ],
+            "id": "00000000-0000-4000-8000-000000000064",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "expense",
+            "amount": 2200,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-5",
+            "date": "2026-05-12T06:30:00.000Z",
+            "note": "Electricity bill",
+            "labels": [
+              "lbl-1"
+            ],
+            "id": "00000000-0000-4000-8000-000000000065",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "transfer",
+            "amount": 5000,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-13",
+            "date": "2026-04-20T06:30:00.000Z",
+            "note": "Credit card payment",
+            "labels": [],
+            "toAccountId": "00000000-0000-4000-8000-000000000003",
+            "id": "00000000-0000-4000-8000-000000000066",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "transfer",
+            "amount": 5000,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-13",
+            "date": "2026-05-20T06:30:00.000Z",
+            "note": "Credit card payment",
+            "labels": [],
+            "toAccountId": "00000000-0000-4000-8000-000000000003",
+            "id": "00000000-0000-4000-8000-000000000067",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          }
+        ],
+        "categories": [
+          {
+            "id": "cat-1",
+            "name": "Food",
+            "icon": "utensils",
+            "color": "#ef4444",
+            "type": "expense"
+          },
+          {
+            "id": "cat-2",
+            "name": "Transport",
+            "icon": "car",
+            "color": "#f97316",
+            "type": "expense"
+          },
+          {
+            "id": "cat-3",
+            "name": "Shopping",
+            "icon": "shopping-bag",
+            "color": "#8b5cf6",
+            "type": "expense"
+          },
+          {
+            "id": "cat-4",
+            "name": "Entertainment",
+            "icon": "film",
+            "color": "#ec4899",
+            "type": "expense"
+          },
+          {
+            "id": "cat-5",
+            "name": "Utilities",
+            "icon": "zap",
+            "color": "#06b6d4",
+            "type": "expense"
+          },
+          {
+            "id": "cat-6",
+            "name": "Healthcare",
+            "icon": "heart-pulse",
+            "color": "#10b981",
+            "type": "expense"
+          },
+          {
+            "id": "cat-7",
+            "name": "Education",
+            "icon": "book-open",
+            "color": "#3b82f6",
+            "type": "expense"
+          },
+          {
+            "id": "cat-8",
+            "name": "Housing",
+            "icon": "home",
+            "color": "#64748b",
+            "type": "expense"
+          },
+          {
+            "id": "cat-15",
+            "name": "Travel",
+            "icon": "plane",
+            "color": "#ef4444",
+            "type": "expense"
+          },
+          {
+            "id": "cat-16",
+            "name": "Gifts",
+            "icon": "gift",
+            "color": "#f97316",
+            "type": "expense"
+          },
+          {
+            "id": "cat-17",
+            "name": "Personal Care",
+            "icon": "scissors",
+            "color": "#8b5cf6",
+            "type": "expense"
+          },
+          {
+            "id": "cat-18",
+            "name": "Subscriptions",
+            "icon": "repeat",
+            "color": "#ec4899",
+            "type": "expense"
+          },
+          {
+            "id": "cat-19",
+            "name": "Vehicles",
+            "icon": "truck",
+            "color": "#06b6d4",
+            "type": "expense"
+          },
+          {
+            "id": "cat-20",
+            "name": "Financial",
+            "icon": "dollar-sign",
+            "color": "#10b981",
+            "type": "expense"
+          },
+          {
+            "id": "cat-11",
+            "name": "Investments",
+            "icon": "trending-up",
+            "color": "#f59e0b",
+            "type": "expense"
+          },
+          {
+            "id": "cat-9",
+            "name": "Salary",
+            "icon": "briefcase",
+            "color": "#22c55e",
+            "type": "income"
+          },
+          {
+            "id": "cat-10",
+            "name": "Freelance",
+            "icon": "laptop",
+            "color": "#146b54",
+            "type": "income"
+          },
+          {
+            "id": "cat-12",
+            "name": "Business",
+            "icon": "building-2",
+            "color": "#a855f7",
+            "type": "income"
+          },
+          {
+            "id": "cat-21",
+            "name": "Gifts",
+            "icon": "gift",
+            "color": "#f97316",
+            "type": "income"
+          },
+          {
+            "id": "cat-22",
+            "name": "Rent",
+            "icon": "home",
+            "color": "#3b82f6",
+            "type": "income"
+          },
+          {
+            "id": "cat-23",
+            "name": "Interest",
+            "icon": "dollar-sign",
+            "color": "#10b981",
+            "type": "income"
+          },
+          {
+            "id": "cat-13",
+            "name": "Transfer",
+            "icon": "repeat",
+            "color": "#3b82f6",
+            "type": "both"
+          },
+          {
+            "id": "cat-24",
+            "name": "Miscellaneous",
+            "icon": "circle-ellipsis",
+            "color": "#94a3b8",
+            "type": "both"
+          },
+          {
+            "id": "cat-25",
+            "name": "Groceries",
+            "icon": "shopping-cart",
+            "color": "#22c55e",
+            "type": "expense"
+          },
+          {
+            "id": "cat-26",
+            "name": "Insurance",
+            "icon": "umbrella",
+            "color": "#0ea5e9",
+            "type": "expense"
+          },
+          {
+            "id": "cat-27",
+            "name": "Loan / EMI",
+            "icon": "banknote",
+            "color": "#f43f5e",
+            "type": "expense"
+          },
+          {
+            "id": "cat-28",
+            "name": "Rent",
+            "icon": "building-2",
+            "color": "#78716c",
+            "type": "expense"
+          },
+          {
+            "id": "cat-29",
+            "name": "Fitness & Wellness",
+            "icon": "dumbbell",
+            "color": "#14b8a6",
+            "type": "expense"
+          },
+          {
+            "id": "cat-30",
+            "name": "Pets",
+            "icon": "paw-print",
+            "color": "#f59e0b",
+            "type": "expense"
+          },
+          {
+            "id": "cat-31",
+            "name": "Childcare",
+            "icon": "baby",
+            "color": "#fb923c",
+            "type": "expense"
+          },
+          {
+            "id": "cat-32",
+            "name": "Home Maintenance",
+            "icon": "wrench",
+            "color": "#6b7280",
+            "type": "expense"
+          },
+          {
+            "id": "cat-33",
+            "name": "Bonus",
+            "icon": "sparkles",
+            "color": "#fbbf24",
+            "type": "income"
+          },
+          {
+            "id": "cat-34",
+            "name": "Dividends",
+            "icon": "piggy-bank",
+            "color": "#10b981",
+            "type": "income"
+          },
+          {
+            "id": "cat-35",
+            "name": "Lending",
+            "icon": "hand-coins",
+            "color": "#ec4899",
+            "type": "expense"
+          },
+          {
+            "id": "cat-36",
+            "name": "Lending",
+            "icon": "hand-coins",
+            "color": "#ec4899",
+            "type": "income"
+          }
+        ],
+        "labels": [
+          {
+            "id": "lbl-1",
+            "name": "Essential",
+            "color": "#22c55e"
+          },
+          {
+            "id": "lbl-2",
+            "name": "Discretionary",
+            "color": "#f59e0b"
+          },
+          {
+            "id": "lbl-3",
+            "name": "Recurring",
+            "color": "#3b82f6"
+          },
+          {
+            "id": "lbl-4",
+            "name": "Tax",
+            "color": "#ef4444"
+          },
+          {
+            "id": "lbl-5",
+            "name": "Obligation",
+            "color": "#10b981"
+          },
+          {
+            "id": "lbl-6",
+            "name": "Investment",
+            "color": "#8b5cf6"
+          },
+          {
+            "id": "lbl-7",
+            "name": "Lending",
+            "color": "#ec4899"
+          },
+          {
+            "id": "lbl-8",
+            "name": "For Self",
+            "color": "#64748b"
+          },
+          {
+            "id": "lbl-9",
+            "name": "For Others",
+            "color": "#06b6d4"
+          }
+        ],
+        "budgets": [
+          {
+            "categoryId": "",
+            "amount": 40000,
+            "period": "monthly",
+            "rollover": false,
+            "id": "00000000-0000-4000-8000-000000000007",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "categoryId": "cat-1",
+            "amount": 8000,
+            "period": "monthly",
+            "rollover": false,
+            "id": "00000000-0000-4000-8000-000000000008",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "categoryId": "cat-3",
+            "amount": 3000,
+            "period": "monthly",
+            "rollover": true,
+            "id": "00000000-0000-4000-8000-000000000009",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          }
+        ],
+        "recurring": [
+          {
+            "type": "expense",
+            "amount": 15000,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-8",
+            "note": "Monthly rent",
+            "labels": [
+              "lbl-1"
+            ],
+            "frequency": "monthly",
+            "startDate": "2026-06-02T06:30:00.000Z",
+            "lastRunDate": null,
+            "occurrenceCount": 0,
+            "id": "00000000-0000-4000-8000-000000000010",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "type": "transfer",
+            "amount": 3000,
+            "accountId": "00000000-0000-4000-8000-000000000001",
+            "categoryId": "cat-13",
+            "note": "Vacation savings",
+            "labels": [],
+            "frequency": "monthly",
+            "startDate": "2026-06-25T06:30:00.000Z",
+            "toAccountId": "00000000-0000-4000-8000-000000000002",
+            "goalId": "00000000-0000-4000-8000-000000000004",
+            "lastRunDate": null,
+            "occurrenceCount": 0,
+            "id": "00000000-0000-4000-8000-000000000011",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          }
+        ],
+        "templates": [],
+        "rules": [],
+        "goals": [
+          {
+            "name": "Vacation Fund",
+            "icon": "plane",
+            "color": "#f59e0b",
+            "targetAmount": 60000,
+            "targetDate": "2027-02-10T12:00:00.000Z",
+            "id": "00000000-0000-4000-8000-000000000004",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          },
+          {
+            "name": "Emergency Fund",
+            "icon": "target",
+            "color": "#146b54",
+            "targetAmount": 100000,
+            "id": "00000000-0000-4000-8000-000000000005",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          }
+        ],
+        "goalContributions": [
+          {
+            "goalId": "00000000-0000-4000-8000-000000000005",
+            "amount": 20000,
+            "date": "2026-04-05T06:30:00.000Z",
+            "note": "Starting balance",
+            "id": "00000000-0000-4000-8000-000000000012",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          }
+        ],
+        "people": [
+          {
+            "name": "Rahul",
+            "icon": "user",
+            "color": "#06b6d4",
+            "id": "00000000-0000-4000-8000-000000000006",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          }
+        ],
+        "debtEntries": [
+          {
+            "personId": "00000000-0000-4000-8000-000000000006",
+            "amount": 1500,
+            "date": "2026-05-16T06:30:00.000Z",
+            "note": "Lent for dinner",
+            "id": "00000000-0000-4000-8000-000000000013",
+            "createdAt": "2026-06-15T12:00:00.000Z"
+          }
+        ],
+        "netWorthSnapshots": [],
+        "loans": [],
+        "loanPrepayments": [],
+        "settings": {
+          "theme": "system",
+          "userName": "",
+          "autoLocalBackup": false,
+          "monthStartDay": 1,
+          "hideAmounts": false,
+          "notificationsEnabled": false,
+          "notifyBills": true,
+          "notifyBudgets": true,
+          "notifyCreditDue": true,
+          "notifyLeadDays": 2,
+          "notifyDailyLog": true
+        }
+      }
+    }
+  ]
+}
