@@ -246,7 +246,7 @@ fun BudgetsScreen(nav: FinioNavigator) {
         }
     }) {
         if (showForm) {
-            FinioCard {
+            FinioCard(Modifier.fillMaxWidth()) {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     FormField("Scope") {
                         val options = buildList {
@@ -342,7 +342,7 @@ private fun BudgetCard(
     else Brush.horizontalGradient(listOf(look.color, look.color.mix(0.8f)))
     val spentOf = "${money(status.spent)} of ${money(status.limit)}"
 
-    FinioCard {
+    FinioCard(Modifier.fillMaxWidth()) {
         Row(Modifier.fillMaxWidth().padding(bottom = 8.dp), verticalAlignment = Alignment.CenterVertically) {
             Column(Modifier.weight(1f)) {
                 Text(look.name, style = FinioType.bodyMedium, color = colors.foreground, maxLines = 1, overflow = TextOverflow.Ellipsis)

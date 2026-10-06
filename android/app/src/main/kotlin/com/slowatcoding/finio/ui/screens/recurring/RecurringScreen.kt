@@ -343,7 +343,7 @@ fun RecurringScreen(nav: FinioNavigator) {
         }
 
         if (showForm) {
-            FinioCard {
+            FinioCard(Modifier.fillMaxWidth()) {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     FormPills(
                         options = listOf(
@@ -462,7 +462,7 @@ fun RecurringScreen(nav: FinioNavigator) {
         }
 
         if (recurring.isNotEmpty()) {
-            FinioCard(contentPadding = PaddingValues(0.dp)) {
+            FinioCard(Modifier.fillMaxWidth(), contentPadding = PaddingValues(0.dp)) {
                 recurring.forEachIndexed { index, r ->
                     if (index > 0) FinioDivider()
                     RuleRow(

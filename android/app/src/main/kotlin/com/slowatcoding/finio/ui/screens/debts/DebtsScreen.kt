@@ -294,7 +294,7 @@ fun DebtsScreen(nav: FinioNavigator) {
         }
     }) {
         if (showForm) {
-            FinioCard {
+            FinioCard(Modifier.fillMaxWidth()) {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     FormField("Name") {
                         FinioTextField(
@@ -502,7 +502,7 @@ private fun PersonCard(
     val balance = status.balance
     val isSettled = balance == 0.0
     val theyOweYou = balance > 0
-    FinioCard {
+    FinioCard(Modifier.fillMaxWidth()) {
         Row(Modifier.fillMaxWidth().padding(bottom = 8.dp), verticalAlignment = Alignment.CenterVertically) {
             Column(Modifier.weight(1f)) {
                 Text(person.name, style = FinioType.bodyMedium, color = colors.foreground, maxLines = 1, overflow = TextOverflow.Ellipsis)

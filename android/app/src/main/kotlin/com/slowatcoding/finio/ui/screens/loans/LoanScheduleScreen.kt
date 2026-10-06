@@ -183,7 +183,7 @@ fun LoanScheduleScreen(nav: FinioNavigator, loanId: String) {
                 else -> "—"
             },
         )
-        FinioCard {
+        FinioCard(Modifier.fillMaxWidth()) {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 stats.chunked(2).forEach { row ->
                     Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -376,7 +376,7 @@ private fun PrepayCalculator(loan: LoanScheduleInput, money: MoneyFormatter, onR
         else simulatePrepaymentImpact(loan, LoanPrepaymentInput(parsed, day.isoAtLocalMidnight()))
     }
 
-    FinioCard {
+    FinioCard(Modifier.fillMaxWidth()) {
         Text("What if I prepay?", style = FinioType.title, color = colors.foreground)
         Text(
             "See how an extra payment shortens this loan.",

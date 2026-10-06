@@ -215,7 +215,7 @@ fun LoansScreen(nav: FinioNavigator) {
         }
     }) {
         if (activeLoans.isNotEmpty()) {
-            FinioCard {
+            FinioCard(Modifier.fillMaxWidth()) {
                 Text(
                     "Outstanding across ${activeLoans.size} loan${if (activeLoans.size == 1) "" else "s"}",
                     style = FinioType.label,
@@ -334,7 +334,7 @@ private fun LoanCard(
     val isClosed = !loan.closedAt.isNullOrEmpty()
     val progress = if (status.totalMonths > 0) status.paidInstallments.toFloat() / status.totalMonths else 0f
 
-    FinioCard(Modifier.alpha(if (isClosed) 0.7f else 1f)) {
+    FinioCard(Modifier.fillMaxWidth().alpha(if (isClosed) 0.7f else 1f)) {
         Row(Modifier.fillMaxWidth().padding(bottom = 8.dp), verticalAlignment = Alignment.CenterVertically) {
             Column(Modifier.weight(1f)) {
                 Text(loan.name, style = FinioType.bodyMedium, color = colors.foreground, maxLines = 1, overflow = TextOverflow.Ellipsis)

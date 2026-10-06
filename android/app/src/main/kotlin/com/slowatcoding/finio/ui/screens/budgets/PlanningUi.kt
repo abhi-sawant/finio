@@ -29,6 +29,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
@@ -271,7 +273,13 @@ fun ColorSwatches(selected: String, onSelect: (String) -> Unit) {
                 Modifier
                     .size(28.dp)
                     .scale(scale)
-                    .then(if (active) Modifier.border(2.dp, colors.primary, FinioShapes.full).padding(4.dp) else Modifier)
+                    // ring-2 ring-offset-2: a 2dp primary ring drawn 2dp outside the disc.
+                    .drawBehind {
+                        if (active) {
+                            val stroke = 2.dp.toPx()
+                            drawCircle(colors.primary, radius = size.minDimension / 2 + 2.dp.toPx() + stroke / 2, style = Stroke(stroke))
+                        }
+                    }
                     .clip(FinioShapes.full)
                     .background(parseHexColor(hex))
                     .semantics { this.selected = active; contentDescription = "Color $hex" }

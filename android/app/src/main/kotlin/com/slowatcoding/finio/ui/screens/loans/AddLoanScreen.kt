@@ -233,7 +233,7 @@ fun AddLoanScreen(nav: FinioNavigator, loanId: String?) {
             HeaderIconSpacer()
         }
     }) {
-        FinioCard {
+        FinioCard(Modifier.fillMaxWidth()) {
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 FormField("Loan name") {
                     FinioTextField(
@@ -287,7 +287,7 @@ fun AddLoanScreen(nav: FinioNavigator, loanId: String?) {
             }
         }
 
-        FinioCard {
+        FinioCard(Modifier.fillMaxWidth()) {
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 FormField("First EMI date") {
                     FinioDatePicker(startDate, { startDate = it }, Modifier.fillMaxWidth(), placeholder = "Pick a date")
@@ -319,7 +319,7 @@ fun AddLoanScreen(nav: FinioNavigator, loanId: String?) {
 
         val past = pastEmis
         if (past != null) {
-            FinioCard {
+            FinioCard(Modifier.fillMaxWidth()) {
                 val count = "${past.count} EMI${if (past.count == 1) "" else "s"} (${money(past.total)})"
                 SwitchField(
                     title = "Log past EMIs as transactions",
