@@ -1,5 +1,7 @@
 package com.slowatcoding.finio.ui.mudra
 
+import com.slowatcoding.finio.core.calc.BudgetHealth
+import com.slowatcoding.finio.core.calc.budgetHealth
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -57,18 +59,6 @@ internal fun DrawScope.drawWindows(
     }
 }
 
-/** Mirrors `budgetHealth()` in web/src/utils/calculations.ts. */
-enum class BudgetHealth { Ok, Near, Over }
-
-/** `BUDGET_NEAR_LIMIT_PERCENT`. */
-const val BudgetNearLimitPercent = 85f
-
-fun budgetHealth(isOver: Boolean, percent: Float): BudgetHealth = when {
-    isOver -> BudgetHealth.Over
-    percent >= BudgetNearLimitPercent -> BudgetHealth.Near
-    else -> BudgetHealth.Ok
-}
-
 /**
  * Goals and other toward-a-target bars: the colour-shift thread (`thread-fill`) masked into 10px
  * windows with 3px gaps, inside an 8px round muted track. [percent] is 0..100 (clamped for the
@@ -117,7 +107,7 @@ fun BudgetProgressBar(
     valueText: String? = null,
 ) {
     val colors = FinioTheme.colors
-    val health = budgetHealth(isOver, percent)
+    val health = budgetHealth(isOver, percent.toDouble())
     val fill by animateFloatAsState(percent.coerceIn(0f, 100f) / 100f, tween(150, easing = TailwindEase), label = "budget")
     Box(
         modifier

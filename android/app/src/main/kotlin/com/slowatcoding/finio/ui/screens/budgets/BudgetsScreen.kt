@@ -72,7 +72,7 @@ import com.slowatcoding.finio.ui.components.parseHexColor
 import com.slowatcoding.finio.ui.components.toast
 import com.slowatcoding.finio.ui.icons.LucideIcons
 import com.slowatcoding.finio.ui.mudra.BudgetProgressBar
-import com.slowatcoding.finio.ui.mudra.budgetHealth
+import com.slowatcoding.finio.core.calc.budgetHealth
 import com.slowatcoding.finio.ui.navigation.FinioNavigator
 import com.slowatcoding.finio.ui.theme.FinioShapes
 import com.slowatcoding.finio.ui.theme.FinioTheme
@@ -249,15 +249,18 @@ fun BudgetsScreen(nav: FinioNavigator) {
             FinioCard(Modifier.fillMaxWidth()) {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     FormField("Scope") {
+                        // The closed field reads the scope's display name ("Overall expenses"), like
+                        // the web's `<SelectValue>{describe(…).name}</SelectValue>`.
+                        fun shown(v: String) = decodeScope(v).let { describe(it.categoryId, it.labelId).name }
                         val options = buildList {
-                            add(SelectOption(OVERALL_SCOPE, "Overall (all expenses)${takenSuffix(OVERALL_SCOPE)}", enabled = !isTaken(OVERALL_SCOPE)))
+                            add(SelectOption(OVERALL_SCOPE, "Overall (all expenses)${takenSuffix(OVERALL_SCOPE)}", enabled = !isTaken(OVERALL_SCOPE), selectedLabel = shown(OVERALL_SCOPE)))
                             expenseCategories.forEach { c ->
                                 val v = "cat:${c.id}"
-                                add(SelectOption(v, "${c.name}${takenSuffix(v)}", enabled = !isTaken(v)))
+                                add(SelectOption(v, "${c.name}${takenSuffix(v)}", enabled = !isTaken(v), selectedLabel = shown(v)))
                             }
                             labels.forEach { l ->
                                 val v = "lbl:${l.id}"
-                                add(SelectOption(v, "Label · ${l.name}${takenSuffix(v)}", enabled = !isTaken(v)))
+                                add(SelectOption(v, "Label · ${l.name}${takenSuffix(v)}", enabled = !isTaken(v), selectedLabel = shown(v)))
                             }
                         }
                         FinioSelect(formScope, options, { formScope = it }, Modifier.fillMaxWidth(), title = "Scope")
@@ -367,7 +370,7 @@ private fun BudgetCard(
                 color = if (status.isOver) colors.destructive else colors.mutedForeground,
             )
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
-                BudgetHealthBadge(budgetHealth(status.isOver, status.percent.toFloat()))
+                BudgetHealthBadge(budgetHealth(status))
                 Text(
                     "${status.percent.roundToInt()}%",
                     style = FinioType.label,

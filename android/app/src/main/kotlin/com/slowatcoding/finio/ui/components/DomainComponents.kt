@@ -49,7 +49,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.slowatcoding.finio.core.model.TransactionType
 import com.slowatcoding.finio.ui.icons.LucideIcons
-import com.slowatcoding.finio.ui.mudra.BudgetHealth
+import com.slowatcoding.finio.core.calc.BudgetHealth
 import com.slowatcoding.finio.ui.theme.CssShadow
 import com.slowatcoding.finio.ui.theme.FinioShapes
 import com.slowatcoding.finio.ui.theme.FinioTheme

@@ -77,7 +77,7 @@ import com.slowatcoding.finio.ui.components.TransactionRow
 import com.slowatcoding.finio.ui.components.parseHexColor
 import com.slowatcoding.finio.ui.components.toast
 import com.slowatcoding.finio.ui.icons.LucideIcons
-import com.slowatcoding.finio.ui.mudra.BudgetHealth
+import com.slowatcoding.finio.core.calc.BudgetHealth
 import com.slowatcoding.finio.ui.mudra.BudgetProgressBar
 import com.slowatcoding.finio.ui.mudra.CoinFab
 import com.slowatcoding.finio.ui.mudra.Guilloche
