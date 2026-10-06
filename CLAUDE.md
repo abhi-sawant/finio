@@ -39,7 +39,7 @@ npm run dev | build | preview | test | lint | format
 npm run gen:fixtures     # regenerate spec/fixtures from the TS logic
 
 # Android (from android/; JDK = Android Studio's JBR)
-./gradlew :core:test           # pure domain logic + golden fixtures
+./gradlew :core:test           # pure domain logic + golden fixtures (28 modules, ~10.7k cases)
 ./gradlew :app:assembleDebug   # debug APK
 ```
 

@@ -341,6 +341,26 @@ npm run dev
 The app runs at `http://localhost:5173`. With no `.env`, the API client points at the hosted
 backend — irrelevant unless you sign in.
 
+### Android app
+
+`android/` is a native Kotlin + Jetpack Compose port of the PWA — same screens, same Mudra look,
+same data model. Its `:core` module holds every money rule (a module-for-module port of
+`web/src/utils` and the store), and `:app` holds the UI and the Android equivalents of the PWA's
+browser features (WorkManager reminders, biometric unlock, Storage Access Framework backups, share
+sheet, launcher shortcuts).
+
+**Requirements:** Android Studio (its bundled JDK) and the Android SDK.
+
+```bash
+cd android
+./gradlew :core:test           # domain logic + 10,700 golden cases generated from the web code
+./gradlew :app:installDebug    # build and install on a connected device
+```
+
+The two apps read and write the same backup files — see [spec/backup-format.md](spec/backup-format.md).
+Any change to money logic lands in both, and `cd web && npm run gen:fixtures` regenerates the golden
+fixtures that keep them identical. [android/CLAUDE.md](android/CLAUDE.md) has the details.
+
 ### Scripts
 
 Run from `web/`:
