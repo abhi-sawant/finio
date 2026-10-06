@@ -1,6 +1,9 @@
 package com.slowatcoding.finio.ui.screens.onboarding
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.foundation.layout.isImeVisible
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -103,8 +106,14 @@ fun OnboardingScreen() {
     val trimmedName = cleanText(name, MAX_NAME_LENGTH)
     val trimmedAccountName = cleanText(accountName, MAX_NAME_LENGTH)
 
+    // This callback registers after the keyboard's own back callback (it only enables on step
+    // 2), so it would win over it: let back close the keyboard first, as it does everywhere else.
+    @OptIn(ExperimentalLayoutApi::class)
+    val imeVisible = WindowInsets.isImeVisible
+    val focusManager = LocalFocusManager.current
     BackHandler(enabled = step != Step.Name) {
-        step = if (step == Step.Balance) Step.Account else Step.Name
+        if (imeVisible) focusManager.clearFocus(force = true)
+        else step = if (step == Step.Balance) Step.Account else Step.Name
     }
 
     fun completeOnboarding() {
