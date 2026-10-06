@@ -1,5 +1,6 @@
 package com.slowatcoding.finio.ui.shell
 
+import com.slowatcoding.finio.ui.components.chromeGlass
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -55,7 +56,7 @@ fun FinioTabBar(active: FinioTab?, onSelect: (FinioTab) -> Unit, modifier: Modif
             .fillMaxWidth()
             // cssShadow before background, or the fill paints over the shadow.
             .cssShadow(RectangleShape, FinioTheme.shadows.tabBar)
-            .background(colors.glassStrong)
+            .background(colors.chromeGlass)
             .drawBehind { drawLine(colors.glassBorder, Offset(0f, 0.5.dp.toPx()), Offset(size.width, 0.5.dp.toPx()), 1.dp.toPx()) }
             .windowInsetsPadding(WindowInsets.navigationBars)
             .padding(start = 8.dp, end = 8.dp, top = 8.dp),

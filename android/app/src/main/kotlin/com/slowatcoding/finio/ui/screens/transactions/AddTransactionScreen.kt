@@ -76,6 +76,7 @@ import com.slowatcoding.finio.ui.common.financeStore
 import com.slowatcoding.finio.ui.common.rememberMoneyFormatter
 import com.slowatcoding.finio.ui.common.undoToast
 import com.slowatcoding.finio.ui.components.ButtonSize
+import com.slowatcoding.finio.ui.components.chromeGlass
 import com.slowatcoding.finio.ui.components.CategoryGrid
 import com.slowatcoding.finio.ui.components.CategoryTileData
 import com.slowatcoding.finio.ui.components.FieldLabel
@@ -599,7 +600,7 @@ fun AddTransactionScreen(nav: FinioNavigator, transactionId: String?, draft: Sha
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
                 .onSizeChanged { footerHeight = it.height }
-                .background(colors.glassStrong)
+                .background(colors.chromeGlass)
                 .drawBehind { drawLine(colors.glassBorder, Offset(0f, 0.5.dp.toPx()), Offset(size.width, 0.5.dp.toPx()), 1.dp.toPx()) }
                 .windowInsetsPadding(WindowInsets.navigationBars)
                 .padding(12.dp),

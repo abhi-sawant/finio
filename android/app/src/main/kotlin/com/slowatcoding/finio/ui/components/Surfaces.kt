@@ -235,3 +235,11 @@ fun FieldLabel(text: String, modifier: Modifier = Modifier, bottomGap: Dp = 6.dp
     Text(text, modifier.padding(bottom = bottomGap), style = FinioType.label, color = FinioTheme.colors.mutedForeground)
 }
 
+/**
+ * The fill for floating chrome (scrolled header, tab bar): `--glass-strong` made more opaque.
+ * The web's strong glass reads because a 24px backdrop blur smears what scrolls beneath it;
+ * Android can't blur behind a view, so at the token's 72–78% the rows under the header stayed
+ * sharp and fought its title. 92% keeps the tint and the hint of motion without the clash.
+ */
+val com.slowatcoding.finio.ui.theme.FinioColors.chromeGlass: Color
+    get() = glassStrong.copy(alpha = maxOf(glassStrong.alpha, 0.92f))

@@ -93,7 +93,7 @@ fun FinioHeader(
     content: @Composable RowScope.() -> Unit,
 ) {
     val colors = FinioTheme.colors
-    val fill by animateColorAsState(if (scrolled) colors.glassStrong else Color.Transparent, tween(200), label = "header")
+    val fill by animateColorAsState(if (scrolled) colors.chromeGlass else Color.Transparent, tween(200), label = "header")
     val hairline by animateColorAsState(if (scrolled) colors.glassBorder else Color.Transparent, tween(200), label = "hairline")
     val wide = isWideLayout()
     Box(
