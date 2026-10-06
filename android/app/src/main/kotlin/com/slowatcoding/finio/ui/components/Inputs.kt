@@ -162,14 +162,21 @@ internal fun FieldTrigger(
     leadingIcon: androidx.compose.ui.graphics.vector.ImageVector? = null,
     showChevron: Boolean = true,
     leadingContent: (@Composable () -> Unit)? = null,
+    trailingText: String? = null,
 ) {
     val colors = FinioTheme.colors
+    // A trigger opens a popup/sheet/dialog; drop text-field focus first, or the window hands it
+    // back to the last field when the popup closes and the keyboard pops up unasked.
+    val focusManager = androidx.compose.ui.platform.LocalFocusManager.current
     Row(
         modifier
             .fillMaxWidth()
             .height(40.dp)
             .fieldChrome(focused = open, isError = isError, enabled = enabled)
-            .clickable(enabled = enabled, role = Role.DropdownList, onClick = onClick)
+            .clickable(enabled = enabled, role = Role.DropdownList) {
+                focusManager.clearFocus(force = true)
+                onClick()
+            }
             .padding(horizontal = 12.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(6.dp),
@@ -179,14 +186,19 @@ internal fun FieldTrigger(
             Spacer(Modifier.width(2.dp))
         }
         leadingContent?.invoke()
-        Text(
-            text,
-            Modifier.weight(1f),
-            style = FinioType.input,
-            color = if (isPlaceholder) colors.mutedForeground else colors.foreground,
-            maxLines = 1,
-            overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
-        )
+        Row(Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            Text(
+                text,
+                Modifier.weight(1f, fill = false),
+                style = FinioType.input,
+                color = if (isPlaceholder) colors.mutedForeground else colors.foreground,
+                maxLines = 1,
+                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+            )
+            if (trailingText != null) {
+                Text(trailingText, style = FinioType.caption, color = colors.mutedForeground, maxLines = 1, softWrap = false)
+            }
+        }
         if (showChevron) Icon(LucideIcons.ChevronDown, null, Modifier.size(16.dp), tint = colors.mutedForeground)
     }
 }

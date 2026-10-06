@@ -49,7 +49,12 @@ import kotlinx.coroutines.launch
 import androidx.compose.foundation.shape.RoundedCornerShape
 import com.slowatcoding.finio.ui.theme.FinioRadius
 
-/** One choice in a [FinioSelect]. [leading] is drawn before the label in both the list and the trigger. */
+/**
+ * One choice in a [FinioSelect]. [leading] is drawn before the label in both the list and the
+ * trigger. The closed trigger shows [selectedLabel] (defaults to [label]) — the web's
+ * `<SelectValue>` children, for when the field reads differently from the list row — followed by
+ * [selectedTrailing] as muted inline text ("HDFC Checking · Bank account").
+ */
 @Immutable
 data class SelectOption<T>(
     val value: T,
@@ -57,6 +62,8 @@ data class SelectOption<T>(
     val description: String? = null,
     val enabled: Boolean = true,
     val leading: (@Composable () -> Unit)? = null,
+    val selectedLabel: String? = null,
+    val selectedTrailing: String? = null,
 )
 
 /**
@@ -83,8 +90,9 @@ fun <T> FinioSelect(
     var open by remember { mutableStateOf(false) }
     val selected = options.firstOrNull { it.value == value }
     FieldTrigger(
-        text = selected?.label ?: placeholder,
+        text = selected?.let { it.selectedLabel ?: it.label } ?: placeholder,
         isPlaceholder = selected == null,
+        trailingText = selected?.selectedTrailing,
         onClick = { open = true },
         modifier = modifier,
         enabled = enabled,

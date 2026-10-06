@@ -286,6 +286,7 @@ fun FinioDatePicker(
     maxDate: LocalDate? = null,
 ) {
     var open by remember { mutableStateOf(false) }
+    val focusManager = androidx.compose.ui.platform.LocalFocusManager.current
     Box(modifier) {
         FieldTrigger(
             text = value?.let(::formatShortDate) ?: placeholder,
@@ -297,12 +298,13 @@ fun FinioDatePicker(
             showChevron = false,
         )
         if (open) {
-            FinioPopover(onDismissRequest = { open = false }, contentPadding = PaddingValues(0.dp)) {
+            FinioPopover(onDismissRequest = { open = false; focusManager.clearFocus(force = true) }, contentPadding = PaddingValues(0.dp)) {
                 FinioCalendar(
                     selected = value,
                     onSelect = {
                         onValueChange(it)
                         open = false
+                        focusManager.clearFocus(force = true)
                     },
                     minDate = minDate,
                     maxDate = maxDate,

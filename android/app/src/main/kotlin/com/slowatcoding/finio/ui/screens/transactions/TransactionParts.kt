@@ -30,9 +30,9 @@ internal fun parseFloatJs(raw: String): Double {
 /** An `<input maxLength>`: refuse the edit past [max] code points (keep the previous value). */
 internal fun withinLength(value: String, max: Int): Boolean = value.codePointCount(0, value.length) <= max
 
-/** An account in a picker: its name, with its human type name ("Credit card") as the muted line. */
+/** An account in a picker: its name, with its human type name ("Credit card") muted — below it in the list, inline in the closed field (AddTransaction.tsx `accountOption`). */
 internal fun accountOptions(accounts: List<Account>): List<SelectOption<String>> =
-    accounts.map { SelectOption(it.id, it.name, description = it.type.label) }
+    accounts.map { SelectOption(it.id, it.name, description = it.type.label, selectedTrailing = it.type.label) }
 
 /** TransactionItem.tsx's long-press actions. */
 internal enum class TransactionRowAction { Select, Duplicate, Template, Delete }
