@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
@@ -35,6 +36,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -162,23 +164,28 @@ fun mainPadding(wide: Boolean, bottom: Dp? = null) = PaddingValues(
 )
 
 /**
- * Shrinks the scroll viewport by the floating header's height (from the top) before deferring to
- * [base], so bring-into-view (focus, keyboard) lands a child just below the header, not under it.
+ * Shrinks the scroll viewport by what floats over it — the header at the top, a sticky footer at
+ * the bottom — before deferring to [base], so bring-into-view (focus, keyboard) lands a child in
+ * the visible band between them rather than under either.
  */
 @OptIn(ExperimentalFoundationApi::class)
-private class BelowHeaderBringIntoViewSpec(
+private class UnobscuredBringIntoViewSpec(
     private val base: BringIntoViewSpec,
-    private val headerPx: () -> Float,
+    private val obscured: () -> Pair<Float, Float>,
 ) : BringIntoViewSpec {
     override fun calculateScrollDistance(offset: Float, size: Float, containerSize: Float): Float {
-        val top = headerPx().coerceIn(0f, containerSize)
-        return base.calculateScrollDistance(offset - top, size, containerSize - top)
+        val (topPx, bottomPx) = obscured()
+        val top = topPx.coerceIn(0f, containerSize)
+        val bottom = bottomPx.coerceIn(0f, containerSize - top)
+        return base.calculateScrollDistance(offset - top, size, containerSize - top - bottom)
     }
 }
 
 /**
  * A whole page: the sticky [FinioHeader] floating over a scrolling [FinioMain], wired so the
  * header frosts as soon as content scrolls under it. Put it inside a PaperBackground.
+ * [bottomObscured] is the height of anything the caller floats over the bottom of the page (a
+ * sticky submit bar), so a focused field is never brought into view behind it.
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -187,18 +194,24 @@ fun FinioScreen(
     modifier: Modifier = Modifier,
     scrollState: ScrollState = rememberScrollState(),
     bottomPadding: Dp? = null,
+    bottomObscured: Dp = 0.dp,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     var headerHeight by remember { mutableIntStateOf(0) }
     val density = LocalDensity.current
     val innerSpec = LocalBringIntoViewSpec.current
-    val headerSpec = remember(innerSpec) { BelowHeaderBringIntoViewSpec(innerSpec) { headerHeight.toFloat() } }
+    val bottomPx by rememberUpdatedState(with(density) { bottomObscured.toPx() })
+    val headerSpec = remember(innerSpec) {
+        UnobscuredBringIntoViewSpec(innerSpec) { headerHeight.toFloat() to bottomPx }
+    }
     Box(modifier.fillMaxSize()) {
         // The header floats over the scroll viewport, so a focused field brought "into view" at
         // the viewport top would sit under it: the page's own scroller treats the band beneath
         // the header as off-screen. Nested scrollers get the default spec back.
         CompositionLocalProvider(LocalBringIntoViewSpec provides headerSpec) {
-            Column(Modifier.fillMaxSize().verticalScroll(scrollState)) {
+            // imePadding: edge to edge, adjustResize no longer shrinks the window, so the scroll
+            // viewport must end at the keyboard or a focused field is "in view" behind it.
+            Column(Modifier.fillMaxSize().imePadding().verticalScroll(scrollState)) {
                 CompositionLocalProvider(LocalBringIntoViewSpec provides innerSpec) {
                     Spacer(Modifier.height(with(density) { headerHeight.toDp() }))
                     FinioMain(bottomPadding = bottomPadding, content = content)

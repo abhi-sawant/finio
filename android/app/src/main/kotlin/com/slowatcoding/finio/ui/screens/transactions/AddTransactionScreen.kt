@@ -15,6 +15,9 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -384,8 +387,10 @@ fun AddTransactionScreen(nav: FinioNavigator, transactionId: String?, draft: Sha
         }
     }
 
+    var footerHeight by remember { mutableIntStateOf(0) }
     Box(Modifier.fillMaxSize().imePadding()) {
         FinioScreen(
+            bottomObscured = with(LocalDensity.current) { footerHeight.toDp() },
             header = {
                 BackButton(nav, onBack = goBack)
                 ScreenTitle(if (existing != null) "Edit transaction" else "Add transaction")
@@ -593,6 +598,7 @@ fun AddTransactionScreen(nav: FinioNavigator, transactionId: String?, draft: Sha
             Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
+                .onSizeChanged { footerHeight = it.height }
                 .background(colors.glassStrong)
                 .drawBehind { drawLine(colors.glassBorder, Offset(0f, 0.5.dp.toPx()), Offset(size.width, 0.5.dp.toPx()), 1.dp.toPx()) }
                 .windowInsetsPadding(WindowInsets.navigationBars)
