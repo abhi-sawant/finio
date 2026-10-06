@@ -123,12 +123,14 @@ fun AuthShell(
                 Box(Modifier.fillMaxWidth().padding(top = 24.dp), contentAlignment = Alignment.Center) { footer() }
             }
 
+            // `variant="ghost" text-muted-foreground`.
             FinioButton(
-                "Continue without an account",
                 onClick = { nav.openTab(FinioTab.Home) },
                 variant = ButtonVariant.Ghost,
                 modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
-            )
+            ) {
+                Text("Continue without an account", color = colors.mutedForeground, maxLines = 1)
+            }
         }
     }
 }

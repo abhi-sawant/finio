@@ -541,6 +541,7 @@ fun BackupSection(nav: FinioNavigator) {
             "Backup folder",
             subtitle = backupFolderName?.let { "Saving to \"$it\" · keeps latest 10" }
                 ?: "Not connected — choose a folder for daily backups",
+            wrapSubtitle = true,
         ) {
             PillButton(
                 if (backupFolderName != null) "Disconnect" else "Choose folder",

@@ -112,6 +112,7 @@ fun SettingsValueRow(
     title: String,
     modifier: Modifier = Modifier,
     subtitle: String? = null,
+    wrapSubtitle: Boolean = false,
     trailing: @Composable () -> Unit,
 ) {
     val colors = FinioTheme.colors
@@ -124,7 +125,13 @@ fun SettingsValueRow(
         Column(Modifier.weight(1f)) {
             Text(title, style = FinioType.bodyMedium, color = colors.foreground, maxLines = 1, overflow = TextOverflow.Ellipsis)
             if (subtitle != null) {
-                Text(subtitle, style = FinioType.caption, color = colors.mutedForeground, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(
+                    subtitle,
+                    style = FinioType.caption,
+                    color = colors.mutedForeground,
+                    maxLines = if (wrapSubtitle) Int.MAX_VALUE else 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
             }
         }
         trailing()
