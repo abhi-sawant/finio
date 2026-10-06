@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -130,13 +129,9 @@ fun AddAccountScreen(nav: FinioNavigator, accountId: String?) {
     var nameError by rememberSaveable { mutableStateOf<String?>(null) }
     var creditFieldIsDue by rememberSaveable { mutableStateOf(true) }
     val nameFocus = remember { FocusRequester() }
-    val scrollState = rememberScrollState()
-    // The header floats over the content, so bring-into-view alone leaves the field under it;
-    // the name is the first field, so scroll to the top as well.
     val showNameError = { message: String ->
         nameError = message
         runCatching { nameFocus.requestFocus() }
-        scope.launch { scrollState.animateScrollTo(0) }
         Unit
     }
 
@@ -291,7 +286,7 @@ fun AddAccountScreen(nav: FinioNavigator, accountId: String?) {
         }
     }
 
-    FinioScreen(scrollState = scrollState, header = {
+    FinioScreen(header = {
         BackButton(nav)
         ScreenTitle(if (initial != null) "Edit Account" else "Add Account")
         if (initial != null) {

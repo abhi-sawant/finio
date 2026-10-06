@@ -2,7 +2,10 @@ package com.slowatcoding.finio.ui.components
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.gestures.BringIntoViewSpec
+import androidx.compose.foundation.gestures.LocalBringIntoViewSpec
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -159,9 +162,25 @@ fun mainPadding(wide: Boolean, bottom: Dp? = null) = PaddingValues(
 )
 
 /**
+ * Shrinks the scroll viewport by the floating header's height (from the top) before deferring to
+ * [base], so bring-into-view (focus, keyboard) lands a child just below the header, not under it.
+ */
+@OptIn(ExperimentalFoundationApi::class)
+private class BelowHeaderBringIntoViewSpec(
+    private val base: BringIntoViewSpec,
+    private val headerPx: () -> Float,
+) : BringIntoViewSpec {
+    override fun calculateScrollDistance(offset: Float, size: Float, containerSize: Float): Float {
+        val top = headerPx().coerceIn(0f, containerSize)
+        return base.calculateScrollDistance(offset - top, size, containerSize - top)
+    }
+}
+
+/**
  * A whole page: the sticky [FinioHeader] floating over a scrolling [FinioMain], wired so the
  * header frosts as soon as content scrolls under it. Put it inside a PaperBackground.
  */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun FinioScreen(
     header: @Composable RowScope.() -> Unit,
@@ -172,10 +191,19 @@ fun FinioScreen(
 ) {
     var headerHeight by remember { mutableIntStateOf(0) }
     val density = LocalDensity.current
+    val innerSpec = LocalBringIntoViewSpec.current
+    val headerSpec = remember(innerSpec) { BelowHeaderBringIntoViewSpec(innerSpec) { headerHeight.toFloat() } }
     Box(modifier.fillMaxSize()) {
-        Column(Modifier.fillMaxSize().verticalScroll(scrollState)) {
-            Spacer(Modifier.height(with(density) { headerHeight.toDp() }))
-            FinioMain(bottomPadding = bottomPadding, content = content)
+        // The header floats over the scroll viewport, so a focused field brought "into view" at
+        // the viewport top would sit under it: the page's own scroller treats the band beneath
+        // the header as off-screen. Nested scrollers get the default spec back.
+        CompositionLocalProvider(LocalBringIntoViewSpec provides headerSpec) {
+            Column(Modifier.fillMaxSize().verticalScroll(scrollState)) {
+                CompositionLocalProvider(LocalBringIntoViewSpec provides innerSpec) {
+                    Spacer(Modifier.height(with(density) { headerHeight.toDp() }))
+                    FinioMain(bottomPadding = bottomPadding, content = content)
+                }
+            }
         }
         FinioHeader(
             scrolled = scrollState.headerScrolled(),
