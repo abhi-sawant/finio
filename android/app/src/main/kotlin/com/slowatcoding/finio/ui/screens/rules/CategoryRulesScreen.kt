@@ -719,14 +719,7 @@ private fun RuleCategoryTile(c: Category, selected: Boolean, showType: Boolean, 
         Box(Modifier.size(28.dp).clip(FinioShapes.full).background(tint), contentAlignment = Alignment.Center) {
             CategoryIcon(c.icon, size = 14.dp, tint = Color.White)
         }
-        Text(
-            c.name,
-            style = FinioType.caption.copy(fontSize = 10.sp, lineHeight = 12.5.sp),
-            color = colors.foreground,
-            textAlign = TextAlign.Center,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis,
-        )
+        com.slowatcoding.finio.ui.components.TileLabel(c.name, color = colors.foreground)
         if (showType) {
             Text(
                 c.type.wire.replaceFirstChar { it.uppercase() },

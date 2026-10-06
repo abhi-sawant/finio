@@ -292,14 +292,30 @@ private fun CategoryTile(c: CategoryTileData, selected: Boolean, onClick: () -> 
         Box(Modifier.size(32.dp).clip(FinioShapes.full).background(c.color), contentAlignment = Alignment.Center) {
             CategoryIcon(c.icon, size = 16.dp, tint = Color.White)
         }
-        Text(
-            c.name,
-            style = FinioType.caption.copy(fontSize = 10.sp, lineHeight = 12.5.sp),
-            color = colors.foreground,
-            textAlign = TextAlign.Center,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis,
-        )
+        TileLabel(c.name, color = colors.foreground)
+    }
+}
+
+/**
+ * A grid tile's name (`line-clamp-2 text-[10px] leading-tight`), centred over two lines at most.
+ * Compose breaks a word that is wider than the tile mid-word ("Entertainmen/t"), which the web
+ * never does; the size steps down (to 8sp) until the longest word fits on one line instead.
+ */
+@Composable
+fun TileLabel(text: String, color: Color, modifier: Modifier = Modifier) {
+    val base = FinioType.caption.copy(fontSize = 10.sp, lineHeight = 12.5.sp)
+    val measurer = androidx.compose.ui.text.rememberTextMeasurer()
+    androidx.compose.foundation.layout.BoxWithConstraints(modifier, contentAlignment = Alignment.Center) {
+        val maxPx = constraints.maxWidth
+        val style = remember(text, maxPx, base) {
+            val longest = text.split(' ').maxByOrNull { it.length } ?: text
+            var size = 10f
+            while (size > 8f &&
+                measurer.measure(longest, base.copy(fontSize = size.sp), maxLines = 1, softWrap = false).size.width > maxPx
+            ) size -= 0.5f
+            if (size == 10f) base else base.copy(fontSize = size.sp, lineHeight = (size * 1.25f).sp)
+        }
+        Text(text, style = style, color = color, textAlign = TextAlign.Center, maxLines = 2, overflow = TextOverflow.Ellipsis)
     }
 }
 
