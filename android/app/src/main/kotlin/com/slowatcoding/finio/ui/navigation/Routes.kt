@@ -128,6 +128,12 @@ object Routes {
  * `/add-transaction?type=income`…) — notification URLs, launcher shortcuts, insight actions.
  * Anything unknown maps to the Dashboard, like the web's `*` catch-all.
  */
+/** Where a parked [LaunchTarget] (share, shortcut, notification, deep link) lands. */
+fun routeForLaunch(target: com.slowatcoding.finio.platform.share.LaunchTarget): FinioRoute = when (target) {
+    is com.slowatcoding.finio.platform.share.LaunchTarget.AddTransaction -> Routes.AddTransaction.from(target.draft)
+    is com.slowatcoding.finio.platform.share.LaunchTarget.Route -> routeForPath(target.path)
+}
+
 fun routeForPath(path: String): FinioRoute {
     val q = path.indexOf('?')
     val pathname = (if (q >= 0) path.substring(0, q) else path).trimEnd('/').ifEmpty { "/" }

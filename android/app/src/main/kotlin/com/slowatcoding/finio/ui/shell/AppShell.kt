@@ -22,13 +22,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.slowatcoding.finio.di.appContainer
-import com.slowatcoding.finio.platform.share.LaunchTarget
 import com.slowatcoding.finio.ui.navigation.FinioNavigator
 import com.slowatcoding.finio.ui.navigation.Routes
 import com.slowatcoding.finio.ui.navigation.activeTab
 import com.slowatcoding.finio.ui.navigation.hidesFab
 import com.slowatcoding.finio.ui.navigation.isLayoutRoute
-import com.slowatcoding.finio.ui.navigation.routeForPath
+import com.slowatcoding.finio.ui.navigation.routeForLaunch
+import androidx.navigation.NavDestination.Companion.hasRoute
 
 /**
  * The app once every gate has lifted — `<Routes>` plus Layout.tsx's chrome. One NavHost holds
@@ -85,13 +85,16 @@ fun AppShell(navController: NavHostController, graph: NavGraph, navigator: Finio
 
     // Deep links wait here until the gates are down, then go exactly where they pointed.
     val pending by container.pendingLaunch.collectAsStateWithLifecycle()
-    LaunchedEffect(pending, entry != null) {
+    LaunchedEffect(pending, entry) {
         val target = pending ?: return@LaunchedEffect
         if (entry == null) return@LaunchedEffect // the graph isn't attached yet
-        when (target) {
-            is LaunchTarget.AddTransaction -> navigator.navigate(Routes.AddTransaction.from(target.draft))
-            is LaunchTarget.Route -> navigator.navigate(routeForPath(target.path))
+        val route = routeForLaunch(target)
+        navigator.navigate(route)
+        // Only let go of the target once it is actually on screen: if the navigation didn't take
+        // (the graph was still settling on a cold start), the next back-stack change retries it
+        // instead of silently leaving the user on Home.
+        if (navController.currentBackStackEntry?.destination?.hasRoute(route::class) == true) {
+            container.consumeLaunch(target)
         }
-        container.consumeLaunch(target)
     }
 }
