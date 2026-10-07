@@ -14,8 +14,8 @@ function recorder() {
   let next = 0;
   const calls: Array<{ fn: string; arg: unknown }> = [];
   const rec =
-    <R>(fn: string, result: (arg: never) => R) =>
-    (arg: never): R => {
+    <A, R>(fn: string, result: (arg: A) => R) =>
+    (arg: A): R => {
       calls.push({ fn, arg });
       return result(arg);
     };
