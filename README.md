@@ -310,7 +310,7 @@ only adds user accounts and cloud backup storage.
 | Language          | TypeScript 6                                                                                       |
 | Build tool        | Vite 8                                                                                             |
 | Styling           | Tailwind CSS v4 (no config file — `@theme` in CSS), "Focus" design system ([design.md](design.md)) |
-| Font              | Geist Variable (`@fontsource-variable/geist`)                                                      |
+| Font              | Instrument Sans (`@fontsource-variable/instrument-sans`)                                                      |
 | UI components     | shadcn/ui (`base-nova`) on Base UI                                                                 |
 | State             | Zustand 5, persisted to `localStorage`                                                             |
 | Routing           | React Router 7 (`react-router`)                                                                    |

@@ -214,7 +214,7 @@ private fun DialogFooter(content: @Composable () -> Unit) {
     }
 }
 
-/** `DialogHeader` / `AlertDialogHeader`: Unbounded title over a muted 14sp description, 8dp apart. */
+/** `DialogHeader` / `AlertDialogHeader`: Familjen Grotesk title over a muted 14sp description, 8dp apart. */
 @Composable
 private fun DialogHeading(title: String?, description: String?, centered: Boolean, gap: Dp) {
     if (title == null && description == null) return
