@@ -151,6 +151,10 @@ Tab pages: `PageTitle("Accounts")` + trailing actions. Sub-pages: `BackButton(na
 `ScreenTitle("Budgets")`, then a trailing action or `HeaderIconSpacer()` to keep the title centred.
 Data-bearing pages put `HideAmountsToggle()` in the header. Header buttons are `HeaderIconButton`.
 `FinioMain` already pads 160dp at the bottom so content clears the tab bar and coin.
+`FinioScreen` ends its scroller at the keyboard (imePadding) and treats the floating header as
+off-screen when bringing a focused field into view; a screen that floats its own sticky footer
+passes its height as `bottomObscured`. Field triggers (select/date/time) clear text focus before
+opening, so the keyboard never pops back when their popup closes.
 
 **Navigation.** Only through `FinioNavigator`: `nav.navigate(Routes.Budgets)`, `nav.back()`,
 `nav.openTab(FinioTab.Accounts)`, `nav.replace(Routes.Settings)` (web `<Navigate replace>`),
@@ -205,7 +209,9 @@ entry) — a screen that deletes its own entity just calls `nav.back()`.
 ## Visual compromises (Mudra on Android)
 
 - **No backdrop blur.** Android can't blur what is behind an arbitrary view, so `card-elevated`,
-  `glass-chrome` (header once scrolled, tab bar) and toasts are translucency only. Dialogs do get a
+  `glass-chrome` (header once scrolled, tab bar) and toasts are translucency only. To keep the
+  scrolled header legible without the blur, floating chrome (header, tab bar, Add Transaction's
+  submit bar) uses `chromeGlass` — `--glass-strong` raised to 92% opacity. Dialogs do get a
   4dp blur-behind on API 31+.
 - **Selects are bottom sheets**, not anchored popups (thumb reach; 44dp rows instead of 28dp).
 - **Time picking** uses the Material time dial in a Mudra dialog (the web uses the browser's
