@@ -62,7 +62,7 @@ import com.slowatcoding.finio.ui.navigation.FinioTab
 import com.slowatcoding.finio.ui.theme.FinioShapes
 import com.slowatcoding.finio.ui.theme.FinioTheme
 import com.slowatcoding.finio.ui.theme.FinioType
-import com.slowatcoding.finio.ui.theme.Geist
+import com.slowatcoding.finio.ui.theme.InstrumentSans
 import com.slowatcoding.finio.ui.theme.cssShadow
 import com.slowatcoding.finio.ui.theme.CssShadow
 import com.slowatcoding.finio.ui.theme.mix
@@ -102,7 +102,7 @@ fun AuthShell(
                 // `text-grad-primary text-4xl font-extrabold` — the wordmark, decorative.
                 Text(
                     "Finio",
-                    style = FinioType.title.copy(fontFamily = Geist, fontSize = 36.sp, lineHeight = 40.sp, fontWeight = FontWeight.ExtraBold),
+                    style = FinioType.title.copy(fontFamily = InstrumentSans, fontSize = 36.sp, lineHeight = 40.sp, fontWeight = FontWeight.ExtraBold),
                     color = colors.primary,
                 )
                 Text(

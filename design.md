@@ -41,42 +41,42 @@ colors:
   coin-ink: "#1d1747"
 typography:
   display-money:
-    fontFamily: "Unbounded Variable, Geist Variable, sans-serif"
+    fontFamily: "Familjen Grotesk Variable, Instrument Sans Variable, sans-serif"
     fontSize: "2.75rem"
     fontWeight: 600
     lineHeight: 1.05
-    letterSpacing: "-0.03em"
+    letterSpacing: "-0.02em"
   headline:
-    fontFamily: "Unbounded Variable, Geist Variable, sans-serif"
+    fontFamily: "Familjen Grotesk Variable, Instrument Sans Variable, sans-serif"
     fontSize: "1.5rem"
     fontWeight: 600
     letterSpacing: "-0.02em"
   money:
-    fontFamily: "Unbounded Variable, Geist Variable, sans-serif"
+    fontFamily: "Familjen Grotesk Variable, Instrument Sans Variable, sans-serif"
     fontSize: "1.125rem"
     fontWeight: 600
-    letterSpacing: "-0.03em"
+    letterSpacing: "-0.02em"
   title:
-    fontFamily: "Geist Variable, sans-serif"
+    fontFamily: "Instrument Sans Variable, sans-serif"
     fontSize: "1rem"
     fontWeight: 600
   dialog-title:
-    fontFamily: "Unbounded Variable, Geist Variable, sans-serif"
+    fontFamily: "Familjen Grotesk Variable, Instrument Sans Variable, sans-serif"
     fontSize: "1rem"
     fontWeight: 500
     lineHeight: 1
   body:
-    fontFamily: "Geist Variable, sans-serif"
+    fontFamily: "Instrument Sans Variable, sans-serif"
     fontSize: "0.875rem"
     fontWeight: 400
     fontFeature: "\"tnum\""
   row-value:
-    fontFamily: "Geist Variable, sans-serif"
+    fontFamily: "Instrument Sans Variable, sans-serif"
     fontSize: "0.875rem"
     fontWeight: 600
     fontFeature: "\"tnum\""
   label:
-    fontFamily: "Geist Variable, sans-serif"
+    fontFamily: "Instrument Sans Variable, sans-serif"
     fontSize: "0.75rem"
     fontWeight: 500
     letterSpacing: "normal"
@@ -168,8 +168,8 @@ rosettes, a windowed colour-shift thread, microprint, denomination tints — is 
 used on the surfaces that carry money and kept out of the reading.
 
 The world lends type, palette and one signature move; it never takes the layout or the controls.
-Lists, forms and settings stay quiet frosted-glass panels of plain rows in Geist. The banknote face
-(Unbounded) is reserved for headline figures and titles, so ornament never competes with a figure
+Lists, forms and settings stay quiet frosted-glass panels of plain rows in Instrument Sans. The banknote face
+(Familjen Grotesk) is reserved for headline figures and titles, so ornament never competes with a figure
 the user has to read. Every figure is legible first and ornamental second.
 
 Light and dark are both first-class: every token has a hand-tuned pair, including every
@@ -186,7 +186,7 @@ is dark.
 **Key Characteristics:**
 - Fixed note-paper gradient behind every screen, with a faint engraved guilloche rosette top-right.
 - Frosted glass cards and chrome: translucent white over the paper, white hairline, lavender-tinted shadow.
-- Unbounded for headline money, page titles and dialog titles; Geist for everything read.
+- Familjen Grotesk for headline money, page titles and dialog titles; Instrument Sans for everything read.
 - One hero banknote per money screen (NoteCard), with a pointer-driven colour-shift thread.
 - Accounts printed in their type's rupee denomination tint.
 - Filled actions are a ₹100-lavender gradient; the add button is a single-hue lavender coin.
@@ -260,28 +260,28 @@ caution is `warning`. Lavender means "you can act here", not "good".
 
 ## Typography
 
-**Display Font:** Unbounded Variable (with Geist Variable, sans-serif)
-**Body Font:** Geist Variable (with sans-serif)
+**Display Font:** Familjen Grotesk (with Instrument Sans, sans-serif)
+**Body Font:** Instrument Sans (with sans-serif)
 
-**Character:** Unbounded is the wide banknote numeral — a printed face for the figure and the
-title. Geist does all the reading. Tabular figures are on for the whole body so listed money aligns.
+**Character:** Familjen Grotesk is the banknote numeral — a printed face for the figure and the
+title. Instrument Sans does all the reading. Tabular figures are on for the whole body so listed money aligns.
 
 ### Hierarchy
-- **Display money** (600, 2.75rem, line-height 1.05, -0.03em, Unbounded): the hero figure on the
+- **Display money** (600, 2.75rem, line-height 1.05, -0.02em, Familjen Grotesk): the hero figure on the
   banknote — "Safe to spend today", net balance on Accounts.
-- **Headline** (600–700, 1.5rem, -0.02em, Unbounded): every `h1` page title, set globally.
-- **Money** (600, -0.03em, Unbounded via `font-money`): headline figures below the hero — note
+- **Headline** (600–700, 1.5rem, -0.02em, Familjen Grotesk): every `h1` page title, set globally.
+- **Money** (600, -0.02em, Familjen Grotesk via `font-money`): headline figures below the hero — note
   tiles (1.125rem), total balance (1.25rem), month stats (1rem), number-pad display (1.875rem, 1.5rem
   past 10 characters).
-- **Dialog title** (500, 1rem, line-height 1, Unbounded).
-- **Title** (600, 1rem, Geist): section headings ("Where it sits", "Latest").
-- **Body** (400, 0.875rem, Geist, tabular): row names and sentences. Row values are 600 Geist,
-  never Unbounded.
-- **Label** (500, 0.75rem, Geist, sentence case, muted): field labels, stat captions, "See all".
+- **Dialog title** (500, 1rem, line-height 1, Familjen Grotesk).
+- **Title** (600, 1rem, Instrument Sans): section headings ("Where it sits", "Latest").
+- **Body** (400, 0.875rem, Instrument Sans, tabular): row names and sentences. Row values are 600 Instrument Sans,
+  never Familjen Grotesk.
+- **Label** (500, 0.75rem, Instrument Sans, sentence case, muted): field labels, stat captions, "See all".
 
 ### Named Rules
-**The Figure-First Rule.** Unbounded only on headline money and titles. Rows, lists and body
-figures stay in Geist — a list of wide numerals reads as decoration.
+**The Figure-First Rule.** Familjen Grotesk only on headline money and titles. Rows, lists and body
+figures stay in Instrument Sans — a list of wide numerals reads as decoration.
 
 **The Sentence-Case Label Rule.** Labels are sentence-case 0.75rem 500 in muted ink. No uppercase
 tracked microlabels and no eyebrows above headings. The banknote microprint is ornament, not a
@@ -355,7 +355,7 @@ Pill-shaped and lit from above.
 - **Shape:** fully round (9999px). Heights 24 / 28 / 36 / 44px (`xs`/`sm`/default/`lg`), icon
   buttons 32px, header icon buttons 40px.
 - **Primary:** the lavender gradient (135deg, `primary-gradient-light` → `primary`; dark starts at
-  `#7d6af2`) with white text and the primary glow; 14px 500 Geist, 16px horizontal padding.
+  `#7d6af2`) with white text and the primary glow; 14px 500 Instrument Sans, 16px horizontal padding.
   Hover brightens 110%; press nudges down 1px.
 - **Outline:** strong glass fill with a white glass hairline and 12px backdrop blur; hover fills muted.
 - **Destructive:** magenta at 10% (dark 20%) with magenta text — a tint, never a solid red slab.
@@ -394,7 +394,7 @@ wrong PIN shakes for 320ms (none under reduced motion).
 ### Dialogs and popovers
 Opaque card colour, 22px radius, 16px padding, 1px border ring, Float shadow, over the `--scrim`
 token with a light backdrop blur. The scrim always *dims* — indigo at 24% in light, near-black at 60%
-in dark — never a foreground-tinted wash that would lighten a dark page. Titles are in Unbounded,
+in dark — never a foreground-tinted wash that would lighten a dark page. Titles are in Familjen Grotesk,
 sentence case. Opaque on purpose: forms are read, not admired. Dialog buttons are pills; dialogs
 never override the 22px radius.
 
@@ -415,7 +415,7 @@ create a stacking context (the background rosette sits at `z-index: -1` for that
   and legal pages stand alone. Items are full-round 14px 500 rows;
   active is lavender tint with lavender ink; hover is muted at 60%. Group label "Tools" is a
   sentence-case muted label.
-- **Header:** transparent at rest; glass with a hairline once scrolled. `h1` in Unbounded.
+- **Header:** transparent at rest; glass with a hairline once scrolled. `h1` in Familjen Grotesk.
 
 ### App icon and favicon
 A ₹100-lavender tile (radial `#a594f2 → #6c57d6 → #3d2bb0`, lit top-left like the coin) carrying
@@ -470,8 +470,8 @@ shadow, 22px radius, 16px padding, spanning the full grid width.
 ### Do:
 - **Do** put one NoteCard on a money screen and let it carry the ornament; keep everything below it
   quiet glass and plain rows.
-- **Do** set headline money, page titles and dialog titles in Unbounded (`font-money` /
-  `font-heading`), and every row, list and body figure in Geist with tabular figures.
+- **Do** set headline money, page titles and dialog titles in Familjen Grotesk (`font-money` /
+  `font-heading`), and every row, list and body figure in Instrument Sans with tabular figures.
 - **Do** tint accounts by type through `noteStyle(type)` and `--note-*`, with each tint's ink.
 - **Do** use `positive` for income and positive figures, `warning` for caution, `destructive` for
   overspend and deletion.
@@ -491,7 +491,7 @@ shadow, 22px radius, 16px padding, spanning the full grid width.
 - **Don't** use `primary` lavender for income or "good" states.
 - **Don't** add uppercase tracked microlabels or eyebrow kickers above headings; labels are
   sentence case.
-- **Don't** set list rows or body figures in Unbounded.
+- **Don't** set list rows or body figures in Familjen Grotesk.
 - **Don't** use neutral grey shadows in light mode, or solid filled red buttons for destructive actions.
 - **Don't** give the header a solid background at rest.
 - **Don't** use raw hex or Tailwind palette colours in components.

@@ -220,9 +220,9 @@ page.
     column carries `lg:pl-60`.
   - Every colour picker offers `COLOR_PALETTE` from [`src/data/colorPalette.ts`](src/data/colorPalette.ts).
     Changing it only changes what pickers offer, never colours already saved on entities.
-  - Fonts: Geist Variable for everything people read or type; **Unbounded Variable** (the banknote
+  - Fonts: Instrument Sans for everything people read or type; **Familjen Grotesk** (the banknote
     numeral) for `h1` page titles, dialog titles (`font-heading`) and headline money (`.font-money`).
-    Row amounts stay Geist.
+    Row amounts stay Instrument Sans.
 - **Tailwind CSS v4** — configured via `@tailwindcss/vite` plugin (no `tailwind.config.js`; directives in `index.css`).
 - **shadcn/ui** with `base-nova` style, using `@base-ui/react` under the hood. Add new components with `npx shadcn@latest add <component>`.
 - **Lucide React** for icons.

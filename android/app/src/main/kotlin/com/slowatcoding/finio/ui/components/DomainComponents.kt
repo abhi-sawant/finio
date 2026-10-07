@@ -326,7 +326,7 @@ data class RowLabel(val name: String, val color: Color)
 /**
  * A transaction row (TransactionItem.tsx), presentational: [title] (note, split names or
  * category) 14sp 500 with a repeat glyph for recurring rows, a muted 12sp [subtitle]
- * ("Food · HDFC" or "HDFC → Cash"), optional label chips, and the amount in 14sp 600 Geist —
+ * ("Food · HDFC" or "HDFC → Cash"), optional label chips, and the amount in 14sp 600 Instrument Sans —
  * green and "+" for income, foreground and "−" for expense, muted and unsigned for transfers.
  * [amount] is the formatted figure without a sign. Rows pad 12dp × 12dp, tinted muted while
  * pressed; [onLongClick] opens the row menu; [selectionMode] shows a checkbox.

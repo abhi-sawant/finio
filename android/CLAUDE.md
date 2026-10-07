@@ -144,7 +144,7 @@ logic in a screen — call the `core` function the web page calls (same names). 
 
 **Money.** `val money = rememberMoneyFormatter()` then `money(amount)` / `money(x, compact = true)`
 — `formatCurrency` with `hidden` bound to `settings.hideAmounts`. Never format money any other way.
-Headline figures use `FinioType.money`/`displayMoney` (Unbounded); row amounts stay Geist.
+Headline figures use `FinioType.money`/`displayMoney` (Familjen Grotesk); row amounts stay Instrument Sans.
 
 **Header.** `FinioScreen(header = { … }) { body }` (`ui/components/PageShell.kt`).
 Tab pages: `PageTitle("Accounts")` + trailing actions. Sub-pages: `BackButton(nav)`,

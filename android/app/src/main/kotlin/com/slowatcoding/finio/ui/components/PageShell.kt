@@ -121,13 +121,13 @@ fun FinioHeader(
     }
 }
 
-/** A tab page's `h1` (`text-2xl font-bold tracking-tight`, Unbounded). */
+/** A tab page's `h1` (`text-2xl font-bold tracking-tight`, FamiljenGrotesk). */
 @Composable
 fun PageTitle(text: String, modifier: Modifier = Modifier, style: TextStyle = FinioType.pageTitle) {
     Text(text, modifier, style = style, maxLines = 1, overflow = TextOverflow.Ellipsis)
 }
 
-/** A sub-page `h1` between a back button and an action (`text-base font-semibold`, Unbounded). */
+/** A sub-page `h1` between a back button and an action (`text-base font-semibold`, FamiljenGrotesk). */
 @Composable
 fun ScreenTitle(text: String, modifier: Modifier = Modifier) = PageTitle(text, modifier, FinioType.screenTitle)
 

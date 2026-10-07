@@ -221,7 +221,7 @@
       },
       "title": {
         "displayName": "Title",
-        "purpose": "Section headings in Geist."
+        "purpose": "Section headings in Instrument Sans."
       },
       "dialog-title": {
         "displayName": "Dialog title",
@@ -233,7 +233,7 @@
       },
       "row-value": {
         "displayName": "Row value",
-        "purpose": "Amounts in list rows; never Unbounded."
+        "purpose": "Amounts in list rows; never Familjen Grotesk."
       },
       "label": {
         "displayName": "Label",
@@ -343,7 +343,7 @@
       "refersTo": "button-primary",
       "description": "Lavender-gradient pill with white text and a lavender glow; the filled action.",
       "html": "<button class=\"ds-btn-primary\">Save transaction</button>",
-      "css": ".ds-btn-primary{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 16px;border:1px solid transparent;border-radius:9999px;background-image:var(--grad-primary, linear-gradient(135deg,#7562ec 0%,#4b36c7 100%));color:#fff;font:500 14px 'Geist Variable',sans-serif;box-shadow:inset 0 1px 0 rgb(255 255 255 / .25),0 10px 22px -10px rgb(75 54 199 / .65);transition:filter .15s,transform .15s;cursor:pointer}.ds-btn-primary:hover{filter:brightness(1.1)}.ds-btn-primary:active{transform:translateY(1px)}.ds-btn-primary:focus-visible{outline:none;box-shadow:0 0 0 3px rgb(75 54 199 / .5)}"
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 16px;border:1px solid transparent;border-radius:9999px;background-image:var(--grad-primary, linear-gradient(135deg,#7562ec 0%,#4b36c7 100%));color:#fff;font:500 14px 'Instrument Sans',sans-serif;box-shadow:inset 0 1px 0 rgb(255 255 255 / .25),0 10px 22px -10px rgb(75 54 199 / .65);transition:filter .15s,transform .15s;cursor:pointer}.ds-btn-primary:hover{filter:brightness(1.1)}.ds-btn-primary:active{transform:translateY(1px)}.ds-btn-primary:focus-visible{outline:none;box-shadow:0 0 0 3px rgb(75 54 199 / .5)}"
     },
     {
       "name": "Outline Button",
@@ -351,7 +351,7 @@
       "refersTo": "button-outline",
       "description": "Strong-glass pill with a white hairline; secondary actions and header icon buttons.",
       "html": "<button class=\"ds-btn-outline\">Cancel</button>",
-      "css": ".ds-btn-outline{height:36px;padding:0 16px;border-radius:9999px;border:1px solid var(--glass-border, rgb(255 255 255 / .9));background:var(--glass-strong, rgb(255 255 255 / .78));backdrop-filter:blur(12px);color:var(--foreground,#1d1747);font:500 14px 'Geist Variable',sans-serif;cursor:pointer;transition:background .15s}.ds-btn-outline:hover{background:var(--muted,#ebe7f8)}.ds-btn-outline:focus-visible{outline:none;box-shadow:0 0 0 3px rgb(75 54 199 / .5)}"
+      "css": ".ds-btn-outline{height:36px;padding:0 16px;border-radius:9999px;border:1px solid var(--glass-border, rgb(255 255 255 / .9));background:var(--glass-strong, rgb(255 255 255 / .78));backdrop-filter:blur(12px);color:var(--foreground,#1d1747);font:500 14px 'Instrument Sans',sans-serif;cursor:pointer;transition:background .15s}.ds-btn-outline:hover{background:var(--muted,#ebe7f8)}.ds-btn-outline:focus-visible{outline:none;box-shadow:0 0 0 3px rgb(75 54 199 / .5)}"
     },
     {
       "name": "Destructive Button",
@@ -359,7 +359,7 @@
       "refersTo": "button-destructive",
       "description": "Magenta tint with magenta text; never a solid slab.",
       "html": "<button class=\"ds-btn-danger\">Delete</button>",
-      "css": ".ds-btn-danger{height:36px;padding:0 16px;border-radius:9999px;border:1px solid transparent;background:color-mix(in srgb,var(--destructive,#b0125f) 10%,transparent);color:var(--destructive,#b0125f);font:500 14px 'Geist Variable',sans-serif;cursor:pointer}.ds-btn-danger:hover{background:color-mix(in srgb,var(--destructive,#b0125f) 20%,transparent)}.ds-btn-danger:focus-visible{outline:none;box-shadow:0 0 0 3px rgb(176 18 95 / .2)}"
+      "css": ".ds-btn-danger{height:36px;padding:0 16px;border-radius:9999px;border:1px solid transparent;background:color-mix(in srgb,var(--destructive,#b0125f) 10%,transparent);color:var(--destructive,#b0125f);font:500 14px 'Instrument Sans',sans-serif;cursor:pointer}.ds-btn-danger:hover{background:color-mix(in srgb,var(--destructive,#b0125f) 20%,transparent)}.ds-btn-danger:focus-visible{outline:none;box-shadow:0 0 0 3px rgb(176 18 95 / .2)}"
     },
     {
       "name": "Text Field",
@@ -367,7 +367,7 @@
       "refersTo": "input",
       "description": "Opaque card fill, ink-16% stroke, 13.2px radius, lavender focus ring.",
       "html": "<input class=\"ds-input\" placeholder=\"Note\" />",
-      "css": ".ds-input{height:40px;width:240px;padding:4px 12px;border-radius:13.2px;border:1px solid var(--input, rgb(29 23 71 / .16));background:var(--card,#fdfcff);color:var(--foreground,#1d1747);font:400 14px 'Geist Variable',sans-serif;outline:none;transition:border-color .15s,box-shadow .15s}.ds-input::placeholder{color:var(--muted-foreground,#5b5689)}.ds-input:focus-visible{border-color:var(--ring,#4b36c7);box-shadow:0 0 0 3px rgb(75 54 199 / .5)}"
+      "css": ".ds-input{height:40px;width:240px;padding:4px 12px;border-radius:13.2px;border:1px solid var(--input, rgb(29 23 71 / .16));background:var(--card,#fdfcff);color:var(--foreground,#1d1747);font:400 14px 'Instrument Sans',sans-serif;outline:none;transition:border-color .15s,box-shadow .15s}.ds-input::placeholder{color:var(--muted-foreground,#5b5689)}.ds-input:focus-visible{border-color:var(--ring,#4b36c7);box-shadow:0 0 0 3px rgb(75 54 199 / .5)}"
     },
     {
       "name": "Glass List Card",
@@ -375,7 +375,7 @@
       "refersTo": "card",
       "description": "One frosted glass container of hairline-divided plain rows.",
       "html": "<div class=\"ds-card\"><div class=\"ds-row\"><span class=\"ds-chip\" style=\"background-image:linear-gradient(135deg,#ece6ff,#d9cffc);color:#3b2a86\"></span><div class=\"ds-row-text\"><b>HDFC Checking</b><small>Bank account</small></div><span class=\"ds-row-val\">₹1,10,000</span></div><div class=\"ds-row\"><span class=\"ds-chip\" style=\"background-image:linear-gradient(135deg,#ffe3f1,#fbc6e0);color:#8a1550\"></span><div class=\"ds-row-text\"><b>Credit Card</b><small>Credit card</small></div><span class=\"ds-row-val\" style=\"color:#b0125f\">-₹1,900</span></div></div>",
-      "css": ".ds-card{width:320px;padding:0 16px;border-radius:17.6px;background:var(--glass, rgb(255 255 255 / .6));border:1px solid var(--glass-border, rgb(255 255 255 / .9));box-shadow:inset 0 1px 0 rgb(255 255 255 / .95),0 18px 36px -26px rgb(60 40 140 / .42);backdrop-filter:blur(18px) saturate(170%);font-family:'Geist Variable',sans-serif;color:#1d1747}.ds-row{display:flex;align-items:center;gap:12px;padding:12px 0}.ds-row+.ds-row{border-top:1px solid rgb(29 23 71 / .1)}.ds-row:hover{opacity:.9}.ds-row-text{flex:1;display:flex;flex-direction:column;font-size:14px}.ds-row-text b{font-weight:500}.ds-row-text small{font-size:12px;color:#5b5689}.ds-row-val{font-size:14px;font-weight:600;font-variant-numeric:tabular-nums}.ds-chip{position:relative;width:30px;height:20px;border-radius:5px;box-shadow:inset 0 0 0 1px rgb(255 255 255 / .55),0 3px 8px -4px rgb(40 26 110 / .45)}.ds-chip::after{content:'';position:absolute;top:0;bottom:0;right:8px;width:2px;background:currentColor;opacity:.4;-webkit-mask:repeating-linear-gradient(180deg,#000 0 3px,transparent 3px 5px);mask:repeating-linear-gradient(180deg,#000 0 3px,transparent 3px 5px)}"
+      "css": ".ds-card{width:320px;padding:0 16px;border-radius:17.6px;background:var(--glass, rgb(255 255 255 / .6));border:1px solid var(--glass-border, rgb(255 255 255 / .9));box-shadow:inset 0 1px 0 rgb(255 255 255 / .95),0 18px 36px -26px rgb(60 40 140 / .42);backdrop-filter:blur(18px) saturate(170%);font-family:'Instrument Sans',sans-serif;color:#1d1747}.ds-row{display:flex;align-items:center;gap:12px;padding:12px 0}.ds-row+.ds-row{border-top:1px solid rgb(29 23 71 / .1)}.ds-row:hover{opacity:.9}.ds-row-text{flex:1;display:flex;flex-direction:column;font-size:14px}.ds-row-text b{font-weight:500}.ds-row-text small{font-size:12px;color:#5b5689}.ds-row-val{font-size:14px;font-weight:600;font-variant-numeric:tabular-nums}.ds-chip{position:relative;width:30px;height:20px;border-radius:5px;box-shadow:inset 0 0 0 1px rgb(255 255 255 / .55),0 3px 8px -4px rgb(40 26 110 / .45)}.ds-chip::after{content:'';position:absolute;top:0;bottom:0;right:8px;width:2px;background:currentColor;opacity:.4;-webkit-mask:repeating-linear-gradient(180deg,#000 0 3px,transparent 3px 5px);mask:repeating-linear-gradient(180deg,#000 0 3px,transparent 3px 5px)}"
     },
     {
       "name": "Mobile Tab Bar",
@@ -383,7 +383,7 @@
       "refersTo": "nav-item-active",
       "description": "Strong glass bar; active tab lavender with a gradient pill indicator and sentence-case label.",
       "html": "<nav class=\"ds-tabs\"><a class=\"ds-tab is-active\" href=\"#\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\"><rect x=\"3\" y=\"3\" width=\"7\" height=\"9\" rx=\"1\"/><rect x=\"14\" y=\"3\" width=\"7\" height=\"5\" rx=\"1\"/><rect x=\"14\" y=\"12\" width=\"7\" height=\"9\" rx=\"1\"/><rect x=\"3\" y=\"16\" width=\"7\" height=\"5\" rx=\"1\"/></svg><i></i><span>Home</span></a><a class=\"ds-tab\" href=\"#\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M3 3v18h18\"/><path d=\"M8 17V9M13 17V5M18 17v-3\"/></svg><i></i><span>Analytics</span></a></nav>",
-      "css": ".ds-tabs{display:flex;width:320px;padding:8px 8px 6px;background:rgb(255 255 255 / .78);backdrop-filter:blur(24px) saturate(180%);border-top:1px solid rgb(255 255 255 / .9);box-shadow:0 -12px 30px -22px rgb(40 26 110 / .45);font-family:'Geist Variable',sans-serif}.ds-tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 4px;border-radius:13.2px;color:#5b5689;text-decoration:none;transition:color .15s}.ds-tab:hover{color:#1d1747}.ds-tab:focus-visible{outline:2px solid #4b36c7;outline-offset:2px}.ds-tab i{width:16px;height:4px;border-radius:9999px;background-image:linear-gradient(135deg,#7562ec,#4b36c7);opacity:0}.ds-tab span{font-size:12px;font-weight:500}.ds-tab.is-active{color:#4b36c7}.ds-tab.is-active i{opacity:1}"
+      "css": ".ds-tabs{display:flex;width:320px;padding:8px 8px 6px;background:rgb(255 255 255 / .78);backdrop-filter:blur(24px) saturate(180%);border-top:1px solid rgb(255 255 255 / .9);box-shadow:0 -12px 30px -22px rgb(40 26 110 / .45);font-family:'Instrument Sans',sans-serif}.ds-tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 4px;border-radius:13.2px;color:#5b5689;text-decoration:none;transition:color .15s}.ds-tab:hover{color:#1d1747}.ds-tab:focus-visible{outline:2px solid #4b36c7;outline-offset:2px}.ds-tab i{width:16px;height:4px;border-radius:9999px;background-image:linear-gradient(135deg,#7562ec,#4b36c7);opacity:0}.ds-tab span{font-size:12px;font-weight:500}.ds-tab.is-active{color:#4b36c7}.ds-tab.is-active i{opacity:1}"
     },
     {
       "name": "Coin Add Button",
@@ -399,24 +399,24 @@
       "refersTo": "note-tile",
       "description": "An account printed in its type's denomination tint, with its own windowed thread; no denomination numeral.",
       "html": "<button class=\"ds-tile\" style=\"background-image:linear-gradient(135deg,#ece6ff 0%,#d9cffc 100%);color:#3b2a86\"><b>HDFC Checking</b><small>Bank account</small><span>₹1.1L</span></button>",
-      "css": ".ds-tile{position:relative;display:flex;flex-direction:column;width:160px;min-height:108px;padding:14px 34px 14px 14px;overflow:hidden;text-align:left;border-radius:17.6px;border:1px solid rgb(255 255 255 / .9);box-shadow:inset 0 1px 0 rgb(255 255 255 / .95),0 14px 28px -20px rgb(40 26 110 / .5);font-family:'Geist Variable',sans-serif;cursor:pointer;transition:transform .2s cubic-bezier(.16,1,.3,1)}.ds-tile::after{content:'';position:absolute;top:0;bottom:0;right:14px;width:4px;background:currentColor;opacity:.35;-webkit-mask:repeating-linear-gradient(180deg,#000 0 9px,transparent 9px 15px);mask:repeating-linear-gradient(180deg,#000 0 9px,transparent 9px 15px)}.ds-tile b{font-size:14px;font-weight:600;line-height:1.2}.ds-tile small{font-size:12px;opacity:.8}.ds-tile span{margin-top:auto;padding-top:12px;font:600 18px 'Unbounded Variable','Geist Variable',sans-serif;letter-spacing:-.03em}.ds-tile:active{transform:scale(.97)}.ds-tile:hover{filter:brightness(1.02)}.ds-tile:focus-visible{outline:2px solid #4b36c7;outline-offset:2px}"
+      "css": ".ds-tile{position:relative;display:flex;flex-direction:column;width:160px;min-height:108px;padding:14px 34px 14px 14px;overflow:hidden;text-align:left;border-radius:17.6px;border:1px solid rgb(255 255 255 / .9);box-shadow:inset 0 1px 0 rgb(255 255 255 / .95),0 14px 28px -20px rgb(40 26 110 / .5);font-family:'Instrument Sans',sans-serif;cursor:pointer;transition:transform .2s cubic-bezier(.16,1,.3,1)}.ds-tile::after{content:'';position:absolute;top:0;bottom:0;right:14px;width:4px;background:currentColor;opacity:.35;-webkit-mask:repeating-linear-gradient(180deg,#000 0 9px,transparent 9px 15px);mask:repeating-linear-gradient(180deg,#000 0 9px,transparent 9px 15px)}.ds-tile b{font-size:14px;font-weight:600;line-height:1.2}.ds-tile small{font-size:12px;opacity:.8}.ds-tile span{margin-top:auto;padding-top:12px;font:600 18px 'Familjen Grotesk','Instrument Sans',sans-serif;letter-spacing:-.03em}.ds-tile:active{transform:scale(.97)}.ds-tile:hover{filter:brightness(1.02)}.ds-tile:focus-visible{outline:2px solid #4b36c7;outline-offset:2px}"
     },
     {
       "name": "NoteCard Hero",
       "kind": "card",
       "refersTo": "card",
-      "description": "The banknote hero: surface gradient, windowed colour-shift thread, Unbounded figure, register bar, microprint privacy band.",
+      "description": "The banknote hero: surface gradient, windowed colour-shift thread, Familjen Grotesk figure, register bar, microprint privacy band.",
       "html": "<div class=\"ds-note\"><div class=\"ds-note-thread\"></div><p class=\"ds-note-label\">Safe to spend today</p><p class=\"ds-note-fig\">₹892</p><p class=\"ds-note-sub\">₹25,000 left this month · 28 days to go</p><div class=\"ds-note-track\"><div class=\"ds-note-reg\"></div></div><div class=\"ds-note-micro\" aria-hidden=\"true\">FINIO · KEPT ON THIS DEVICE · NOT A BANK · YOUR DATA STAYS YOURS · FINIO · KEPT ON THIS DEVICE ·</div></div>",
-      "css": ".ds-note{position:relative;overflow:hidden;width:340px;padding:22px 100px 34px 22px;border-radius:25.3px;background-image:linear-gradient(135deg,#fefdff 0%,#efe9ff 55%,#e2f3ec 100%);border:1px solid rgb(255 255 255 / .9);box-shadow:inset 0 1px 0 rgb(255 255 255 / .95),0 28px 56px -26px rgb(40 26 110 / .5);font-family:'Geist Variable',sans-serif;color:#1d1747;transition:transform .5s cubic-bezier(.16,1,.3,1)}.ds-note:hover{transform:perspective(900px) rotateY(2deg)}.ds-note:hover .ds-note-thread{filter:hue-rotate(70deg)}.ds-note-thread{position:absolute;top:0;bottom:0;right:56px;width:9px;opacity:.85;background:linear-gradient(180deg,hsl(150 70% 42%),hsl(200 78% 50%),hsl(255 70% 58%));-webkit-mask:repeating-linear-gradient(180deg,#000 0 16px,transparent 16px 26px);mask:repeating-linear-gradient(180deg,#000 0 16px,transparent 16px 26px);transition:filter .5s}.ds-note-label{margin:0;font-size:14px;font-weight:500;color:#5b5689}.ds-note-fig{margin:4px 0 0;font:600 2.75rem/1.05 'Unbounded Variable','Geist Variable',sans-serif;letter-spacing:-.03em}.ds-note-sub{margin:6px 0 12px;font-size:14px}.ds-note-track{height:8px;border-radius:9999px;background:#ebe7f8;overflow:hidden}.ds-note-reg{width:38%;height:100%;background:repeating-linear-gradient(115deg,#3d2bb8 0 2px,#6b58e8 2px 4.5px)}.ds-note-micro{position:absolute;left:0;right:0;bottom:10px;white-space:nowrap;overflow:hidden;font-size:6px;font-weight:600;letter-spacing:.2em;color:rgb(29 23 71 / .36)}"
+      "css": ".ds-note{position:relative;overflow:hidden;width:340px;padding:22px 100px 34px 22px;border-radius:25.3px;background-image:linear-gradient(135deg,#fefdff 0%,#efe9ff 55%,#e2f3ec 100%);border:1px solid rgb(255 255 255 / .9);box-shadow:inset 0 1px 0 rgb(255 255 255 / .95),0 28px 56px -26px rgb(40 26 110 / .5);font-family:'Instrument Sans',sans-serif;color:#1d1747;transition:transform .5s cubic-bezier(.16,1,.3,1)}.ds-note:hover{transform:perspective(900px) rotateY(2deg)}.ds-note:hover .ds-note-thread{filter:hue-rotate(70deg)}.ds-note-thread{position:absolute;top:0;bottom:0;right:56px;width:9px;opacity:.85;background:linear-gradient(180deg,hsl(150 70% 42%),hsl(200 78% 50%),hsl(255 70% 58%));-webkit-mask:repeating-linear-gradient(180deg,#000 0 16px,transparent 16px 26px);mask:repeating-linear-gradient(180deg,#000 0 16px,transparent 16px 26px);transition:filter .5s}.ds-note-label{margin:0;font-size:14px;font-weight:500;color:#5b5689}.ds-note-fig{margin:4px 0 0;font:600 2.75rem/1.05 'Familjen Grotesk','Instrument Sans',sans-serif;letter-spacing:-.03em}.ds-note-sub{margin:6px 0 12px;font-size:14px}.ds-note-track{height:8px;border-radius:9999px;background:#ebe7f8;overflow:hidden}.ds-note-reg{width:38%;height:100%;background:repeating-linear-gradient(115deg,#3d2bb8 0 2px,#6b58e8 2px 4.5px)}.ds-note-micro{position:absolute;left:0;right:0;bottom:10px;white-space:nowrap;overflow:hidden;font-size:6px;font-weight:600;letter-spacing:.2em;color:rgb(29 23 71 / .36)}"
     }
   ],
   "narrative": {
     "northStar": "Mudra — the money looks like money.",
-    "overview": "Finio is printed the way a rupee note is printed. Light mode is note paper in daylight: a fixed lavender-to-mint-to-peach paper gradient, indigo ink, and the ₹100 lavender as the one accent. Dark mode is the same note under a UV lamp: an indigo field, the engraving lit in lavender, and security fibres that only fluoresce in the dark. The security-printing vocabulary — guilloche rosettes, a windowed colour-shift thread, microprint, denomination tints — is the house material, used on the surfaces that carry money and kept out of the reading.\n\nThe world lends type, palette and one signature move; it never takes the layout or the controls. Lists, forms and settings stay quiet frosted-glass panels of plain rows in Geist. The banknote face (Unbounded) is reserved for headline figures and titles, so ornament never competes with a figure the user has to read. Every figure is legible first and ornamental second.\n\nLight and dark are both first-class: every token has a hand-tuned pair, including every denomination tint.",
+    "overview": "Finio is printed the way a rupee note is printed. Light mode is note paper in daylight: a fixed lavender-to-mint-to-peach paper gradient, indigo ink, and the ₹100 lavender as the one accent. Dark mode is the same note under a UV lamp: an indigo field, the engraving lit in lavender, and security fibres that only fluoresce in the dark. The security-printing vocabulary — guilloche rosettes, a windowed colour-shift thread, microprint, denomination tints — is the house material, used on the surfaces that carry money and kept out of the reading.\n\nThe world lends type, palette and one signature move; it never takes the layout or the controls. Lists, forms and settings stay quiet frosted-glass panels of plain rows in Instrument Sans. The banknote face (Familjen Grotesk) is reserved for headline figures and titles, so ornament never competes with a figure the user has to read. Every figure is legible first and ornamental second.\n\nLight and dark are both first-class: every token has a hand-tuned pair, including every denomination tint.",
     "keyCharacteristics": [
       "Fixed note-paper gradient behind every screen, with a faint engraved guilloche rosette top-right.",
       "Frosted glass cards and chrome: translucent white over the paper, white hairline, lavender-tinted shadow.",
-      "Unbounded for headline money, page titles and dialog titles; Geist for everything read.",
+      "Familjen Grotesk for headline money, page titles and dialog titles; Instrument Sans for everything read.",
       "One hero banknote per money screen (NoteCard), with a pointer-driven colour-shift thread.",
       "Accounts printed in their type's rupee denomination tint.",
       "Filled actions are a ₹100-lavender gradient; the add button is a single-hue lavender coin."
@@ -444,7 +444,7 @@
       },
       {
         "name": "The Figure-First Rule",
-        "body": "Unbounded only on headline money and titles. Rows, lists and body figures stay in Geist — a list of wide numerals reads as decoration.",
+        "body": "Familjen Grotesk only on headline money and titles. Rows, lists and body figures stay in Instrument Sans — a list of wide numerals reads as decoration.",
         "section": "typography"
       },
       {
@@ -465,7 +465,7 @@
     ],
     "dos": [
       "Do put one NoteCard on a money screen and let it carry the ornament; keep everything below it quiet glass and plain rows.",
-      "Do set headline money, page titles and dialog titles in Unbounded (`font-money` / `font-heading`), and every row, list and body figure in Geist with tabular figures.",
+      "Do set headline money, page titles and dialog titles in Familjen Grotesk (`font-money` / `font-heading`), and every row, list and body figure in Instrument Sans with tabular figures.",
       "Do tint accounts by type through `noteStyle(type)` and `--note-*`, with each tint's ink.",
       "Do use `positive` for income and positive figures, `warning` for caution, `destructive` for overspend and deletion.",
       "Do use frosted glass for cards and chrome, opaque card colour for dialogs, popovers and inputs.",
@@ -479,7 +479,7 @@
       "Don't use the account's user-chosen colour for its note tint.",
       "Don't use `primary` lavender for income or \"good\" states.",
       "Don't add uppercase tracked microlabels or eyebrow kickers above headings; labels are sentence case.",
-      "Don't set list rows or body figures in Unbounded.",
+      "Don't set list rows or body figures in Familjen Grotesk.",
       "Don't use neutral grey shadows in light mode, or solid filled red buttons for destructive actions.",
       "Don't give the header a solid background at rest.",
       "Don't use raw hex or Tailwind palette colours in components.",

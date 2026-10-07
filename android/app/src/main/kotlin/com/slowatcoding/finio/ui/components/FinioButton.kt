@@ -113,7 +113,7 @@ internal fun buttonPaint(
 }
 
 /**
- * The Mudra button (button.tsx + button-variants.ts): pill-shaped, 14sp 500 Geist, lit from
+ * The Mudra button (button.tsx + button-variants.ts): pill-shaped, 14sp 500 Instrument Sans, lit from
  * above. Pressing nudges it down 1dp (`active:translate-y-px`) and disabled is 50% opacity.
  * Content is a Row; use [FinioButton] with `text` for the common case.
  */

@@ -36,7 +36,7 @@ Used in short, frequent sessions (quick add of an expense, often via the FAB, sh
 Name: Finio. The visual world is **Mudra** (adopted 2026-10-04, replacing the earlier "Focus" ledger look): the app is printed the way a rupee note is, with guilloche linework, microprint, a windowed colour-shift thread, denomination tints, frosted glass and soft gradients. DESIGN.md is the authority on how it is built.
 
 - Chosen by the owner from three prototyped directions (Kaanch, Mudra, Gulal), in both light ("note paper in daylight") and dark ("the note under a UV lamp"); both modes are first-class.
-- Unbounded (the banknote numeral) sets page titles, dialog titles and headline money; Geist sets everything people read or type.
+- Familjen Grotesk (the banknote numeral) sets page titles, dialog titles and headline money; Instrument Sans sets everything people read or type.
 - An account's note tint is decided by its account type, never by its user-chosen colour: bank ₹100 lavender, savings ₹500 stone, card ₹2000 magenta, FD/RD ₹200 yellow, cash ₹10 chocolate, wallet ₹50 cyan, investment ₹20 green-yellow.
 - The add-transaction button is a single-hue ₹100-lavender coin, never multicolour.
 - Ornament never outranks a figure: rosettes, sheen and microprint stay faint enough that every number reads first (Product Principle 2).
