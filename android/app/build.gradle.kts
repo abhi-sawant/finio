@@ -1,7 +1,23 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
+}
+
+// One version for the whole product: the repo-root VERSION file (also read by web/vite.config.ts).
+// versionCode = major·10000 + minor·100 + patch, so 2.0.0 → 20000 and it always increases.
+val finioVersion: String = rootProject.file("../VERSION").readText().trim()
+val finioVersionCode: Int = finioVersion.split(".").map(String::toInt).let { (major, minor, patch) ->
+    major * 10_000 + minor * 100 + patch
+}
+
+// Release signing comes from android/keystore.properties (gitignored): storeFile, storePassword,
+// keyAlias, keyPassword. Without it, assembleRelease still builds — just unsigned.
+val keystoreProperties = Properties().apply {
+    val file = rootProject.file("keystore.properties")
+    if (file.exists()) file.inputStream().use(::load)
 }
 
 android {
@@ -14,18 +30,33 @@ android {
         applicationId = "com.slowatcoding.finio"
         minSdk = 26
         targetSdk = 37
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = finioVersionCode
+        versionName = finioVersion
 
         // Mirrors web's VITE_API_URL: override with -PfinioApiUrl=https://api.example.com.
         val apiUrl = (project.findProperty("finioApiUrl") as String?) ?: "https://api.finio.slowatcoding.com"
         buildConfigField("String", "API_URL", "\"$apiUrl\"")
     }
 
+    signingConfigs {
+        create("release") {
+            if (keystoreProperties.containsKey("storeFile")) {
+                storeFile = rootProject.file(keystoreProperties.getProperty("storeFile"))
+                storePassword = keystoreProperties.getProperty("storePassword")
+                keyAlias = keystoreProperties.getProperty("keyAlias")
+                keyPassword = keystoreProperties.getProperty("keyPassword")
+            }
+        }
+    }
+
     buildTypes {
         release {
             optimization {
                 enable = true
+            }
+            proguardFiles("proguard-rules.pro")
+            if (keystoreProperties.containsKey("storeFile")) {
+                signingConfig = signingConfigs.getByName("release")
             }
         }
     }

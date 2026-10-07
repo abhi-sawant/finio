@@ -43,6 +43,32 @@ npm run gen:fixtures     # regenerate spec/fixtures from the TS logic
 ./gradlew :app:assembleDebug   # debug APK
 ```
 
+## Releasing
+
+Versions follow SemVer and are **one number for the whole product** — web and Android always ship
+together.
+
+1. Bump the repo-root `VERSION` file and the `version` in `web/package.json` (a vitest test fails if
+   they differ). Android derives `versionName` from `VERSION` and `versionCode` as
+   `major·10000 + minor·100 + patch`, so the code only ever grows.
+2. Add the release's section to [CHANGELOG.md](CHANGELOG.md).
+3. Build:
+   - web: `cd web && npm run build`, then zip `web/dist/`;
+   - Android: `cd android && ./gradlew :app:assembleRelease`, which writes
+     `app/build/outputs/apk/release/app-release.apk`.
+
+   The APK is signed only when `android/keystore.properties` (gitignored) points at the release
+   keystore in `android/keystore/` (also gitignored). **Every future update must be signed with
+   that same key**, or Android refuses to install it over an existing copy, so keep the keystore
+   and its properties file backed up outside the repo.
+4. Put the artifacts in `releases/vX.Y.Z/` (gitignored) along with `SHA256SUMS.txt`. Merge to
+   `main`, tag `vX.Y.Z`, and attach the artifacts to a GitHub Release whose notes are the CHANGELOG
+   section.
+
+The release build runs R8. `android/app/proguard-rules.pro` keeps the two things the app reads by
+reflection: enum `@SerialName` fields (`wireName`) and the navigation routes. Any new reflection
+needs a rule there.
+
 ## Architecture
 
 ### Backend (backend/)

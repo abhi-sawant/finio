@@ -107,7 +107,9 @@ export default function Settings() {
             Terms of Service
           </Link>
         </p>
-        <p className="text-muted-foreground text-center text-[11px]">Finio · Personal Finance</p>
+        <p className="text-muted-foreground text-center text-[11px]">
+          Finio · Personal Finance · v{__APP_VERSION__}
+        </p>
       </Main>
     </>
   );
