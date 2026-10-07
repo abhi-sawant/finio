@@ -3,6 +3,14 @@
 Finio follows [Semantic Versioning](https://semver.org). The repo-root `VERSION` file is the single
 source of truth for both clients; see "Releasing" in [CLAUDE.md](CLAUDE.md).
 
+## 2.0.2 — 2026-10-07
+
+### Changed
+
+- **New typefaces on both clients.** Titles and headline amounts now use Familjen Grotesk, and body
+  text uses Instrument Sans, replacing Unbounded and Geist. Colours, layout and data are unchanged.
+  No backup-format changes.
+
 ## 2.0.1 — 2026-10-07
 
 ### Added
