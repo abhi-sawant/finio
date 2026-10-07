@@ -48,6 +48,7 @@ import com.slowatcoding.finio.ui.common.financeStore
 import com.slowatcoding.finio.ui.components.FinioCard
 import com.slowatcoding.finio.ui.components.FinioDialog
 import com.slowatcoding.finio.ui.components.FinioDivider
+import com.slowatcoding.finio.ui.components.SwitchField
 import com.slowatcoding.finio.ui.components.FinioSelect
 import com.slowatcoding.finio.ui.components.FinioTextField
 import com.slowatcoding.finio.ui.components.SelectOption
@@ -164,6 +165,15 @@ fun ProfileSection() {
                 title = "Theme",
             )
         }
+        FinioDivider()
+        SwitchField(
+            title = "Use AMOLED colors in dark mode",
+            description = "True black background that switches pixels off on OLED screens",
+            checked = settings.amoledDark,
+            onCheckedChange = { on -> store.updateSettings { it.copy(amoledDark = on) } },
+            icon = { Icon(LucideIcons.Moon, null, Modifier.size(18.dp), tint = colors.mutedForeground) },
+            modifier = Modifier.padding(16.dp),
+        )
         FinioDivider()
         SettingsValueRow(LucideIcons.CalendarRange, "Month starts on", subtitle = "Current cycle: $currentCycleLabel") {
             // A grid beats a 28-item dropdown here — every day is one tap away.

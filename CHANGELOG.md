@@ -3,6 +3,17 @@
 Finio follows [Semantic Versioning](https://semver.org). The repo-root `VERSION` file is the single
 source of truth for both clients; see "Releasing" in [CLAUDE.md](CLAUDE.md).
 
+## 2.0.1 — 2026-10-07
+
+### Added
+
+- **AMOLED dark mode** on both clients. Turn on "Use AMOLED colors in dark mode" in Settings →
+  Profile & preferences for a true-black background that switches pixels off on OLED screens.
+  Surfaces stay readable through a lavender hairline and a faint wash instead of shadows; hues and
+  semantic colours are unchanged. It only applies while the theme resolves to dark.
+- `amoledDark` is a new optional setting in the backup format (default `false`), so the choice
+  travels in backups between the web and Android apps. See [spec/backup-format.md](spec/backup-format.md).
+
 ## 2.0.0 — 2026-10-07
 
 The first versioned release: Finio is now one product on two clients, the PWA and a native Android

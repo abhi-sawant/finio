@@ -155,7 +155,7 @@ Defined in [src/types/index.ts](web/src/types/index.ts):
 | `Loan`                  | id, name, principal, interestRate, tenureMonths, startDate, accountId, categoryId, recurringId? (auto-generated EMI rule), closedAt? — see loan gotcha                        |
 | `LoanPrepayment`        | id, loanId, amount, date, note, transactionId? (the real expense it created)                                                                                                  |
 | `NetWorthSnapshot`      | id, periodKey (`yyyy-MM`), date, assets, liabilities                                                                                                                          |
-| `Settings`              | theme, userName, autoLocalBackup, monthStartDay, onboardedAt?, hideAmounts, notificationsEnabled, notifyBills, notifyBudgets, notifyCreditDue, notifyLeadDays, notifyDailyLog |
+| `Settings`              | theme, amoledDark, userName, autoLocalBackup, monthStartDay, onboardedAt?, hideAmounts, notificationsEnabled, notifyBills, notifyBudgets, notifyCreditDue, notifyLeadDays, notifyDailyLog |
 | `AppLockConfig`         | enabled, salt, hash, iterations, pinLength, autoLockMinutes, webauthnCredentialId — **not** in `Settings`, see gotchas                                                        |
 | `BackupCryptoConfig`    | enabled, salt, iterations, verifierIv, verifierCiphertext — **not** in `Settings`, same reason                                                                                |
 | `ScheduledNotification` | id (`kind:subject:occurrence`), kind, fireAt, expiresAt, title, body, url                                                                                                     |

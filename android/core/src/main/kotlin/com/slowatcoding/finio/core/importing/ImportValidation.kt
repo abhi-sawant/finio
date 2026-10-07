@@ -564,6 +564,7 @@ private fun parseSettings(value: JsonElement?): Settings? {
     // drops `onboardedAt` so a restore never re-runs or skips this device's onboarding.
     return Settings(
         theme = member(value["theme"], THEMES) ?: d.theme,
+        amoledDark = flag("amoledDark", d.amoledDark),
         userName = asId(value["userName"]) ?: d.userName,
         autoLocalBackup = flag("autoLocalBackup", d.autoLocalBackup),
         monthStartDay = normalizeMonthStartDay(value["monthStartDay"]),

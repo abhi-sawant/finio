@@ -908,9 +908,26 @@ async function migrationCases(): Promise<GoldenCase[]> {
       },
     ],
     [
-      'current',
+      'v16',
       {
         version: 16,
+        state: {
+          accounts: [],
+          transactions: [],
+          // A v16 blob predates `amoledDark`; migration must add it, off.
+          settings: {
+            ...Object.fromEntries(
+              Object.entries(defaultSettings).filter(([k]) => k !== 'amoledDark'),
+            ),
+            onboardedAt: '2025-01-01T00:00:00.000Z',
+          },
+        },
+      },
+    ],
+    [
+      'current',
+      {
+        version: 17,
         state: {
           accounts: [account('a', 100, { openingBalance: 100 })],
           settings: { ...defaultSettings, userName: 'Now' },
@@ -925,7 +942,7 @@ async function migrationCases(): Promise<GoldenCase[]> {
     return blobs.map(([name, envelope]) => {
       const raw = JSON.parse(JSON.stringify(envelope)) as typeof envelope;
       const migrated =
-        raw.version === 16
+        raw.version === 17
           ? raw.state
           : (migrate(raw.state, raw.version) as Record<string, unknown>);
       const merged = { ...initial, ...migrated } as Record<string, unknown>;

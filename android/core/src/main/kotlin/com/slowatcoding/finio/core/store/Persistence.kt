@@ -26,12 +26,12 @@ import kotlinx.serialization.serializer
 import java.time.Instant
 
 // The persisted envelope of the finance store and the port of the Zustand `persist` options in
-// web/src/store/useFinanceStore.ts (name `finio-storage`, version 16, the cumulative `migrate`).
+// web/src/store/useFinanceStore.ts (name `finio-storage`, version 17, the cumulative `migrate`).
 // Zustand stores `{ state, version }`; an older version runs through every migration step in
 // order, then the result is shallow-merged over the initial state (`{...initial, ...migrated}`).
 
 /** The store's persisted schema version — bump together with a new step in [migrateFinance]. */
-const val FINANCE_STORE_VERSION = 16
+const val FINANCE_STORE_VERSION = 17
 
 @Serializable
 data class PersistedFinance(val state: FinanceState, val version: Int = FINANCE_STORE_VERSION)
@@ -193,6 +193,14 @@ fun migrateFinance(persisted: JsonObject, version: Int, now: Instant = nowInstan
     }
 
     if (version < 16) appendMissingDefaultCategories(s, setOf("cat-35", "cat-36"))
+
+    if (version < 17) {
+        // AMOLED dark mode is new and off — an upgrade never changes how dark mode looks.
+        val st = settings()
+        s["settings"] = JsonObject(
+            spread(defaultSettingsJson, st, mapOf("amoledDark" to withDefault(st, "amoledDark", JsonPrimitive(false)))),
+        )
+    }
 
     return JsonObject(s)
 }

@@ -187,6 +187,12 @@ export interface RecurringTransaction {
 
 export interface Settings {
   theme: Theme;
+  /**
+   * Swap dark mode's indigo field for true black (`#000`) so an AMOLED panel can switch those
+   * pixels off. Only takes effect while the resolved theme is dark — the setting is remembered
+   * but inert in light mode.
+   */
+  amoledDark: boolean;
   userName: string;
   /** Whether to automatically download a local backup JSON once per day. */
   autoLocalBackup: boolean;

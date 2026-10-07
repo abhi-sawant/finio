@@ -175,6 +175,14 @@ the user has to read. Every figure is legible first and ornamental second.
 Light and dark are both first-class: every token has a hand-tuned pair, including every
 denomination tint.
 
+**AMOLED dark** (Settings → Profile & preferences, "Use AMOLED colors in dark mode") is a third
+palette layered on dark: `html.dark.amoled` on the web, `AmoledFinioColors`/`Brushes`/`Shadows` on
+Android. The field is true `#000` with no paper gradient, so OLED pixels stay off. Surfaces lift off
+black by a lavender hairline (`--glass-border`, `--border` at 12%) and a 4.5% lavender wash rather
+than by shadow, which is invisible on black. Hues, inks and semantic colours are unchanged; each
+denomination gradient sinks to near-black on its far corner. It is inert unless the resolved theme
+is dark.
+
 **Key Characteristics:**
 - Fixed note-paper gradient behind every screen, with a faint engraved guilloche rosette top-right.
 - Frosted glass cards and chrome: translucent white over the paper, white hairline, lavender-tinted shadow.
