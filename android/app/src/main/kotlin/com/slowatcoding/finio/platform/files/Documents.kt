@@ -119,7 +119,7 @@ suspend fun readText(context: Context, uri: Uri): String = withContext(Dispatche
         val bytes = input.readNBytesCompat(MAX_IMPORT_BYTES + 1)
         if (bytes.size > MAX_IMPORT_BYTES) throw IOException("File is too large to import")
         // Strip a UTF-8 BOM (Excel-exported CSVs carry one).
-        String(bytes, Charsets.UTF_8).removePrefix("﻿")
+        String(bytes, Charsets.UTF_8).removePrefix("\uFEFF")
     } ?: throw IOException("Could not open the file")
 }
 
