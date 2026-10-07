@@ -240,6 +240,7 @@ describe('validateBackup', () => {
     });
     expect(data.settings).toEqual({
       theme: 'dark',
+      amoledDark: false,
       userName: 'Abhishek',
       autoLocalBackup: true,
       monthStartDay: 1,
@@ -251,6 +252,13 @@ describe('validateBackup', () => {
       notifyLeadDays: 2,
       notifyDailyLog: true,
     });
+  });
+
+  it('keeps a boolean amoledDark and defaults anything else to off', () => {
+    expect(validateBackup({ settings: { amoledDark: true } }).data.settings?.amoledDark).toBe(true);
+    expect(validateBackup({ settings: { amoledDark: 'yes' } }).data.settings?.amoledDark).toBe(
+      false,
+    );
   });
 
   it('clamps an out-of-range notification lead time', () => {

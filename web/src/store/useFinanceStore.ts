@@ -1490,7 +1490,7 @@ export const useFinanceStore = create<FinanceStore>()(
     }),
     {
       name: 'finio-storage',
-      version: 16,
+      version: 17,
       storage: createJSONStorage(() => localStorage),
       // Steps are cumulative: a v1 state falls through every branch in order.
       migrate: (persistedState, version) => {
@@ -1690,6 +1690,15 @@ export const useFinanceStore = create<FinanceStore>()(
           s = {
             ...s,
             categories: Array.isArray(s.categories) ? [...s.categories, ...missing] : s.categories,
+          };
+        }
+
+        if (version < 17) {
+          // AMOLED dark mode is new and off — an upgrade never changes how dark mode looks.
+          const settings = (s.settings ?? {}) as Partial<Settings>;
+          s = {
+            ...s,
+            settings: { ...defaultSettings, ...settings, amoledDark: settings.amoledDark ?? false },
           };
         }
 

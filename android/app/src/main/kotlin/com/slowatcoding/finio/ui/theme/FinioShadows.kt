@@ -130,6 +130,15 @@ val DarkFinioShadows = stock(DarkFinioColors.shadowTint).let { s ->
     )
 }
 
+/** `.dark.amoled`: shadows vanish on black, so cards drop theirs and the float gets a hairline ring. */
+val AmoledFinioShadows = DarkFinioShadows.copy(
+    card = emptyList(),
+    float = listOf(
+        CssShadow(spread = 1.dp, color = rgba(185, 173, 255, 0.14f)),
+        CssShadow(y = 24.dp, blur = 48.dp, spread = (-20).dp, color = rgba(0, 0, 0, 1f)),
+    ),
+)
+
 val LocalFinioShadows = staticCompositionLocalOf { LightFinioShadows }
 
 /**

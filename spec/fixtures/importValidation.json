@@ -52449,6 +52449,7 @@
           ],
           "settings": {
             "theme": "dark",
+            "amoledDark": false,
             "userName": "Asha",
             "autoLocalBackup": true,
             "monthStartDay": 25,
@@ -52678,6 +52679,7 @@
         "data": {
           "settings": {
             "theme": "system",
+            "amoledDark": false,
             "userName": "",
             "autoLocalBackup": false,
             "monthStartDay": 1,
@@ -52922,6 +52924,7 @@
         "data": {
           "settings": {
             "theme": "system",
+            "amoledDark": false,
             "userName": "",
             "autoLocalBackup": false,
             "monthStartDay": 1,
@@ -53154,6 +53157,7 @@
         "data": {
           "settings": {
             "theme": "system",
+            "amoledDark": false,
             "userName": "",
             "autoLocalBackup": false,
             "monthStartDay": 1,
@@ -53386,6 +53390,7 @@
         "data": {
           "settings": {
             "theme": "system",
+            "amoledDark": false,
             "userName": "",
             "autoLocalBackup": false,
             "monthStartDay": 28,
@@ -53619,6 +53624,7 @@
         "data": {
           "settings": {
             "theme": "light",
+            "amoledDark": false,
             "userName": "",
             "autoLocalBackup": false,
             "monthStartDay": 15,
@@ -53852,6 +53858,7 @@
         "data": {
           "settings": {
             "theme": "system",
+            "amoledDark": false,
             "userName": "",
             "autoLocalBackup": false,
             "monthStartDay": 1,
@@ -54083,6 +54090,7 @@
         "data": {
           "settings": {
             "theme": "system",
+            "amoledDark": false,
             "userName": "  Asha ",
             "autoLocalBackup": false,
             "monthStartDay": 1,
@@ -54340,6 +54348,7 @@
           ],
           "settings": {
             "theme": "dark",
+            "amoledDark": false,
             "userName": "",
             "autoLocalBackup": false,
             "monthStartDay": 1,
@@ -62281,6 +62290,7 @@
           "loanPrepayments": [],
           "settings": {
             "theme": "dark",
+            "amoledDark": false,
             "userName": "",
             "autoLocalBackup": false,
             "monthStartDay": 1,
@@ -63894,6 +63904,7 @@
           "loanPrepayments": [],
           "settings": {
             "theme": "system",
+            "amoledDark": false,
             "userName": "",
             "autoLocalBackup": false,
             "monthStartDay": 1,
@@ -65040,6 +65051,7 @@
           "loanPrepayments": [],
           "settings": {
             "theme": "system",
+            "amoledDark": false,
             "userName": "",
             "autoLocalBackup": false,
             "monthStartDay": 1,

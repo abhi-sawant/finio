@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { User, Palette, CalendarRange } from 'lucide-react';
+import { User, Palette, CalendarRange, Moon } from 'lucide-react';
 import { useFinanceStore } from '@/store/useFinanceStore';
 import { useAuthStore } from '@/store/useAuthStore';
 import { api } from '@/services/api';
 import { Input } from '@/components/ui/input';
+import { SwitchField } from '@/components/ui/switch';
 import {
   Dialog,
   DialogContent,
@@ -120,6 +121,14 @@ export function ProfileSection() {
             </SelectContent>
           </Select>
         </div>
+        <SwitchField
+          className="p-4"
+          icon={<Moon size={18} className="text-muted-foreground shrink-0" />}
+          title="Use AMOLED colors in dark mode"
+          description="True black background that switches pixels off on OLED screens"
+          checked={settings.amoledDark}
+          onCheckedChange={(amoledDark) => updateSettings({ amoledDark })}
+        />
         <div className="flex items-center justify-between gap-3 p-4">
           <div className="flex min-w-0 flex-1 items-center gap-3">
             <CalendarRange size={18} className="text-muted-foreground shrink-0" />

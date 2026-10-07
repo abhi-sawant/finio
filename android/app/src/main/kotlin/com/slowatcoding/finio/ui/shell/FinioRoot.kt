@@ -64,7 +64,7 @@ fun FinioRoot(container: AppContainer) {
         LocalFinioNavigator provides navigator,
         LocalShellState provides shellState,
     ) {
-        FinioTheme(finance.settings.theme) {
+        FinioTheme(finance.settings.theme, amoled = finance.settings.amoledDark) {
             SystemBarsEffect(dark = finance.settings.theme.isDark())
             SecureWindowEffect(enabled = lock.config?.enabled == true)
             ConfirmHost {

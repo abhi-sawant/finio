@@ -31,18 +31,20 @@ fun Theme.isDark(): Boolean = when (this) {
  * Material 3 [ColorScheme], so any stock M3 component that slips in still wears the world.
  */
 @Composable
-fun FinioTheme(theme: Theme = Theme.System, content: @Composable () -> Unit) {
-    FinioTheme(dark = theme.isDark(), content = content)
+fun FinioTheme(theme: Theme = Theme.System, amoled: Boolean = false, content: @Composable () -> Unit) {
+    FinioTheme(dark = theme.isDark(), amoled = amoled, content = content)
 }
 
+/** [amoled] only takes effect while [dark] is true, like `.dark.amoled` in the stylesheet. */
 @Composable
-fun FinioTheme(dark: Boolean, content: @Composable () -> Unit) {
-    val colors = if (dark) DarkFinioColors else LightFinioColors
-    val brushes = if (dark) DarkFinioBrushes else LightFinioBrushes
-    val shadows = if (dark) DarkFinioShadows else LightFinioShadows
-    val scheme = remember(dark) { colors.toColorScheme() }
+fun FinioTheme(dark: Boolean, amoled: Boolean = false, content: @Composable () -> Unit) {
+    val black = dark && amoled
+    val colors = if (black) AmoledFinioColors else if (dark) DarkFinioColors else LightFinioColors
+    val brushes = if (black) AmoledFinioBrushes else if (dark) DarkFinioBrushes else LightFinioBrushes
+    val shadows = if (black) AmoledFinioShadows else if (dark) DarkFinioShadows else LightFinioShadows
+    val scheme = remember(colors) { colors.toColorScheme() }
     // `::selection { background: color-mix(in srgb, var(--primary) 28%, transparent) }`.
-    val selection = remember(dark) { TextSelectionColors(colors.primary, colors.primary.mix(0.28f)) }
+    val selection = remember(colors) { TextSelectionColors(colors.primary, colors.primary.mix(0.28f)) }
 
     MaterialTheme(colorScheme = scheme, typography = MaterialTypography, shapes = MaterialShapes) {
         CompositionLocalProvider(

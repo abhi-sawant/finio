@@ -263,6 +263,58 @@
   color-scheme: dark;
 }
 
+/* AMOLED dark — "the note under a UV lamp, with the room lights off".
+   Applies only when <html class="dark amoled">. Same hues as .dark; the field is true #000,
+   surfaces lift off it by a hairline and a barely-there lavender wash instead of by shadow
+   (a black shadow is invisible on black). */
+.dark.amoled {
+  --background: #000000;
+  --card: #0b0a14;
+  --popover: #0e0c1b;
+  --secondary: #15122a;
+  --muted: #15122a;
+  --muted-foreground: #a49fd2;
+  --accent: #1e1951;
+  --border: rgb(238 234 255 / 0.12);
+  --input: rgb(238 234 255 / 0.2);
+
+  --sidebar: rgb(0 0 0 / 0);
+  --sidebar-border: rgb(238 234 255 / 0.12);
+  --sidebar-accent: #1e1951;
+
+  --warning-band: #2a0c1e;
+
+  /* No paper gradient, no maroon glow: every pixel off unless it carries content. */
+  --paper: none;
+  --engraving: rgb(170 150 255 / 0.05);
+
+  --glass: rgb(185 173 255 / 0.045);
+  --glass-strong: rgb(0 0 0 / 0.86);
+  --glass-border: rgb(185 173 255 / 0.15);
+  --glass-highlight: rgb(185 173 255 / 0.08);
+
+  --grad-primary-soft: linear-gradient(135deg, #1b1650 0%, #120f38 100%);
+  --grad-success-soft: linear-gradient(135deg, #0a2b24 0%, #061a16 100%);
+  --grad-danger-soft: linear-gradient(135deg, #2f0d20 0%, #1d0714 100%);
+  --grad-surface: linear-gradient(135deg, #1a1550 0%, #0d0b26 52%, #05120f 100%);
+
+  --scrim: rgb(0 0 0 / 0.72);
+  --shadow-card: 0 0 0 0 transparent;
+  --shadow-float: 0 0 0 1px rgb(185 173 255 / 0.14), 0 24px 48px -20px rgb(0 0 0 / 1);
+
+  /* Denomination notes: same hue and ink, but each gradient sinks to near-black on its far corner. */
+  --note-100: linear-gradient(135deg, #2e2470 0%, #0c0a22 100%);
+  --note-500: linear-gradient(135deg, #2e3324 0%, #0b0d08 100%);
+  --note-2000: linear-gradient(135deg, #561239 0%, #190610 100%);
+  --note-200: linear-gradient(135deg, #4c3a08 0%, #130e02 100%);
+  --note-10: linear-gradient(135deg, #3b2312 0%, #100905 100%);
+  --note-50: linear-gradient(135deg, #0c3a45 0%, #031014 100%);
+  --note-20: linear-gradient(135deg, #323d0b 0%, #0b0f03 100%);
+}
+.dark.amoled body::before {
+  opacity: 0.8;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

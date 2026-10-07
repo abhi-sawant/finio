@@ -214,6 +214,8 @@ data class RecurringTransaction(
 @Serializable
 data class Settings(
     val theme: Theme = Theme.System,
+    /** True-black dark mode for AMOLED panels; inert unless the resolved theme is dark. */
+    val amoledDark: Boolean = false,
     val userName: String = "",
     val autoLocalBackup: Boolean = false,
     val monthStartDay: Int = 1,

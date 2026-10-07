@@ -13,6 +13,8 @@ import androidx.compose.ui.graphics.Color
 @Immutable
 data class FinioColors(
     val isDark: Boolean,
+    /** True-black dark mode (`.dark.amoled`); always paired with `isDark = true`. */
+    val isAmoled: Boolean = false,
     val background: Color,
     val foreground: Color,
     val card: Color,
@@ -163,6 +165,36 @@ val DarkFinioColors = FinioColors(
     glassHighlight = rgba(255, 255, 255, 0.12f),
     shadowTint = Color(0, 0, 0),
     scrim = rgba(6, 4, 24, 0.6f),
+)
+
+/**
+ * `.dark.amoled` in index.css: the dark palette on a true-black field, so an AMOLED panel can
+ * switch those pixels off. Surfaces lift off black by a hairline and a faint lavender wash instead
+ * of by shadow (a black shadow is invisible on black).
+ */
+val AmoledFinioColors = DarkFinioColors.copy(
+    isAmoled = true,
+    background = Color(0xFF000000),
+    card = Color(0xFF0B0A14),
+    cardForeground = Color(0xFFEEEAFF),
+    popover = Color(0xFF0E0C1B),
+    secondary = Color(0xFF15122A),
+    muted = Color(0xFF15122A),
+    mutedForeground = Color(0xFFA49FD2),
+    accent = Color(0xFF1E1951),
+    border = rgba(238, 234, 255, 0.12f),
+    input = rgba(238, 234, 255, 0.2f),
+    sidebar = rgba(0, 0, 0, 0f),
+    sidebarBorder = rgba(238, 234, 255, 0.12f),
+    sidebarAccent = Color(0xFF1E1951),
+    warningBand = Color(0xFF2A0C1E),
+    // 0.05 in the stylesheet, then `body::before { opacity: .8 }`.
+    engraving = rgba(170, 150, 255, 0.04f),
+    glass = rgba(185, 173, 255, 0.045f),
+    glassStrong = rgba(0, 0, 0, 0.86f),
+    glassBorder = rgba(185, 173, 255, 0.15f),
+    glassHighlight = rgba(185, 173, 255, 0.08f),
+    scrim = rgba(0, 0, 0, 0.72f),
 )
 
 val LocalFinioColors = staticCompositionLocalOf { LightFinioColors }

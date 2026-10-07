@@ -78,6 +78,7 @@ val defaultLabels: List<Label> = listOf(
  */
 val defaultSettings: Settings = Settings(
     theme = Theme.System,
+    amoledDark = false,
     // Deliberately blank: the first-run wizard asks for a name.
     userName = "",
     autoLocalBackup = false,

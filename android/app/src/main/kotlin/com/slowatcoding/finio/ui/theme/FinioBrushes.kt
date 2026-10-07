@@ -4,6 +4,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 
 /**
  * The `--grad-*`, `--paper`, `--coin`, `--register` and `--thread` gradients from index.css, per
@@ -109,6 +110,18 @@ val DarkFinioBrushes = FinioBrushes(
     coin = CoinBrush,
     register = register(0xFF8F7DFF, 0xFFBDB1FF),
     thread = cssLinear(90f, listOf(hsl(150f, 0.65f, 0.52f), hsl(200f, 0.80f, 0.60f), hsl(255f, 0.85f, 0.75f))),
+)
+
+/** `.dark.amoled`: no paper gradient (and no maroon glow) — every pixel off unless it carries content. */
+val AmoledFinioBrushes = DarkFinioBrushes.copy(
+    gradPrimarySoft = two(135f, 0xFF1B1650, 0xFF120F38),
+    gradSuccessSoft = two(135f, 0xFF0A2B24, 0xFF061A16),
+    gradDangerSoft = two(135f, 0xFF2F0D20, 0xFF1D0714),
+    gradSurface = CssLinearGradient(
+        135f,
+        listOf(Stop(0f, Color(0xFF1A1550)), Stop(0.52f, Color(0xFF0D0B26)), Stop(1f, Color(0xFF05120F))),
+    ),
+    paper = SolidColor(Color.Transparent),
 )
 
 val LocalFinioBrushes = staticCompositionLocalOf { LightFinioBrushes }

@@ -332,6 +332,7 @@
       "args": [],
       "out": {
         "theme": "system",
+        "amoledDark": false,
         "userName": "",
         "autoLocalBackup": false,
         "monthStartDay": 1,

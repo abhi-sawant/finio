@@ -42,7 +42,7 @@ android/
 ├── core/  (pure Kotlin/JVM — no Android imports; every money rule, unit-tested against golden fixtures)
 │   └── com.slowatcoding.finio.core
 │       ├── model/      Model.kt (every domain type, wire names), FinioJson
-│       ├── store/      FinanceStore (all actions, atomic), Persistence (encode/decodePersisted, v1→v16
+│       ├── store/      FinanceStore (all actions, atomic), Persistence (encode/decodePersisted, v1→v17
 │       │               migrations), Balance, Recurring, AppLockState, AuthState, BackupCryptoState
 │       ├── calc/       Calculations, Analytics, Forecast, Insights, Merchants, NetWorth
 │       ├── period/     Period (financial months, monthStartDay), DateExtras
@@ -186,7 +186,7 @@ entry) — a screen that deletes its own entity just calls `nav.back()`.
 | PWA                                              | Android                                                                                     |
 | ------------------------------------------------ | ------------------------------------------------------------------------------------------- |
 | localStorage keys (`finio-storage`, `finio-lock`…) | One atomic JSON file each in `filesDir` (`JsonFileStore`, `StoreFiles`), `.bak` fallback       |
-| Zustand `persist` + `migrate`                    | `encodePersisted`/`decodePersisted` (same `{state, version}` envelope, v16) + debounced writer |
+| Zustand `persist` + `migrate`                    | `encodePersisted`/`decodePersisted` (same `{state, version}` envelope, v17) + debounced writer |
 | `useAutoLock` (visibilitychange/pagehide)        | `AppLifecycleWatcher` (ProcessLifecycleOwner) → `AppContainer.onBackground/onForeground`     |
 | Task-switcher snapshot of the lock screen        | `FLAG_SECURE` while the lock is enabled (`SecureWindowEffect`)                               |
 | WebAuthn platform authenticator                  | `BiometricPrompt` BIOMETRIC_STRONG (`BiometricUnlock`); flag stored in `webauthnCredentialId` |
