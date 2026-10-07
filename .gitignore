@@ -29,3 +29,21 @@ flow-docs/
 
 # Impeccable review captures (regenerated each review round)
 .impeccable/review/
+
+# Android (android/)
+android/.gradle/
+android/.kotlin/
+android/**/build/
+android/build/
+android/local.properties
+android/captures/
+*.iml
+*.jks
+*.keystore
+
+# Android release signing (never commit; back the keystore up somewhere safe)
+android/keystore.properties
+android/keystore/
+
+# Local release artifacts (uploaded to GitHub Releases, never committed)
+releases/

@@ -1,0 +1,2355 @@
+{
+  "module": "pinCrypto",
+  "tz": "Asia/Kolkata",
+  "cases": [
+    {
+      "fn": "constants",
+      "args": [],
+      "out": {
+        "PIN_HASH_ITERATIONS": 310000,
+        "PIN_SALT_BYTES": 16,
+        "PIN_HASH_BITS": 256,
+        "MIN_PIN_LENGTH": 4,
+        "MAX_PIN_LENGTH": 8,
+        "PIN_LENGTH_OPTIONS": [
+          4,
+          6
+        ]
+      }
+    },
+    {
+      "fn": "toBase64Url",
+      "args": [
+        []
+      ],
+      "out": ""
+    },
+    {
+      "fn": "toBase64Url",
+      "args": [
+        [
+          6
+        ]
+      ],
+      "out": "Bg"
+    },
+    {
+      "fn": "toBase64Url",
+      "args": [
+        [
+          17,
+          54
+        ]
+      ],
+      "out": "ETY"
+    },
+    {
+      "fn": "toBase64Url",
+      "args": [
+        [
+          28,
+          65,
+          102
+        ]
+      ],
+      "out": "HEFm"
+    },
+    {
+      "fn": "toBase64Url",
+      "args": [
+        [
+          39,
+          76,
+          113,
+          150
+        ]
+      ],
+      "out": "J0xxlg"
+    },
+    {
+      "fn": "toBase64Url",
+      "args": [
+        [
+          50,
+          87,
+          124,
+          161,
+          198
+        ]
+      ],
+      "out": "Mld8ocY"
+    },
+    {
+      "fn": "toBase64Url",
+      "args": [
+        [
+          160,
+          197,
+          234,
+          15,
+          52,
+          89,
+          126,
+          163,
+          200,
+          237,
+          18,
+          55,
+          92,
+          129,
+          166
+        ]
+      ],
+      "out": "oMXqDzRZfqPI7RI3XIGm"
+    },
+    {
+      "fn": "toBase64Url",
+      "args": [
+        [
+          171,
+          208,
+          245,
+          26,
+          63,
+          100,
+          137,
+          174,
+          211,
+          248,
+          29,
+          66,
+          103,
+          140,
+          177,
+          214
+        ]
+      ],
+      "out": "q9D1Gj9kia7T-B1CZ4yx1g"
+    },
+    {
+      "fn": "toBase64Url",
+      "args": [
+        [
+          182,
+          219,
+          0,
+          37,
+          74,
+          111,
+          148,
+          185,
+          222,
+          3,
+          40,
+          77,
+          114,
+          151,
+          188,
+          225,
+          6
+        ]
+      ],
+      "out": "ttsAJUpvlLneAyhNcpe84QY"
+    },
+    {
+      "fn": "toBase64Url",
+      "args": [
+        [
+          80,
+          117,
+          154,
+          191,
+          228,
+          9,
+          46,
+          83,
+          120,
+          157,
+          194,
+          231,
+          12,
+          49,
+          86,
+          123,
+          160,
+          197,
+          234,
+          15,
+          52,
+          89,
+          126,
+          163,
+          200,
+          237,
+          18,
+          55,
+          92,
+          129,
+          166
+        ]
+      ],
+      "out": "UHWav-QJLlN4ncLnDDFWe6DF6g80WX6jyO0SN1yBpg"
+    },
+    {
+      "fn": "toBase64Url",
+      "args": [
+        [
+          91,
+          128,
+          165,
+          202,
+          239,
+          20,
+          57,
+          94,
+          131,
+          168,
+          205,
+          242,
+          23,
+          60,
+          97,
+          134,
+          171,
+          208,
+          245,
+          26,
+          63,
+          100,
+          137,
+          174,
+          211,
+          248,
+          29,
+          66,
+          103,
+          140,
+          177,
+          214
+        ]
+      ],
+      "out": "W4Clyu8UOV6DqM3yFzxhhqvQ9Ro_ZImu0_gdQmeMsdY"
+    },
+    {
+      "fn": "toBase64Url",
+      "args": [
+        [
+          102,
+          139,
+          176,
+          213,
+          250,
+          31,
+          68,
+          105,
+          142,
+          179,
+          216,
+          253,
+          34,
+          71,
+          108,
+          145,
+          182,
+          219,
+          0,
+          37,
+          74,
+          111,
+          148,
+          185,
+          222,
+          3,
+          40,
+          77,
+          114,
+          151,
+          188,
+          225,
+          6
+        ]
+      ],
+      "out": "Zouw1fofRGmOs9j9IkdskbbbACVKb5S53gMoTXKXvOEG"
+    },
+    {
+      "fn": "toBase64Url",
+      "args": [
+        [
+          251,
+          255,
+          191,
+          254
+        ]
+      ],
+      "out": "-_-__g"
+    },
+    {
+      "fn": "toBase64Url",
+      "args": [
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "out": "AAAA"
+    },
+    {
+      "fn": "toBase64Url",
+      "args": [
+        [
+          255,
+          255,
+          255,
+          255
+        ]
+      ],
+      "out": "_____w"
+    },
+    {
+      "fn": "fromBase64Url",
+      "args": [
+        ""
+      ],
+      "out": []
+    },
+    {
+      "fn": "fromBase64Url",
+      "args": [
+        "AA"
+      ],
+      "out": [
+        0
+      ]
+    },
+    {
+      "fn": "fromBase64Url",
+      "args": [
+        "AAA"
+      ],
+      "out": [
+        0,
+        0
+      ]
+    },
+    {
+      "fn": "fromBase64Url",
+      "args": [
+        "AAAA"
+      ],
+      "out": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "fn": "fromBase64Url",
+      "args": [
+        "A"
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "fromBase64Url",
+      "args": [
+        "AAAAA"
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "fromBase64Url",
+      "args": [
+        "-_8"
+      ],
+      "out": [
+        251,
+        255
+      ]
+    },
+    {
+      "fn": "fromBase64Url",
+      "args": [
+        "-_-_"
+      ],
+      "out": [
+        251,
+        255,
+        191
+      ]
+    },
+    {
+      "fn": "fromBase64Url",
+      "args": [
+        "+/+/"
+      ],
+      "out": [
+        251,
+        255,
+        191
+      ]
+    },
+    {
+      "fn": "fromBase64Url",
+      "args": [
+        "AQID"
+      ],
+      "out": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "fn": "fromBase64Url",
+      "args": [
+        "AQI="
+      ],
+      "out": [
+        1,
+        2
+      ]
+    },
+    {
+      "fn": "fromBase64Url",
+      "args": [
+        "AQ=="
+      ],
+      "out": [
+        1
+      ]
+    },
+    {
+      "fn": "fromBase64Url",
+      "args": [
+        "AQ="
+      ],
+      "out": [
+        1
+      ]
+    },
+    {
+      "fn": "fromBase64Url",
+      "args": [
+        "A==="
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "fromBase64Url",
+      "args": [
+        "AQID="
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "fromBase64Url",
+      "args": [
+        "A=QI"
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "fromBase64Url",
+      "args": [
+        "AQ I D"
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "fromBase64Url",
+      "args": [
+        " AQID"
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "fromBase64Url",
+      "args": [
+        "AQ\nID"
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "fromBase64Url",
+      "args": [
+        "AQ\tI\fD\r"
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "fromBase64Url",
+      "args": [
+        "AQ ID"
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "fromBase64Url",
+      "args": [
+        "not-base64"
+      ],
+      "out": [
+        158,
+        139,
+        126,
+        109,
+        171,
+        30,
+        235
+      ]
+    },
+    {
+      "fn": "fromBase64Url",
+      "args": [
+        "???"
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "fromBase64Url",
+      "args": [
+        "abc$"
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "fromBase64Url",
+      "args": [
+        "ÿÿ"
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "fromBase64Url",
+      "args": [
+        "AB"
+      ],
+      "out": [
+        0
+      ]
+    },
+    {
+      "fn": "fromBase64Url",
+      "args": [
+        "AP"
+      ],
+      "out": [
+        0
+      ]
+    },
+    {
+      "fn": "fromBase64Url",
+      "args": [
+        "AAAAAAAAAAAAAAAAAAAAAA"
+      ],
+      "out": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "fn": "fromBase64Url",
+      "args": [
+        "q83vASNFZ4mrze8BI0VniQ"
+      ],
+      "out": [
+        171,
+        205,
+        239,
+        1,
+        35,
+        69,
+        103,
+        137,
+        171,
+        205,
+        239,
+        1,
+        35,
+        69,
+        103,
+        137
+      ]
+    },
+    {
+      "fn": "isValidPin",
+      "args": [
+        ""
+      ],
+      "out": false
+    },
+    {
+      "fn": "isValidPin",
+      "args": [
+        "1"
+      ],
+      "out": false
+    },
+    {
+      "fn": "isValidPin",
+      "args": [
+        "123"
+      ],
+      "out": false
+    },
+    {
+      "fn": "isValidPin",
+      "args": [
+        "0000"
+      ],
+      "out": true
+    },
+    {
+      "fn": "isValidPin",
+      "args": [
+        "1234"
+      ],
+      "out": true
+    },
+    {
+      "fn": "isValidPin",
+      "args": [
+        "12345"
+      ],
+      "out": true
+    },
+    {
+      "fn": "isValidPin",
+      "args": [
+        "123456"
+      ],
+      "out": true
+    },
+    {
+      "fn": "isValidPin",
+      "args": [
+        "1234567"
+      ],
+      "out": true
+    },
+    {
+      "fn": "isValidPin",
+      "args": [
+        "12345678"
+      ],
+      "out": true
+    },
+    {
+      "fn": "isValidPin",
+      "args": [
+        "123456789"
+      ],
+      "out": false
+    },
+    {
+      "fn": "isValidPin",
+      "args": [
+        "12a4"
+      ],
+      "out": false
+    },
+    {
+      "fn": "isValidPin",
+      "args": [
+        "1234 "
+      ],
+      "out": false
+    },
+    {
+      "fn": "isValidPin",
+      "args": [
+        " 1234"
+      ],
+      "out": false
+    },
+    {
+      "fn": "isValidPin",
+      "args": [
+        "１２３４"
+      ],
+      "out": false
+    },
+    {
+      "fn": "isValidPin",
+      "args": [
+        "١٢٣٤"
+      ],
+      "out": false
+    },
+    {
+      "fn": "isValidPin",
+      "args": [
+        "12.4"
+      ],
+      "out": false
+    },
+    {
+      "fn": "isValidPin",
+      "args": [
+        "-123"
+      ],
+      "out": false
+    },
+    {
+      "fn": "isValidPin",
+      "args": [
+        "😀😀"
+      ],
+      "out": false
+    },
+    {
+      "fn": "isValidPin",
+      "args": [
+        "😀😀😀😀"
+      ],
+      "out": false
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "0000",
+        "AAAAAAAAAAAAAAAAAAAAAA",
+        1
+      ],
+      "out": "uYcY58UIs08-I52Pix_w3CN_s0W2p69_rfB-6V6RqsY"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "0000",
+        "AAAAAAAAAAAAAAAAAAAAAA",
+        1000
+      ],
+      "out": "c7vo1LY2CGeAI9sn__I3hq2R_66pU9bK3byBmvKxcZE"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "1234",
+        "AAAAAAAAAAAAAAAAAAAAAA",
+        1
+      ],
+      "out": "NQrszWp4sV1HZX5BmlPGUqeuZ8Jjl5CA_L30rz3NEOw"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "1234",
+        "AAAAAAAAAAAAAAAAAAAAAA",
+        1000
+      ],
+      "out": "WF9XYD3HVhc6DsfLiZj6vRAw6dSsZScye2hcHU_yKlw"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "4321",
+        "AAAAAAAAAAAAAAAAAAAAAA",
+        1
+      ],
+      "out": "hCSPsvfjoGckA5PLwiNlXVT2uMAw-c9qdCtgwLIWMOI"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "4321",
+        "AAAAAAAAAAAAAAAAAAAAAA",
+        1000
+      ],
+      "out": "fKv71A8kzfrVNnVW1lr61-zou3TjwV57LRP18X6Kx7k"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "12345678",
+        "AAAAAAAAAAAAAAAAAAAAAA",
+        1
+      ],
+      "out": "k9ryv2TSWNNSV7Cl52m3fgQ5tS3ZqiN6FR7K9tX7Z68"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "12345678",
+        "AAAAAAAAAAAAAAAAAAAAAA",
+        1000
+      ],
+      "out": "6946gsH9vWzJp49W0zIwoR-LO-YLEYJj0Hmx2AkGXhI"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "",
+        "AAAAAAAAAAAAAAAAAAAAAA",
+        1
+      ],
+      "out": "yMLvk2JPU_dGrVZkRB-eBPHd5shPjwoGaJ2fTvYewb0"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "",
+        "AAAAAAAAAAAAAAAAAAAAAA",
+        1000
+      ],
+      "out": "XZxuf925AX_BBp3qzXagkIsq8lTpYFt-mP77tz0u8CU"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "ñ",
+        "AAAAAAAAAAAAAAAAAAAAAA",
+        1
+      ],
+      "out": "u41P24d3WShpNI_uJ6kLpOpAHXZPLfPIU3RRgYdUqWI"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "ñ",
+        "AAAAAAAAAAAAAAAAAAAAAA",
+        1000
+      ],
+      "out": "wQA8NINheilm0EGzvQozW-NDWbGhAnpEdjgWMdLAHTY"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "\ud800",
+        "AAAAAAAAAAAAAAAAAAAAAA",
+        1
+      ],
+      "out": "v0yrRdUPStYb79Hr-6MdjdjIbrtnffqi_ArGrxjf4Qg"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "\ud800",
+        "AAAAAAAAAAAAAAAAAAAAAA",
+        1000
+      ],
+      "out": "Ht6jX_rc0fER0nUDSBkOm9YFiYXeViVTDXK1fAjYqfs"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "pässwörd 🎉",
+        "AAAAAAAAAAAAAAAAAAAAAA",
+        1
+      ],
+      "out": "dPSjEsHiZlsXL14ax2AJUX9uGVtWRPYMsCKcKLsJh0s"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "pässwörd 🎉",
+        "AAAAAAAAAAAAAAAAAAAAAA",
+        1000
+      ],
+      "out": "ZEa_5ymOGvWQIZC93epIW7kdIlPzZJ7GueUeonRZL7I"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "１２３４",
+        "AAAAAAAAAAAAAAAAAAAAAA",
+        1
+      ],
+      "out": "TMi80o25n-1qK-xl3QW0ly3wj7ZemR8Y5lKSFVARPOI"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "１２３４",
+        "AAAAAAAAAAAAAAAAAAAAAA",
+        1000
+      ],
+      "out": "Vjo12J8h4Nsu1u0ESlfB2yOv8GdB9LhRENsSec8isWU"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "0000",
+        "q83vASNFZ4mrze8BI0VniQ",
+        1
+      ],
+      "out": "Jt-sNsSUfclnFjYZYJWfkWVpv8tt74MOrVzAq0P-7-g"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "0000",
+        "q83vASNFZ4mrze8BI0VniQ",
+        1000
+      ],
+      "out": "WB2V-CnQS_MdQxxuPz0uPFRFh6l0ucFnnvDxizh2y5U"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "1234",
+        "q83vASNFZ4mrze8BI0VniQ",
+        1
+      ],
+      "out": "mlfTeuJxJFzGHfhoiTTVSFDfyLSXhcEAf0ykLSWNOgg"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "1234",
+        "q83vASNFZ4mrze8BI0VniQ",
+        1000
+      ],
+      "out": "xhs1yFPg5oB2SfqAJ7I15d_Iw4WAzbIwQ6li0pNCJFQ"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "4321",
+        "q83vASNFZ4mrze8BI0VniQ",
+        1
+      ],
+      "out": "nEIduS88PZH8T03p4MqusRmXEOBrIW-nHVZ01YP9q3A"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "4321",
+        "q83vASNFZ4mrze8BI0VniQ",
+        1000
+      ],
+      "out": "-lDqCVeeU13EOZAJib5lJ4nqNpGLyWFXDjrAj2rKeVU"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "12345678",
+        "q83vASNFZ4mrze8BI0VniQ",
+        1
+      ],
+      "out": "vOSZM8C71OhJsIBov5ax9hFzjhTtoiFfTezbNvfpvqk"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "12345678",
+        "q83vASNFZ4mrze8BI0VniQ",
+        1000
+      ],
+      "out": "x5iRmlMLD03a3J6M2TTmRyJKVb2UR0IsD5CwnQmo8G8"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "",
+        "q83vASNFZ4mrze8BI0VniQ",
+        1
+      ],
+      "out": "5u5RpyOd2ZsFoXjP66bpHLgQ-05Lxn526Qiy6IBe7dw"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "",
+        "q83vASNFZ4mrze8BI0VniQ",
+        1000
+      ],
+      "out": "8XUq_PthDvbaBNb4MxwoEI_MQX-veAmatZxQQ4BgdPo"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "ñ",
+        "q83vASNFZ4mrze8BI0VniQ",
+        1
+      ],
+      "out": "Wag4Agr2WCo2fQFION2Q70K282QMXpOMy3YH9P9ThIo"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "ñ",
+        "q83vASNFZ4mrze8BI0VniQ",
+        1000
+      ],
+      "out": "euOa0EbQuOi54pT32rOgIyBjb1v69y_0KtYdAfGLkhw"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "\ud800",
+        "q83vASNFZ4mrze8BI0VniQ",
+        1
+      ],
+      "out": "4BGOgD-E3aVAr7r1Wh__ex0jpYSfaNB_KKSs9oxUOK0"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "\ud800",
+        "q83vASNFZ4mrze8BI0VniQ",
+        1000
+      ],
+      "out": "mGZI3rX4HuwVyRIPBbbSg_7kyz2OeMwf5Tik2XJrd4Y"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "pässwörd 🎉",
+        "q83vASNFZ4mrze8BI0VniQ",
+        1
+      ],
+      "out": "slnmAJfakt-eMrvbXrbxKHkh-ZgpXmcPPCJcRwpsn28"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "pässwörd 🎉",
+        "q83vASNFZ4mrze8BI0VniQ",
+        1000
+      ],
+      "out": "6iYEry3yL-HujIwza3IJJcEJTGdRftXFIdziDL-ih1k"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "１２３４",
+        "q83vASNFZ4mrze8BI0VniQ",
+        1
+      ],
+      "out": "3KZ5KY3pM1vy1rNEDTAI_fOMP4il25iL5A-18kUleu4"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "１２３４",
+        "q83vASNFZ4mrze8BI0VniQ",
+        1000
+      ],
+      "out": "XaVCXUcISS3lHvxi_XDHK3aoVQMtvjzdttAT7GiDILw"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "0000",
+        "-_-_-_-_-_-_-_-_-_-_-w",
+        1
+      ],
+      "out": "L9T1T3i4G589nIXcyfrzTro5O3i6m_A1sTjkXDBRYW0"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "0000",
+        "-_-_-_-_-_-_-_-_-_-_-w",
+        1000
+      ],
+      "out": "KFXAj8MwyUUf52tVGvqwGwh56C1okWEw54qg8YJ7FfE"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "1234",
+        "-_-_-_-_-_-_-_-_-_-_-w",
+        1
+      ],
+      "out": "64RFRz_Tw0mop3S_9MFMDItI-2St7jg-jjwXktpczHM"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "1234",
+        "-_-_-_-_-_-_-_-_-_-_-w",
+        1000
+      ],
+      "out": "bWvPUUAzrYKYQsq0e7hEy1L8yxFxCiRVizO2IIWADC0"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "4321",
+        "-_-_-_-_-_-_-_-_-_-_-w",
+        1
+      ],
+      "out": "nE-vUT1p-RtVhWPaJh_KNDlTigBkmflMDiuOx_V7Q6k"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "4321",
+        "-_-_-_-_-_-_-_-_-_-_-w",
+        1000
+      ],
+      "out": "-GcCfeCkRppVZOFLM_7eLQDFr6S9UpZV77rbf4IgZp8"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "12345678",
+        "-_-_-_-_-_-_-_-_-_-_-w",
+        1
+      ],
+      "out": "CLSlCbKpM2mEXYSiIqRba1LADFkYAf2UewCv9C4F4aY"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "12345678",
+        "-_-_-_-_-_-_-_-_-_-_-w",
+        1000
+      ],
+      "out": "AIky4V-kHDCO20-ghHaV-OTEsDczs1fw5gTmpGxK1AQ"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "",
+        "-_-_-_-_-_-_-_-_-_-_-w",
+        1
+      ],
+      "out": "paErccV3R-hNlZV-9zDzUsT0W_IKUwYLh8xGZgckQI0"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "",
+        "-_-_-_-_-_-_-_-_-_-_-w",
+        1000
+      ],
+      "out": "LAQJiDEVFWlf5FnvAZsJS3rNl6M8ZshV3ejbPVCPuy0"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "ñ",
+        "-_-_-_-_-_-_-_-_-_-_-w",
+        1
+      ],
+      "out": "a8xTwlc2BsMdMEVOz9W89VVSX9o-KgCGoiZRRDwJpAo"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "ñ",
+        "-_-_-_-_-_-_-_-_-_-_-w",
+        1000
+      ],
+      "out": "aHAdjfTG98Eifu7WWgO7tOyc0_puUVA5e2nnmHVF1fk"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "\ud800",
+        "-_-_-_-_-_-_-_-_-_-_-w",
+        1
+      ],
+      "out": "3tFNh8K4kKMBF_NTmbf5EJzQybhjNTlK67esNCzf3p4"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "\ud800",
+        "-_-_-_-_-_-_-_-_-_-_-w",
+        1000
+      ],
+      "out": "HTnJ6NoqFLP0f0gKHl_01qO_fFUDpGCvlg9nutTS840"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "pässwörd 🎉",
+        "-_-_-_-_-_-_-_-_-_-_-w",
+        1
+      ],
+      "out": "Vl14Ep5rloNwyn17k0TJLCGNoz3gez3CgrZ3Bq5NDQg"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "pässwörd 🎉",
+        "-_-_-_-_-_-_-_-_-_-_-w",
+        1000
+      ],
+      "out": "7RVV8mXcRasIxM1cUNa_oBwnAEgc9ZfqdwyvHTpgnsY"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "１２３４",
+        "-_-_-_-_-_-_-_-_-_-_-w",
+        1
+      ],
+      "out": "5b0vpB9dwcnz9FbBjIZBXG-A3NhNAeC-AeQTfaXQuAs"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "１２３４",
+        "-_-_-_-_-_-_-_-_-_-_-w",
+        1000
+      ],
+      "out": "6Euvj042i6grSctKbzf8wJeKKtMQSHbweQBOMNnZRYI"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "0000",
+        "c2FsdA",
+        1
+      ],
+      "out": "vAeYWl-il7BODIIDacuBx-v_2y3ADitCX2gqC0kVGxk"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "0000",
+        "c2FsdA",
+        1000
+      ],
+      "out": "7T9vGprce5PV7Kb_VCNaBx7nwFSflEob5G_k5SHGytg"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "1234",
+        "c2FsdA",
+        1
+      ],
+      "out": "0Lw6Xl-wbzy4ksdB_r9Yt9QNIueeYBJeKbwOTzVLqEI"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "1234",
+        "c2FsdA",
+        1000
+      ],
+      "out": "_vKS0jH25vXnh7ItsSiw5Q0uddDD1_KYnnf3ICZGcXs"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "4321",
+        "c2FsdA",
+        1
+      ],
+      "out": "TvqavPn_yRnlTf1UR4-BXDqBNbMIz87-1m6Oe2SjUko"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "4321",
+        "c2FsdA",
+        1000
+      ],
+      "out": "8WZ-kAy7pfVIn32Wayl_q8n9Bmmx7T5RjuQhgzz10A0"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "12345678",
+        "c2FsdA",
+        1
+      ],
+      "out": "qkL2NlLmtr62GLKledQVNtC5dV5Sg2LAiQOiaPKdlew"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "12345678",
+        "c2FsdA",
+        1000
+      ],
+      "out": "i5wpR15flW4OAXGGvYYK7l1MwUSppuwVG8sggeQtUJU"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "",
+        "c2FsdA",
+        1
+      ],
+      "out": "8TXCeZO6-Ydzxc20ClcGzmo0XN5hsACmeFhlDNajJNc"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "",
+        "c2FsdA",
+        1000
+      ],
+      "out": "lPtWrz6iLl0-0bBUCFsTbKMBt12LQGyALEiUefJzh8Y"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "ñ",
+        "c2FsdA",
+        1
+      ],
+      "out": "bh904PcGpja1kBG7V482TyS4u-R1qRmNhYNoJ_goOis"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "ñ",
+        "c2FsdA",
+        1000
+      ],
+      "out": "0h2nnr8tFPLngj2Ohkk-ItKE0Ox4co3AsMN3I8H-DRQ"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "\ud800",
+        "c2FsdA",
+        1
+      ],
+      "out": "axdi8nCU1A79j59C3c3knH7UiQqFO0NFmhzh4r-rrRM"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "\ud800",
+        "c2FsdA",
+        1000
+      ],
+      "out": "KEaC49KY8bGVl6TDY_rG5rzzlAHpfbd89qQukOBJ6C4"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "pässwörd 🎉",
+        "c2FsdA",
+        1
+      ],
+      "out": "2iExFnROTeo7x673JdFqVZsEnXgb3vI-J6of1TcIplE"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "pässwörd 🎉",
+        "c2FsdA",
+        1000
+      ],
+      "out": "0Wo61Ce9ISnDyPHxyg_qfEAi6RPPcQCgES1XrNtsqRU"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "１２３４",
+        "c2FsdA",
+        1
+      ],
+      "out": "QYbRT-Lsh3UepAljyFOnmKyjtlR30knFTtHvPbMGjok"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "１２３４",
+        "c2FsdA",
+        1000
+      ],
+      "out": "nRnvEL-mHp2KN61YvNXZh_gOLCQe5ZpnmZeJXJLcCJY"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "0000",
+        "",
+        1
+      ],
+      "out": "MbNIa42Bm-OvGuC6f2-si-NXA00L8f5WLrsPq1EJLQw"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "0000",
+        "",
+        1000
+      ],
+      "out": "qCtDWCiCgjg5BUjJz_Nngo7-zh3cY4n1BPur-jV7nzQ"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "1234",
+        "",
+        1
+      ],
+      "out": "Km6D78OdGH_As1olda5wXEHVqQNK2FS0v3n_v8x9WK8"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "1234",
+        "",
+        1000
+      ],
+      "out": "FG9so-8uXktUtkivk4UI_E-Hf72lk7kHy67G9XE_RJo"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "4321",
+        "",
+        1
+      ],
+      "out": "D-BkvcdzNcq_X21455cOvOgY2gKp9XOA_L0wnKLvlYk"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "4321",
+        "",
+        1000
+      ],
+      "out": "LlXVRHGjnMtxXOIuejjAgDSrhlXFi9toaNwR27RPgtY"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "12345678",
+        "",
+        1
+      ],
+      "out": "z8wjZuSh3h6DPqdnZvxipvCnDhq1Q9DhH_9O8wNDa60"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "12345678",
+        "",
+        1000
+      ],
+      "out": "jZs-MO0sZ4pYGi1Aeke0BeCaQhPuu6D7-S-6ssyRd1Q"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "",
+        "",
+        1
+      ],
+      "out": "984LZT0tcqQQjPWr6RL_3Xd2Ftu7J6cOggTzri0Pb60"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "",
+        "",
+        1000
+      ],
+      "out": "T8WKIcEAzhg1uPmZHXOLVpZdFLJOF2H73_xprF4LZno"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "ñ",
+        "",
+        1
+      ],
+      "out": "DhMVoG0zPZfYslcBSIplyZrt8Lhep2UcUy82GIQXyZY"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "ñ",
+        "",
+        1000
+      ],
+      "out": "rqoIjgrYcBGoO1Q8aA_qbL-nxGN0d942jCIduiBu2YQ"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "\ud800",
+        "",
+        1
+      ],
+      "out": "BiETkyLO9jOB10zHs8PyR1B8K3mu5LZY4Jmh5E9hu94"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "\ud800",
+        "",
+        1000
+      ],
+      "out": "sdemIAeW1Tke5-TA0CnzCLzDfPnkNyHZdALU4Q1nmnc"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "pässwörd 🎉",
+        "",
+        1
+      ],
+      "out": "eaICun4xqv2DAWOf4RvfS6D5bI9FCUtdhJZ_Fa-L2Jo"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "pässwörd 🎉",
+        "",
+        1000
+      ],
+      "out": "RWSdnnrmWGo856c8MSU6BNSOaBZLJVTdE_XslJtKuJc"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "１２３４",
+        "",
+        1
+      ],
+      "out": "PLTqdK2XV1eHwq6MwgmCJPxziRJBhw0-PQ-T6qDxiTk"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "１２３４",
+        "",
+        1000
+      ],
+      "out": "CmVDrzsD75-ZDWyRY7f44xRljV9sOHse5mhAlDH6a-Q"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "0000",
+        "AQ ID",
+        1
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "0000",
+        "AQ ID",
+        1000
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "1234",
+        "AQ ID",
+        1
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "1234",
+        "AQ ID",
+        1000
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "4321",
+        "AQ ID",
+        1
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "4321",
+        "AQ ID",
+        1000
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "12345678",
+        "AQ ID",
+        1
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "12345678",
+        "AQ ID",
+        1000
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "",
+        "AQ ID",
+        1
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "",
+        "AQ ID",
+        1000
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "ñ",
+        "AQ ID",
+        1
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "ñ",
+        "AQ ID",
+        1000
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "\ud800",
+        "AQ ID",
+        1
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "\ud800",
+        "AQ ID",
+        1000
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "pässwörd 🎉",
+        "AQ ID",
+        1
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "pässwörd 🎉",
+        "AQ ID",
+        1000
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "１２３４",
+        "AQ ID",
+        1
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "１２３４",
+        "AQ ID",
+        1000
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "0000",
+        "???",
+        1
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "0000",
+        "???",
+        1000
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "1234",
+        "???",
+        1
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "1234",
+        "???",
+        1000
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "4321",
+        "???",
+        1
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "4321",
+        "???",
+        1000
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "12345678",
+        "???",
+        1
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "12345678",
+        "???",
+        1000
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "",
+        "???",
+        1
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "",
+        "???",
+        1000
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "ñ",
+        "???",
+        1
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "ñ",
+        "???",
+        1000
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "\ud800",
+        "???",
+        1
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "\ud800",
+        "???",
+        1000
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "pässwörd 🎉",
+        "???",
+        1
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "pässwörd 🎉",
+        "???",
+        1000
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "１２３４",
+        "???",
+        1
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "１２３４",
+        "???",
+        1000
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "1234",
+        "AAAAAAAAAAAAAAAAAAAAAA",
+        1001
+      ],
+      "out": "CkC9Gc7avuLNGqClDc6moC-4uieFoTqsudvO_sFlPDc"
+    },
+    {
+      "fn": "derivePinHash",
+      "args": [
+        "1234",
+        "AAAAAAAAAAAAAAAAAAAAAA",
+        0
+      ],
+      "out": {
+        "threw": true
+      }
+    },
+    {
+      "fn": "derivePinHash",
+      "name": "default 310000",
+      "args": [
+        "1234",
+        "q83vASNFZ4mrze8BI0VniQ",
+        null
+      ],
+      "out": "bIars8oIT4T_sL6LtjATOAbG9Ii4teZEJOrEcb2pa7g"
+    },
+    {
+      "fn": "derivePinHash",
+      "name": "default 310000",
+      "args": [
+        "000000",
+        "AAAAAAAAAAAAAAAAAAAAAA",
+        null
+      ],
+      "out": "aqDvtPGutesE_tZoZP9MMJZxl2D6Zl6bx-njhg2CEjk"
+    },
+    {
+      "fn": "timingSafeEqualB64",
+      "args": [
+        "AQIDBA",
+        "AQIDBA"
+      ],
+      "out": true
+    },
+    {
+      "fn": "timingSafeEqualB64",
+      "args": [
+        "AQIDBA",
+        "AQIDBQ"
+      ],
+      "out": false
+    },
+    {
+      "fn": "timingSafeEqualB64",
+      "args": [
+        "AQI",
+        "AQ"
+      ],
+      "out": false
+    },
+    {
+      "fn": "timingSafeEqualB64",
+      "args": [
+        "",
+        ""
+      ],
+      "out": true
+    },
+    {
+      "fn": "timingSafeEqualB64",
+      "args": [
+        "AQID",
+        "AQI D"
+      ],
+      "out": false
+    },
+    {
+      "fn": "timingSafeEqualB64",
+      "args": [
+        "AQID",
+        "AQID="
+      ],
+      "out": false
+    },
+    {
+      "fn": "timingSafeEqualB64",
+      "args": [
+        "AQID",
+        "???"
+      ],
+      "out": false
+    },
+    {
+      "fn": "timingSafeEqualB64",
+      "args": [
+        "A",
+        "A"
+      ],
+      "out": false
+    },
+    {
+      "fn": "timingSafeEqualB64",
+      "args": [
+        "AB",
+        "AA"
+      ],
+      "out": true
+    },
+    {
+      "fn": "verifyPin",
+      "args": [
+        "1234",
+        {
+          "salt": "q83vASNFZ4mrze8BI0VniQ",
+          "hash": "xhs1yFPg5oB2SfqAJ7I15d_Iw4WAzbIwQ6li0pNCJFQ",
+          "iterations": 1000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "verifyPin",
+      "args": [
+        "4321",
+        {
+          "salt": "q83vASNFZ4mrze8BI0VniQ",
+          "hash": "xhs1yFPg5oB2SfqAJ7I15d_Iw4WAzbIwQ6li0pNCJFQ",
+          "iterations": 1000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "verifyPin",
+      "args": [
+        "12345",
+        {
+          "salt": "q83vASNFZ4mrze8BI0VniQ",
+          "hash": "xhs1yFPg5oB2SfqAJ7I15d_Iw4WAzbIwQ6li0pNCJFQ",
+          "iterations": 1000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "verifyPin",
+      "args": [
+        "1234",
+        {
+          "salt": "q83vASNFZ4mrze8BI0VniQ",
+          "hash": "xhs1yFPg5oB2SfqAJ7I15d_Iw4WAzbIwQ6li0pNCJFQ",
+          "iterations": 2000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "verifyPin",
+      "args": [
+        "4321",
+        {
+          "salt": "q83vASNFZ4mrze8BI0VniQ",
+          "hash": "xhs1yFPg5oB2SfqAJ7I15d_Iw4WAzbIwQ6li0pNCJFQ",
+          "iterations": 2000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "verifyPin",
+      "args": [
+        "12345",
+        {
+          "salt": "q83vASNFZ4mrze8BI0VniQ",
+          "hash": "xhs1yFPg5oB2SfqAJ7I15d_Iw4WAzbIwQ6li0pNCJFQ",
+          "iterations": 2000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "verifyPin",
+      "args": [
+        "1234",
+        {
+          "salt": "AAAAAAAAAAAAAAAAAAAAAA",
+          "hash": "xhs1yFPg5oB2SfqAJ7I15d_Iw4WAzbIwQ6li0pNCJFQ",
+          "iterations": 1000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "verifyPin",
+      "args": [
+        "4321",
+        {
+          "salt": "AAAAAAAAAAAAAAAAAAAAAA",
+          "hash": "xhs1yFPg5oB2SfqAJ7I15d_Iw4WAzbIwQ6li0pNCJFQ",
+          "iterations": 1000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "verifyPin",
+      "args": [
+        "12345",
+        {
+          "salt": "AAAAAAAAAAAAAAAAAAAAAA",
+          "hash": "xhs1yFPg5oB2SfqAJ7I15d_Iw4WAzbIwQ6li0pNCJFQ",
+          "iterations": 1000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "verifyPin",
+      "args": [
+        "1234",
+        {
+          "salt": "q83vASNFZ4mrze8BI0VniQ",
+          "hash": "xhs1yFPg5o",
+          "iterations": 1000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "verifyPin",
+      "args": [
+        "4321",
+        {
+          "salt": "q83vASNFZ4mrze8BI0VniQ",
+          "hash": "xhs1yFPg5o",
+          "iterations": 1000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "verifyPin",
+      "args": [
+        "12345",
+        {
+          "salt": "q83vASNFZ4mrze8BI0VniQ",
+          "hash": "xhs1yFPg5o",
+          "iterations": 1000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "verifyPin",
+      "args": [
+        "1234",
+        {
+          "salt": "q83vASNFZ4mrze8BI0VniQ",
+          "hash": "xhs1yFPg5oB2SfqAJ7I15d_Iw4WAzbIwQ6li0pNCJFQ=",
+          "iterations": 1000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "verifyPin",
+      "args": [
+        "4321",
+        {
+          "salt": "q83vASNFZ4mrze8BI0VniQ",
+          "hash": "xhs1yFPg5oB2SfqAJ7I15d_Iw4WAzbIwQ6li0pNCJFQ=",
+          "iterations": 1000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "verifyPin",
+      "args": [
+        "12345",
+        {
+          "salt": "q83vASNFZ4mrze8BI0VniQ",
+          "hash": "xhs1yFPg5oB2SfqAJ7I15d_Iw4WAzbIwQ6li0pNCJFQ=",
+          "iterations": 1000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "verifyPin",
+      "args": [
+        "1234",
+        {
+          "salt": "q83vASNFZ4mrze8BI0VniQ",
+          "hash": "???",
+          "iterations": 1000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "verifyPin",
+      "args": [
+        "4321",
+        {
+          "salt": "q83vASNFZ4mrze8BI0VniQ",
+          "hash": "???",
+          "iterations": 1000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "verifyPin",
+      "args": [
+        "12345",
+        {
+          "salt": "q83vASNFZ4mrze8BI0VniQ",
+          "hash": "???",
+          "iterations": 1000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "verifyPin",
+      "args": [
+        "1234",
+        {
+          "salt": "???",
+          "hash": "xhs1yFPg5oB2SfqAJ7I15d_Iw4WAzbIwQ6li0pNCJFQ",
+          "iterations": 1000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "verifyPin",
+      "args": [
+        "4321",
+        {
+          "salt": "???",
+          "hash": "xhs1yFPg5oB2SfqAJ7I15d_Iw4WAzbIwQ6li0pNCJFQ",
+          "iterations": 1000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "verifyPin",
+      "args": [
+        "12345",
+        {
+          "salt": "???",
+          "hash": "xhs1yFPg5oB2SfqAJ7I15d_Iw4WAzbIwQ6li0pNCJFQ",
+          "iterations": 1000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "verifyPin",
+      "args": [
+        "1234",
+        {
+          "salt": "q83vASNFZ4mrze8BI0VniQ",
+          "hash": "xhs1yFPg5oB2SfqAJ7I15d_Iw4WAzbIwQ6li0pNCJFQ",
+          "iterations": 0
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "verifyPin",
+      "args": [
+        "4321",
+        {
+          "salt": "q83vASNFZ4mrze8BI0VniQ",
+          "hash": "xhs1yFPg5oB2SfqAJ7I15d_Iw4WAzbIwQ6li0pNCJFQ",
+          "iterations": 0
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "verifyPin",
+      "args": [
+        "12345",
+        {
+          "salt": "q83vASNFZ4mrze8BI0VniQ",
+          "hash": "xhs1yFPg5oB2SfqAJ7I15d_Iw4WAzbIwQ6li0pNCJFQ",
+          "iterations": 0
+        }
+      ],
+      "out": false
+    }
+  ]
+}

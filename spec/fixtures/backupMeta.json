@@ -1,0 +1,800 @@
+{
+  "module": "backupMeta",
+  "tz": "Asia/Kolkata",
+  "cases": [
+    {
+      "fn": "BACKUP_SCHEMA_VERSION",
+      "args": [],
+      "out": 1
+    },
+    {
+      "fn": "withBackupMeta",
+      "args": [
+        {},
+        "2026-10-01T10:00:00.000Z"
+      ],
+      "out": [
+        [
+          "version",
+          1
+        ],
+        [
+          "exportedAt",
+          "2026-10-01T10:00:00.000Z"
+        ]
+      ]
+    },
+    {
+      "fn": "withBackupMeta",
+      "args": [
+        {},
+        "1999-12-31T18:30:00.123Z"
+      ],
+      "out": [
+        [
+          "version",
+          1
+        ],
+        [
+          "exportedAt",
+          "1999-12-31T18:30:00.123Z"
+        ]
+      ]
+    },
+    {
+      "fn": "withBackupMeta",
+      "args": [
+        {
+          "accounts": []
+        },
+        "2026-10-01T10:00:00.000Z"
+      ],
+      "out": [
+        [
+          "version",
+          1
+        ],
+        [
+          "exportedAt",
+          "2026-10-01T10:00:00.000Z"
+        ],
+        [
+          "accounts",
+          []
+        ]
+      ]
+    },
+    {
+      "fn": "withBackupMeta",
+      "args": [
+        {
+          "accounts": []
+        },
+        "1999-12-31T18:30:00.123Z"
+      ],
+      "out": [
+        [
+          "version",
+          1
+        ],
+        [
+          "exportedAt",
+          "1999-12-31T18:30:00.123Z"
+        ],
+        [
+          "accounts",
+          []
+        ]
+      ]
+    },
+    {
+      "fn": "withBackupMeta",
+      "args": [
+        {
+          "accounts": [
+            {
+              "id": "a"
+            }
+          ],
+          "settings": {
+            "theme": "dark"
+          }
+        },
+        "2026-10-01T10:00:00.000Z"
+      ],
+      "out": [
+        [
+          "version",
+          1
+        ],
+        [
+          "exportedAt",
+          "2026-10-01T10:00:00.000Z"
+        ],
+        [
+          "accounts",
+          [
+            {
+              "id": "a"
+            }
+          ]
+        ],
+        [
+          "settings",
+          {
+            "theme": "dark"
+          }
+        ]
+      ]
+    },
+    {
+      "fn": "withBackupMeta",
+      "args": [
+        {
+          "accounts": [
+            {
+              "id": "a"
+            }
+          ],
+          "settings": {
+            "theme": "dark"
+          }
+        },
+        "1999-12-31T18:30:00.123Z"
+      ],
+      "out": [
+        [
+          "version",
+          1
+        ],
+        [
+          "exportedAt",
+          "1999-12-31T18:30:00.123Z"
+        ],
+        [
+          "accounts",
+          [
+            {
+              "id": "a"
+            }
+          ]
+        ],
+        [
+          "settings",
+          {
+            "theme": "dark"
+          }
+        ]
+      ]
+    },
+    {
+      "fn": "withBackupMeta",
+      "args": [
+        {
+          "version": 7,
+          "accounts": []
+        },
+        "2026-10-01T10:00:00.000Z"
+      ],
+      "out": [
+        [
+          "version",
+          7
+        ],
+        [
+          "exportedAt",
+          "2026-10-01T10:00:00.000Z"
+        ],
+        [
+          "accounts",
+          []
+        ]
+      ]
+    },
+    {
+      "fn": "withBackupMeta",
+      "args": [
+        {
+          "version": 7,
+          "accounts": []
+        },
+        "1999-12-31T18:30:00.123Z"
+      ],
+      "out": [
+        [
+          "version",
+          7
+        ],
+        [
+          "exportedAt",
+          "1999-12-31T18:30:00.123Z"
+        ],
+        [
+          "accounts",
+          []
+        ]
+      ]
+    },
+    {
+      "fn": "withBackupMeta",
+      "args": [
+        {
+          "exportedAt": "payload",
+          "zeta": 1,
+          "alpha": 2
+        },
+        "2026-10-01T10:00:00.000Z"
+      ],
+      "out": [
+        [
+          "version",
+          1
+        ],
+        [
+          "exportedAt",
+          "payload"
+        ],
+        [
+          "zeta",
+          1
+        ],
+        [
+          "alpha",
+          2
+        ]
+      ]
+    },
+    {
+      "fn": "withBackupMeta",
+      "args": [
+        {
+          "exportedAt": "payload",
+          "zeta": 1,
+          "alpha": 2
+        },
+        "1999-12-31T18:30:00.123Z"
+      ],
+      "out": [
+        [
+          "version",
+          1
+        ],
+        [
+          "exportedAt",
+          "payload"
+        ],
+        [
+          "zeta",
+          1
+        ],
+        [
+          "alpha",
+          2
+        ]
+      ]
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        null
+      ],
+      "out": {}
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        "x"
+      ],
+      "out": {}
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        42
+      ],
+      "out": {}
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        true
+      ],
+      "out": {}
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        []
+      ],
+      "out": {}
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        [
+          1,
+          2
+        ]
+      ],
+      "out": {}
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {}
+      ],
+      "out": {}
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "accounts": []
+        }
+      ],
+      "out": {}
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "version": 1,
+          "exportedAt": "2026-10-01T10:00:00.000Z"
+        }
+      ],
+      "out": {
+        "version": 1,
+        "exportedAt": "2026-10-01T10:00:00.000Z"
+      }
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "version": "2",
+          "exportedAt": "nope"
+        }
+      ],
+      "out": {}
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "version": 0,
+          "exportedAt": "2026-10-01T10:00:00.000Z"
+        }
+      ],
+      "out": {
+        "exportedAt": "2026-10-01T10:00:00.000Z"
+      }
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "version": 1.5
+        }
+      ],
+      "out": {}
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "version": -1
+        }
+      ],
+      "out": {}
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "version": 1
+        }
+      ],
+      "out": {
+        "version": 1
+      }
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "version": 2
+        }
+      ],
+      "out": {
+        "version": 2
+      }
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "version": 1000000
+        }
+      ],
+      "out": {
+        "version": 1000000
+      }
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "version": 1
+        }
+      ],
+      "out": {
+        "version": 1
+      }
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "version": null
+        }
+      ],
+      "out": {}
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "version": true
+        }
+      ],
+      "out": {}
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "version": [
+            1
+          ]
+        }
+      ],
+      "out": {}
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "exportedAt": ""
+        }
+      ],
+      "out": {}
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "exportedAt": 123
+        }
+      ],
+      "out": {}
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "exportedAt": null
+        }
+      ],
+      "out": {}
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "exportedAt": "2026-10-05"
+        }
+      ],
+      "out": {
+        "exportedAt": "2026-10-05"
+      }
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "exportedAt": "2026-10-05T10:00"
+        }
+      ],
+      "out": {
+        "exportedAt": "2026-10-05T10:00"
+      }
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "exportedAt": "2026-10-05T10:00:00+05:30"
+        }
+      ],
+      "out": {
+        "exportedAt": "2026-10-05T10:00:00+05:30"
+      }
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "exportedAt": "2026-10-05T10:00:00.1234567Z"
+        }
+      ],
+      "out": {
+        "exportedAt": "2026-10-05T10:00:00.1234567Z"
+      }
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "exportedAt": "2026-10-05 10:00"
+        }
+      ],
+      "out": {
+        "exportedAt": "2026-10-05 10:00"
+      }
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "exportedAt": "2026-02-30"
+        }
+      ],
+      "out": {
+        "exportedAt": "2026-02-30"
+      }
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "exportedAt": "2026-02-31"
+        }
+      ],
+      "out": {
+        "exportedAt": "2026-02-31"
+      }
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "exportedAt": "2026-13-01"
+        }
+      ],
+      "out": {}
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "exportedAt": "2026-00-10"
+        }
+      ],
+      "out": {}
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "exportedAt": "2026-10-00"
+        }
+      ],
+      "out": {}
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "exportedAt": "2026-10-32"
+        }
+      ],
+      "out": {}
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "exportedAt": "2026"
+        }
+      ],
+      "out": {
+        "exportedAt": "2026"
+      }
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "exportedAt": "2026-10"
+        }
+      ],
+      "out": {
+        "exportedAt": "2026-10"
+      }
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "exportedAt": "2026-10-05T24:00:00Z"
+        }
+      ],
+      "out": {
+        "exportedAt": "2026-10-05T24:00:00Z"
+      }
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "exportedAt": "2026-10-05T24:30:00Z"
+        }
+      ],
+      "out": {}
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "exportedAt": "2026-10-05T25:00:00Z"
+        }
+      ],
+      "out": {}
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "exportedAt": "2026-10-05T23:60:00Z"
+        }
+      ],
+      "out": {}
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "exportedAt": "2026-10-05T10:00Z"
+        }
+      ],
+      "out": {
+        "exportedAt": "2026-10-05T10:00Z"
+      }
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "exportedAt": "2026-10-05T10:00:00z"
+        }
+      ],
+      "out": {
+        "exportedAt": "2026-10-05T10:00:00z"
+      }
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "exportedAt": "2026-10-05t10:00:00Z"
+        }
+      ],
+      "out": {
+        "exportedAt": "2026-10-05t10:00:00Z"
+      }
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "exportedAt": "+002026-10-05T00:00:00.000Z"
+        }
+      ],
+      "out": {
+        "exportedAt": "+002026-10-05T00:00:00.000Z"
+      }
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "exportedAt": "-000001-01-01T00:00:00Z"
+        }
+      ],
+      "out": {
+        "exportedAt": "-000001-01-01T00:00:00Z"
+      }
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "exportedAt": "2026-10-05T10:00:00+0530"
+        }
+      ],
+      "out": {
+        "exportedAt": "2026-10-05T10:00:00+0530"
+      }
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "exportedAt": "2026-10-05T10:00:00+23:59"
+        }
+      ],
+      "out": {
+        "exportedAt": "2026-10-05T10:00:00+23:59"
+      }
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "exportedAt": "2026-10-05T10:00:00+24:00"
+        }
+      ],
+      "out": {}
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "exportedAt": "2026-10-05T10:00:00+05"
+        }
+      ],
+      "out": {}
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "exportedAt": "20261005"
+        }
+      ],
+      "out": {}
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "exportedAt": "nope"
+        }
+      ],
+      "out": {}
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "exportedAt": "1e3"
+        }
+      ],
+      "out": {}
+    },
+    {
+      "fn": "readBackupMeta",
+      "args": [
+        {
+          "version": 3,
+          "exportedAt": "2026-10-05T10:00:00.000Z",
+          "accounts": []
+        }
+      ],
+      "out": {
+        "version": 3,
+        "exportedAt": "2026-10-05T10:00:00.000Z"
+      }
+    }
+  ]
+}

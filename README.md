@@ -333,7 +333,7 @@ only adds user accounts and cloud backup storage.
 
 ```bash
 git clone https://github.com/abhi-sawant/finio-web.git
-cd finio-web
+cd finio-web/web
 npm install
 npm run dev
 ```
@@ -341,7 +341,29 @@ npm run dev
 The app runs at `http://localhost:5173`. With no `.env`, the API client points at the hosted
 backend — irrelevant unless you sign in.
 
+### Android app
+
+`android/` is a native Kotlin + Jetpack Compose port of the PWA — same screens, same Mudra look,
+same data model. Its `:core` module holds every money rule (a module-for-module port of
+`web/src/utils` and the store), and `:app` holds the UI and the Android equivalents of the PWA's
+browser features (WorkManager reminders, biometric unlock, Storage Access Framework backups, share
+sheet, launcher shortcuts).
+
+**Requirements:** Android Studio (its bundled JDK) and the Android SDK.
+
+```bash
+cd android
+./gradlew :core:test           # domain logic + 10,700 golden cases generated from the web code
+./gradlew :app:installDebug    # build and install on a connected device
+```
+
+The two apps read and write the same backup files — see [spec/backup-format.md](spec/backup-format.md).
+Any change to money logic lands in both, and `cd web && npm run gen:fixtures` regenerates the golden
+fixtures that keep them identical. [android/CLAUDE.md](android/CLAUDE.md) has the details.
+
 ### Scripts
+
+Run from `web/`:
 
 ```bash
 npm run dev          # Vite dev server
@@ -356,7 +378,7 @@ npm run format:check # Check formatting without writing
 
 ### Tests
 
-534 tests across 26 files, living next to their subjects as `*.test.ts`. They cover the pure money
+637 tests across 29 files (in `web/`), living next to their subjects as `*.test.ts`. They cover the pure money
 logic — balance deltas and reconciliation, the recurring planner, budget status and rollover,
 period math, backup validation, CSV parsing, the categorization engine, forecasting, net worth,
 insights, loan amortization, merchant grouping, the notification schedule, PIN and backup crypto —
@@ -378,16 +400,16 @@ Read [CLAUDE.md](CLAUDE.md) for the full set. The short version:
 - **There are two different "reconcile" flows.** Settings' global `recomputeBalances()` just
   recomputes the cache; the per-account `ReconcileAccountDialog` posts a real adjustment
   transaction against a bank/card statement. They are not interchangeable.
-- **A loan's EMI is derived, never stored** — `src/utils/loan.ts` recomputes it from
+- **A loan's EMI is derived, never stored** — `web/src/utils/loan.ts` recomputes it from
   principal/rate/tenure every time, the same way an account's balance is a cache, not a source.
-- **Merchants are a computed view, not a schema entity.** `src/utils/merchants.ts` groups
+- **Merchants are a computed view, not a schema entity.** `web/src/utils/merchants.ts` groups
   transactions by a normalized note; there's no `Merchant` id anywhere.
 - **"This month" is a financial month.** Never call `startOfMonth`/`endOfMonth` in feature code —
-  go through `src/utils/period.ts`, which honours `Settings.monthStartDay`.
+  go through `web/src/utils/period.ts`, which honours `Settings.monthStartDay`.
 - **The PWA doesn't run under `vite dev`.** Use `npm run build && npm run preview`.
 - **The service worker is hand-written.** `runtimeCaching`, `navigateFallback`,
   `cleanupOutdatedCaches`, and `clientsClaim` are `generateSW`-only options that `injectManifest`
-  ignores _silently_. `src/sw/sw.ts` writes them all out by hand; the SPA navigation fallback is
+  ignores _silently_. `web/src/sw/sw.ts` writes them all out by hand; the SPA navigation fallback is
   the one that matters most.
 - **Never put secrets in `Settings`.** It's serialized into every export and cloud upload. The PIN
   hash and backup-encryption config live in their own stores for exactly this reason.
@@ -400,34 +422,37 @@ Read [CLAUDE.md](CLAUDE.md) for the full set. The short version:
 
 ```
 finio-web/
-├── src/
-│   ├── App.tsx              # Router + the hydration / lock / onboarding gates
-│   ├── pages/               # One file per route, all lazy-loaded (incl. legal/, auth/)
-│   ├── components/          # ui/ charts/ analytics/ applock/ onboarding/ layout/ …
-│   ├── sw/sw.ts             # Hand-written service worker (its own TS project)
-│   ├── store/               # Zustand stores + pure balance/recurring modules
-│   ├── services/            # API client, backup, notifications, app lock, downloads
-│   ├── utils/               # All the pure logic (and all the tests)
-│   ├── types/index.ts       # Every domain interface
-│   └── data/                # Default categories/labels/settings, colour palette, sample data
+├── web/                     # The PWA (React + Vite) — run npm commands from here
+│   ├── src/
+│   │   ├── App.tsx          # Router + the hydration / lock / onboarding gates
+│   │   ├── pages/           # One file per route, all lazy-loaded (incl. legal/, auth/)
+│   │   ├── components/      # ui/ charts/ analytics/ applock/ onboarding/ layout/ …
+│   │   ├── sw/sw.ts         # Hand-written service worker (its own TS project)
+│   │   ├── store/           # Zustand stores + pure balance/recurring modules
+│   │   ├── services/        # API client, backup, notifications, app lock, downloads
+│   │   ├── utils/           # All the pure logic (and all the tests)
+│   │   ├── types/index.ts   # Every domain interface
+│   │   └── data/            # Default categories/labels/settings, colour palette, sample data
+│   ├── public/              # PWA icons, .htaccess
+│   ├── scripts/             # gen-dummydata.mjs, gen-icons.mjs, gen-fixtures.mts
+│   ├── vite.config.ts       # Vite + PWA manifest + chunk splitting
+│   ├── vitest.config.ts     # Test config (node environment)
+│   └── tsconfig.sw.json     # Separate TS project for the service worker
+├── android/                 # Native Android app (Kotlin + Jetpack Compose)
 ├── backend/                 # Optional PHP API (see below)
-├── public/                  # PWA icons, .htaccess
-├── scripts/                 # gen-dummydata.mjs → dummydata.json (a large import fixture for QA)
-├── design.md                # The visual system: tokens, layout shell, component rules
-├── improvements.md          # Latest review pass: open bugs and feature ideas
-├── vite.config.ts           # Vite + PWA manifest + chunk splitting
-├── vitest.config.ts         # Test config (node environment)
-└── tsconfig.sw.json         # Separate TS project for the service worker
+├── spec/                    # Shared contract: backup format + golden test fixtures
+└── design.md                # The visual system: tokens, layout shell, component rules
 ```
 
 ### Deploying the Frontend
 
 ```bash
+cd web
 npm run build
 ```
 
-Deploy `dist/` to any static host. Because it's an SPA, the host must rewrite unknown paths to
-`index.html` — `public/.htaccess` does this for Apache/cPanel; on Netlify, Vercel, or Nginx use
+Deploy `web/dist/` to any static host. Because it's an SPA, the host must rewrite unknown paths to
+`index.html` — `web/public/.htaccess` does this for Apache/cPanel; on Netlify, Vercel, or Nginx use
 their equivalent.
 
 ---
@@ -643,7 +668,7 @@ header — that's the rate limiter working, not a bug.
 
 ### Step 11 — Point the frontend at your API
 
-Create `.env.local` in the project root:
+Create `web/.env.local`:
 
 ```
 VITE_API_URL=https://api.yourdomain.com
@@ -652,10 +677,11 @@ VITE_API_URL=https://api.yourdomain.com
 `VITE_*` variables are inlined at **build time**, so rebuild and redeploy:
 
 ```bash
+cd web
 npm run build
 ```
 
-Deploy `dist/` to your web host (e.g. `public_html/` or `finio.yourdomain.com`). Make sure that
+Deploy `web/dist/` to your web host (e.g. `public_html/` or `finio.yourdomain.com`). Make sure that
 origin is in the backend's `allowed_origins`.
 
 ### API Reference
@@ -699,6 +725,5 @@ requests are allowed through rather than the API going down.
 [CLAUDE.md](CLAUDE.md) is the architecture guide — domain types, state management, the PWA setup,
 and a long list of gotchas worth reading before you change anything money-related.
 [design.md](design.md) covers the look — read it before changing any styling.
-[improvements.md](improvements.md) lists known bugs and ideas that are up for grabs.
 
-Before opening a PR: `npm test`, `npm run lint`, `npm run format`.
+Before opening a PR: in `web/`, `npm test`, `npm run lint`, `npm run format`; in `android/`, `./gradlew test`.

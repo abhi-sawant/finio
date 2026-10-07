@@ -1,0 +1,2892 @@
+{
+  "module": "notifications",
+  "tz": "Asia/Kolkata",
+  "cases": [
+    {
+      "fn": "constants",
+      "args": [],
+      "out": {
+        "NOTIFICATION_SYNC_TAG": "finio-notifications",
+        "NOTIFICATION_HORIZON_DAYS": 45,
+        "MAX_NOTIFY_LEAD_DAYS": 7,
+        "NOTIFY_HOUR": 9,
+        "DAILY_LOG_HOUR": 21,
+        "MAX_NOTIFICATIONS_PER_RUN": 3
+      }
+    },
+    {
+      "fn": "selectDueNotifications",
+      "args": [
+        [
+          {
+            "kind": "bill",
+            "fireAt": 1781521200000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "bill:r1:2026-06-15"
+          },
+          {
+            "kind": "budget",
+            "fireAt": 1781506800000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/budgets",
+            "id": "budget:cat-1:2026-06-01:near"
+          },
+          {
+            "kind": "credit",
+            "fireAt": 1781524800000,
+            "expiresAt": 1781528400000,
+            "title": "Card due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "credit:acc-1:2026-06-20"
+          },
+          {
+            "kind": "daily",
+            "fireAt": 1781528400000,
+            "expiresAt": 1781535600000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "daily:log:2026-06-15"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781492400000,
+            "expiresAt": 1781524799999,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expired"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781517600000,
+            "expiresAt": 1781524800000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expires-now"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-a"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-b"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1778932800000,
+            "expiresAt": 1781611200000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "old"
+          }
+        ],
+        [],
+        1781524800000
+      ],
+      "out": [
+        {
+          "kind": "bill",
+          "fireAt": 1778932800000,
+          "expiresAt": 1781611200000,
+          "title": "Bill due",
+          "body": "₹100",
+          "url": "/recurring",
+          "id": "old"
+        },
+        {
+          "kind": "budget",
+          "fireAt": 1781506800000,
+          "expiresAt": 1781528400000,
+          "title": "Bill due",
+          "body": "₹100",
+          "url": "/budgets",
+          "id": "budget:cat-1:2026-06-01:near"
+        },
+        {
+          "kind": "bill",
+          "fireAt": 1781514000000,
+          "expiresAt": 1781528400000,
+          "title": "Bill due",
+          "body": "₹100",
+          "url": "/recurring",
+          "id": "tie-a"
+        }
+      ]
+    },
+    {
+      "fn": "selectDueNotifications",
+      "args": [
+        [
+          {
+            "kind": "bill",
+            "fireAt": 1781521200000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "bill:r1:2026-06-15"
+          },
+          {
+            "kind": "budget",
+            "fireAt": 1781506800000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/budgets",
+            "id": "budget:cat-1:2026-06-01:near"
+          },
+          {
+            "kind": "credit",
+            "fireAt": 1781524800000,
+            "expiresAt": 1781528400000,
+            "title": "Card due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "credit:acc-1:2026-06-20"
+          },
+          {
+            "kind": "daily",
+            "fireAt": 1781528400000,
+            "expiresAt": 1781535600000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "daily:log:2026-06-15"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781492400000,
+            "expiresAt": 1781524799999,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expired"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781517600000,
+            "expiresAt": 1781524800000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expires-now"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-a"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-b"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1778932800000,
+            "expiresAt": 1781611200000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "old"
+          }
+        ],
+        [],
+        1781510400000
+      ],
+      "out": [
+        {
+          "kind": "bill",
+          "fireAt": 1778932800000,
+          "expiresAt": 1781611200000,
+          "title": "Bill due",
+          "body": "₹100",
+          "url": "/recurring",
+          "id": "old"
+        },
+        {
+          "kind": "bill",
+          "fireAt": 1781492400000,
+          "expiresAt": 1781524799999,
+          "title": "Bill due",
+          "body": "₹100",
+          "url": "/recurring",
+          "id": "expired"
+        },
+        {
+          "kind": "budget",
+          "fireAt": 1781506800000,
+          "expiresAt": 1781528400000,
+          "title": "Bill due",
+          "body": "₹100",
+          "url": "/budgets",
+          "id": "budget:cat-1:2026-06-01:near"
+        }
+      ]
+    },
+    {
+      "fn": "selectDueNotifications",
+      "args": [
+        [
+          {
+            "kind": "bill",
+            "fireAt": 1781521200000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "bill:r1:2026-06-15"
+          },
+          {
+            "kind": "budget",
+            "fireAt": 1781506800000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/budgets",
+            "id": "budget:cat-1:2026-06-01:near"
+          },
+          {
+            "kind": "credit",
+            "fireAt": 1781524800000,
+            "expiresAt": 1781528400000,
+            "title": "Card due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "credit:acc-1:2026-06-20"
+          },
+          {
+            "kind": "daily",
+            "fireAt": 1781528400000,
+            "expiresAt": 1781535600000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "daily:log:2026-06-15"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781492400000,
+            "expiresAt": 1781524799999,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expired"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781517600000,
+            "expiresAt": 1781524800000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expires-now"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-a"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-b"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1778932800000,
+            "expiresAt": 1781611200000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "old"
+          }
+        ],
+        [],
+        1781532000000
+      ],
+      "out": [
+        {
+          "kind": "bill",
+          "fireAt": 1778932800000,
+          "expiresAt": 1781611200000,
+          "title": "Bill due",
+          "body": "₹100",
+          "url": "/recurring",
+          "id": "old"
+        },
+        {
+          "kind": "daily",
+          "fireAt": 1781528400000,
+          "expiresAt": 1781535600000,
+          "title": "Bill due",
+          "body": "₹100",
+          "url": "/recurring",
+          "id": "daily:log:2026-06-15"
+        }
+      ]
+    },
+    {
+      "fn": "selectDueNotifications",
+      "args": [
+        [
+          {
+            "kind": "bill",
+            "fireAt": 1781521200000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "bill:r1:2026-06-15"
+          },
+          {
+            "kind": "budget",
+            "fireAt": 1781506800000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/budgets",
+            "id": "budget:cat-1:2026-06-01:near"
+          },
+          {
+            "kind": "credit",
+            "fireAt": 1781524800000,
+            "expiresAt": 1781528400000,
+            "title": "Card due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "credit:acc-1:2026-06-20"
+          },
+          {
+            "kind": "daily",
+            "fireAt": 1781528400000,
+            "expiresAt": 1781535600000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "daily:log:2026-06-15"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781492400000,
+            "expiresAt": 1781524799999,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expired"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781517600000,
+            "expiresAt": 1781524800000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expires-now"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-a"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-b"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1778932800000,
+            "expiresAt": 1781611200000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "old"
+          }
+        ],
+        [],
+        1781884800000
+      ],
+      "out": []
+    },
+    {
+      "fn": "selectDueNotifications",
+      "args": [
+        [
+          {
+            "kind": "bill",
+            "fireAt": 1781521200000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "bill:r1:2026-06-15"
+          },
+          {
+            "kind": "budget",
+            "fireAt": 1781506800000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/budgets",
+            "id": "budget:cat-1:2026-06-01:near"
+          },
+          {
+            "kind": "credit",
+            "fireAt": 1781524800000,
+            "expiresAt": 1781528400000,
+            "title": "Card due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "credit:acc-1:2026-06-20"
+          },
+          {
+            "kind": "daily",
+            "fireAt": 1781528400000,
+            "expiresAt": 1781535600000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "daily:log:2026-06-15"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781492400000,
+            "expiresAt": 1781524799999,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expired"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781517600000,
+            "expiresAt": 1781524800000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expires-now"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-a"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-b"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1778932800000,
+            "expiresAt": 1781611200000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "old"
+          }
+        ],
+        [],
+        0
+      ],
+      "out": []
+    },
+    {
+      "fn": "selectDueNotifications",
+      "args": [
+        [
+          {
+            "kind": "bill",
+            "fireAt": 1781521200000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "bill:r1:2026-06-15"
+          },
+          {
+            "kind": "budget",
+            "fireAt": 1781506800000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/budgets",
+            "id": "budget:cat-1:2026-06-01:near"
+          },
+          {
+            "kind": "credit",
+            "fireAt": 1781524800000,
+            "expiresAt": 1781528400000,
+            "title": "Card due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "credit:acc-1:2026-06-20"
+          },
+          {
+            "kind": "daily",
+            "fireAt": 1781528400000,
+            "expiresAt": 1781535600000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "daily:log:2026-06-15"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781492400000,
+            "expiresAt": 1781524799999,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expired"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781517600000,
+            "expiresAt": 1781524800000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expires-now"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-a"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-b"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1778932800000,
+            "expiresAt": 1781611200000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "old"
+          }
+        ],
+        [
+          "old"
+        ],
+        1781524800000
+      ],
+      "out": [
+        {
+          "kind": "budget",
+          "fireAt": 1781506800000,
+          "expiresAt": 1781528400000,
+          "title": "Bill due",
+          "body": "₹100",
+          "url": "/budgets",
+          "id": "budget:cat-1:2026-06-01:near"
+        },
+        {
+          "kind": "bill",
+          "fireAt": 1781514000000,
+          "expiresAt": 1781528400000,
+          "title": "Bill due",
+          "body": "₹100",
+          "url": "/recurring",
+          "id": "tie-a"
+        },
+        {
+          "kind": "bill",
+          "fireAt": 1781514000000,
+          "expiresAt": 1781528400000,
+          "title": "Bill due",
+          "body": "₹100",
+          "url": "/recurring",
+          "id": "tie-b"
+        }
+      ]
+    },
+    {
+      "fn": "selectDueNotifications",
+      "args": [
+        [
+          {
+            "kind": "bill",
+            "fireAt": 1781521200000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "bill:r1:2026-06-15"
+          },
+          {
+            "kind": "budget",
+            "fireAt": 1781506800000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/budgets",
+            "id": "budget:cat-1:2026-06-01:near"
+          },
+          {
+            "kind": "credit",
+            "fireAt": 1781524800000,
+            "expiresAt": 1781528400000,
+            "title": "Card due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "credit:acc-1:2026-06-20"
+          },
+          {
+            "kind": "daily",
+            "fireAt": 1781528400000,
+            "expiresAt": 1781535600000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "daily:log:2026-06-15"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781492400000,
+            "expiresAt": 1781524799999,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expired"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781517600000,
+            "expiresAt": 1781524800000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expires-now"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-a"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-b"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1778932800000,
+            "expiresAt": 1781611200000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "old"
+          }
+        ],
+        [
+          "old"
+        ],
+        1781510400000
+      ],
+      "out": [
+        {
+          "kind": "bill",
+          "fireAt": 1781492400000,
+          "expiresAt": 1781524799999,
+          "title": "Bill due",
+          "body": "₹100",
+          "url": "/recurring",
+          "id": "expired"
+        },
+        {
+          "kind": "budget",
+          "fireAt": 1781506800000,
+          "expiresAt": 1781528400000,
+          "title": "Bill due",
+          "body": "₹100",
+          "url": "/budgets",
+          "id": "budget:cat-1:2026-06-01:near"
+        }
+      ]
+    },
+    {
+      "fn": "selectDueNotifications",
+      "args": [
+        [
+          {
+            "kind": "bill",
+            "fireAt": 1781521200000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "bill:r1:2026-06-15"
+          },
+          {
+            "kind": "budget",
+            "fireAt": 1781506800000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/budgets",
+            "id": "budget:cat-1:2026-06-01:near"
+          },
+          {
+            "kind": "credit",
+            "fireAt": 1781524800000,
+            "expiresAt": 1781528400000,
+            "title": "Card due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "credit:acc-1:2026-06-20"
+          },
+          {
+            "kind": "daily",
+            "fireAt": 1781528400000,
+            "expiresAt": 1781535600000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "daily:log:2026-06-15"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781492400000,
+            "expiresAt": 1781524799999,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expired"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781517600000,
+            "expiresAt": 1781524800000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expires-now"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-a"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-b"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1778932800000,
+            "expiresAt": 1781611200000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "old"
+          }
+        ],
+        [
+          "old"
+        ],
+        1781532000000
+      ],
+      "out": [
+        {
+          "kind": "daily",
+          "fireAt": 1781528400000,
+          "expiresAt": 1781535600000,
+          "title": "Bill due",
+          "body": "₹100",
+          "url": "/recurring",
+          "id": "daily:log:2026-06-15"
+        }
+      ]
+    },
+    {
+      "fn": "selectDueNotifications",
+      "args": [
+        [
+          {
+            "kind": "bill",
+            "fireAt": 1781521200000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "bill:r1:2026-06-15"
+          },
+          {
+            "kind": "budget",
+            "fireAt": 1781506800000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/budgets",
+            "id": "budget:cat-1:2026-06-01:near"
+          },
+          {
+            "kind": "credit",
+            "fireAt": 1781524800000,
+            "expiresAt": 1781528400000,
+            "title": "Card due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "credit:acc-1:2026-06-20"
+          },
+          {
+            "kind": "daily",
+            "fireAt": 1781528400000,
+            "expiresAt": 1781535600000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "daily:log:2026-06-15"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781492400000,
+            "expiresAt": 1781524799999,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expired"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781517600000,
+            "expiresAt": 1781524800000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expires-now"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-a"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-b"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1778932800000,
+            "expiresAt": 1781611200000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "old"
+          }
+        ],
+        [
+          "old"
+        ],
+        1781884800000
+      ],
+      "out": []
+    },
+    {
+      "fn": "selectDueNotifications",
+      "args": [
+        [
+          {
+            "kind": "bill",
+            "fireAt": 1781521200000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "bill:r1:2026-06-15"
+          },
+          {
+            "kind": "budget",
+            "fireAt": 1781506800000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/budgets",
+            "id": "budget:cat-1:2026-06-01:near"
+          },
+          {
+            "kind": "credit",
+            "fireAt": 1781524800000,
+            "expiresAt": 1781528400000,
+            "title": "Card due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "credit:acc-1:2026-06-20"
+          },
+          {
+            "kind": "daily",
+            "fireAt": 1781528400000,
+            "expiresAt": 1781535600000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "daily:log:2026-06-15"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781492400000,
+            "expiresAt": 1781524799999,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expired"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781517600000,
+            "expiresAt": 1781524800000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expires-now"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-a"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-b"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1778932800000,
+            "expiresAt": 1781611200000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "old"
+          }
+        ],
+        [
+          "old"
+        ],
+        0
+      ],
+      "out": []
+    },
+    {
+      "fn": "selectDueNotifications",
+      "args": [
+        [
+          {
+            "kind": "bill",
+            "fireAt": 1781521200000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "bill:r1:2026-06-15"
+          },
+          {
+            "kind": "budget",
+            "fireAt": 1781506800000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/budgets",
+            "id": "budget:cat-1:2026-06-01:near"
+          },
+          {
+            "kind": "credit",
+            "fireAt": 1781524800000,
+            "expiresAt": 1781528400000,
+            "title": "Card due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "credit:acc-1:2026-06-20"
+          },
+          {
+            "kind": "daily",
+            "fireAt": 1781528400000,
+            "expiresAt": 1781535600000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "daily:log:2026-06-15"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781492400000,
+            "expiresAt": 1781524799999,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expired"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781517600000,
+            "expiresAt": 1781524800000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expires-now"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-a"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-b"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1778932800000,
+            "expiresAt": 1781611200000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "old"
+          }
+        ],
+        [
+          "old",
+          "budget:cat-1:2026-06-01:near"
+        ],
+        1781524800000
+      ],
+      "out": [
+        {
+          "kind": "bill",
+          "fireAt": 1781514000000,
+          "expiresAt": 1781528400000,
+          "title": "Bill due",
+          "body": "₹100",
+          "url": "/recurring",
+          "id": "tie-a"
+        },
+        {
+          "kind": "bill",
+          "fireAt": 1781514000000,
+          "expiresAt": 1781528400000,
+          "title": "Bill due",
+          "body": "₹100",
+          "url": "/recurring",
+          "id": "tie-b"
+        },
+        {
+          "kind": "bill",
+          "fireAt": 1781521200000,
+          "expiresAt": 1781528400000,
+          "title": "Bill due",
+          "body": "₹100",
+          "url": "/recurring",
+          "id": "bill:r1:2026-06-15"
+        }
+      ]
+    },
+    {
+      "fn": "selectDueNotifications",
+      "args": [
+        [
+          {
+            "kind": "bill",
+            "fireAt": 1781521200000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "bill:r1:2026-06-15"
+          },
+          {
+            "kind": "budget",
+            "fireAt": 1781506800000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/budgets",
+            "id": "budget:cat-1:2026-06-01:near"
+          },
+          {
+            "kind": "credit",
+            "fireAt": 1781524800000,
+            "expiresAt": 1781528400000,
+            "title": "Card due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "credit:acc-1:2026-06-20"
+          },
+          {
+            "kind": "daily",
+            "fireAt": 1781528400000,
+            "expiresAt": 1781535600000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "daily:log:2026-06-15"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781492400000,
+            "expiresAt": 1781524799999,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expired"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781517600000,
+            "expiresAt": 1781524800000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expires-now"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-a"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-b"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1778932800000,
+            "expiresAt": 1781611200000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "old"
+          }
+        ],
+        [
+          "old",
+          "budget:cat-1:2026-06-01:near"
+        ],
+        1781510400000
+      ],
+      "out": [
+        {
+          "kind": "bill",
+          "fireAt": 1781492400000,
+          "expiresAt": 1781524799999,
+          "title": "Bill due",
+          "body": "₹100",
+          "url": "/recurring",
+          "id": "expired"
+        }
+      ]
+    },
+    {
+      "fn": "selectDueNotifications",
+      "args": [
+        [
+          {
+            "kind": "bill",
+            "fireAt": 1781521200000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "bill:r1:2026-06-15"
+          },
+          {
+            "kind": "budget",
+            "fireAt": 1781506800000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/budgets",
+            "id": "budget:cat-1:2026-06-01:near"
+          },
+          {
+            "kind": "credit",
+            "fireAt": 1781524800000,
+            "expiresAt": 1781528400000,
+            "title": "Card due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "credit:acc-1:2026-06-20"
+          },
+          {
+            "kind": "daily",
+            "fireAt": 1781528400000,
+            "expiresAt": 1781535600000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "daily:log:2026-06-15"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781492400000,
+            "expiresAt": 1781524799999,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expired"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781517600000,
+            "expiresAt": 1781524800000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expires-now"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-a"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-b"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1778932800000,
+            "expiresAt": 1781611200000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "old"
+          }
+        ],
+        [
+          "old",
+          "budget:cat-1:2026-06-01:near"
+        ],
+        1781532000000
+      ],
+      "out": [
+        {
+          "kind": "daily",
+          "fireAt": 1781528400000,
+          "expiresAt": 1781535600000,
+          "title": "Bill due",
+          "body": "₹100",
+          "url": "/recurring",
+          "id": "daily:log:2026-06-15"
+        }
+      ]
+    },
+    {
+      "fn": "selectDueNotifications",
+      "args": [
+        [
+          {
+            "kind": "bill",
+            "fireAt": 1781521200000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "bill:r1:2026-06-15"
+          },
+          {
+            "kind": "budget",
+            "fireAt": 1781506800000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/budgets",
+            "id": "budget:cat-1:2026-06-01:near"
+          },
+          {
+            "kind": "credit",
+            "fireAt": 1781524800000,
+            "expiresAt": 1781528400000,
+            "title": "Card due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "credit:acc-1:2026-06-20"
+          },
+          {
+            "kind": "daily",
+            "fireAt": 1781528400000,
+            "expiresAt": 1781535600000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "daily:log:2026-06-15"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781492400000,
+            "expiresAt": 1781524799999,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expired"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781517600000,
+            "expiresAt": 1781524800000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expires-now"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-a"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-b"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1778932800000,
+            "expiresAt": 1781611200000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "old"
+          }
+        ],
+        [
+          "old",
+          "budget:cat-1:2026-06-01:near"
+        ],
+        1781884800000
+      ],
+      "out": []
+    },
+    {
+      "fn": "selectDueNotifications",
+      "args": [
+        [
+          {
+            "kind": "bill",
+            "fireAt": 1781521200000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "bill:r1:2026-06-15"
+          },
+          {
+            "kind": "budget",
+            "fireAt": 1781506800000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/budgets",
+            "id": "budget:cat-1:2026-06-01:near"
+          },
+          {
+            "kind": "credit",
+            "fireAt": 1781524800000,
+            "expiresAt": 1781528400000,
+            "title": "Card due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "credit:acc-1:2026-06-20"
+          },
+          {
+            "kind": "daily",
+            "fireAt": 1781528400000,
+            "expiresAt": 1781535600000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "daily:log:2026-06-15"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781492400000,
+            "expiresAt": 1781524799999,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expired"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781517600000,
+            "expiresAt": 1781524800000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expires-now"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-a"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-b"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1778932800000,
+            "expiresAt": 1781611200000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "old"
+          }
+        ],
+        [
+          "old",
+          "budget:cat-1:2026-06-01:near"
+        ],
+        0
+      ],
+      "out": []
+    },
+    {
+      "fn": "selectDueNotifications",
+      "args": [
+        [
+          {
+            "kind": "bill",
+            "fireAt": 1781521200000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "bill:r1:2026-06-15"
+          },
+          {
+            "kind": "budget",
+            "fireAt": 1781506800000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/budgets",
+            "id": "budget:cat-1:2026-06-01:near"
+          },
+          {
+            "kind": "credit",
+            "fireAt": 1781524800000,
+            "expiresAt": 1781528400000,
+            "title": "Card due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "credit:acc-1:2026-06-20"
+          },
+          {
+            "kind": "daily",
+            "fireAt": 1781528400000,
+            "expiresAt": 1781535600000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "daily:log:2026-06-15"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781492400000,
+            "expiresAt": 1781524799999,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expired"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781517600000,
+            "expiresAt": 1781524800000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expires-now"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-a"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-b"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1778932800000,
+            "expiresAt": 1781611200000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "old"
+          }
+        ],
+        [
+          "tie-a",
+          "old",
+          "bill:r1:2026-06-15"
+        ],
+        1781524800000
+      ],
+      "out": [
+        {
+          "kind": "budget",
+          "fireAt": 1781506800000,
+          "expiresAt": 1781528400000,
+          "title": "Bill due",
+          "body": "₹100",
+          "url": "/budgets",
+          "id": "budget:cat-1:2026-06-01:near"
+        },
+        {
+          "kind": "bill",
+          "fireAt": 1781514000000,
+          "expiresAt": 1781528400000,
+          "title": "Bill due",
+          "body": "₹100",
+          "url": "/recurring",
+          "id": "tie-b"
+        },
+        {
+          "kind": "credit",
+          "fireAt": 1781524800000,
+          "expiresAt": 1781528400000,
+          "title": "Card due",
+          "body": "₹100",
+          "url": "/recurring",
+          "id": "credit:acc-1:2026-06-20"
+        }
+      ]
+    },
+    {
+      "fn": "selectDueNotifications",
+      "args": [
+        [
+          {
+            "kind": "bill",
+            "fireAt": 1781521200000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "bill:r1:2026-06-15"
+          },
+          {
+            "kind": "budget",
+            "fireAt": 1781506800000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/budgets",
+            "id": "budget:cat-1:2026-06-01:near"
+          },
+          {
+            "kind": "credit",
+            "fireAt": 1781524800000,
+            "expiresAt": 1781528400000,
+            "title": "Card due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "credit:acc-1:2026-06-20"
+          },
+          {
+            "kind": "daily",
+            "fireAt": 1781528400000,
+            "expiresAt": 1781535600000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "daily:log:2026-06-15"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781492400000,
+            "expiresAt": 1781524799999,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expired"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781517600000,
+            "expiresAt": 1781524800000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expires-now"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-a"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-b"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1778932800000,
+            "expiresAt": 1781611200000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "old"
+          }
+        ],
+        [
+          "tie-a",
+          "old",
+          "bill:r1:2026-06-15"
+        ],
+        1781510400000
+      ],
+      "out": [
+        {
+          "kind": "bill",
+          "fireAt": 1781492400000,
+          "expiresAt": 1781524799999,
+          "title": "Bill due",
+          "body": "₹100",
+          "url": "/recurring",
+          "id": "expired"
+        },
+        {
+          "kind": "budget",
+          "fireAt": 1781506800000,
+          "expiresAt": 1781528400000,
+          "title": "Bill due",
+          "body": "₹100",
+          "url": "/budgets",
+          "id": "budget:cat-1:2026-06-01:near"
+        }
+      ]
+    },
+    {
+      "fn": "selectDueNotifications",
+      "args": [
+        [
+          {
+            "kind": "bill",
+            "fireAt": 1781521200000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "bill:r1:2026-06-15"
+          },
+          {
+            "kind": "budget",
+            "fireAt": 1781506800000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/budgets",
+            "id": "budget:cat-1:2026-06-01:near"
+          },
+          {
+            "kind": "credit",
+            "fireAt": 1781524800000,
+            "expiresAt": 1781528400000,
+            "title": "Card due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "credit:acc-1:2026-06-20"
+          },
+          {
+            "kind": "daily",
+            "fireAt": 1781528400000,
+            "expiresAt": 1781535600000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "daily:log:2026-06-15"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781492400000,
+            "expiresAt": 1781524799999,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expired"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781517600000,
+            "expiresAt": 1781524800000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expires-now"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-a"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-b"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1778932800000,
+            "expiresAt": 1781611200000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "old"
+          }
+        ],
+        [
+          "tie-a",
+          "old",
+          "bill:r1:2026-06-15"
+        ],
+        1781532000000
+      ],
+      "out": [
+        {
+          "kind": "daily",
+          "fireAt": 1781528400000,
+          "expiresAt": 1781535600000,
+          "title": "Bill due",
+          "body": "₹100",
+          "url": "/recurring",
+          "id": "daily:log:2026-06-15"
+        }
+      ]
+    },
+    {
+      "fn": "selectDueNotifications",
+      "args": [
+        [
+          {
+            "kind": "bill",
+            "fireAt": 1781521200000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "bill:r1:2026-06-15"
+          },
+          {
+            "kind": "budget",
+            "fireAt": 1781506800000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/budgets",
+            "id": "budget:cat-1:2026-06-01:near"
+          },
+          {
+            "kind": "credit",
+            "fireAt": 1781524800000,
+            "expiresAt": 1781528400000,
+            "title": "Card due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "credit:acc-1:2026-06-20"
+          },
+          {
+            "kind": "daily",
+            "fireAt": 1781528400000,
+            "expiresAt": 1781535600000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "daily:log:2026-06-15"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781492400000,
+            "expiresAt": 1781524799999,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expired"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781517600000,
+            "expiresAt": 1781524800000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expires-now"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-a"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-b"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1778932800000,
+            "expiresAt": 1781611200000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "old"
+          }
+        ],
+        [
+          "tie-a",
+          "old",
+          "bill:r1:2026-06-15"
+        ],
+        1781884800000
+      ],
+      "out": []
+    },
+    {
+      "fn": "selectDueNotifications",
+      "args": [
+        [
+          {
+            "kind": "bill",
+            "fireAt": 1781521200000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "bill:r1:2026-06-15"
+          },
+          {
+            "kind": "budget",
+            "fireAt": 1781506800000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/budgets",
+            "id": "budget:cat-1:2026-06-01:near"
+          },
+          {
+            "kind": "credit",
+            "fireAt": 1781524800000,
+            "expiresAt": 1781528400000,
+            "title": "Card due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "credit:acc-1:2026-06-20"
+          },
+          {
+            "kind": "daily",
+            "fireAt": 1781528400000,
+            "expiresAt": 1781535600000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "daily:log:2026-06-15"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781492400000,
+            "expiresAt": 1781524799999,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expired"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781517600000,
+            "expiresAt": 1781524800000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expires-now"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-a"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-b"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1778932800000,
+            "expiresAt": 1781611200000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "old"
+          }
+        ],
+        [
+          "tie-a",
+          "old",
+          "bill:r1:2026-06-15"
+        ],
+        0
+      ],
+      "out": []
+    },
+    {
+      "fn": "selectDueNotifications",
+      "args": [
+        [
+          {
+            "kind": "bill",
+            "fireAt": 1781521200000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "bill:r1:2026-06-15"
+          },
+          {
+            "kind": "budget",
+            "fireAt": 1781506800000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/budgets",
+            "id": "budget:cat-1:2026-06-01:near"
+          },
+          {
+            "kind": "credit",
+            "fireAt": 1781524800000,
+            "expiresAt": 1781528400000,
+            "title": "Card due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "credit:acc-1:2026-06-20"
+          },
+          {
+            "kind": "daily",
+            "fireAt": 1781528400000,
+            "expiresAt": 1781535600000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "daily:log:2026-06-15"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781492400000,
+            "expiresAt": 1781524799999,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expired"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781517600000,
+            "expiresAt": 1781524800000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expires-now"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-a"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-b"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1778932800000,
+            "expiresAt": 1781611200000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "old"
+          }
+        ],
+        [
+          "bill:r1:2026-06-15",
+          "budget:cat-1:2026-06-01:near",
+          "credit:acc-1:2026-06-20",
+          "daily:log:2026-06-15",
+          "expired",
+          "expires-now",
+          "tie-a",
+          "tie-b",
+          "old"
+        ],
+        1781524800000
+      ],
+      "out": []
+    },
+    {
+      "fn": "selectDueNotifications",
+      "args": [
+        [
+          {
+            "kind": "bill",
+            "fireAt": 1781521200000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "bill:r1:2026-06-15"
+          },
+          {
+            "kind": "budget",
+            "fireAt": 1781506800000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/budgets",
+            "id": "budget:cat-1:2026-06-01:near"
+          },
+          {
+            "kind": "credit",
+            "fireAt": 1781524800000,
+            "expiresAt": 1781528400000,
+            "title": "Card due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "credit:acc-1:2026-06-20"
+          },
+          {
+            "kind": "daily",
+            "fireAt": 1781528400000,
+            "expiresAt": 1781535600000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "daily:log:2026-06-15"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781492400000,
+            "expiresAt": 1781524799999,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expired"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781517600000,
+            "expiresAt": 1781524800000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expires-now"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-a"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-b"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1778932800000,
+            "expiresAt": 1781611200000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "old"
+          }
+        ],
+        [
+          "bill:r1:2026-06-15",
+          "budget:cat-1:2026-06-01:near",
+          "credit:acc-1:2026-06-20",
+          "daily:log:2026-06-15",
+          "expired",
+          "expires-now",
+          "tie-a",
+          "tie-b",
+          "old"
+        ],
+        1781510400000
+      ],
+      "out": []
+    },
+    {
+      "fn": "selectDueNotifications",
+      "args": [
+        [
+          {
+            "kind": "bill",
+            "fireAt": 1781521200000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "bill:r1:2026-06-15"
+          },
+          {
+            "kind": "budget",
+            "fireAt": 1781506800000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/budgets",
+            "id": "budget:cat-1:2026-06-01:near"
+          },
+          {
+            "kind": "credit",
+            "fireAt": 1781524800000,
+            "expiresAt": 1781528400000,
+            "title": "Card due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "credit:acc-1:2026-06-20"
+          },
+          {
+            "kind": "daily",
+            "fireAt": 1781528400000,
+            "expiresAt": 1781535600000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "daily:log:2026-06-15"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781492400000,
+            "expiresAt": 1781524799999,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expired"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781517600000,
+            "expiresAt": 1781524800000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expires-now"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-a"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-b"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1778932800000,
+            "expiresAt": 1781611200000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "old"
+          }
+        ],
+        [
+          "bill:r1:2026-06-15",
+          "budget:cat-1:2026-06-01:near",
+          "credit:acc-1:2026-06-20",
+          "daily:log:2026-06-15",
+          "expired",
+          "expires-now",
+          "tie-a",
+          "tie-b",
+          "old"
+        ],
+        1781532000000
+      ],
+      "out": []
+    },
+    {
+      "fn": "selectDueNotifications",
+      "args": [
+        [
+          {
+            "kind": "bill",
+            "fireAt": 1781521200000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "bill:r1:2026-06-15"
+          },
+          {
+            "kind": "budget",
+            "fireAt": 1781506800000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/budgets",
+            "id": "budget:cat-1:2026-06-01:near"
+          },
+          {
+            "kind": "credit",
+            "fireAt": 1781524800000,
+            "expiresAt": 1781528400000,
+            "title": "Card due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "credit:acc-1:2026-06-20"
+          },
+          {
+            "kind": "daily",
+            "fireAt": 1781528400000,
+            "expiresAt": 1781535600000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "daily:log:2026-06-15"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781492400000,
+            "expiresAt": 1781524799999,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expired"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781517600000,
+            "expiresAt": 1781524800000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expires-now"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-a"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-b"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1778932800000,
+            "expiresAt": 1781611200000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "old"
+          }
+        ],
+        [
+          "bill:r1:2026-06-15",
+          "budget:cat-1:2026-06-01:near",
+          "credit:acc-1:2026-06-20",
+          "daily:log:2026-06-15",
+          "expired",
+          "expires-now",
+          "tie-a",
+          "tie-b",
+          "old"
+        ],
+        1781884800000
+      ],
+      "out": []
+    },
+    {
+      "fn": "selectDueNotifications",
+      "args": [
+        [
+          {
+            "kind": "bill",
+            "fireAt": 1781521200000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "bill:r1:2026-06-15"
+          },
+          {
+            "kind": "budget",
+            "fireAt": 1781506800000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/budgets",
+            "id": "budget:cat-1:2026-06-01:near"
+          },
+          {
+            "kind": "credit",
+            "fireAt": 1781524800000,
+            "expiresAt": 1781528400000,
+            "title": "Card due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "credit:acc-1:2026-06-20"
+          },
+          {
+            "kind": "daily",
+            "fireAt": 1781528400000,
+            "expiresAt": 1781535600000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "daily:log:2026-06-15"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781492400000,
+            "expiresAt": 1781524799999,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expired"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781517600000,
+            "expiresAt": 1781524800000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "expires-now"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-a"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "tie-b"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1778932800000,
+            "expiresAt": 1781611200000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "old"
+          }
+        ],
+        [
+          "bill:r1:2026-06-15",
+          "budget:cat-1:2026-06-01:near",
+          "credit:acc-1:2026-06-20",
+          "daily:log:2026-06-15",
+          "expired",
+          "expires-now",
+          "tie-a",
+          "tie-b",
+          "old"
+        ],
+        0
+      ],
+      "out": []
+    },
+    {
+      "fn": "selectDueNotifications",
+      "args": [
+        [
+          {
+            "kind": "bill",
+            "fireAt": 1781488800000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "e0"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781492400000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "e1"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781496000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "e2"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781499600000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "e3"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781503200000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "e4"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781506800000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "e5"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781510400000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "e6"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "e7"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781517600000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "e8"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781521200000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "e9"
+          }
+        ],
+        [],
+        1781524800000
+      ],
+      "out": [
+        {
+          "kind": "bill",
+          "fireAt": 1781488800000,
+          "expiresAt": 1781528400000,
+          "title": "Bill due",
+          "body": "₹100",
+          "url": "/recurring",
+          "id": "e0"
+        },
+        {
+          "kind": "bill",
+          "fireAt": 1781492400000,
+          "expiresAt": 1781528400000,
+          "title": "Bill due",
+          "body": "₹100",
+          "url": "/recurring",
+          "id": "e1"
+        },
+        {
+          "kind": "bill",
+          "fireAt": 1781496000000,
+          "expiresAt": 1781528400000,
+          "title": "Bill due",
+          "body": "₹100",
+          "url": "/recurring",
+          "id": "e2"
+        }
+      ]
+    },
+    {
+      "fn": "selectDueNotifications",
+      "args": [
+        [
+          {
+            "kind": "bill",
+            "fireAt": 1781521200000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "e9"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781517600000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "e8"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781514000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "e7"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781510400000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "e6"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781506800000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "e5"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781503200000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "e4"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781499600000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "e3"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781496000000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "e2"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781492400000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "e1"
+          },
+          {
+            "kind": "bill",
+            "fireAt": 1781488800000,
+            "expiresAt": 1781528400000,
+            "title": "Bill due",
+            "body": "₹100",
+            "url": "/recurring",
+            "id": "e0"
+          }
+        ],
+        [
+          "e0"
+        ],
+        1781524800000
+      ],
+      "out": [
+        {
+          "kind": "bill",
+          "fireAt": 1781492400000,
+          "expiresAt": 1781528400000,
+          "title": "Bill due",
+          "body": "₹100",
+          "url": "/recurring",
+          "id": "e1"
+        },
+        {
+          "kind": "bill",
+          "fireAt": 1781496000000,
+          "expiresAt": 1781528400000,
+          "title": "Bill due",
+          "body": "₹100",
+          "url": "/recurring",
+          "id": "e2"
+        },
+        {
+          "kind": "bill",
+          "fireAt": 1781499600000,
+          "expiresAt": 1781528400000,
+          "title": "Bill due",
+          "body": "₹100",
+          "url": "/recurring",
+          "id": "e3"
+        }
+      ]
+    },
+    {
+      "fn": "selectDueNotifications",
+      "args": [
+        [],
+        [],
+        1781524800000
+      ],
+      "out": []
+    }
+  ]
+}

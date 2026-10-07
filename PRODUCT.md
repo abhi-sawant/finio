@@ -43,7 +43,7 @@ Name: Finio. The visual world is **Mudra** (adopted 2026-10-04, replacing the ea
 
 ## Evidence on Hand
 
-Real in-repo assets only: README.md, design.md, DESIGN.md, improvements.md, a deterministic sample dataset (`src/data/sampleData.ts`) and `dummydata.json`. No testimonials, customer logos, benchmarks, or store ratings exist; do not fabricate them.
+Real in-repo assets only: README.md, design.md, a deterministic sample dataset (`web/src/data/sampleData.ts`) and `web/dummydata.json`. No testimonials, customer logos, benchmarks, or store ratings exist; do not fabricate them.
 
 ## Product Principles
 

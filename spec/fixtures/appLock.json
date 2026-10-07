@@ -1,0 +1,1324 @@
+{
+  "module": "appLock",
+  "tz": "Asia/Kolkata",
+  "cases": [
+    {
+      "fn": "constants",
+      "args": [],
+      "out": {
+        "AUTO_LOCK_OPTIONS": [
+          0,
+          1,
+          5,
+          15,
+          60
+        ],
+        "DEFAULT_AUTO_LOCK_MINUTES": 5,
+        "FREE_ATTEMPTS": 4
+      }
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": null,
+          "autoLockMinutes": -1,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": null,
+          "autoLockMinutes": 0,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": null,
+          "autoLockMinutes": 1,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": null,
+          "autoLockMinutes": 5,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": null,
+          "autoLockMinutes": 15,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": null,
+          "autoLockMinutes": 60,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524860000,
+          "autoLockMinutes": -1,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524860000,
+          "autoLockMinutes": 0,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524860000,
+          "autoLockMinutes": 1,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524860000,
+          "autoLockMinutes": 5,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524860000,
+          "autoLockMinutes": 15,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524860000,
+          "autoLockMinutes": 60,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524800001,
+          "autoLockMinutes": -1,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524800001,
+          "autoLockMinutes": 0,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524800001,
+          "autoLockMinutes": 1,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524800001,
+          "autoLockMinutes": 5,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524800001,
+          "autoLockMinutes": 15,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524800001,
+          "autoLockMinutes": 60,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524800000,
+          "autoLockMinutes": -1,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524800000,
+          "autoLockMinutes": 0,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524800000,
+          "autoLockMinutes": 1,
+          "now": 1781524800000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524800000,
+          "autoLockMinutes": 5,
+          "now": 1781524800000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524800000,
+          "autoLockMinutes": 15,
+          "now": 1781524800000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524800000,
+          "autoLockMinutes": 60,
+          "now": 1781524800000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524799999,
+          "autoLockMinutes": -1,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524799999,
+          "autoLockMinutes": 0,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524799999,
+          "autoLockMinutes": 1,
+          "now": 1781524800000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524799999,
+          "autoLockMinutes": 5,
+          "now": 1781524800000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524799999,
+          "autoLockMinutes": 15,
+          "now": 1781524800000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524799999,
+          "autoLockMinutes": 60,
+          "now": 1781524800000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524501000,
+          "autoLockMinutes": -1,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524501000,
+          "autoLockMinutes": 0,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524501000,
+          "autoLockMinutes": 1,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524501000,
+          "autoLockMinutes": 5,
+          "now": 1781524800000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524501000,
+          "autoLockMinutes": 15,
+          "now": 1781524800000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524501000,
+          "autoLockMinutes": 60,
+          "now": 1781524800000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524500001,
+          "autoLockMinutes": -1,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524500001,
+          "autoLockMinutes": 0,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524500001,
+          "autoLockMinutes": 1,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524500001,
+          "autoLockMinutes": 5,
+          "now": 1781524800000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524500001,
+          "autoLockMinutes": 15,
+          "now": 1781524800000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524500001,
+          "autoLockMinutes": 60,
+          "now": 1781524800000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524500000,
+          "autoLockMinutes": -1,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524500000,
+          "autoLockMinutes": 0,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524500000,
+          "autoLockMinutes": 1,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524500000,
+          "autoLockMinutes": 5,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524500000,
+          "autoLockMinutes": 15,
+          "now": 1781524800000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524500000,
+          "autoLockMinutes": 60,
+          "now": 1781524800000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524440000,
+          "autoLockMinutes": -1,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524440000,
+          "autoLockMinutes": 0,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524440000,
+          "autoLockMinutes": 1,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524440000,
+          "autoLockMinutes": 5,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524440000,
+          "autoLockMinutes": 15,
+          "now": 1781524800000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781524440000,
+          "autoLockMinutes": 60,
+          "now": 1781524800000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781521200000,
+          "autoLockMinutes": -1,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781521200000,
+          "autoLockMinutes": 0,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781521200000,
+          "autoLockMinutes": 1,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781521200000,
+          "autoLockMinutes": 5,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781521200000,
+          "autoLockMinutes": 15,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781521200000,
+          "autoLockMinutes": 60,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781521200001,
+          "autoLockMinutes": -1,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781521200001,
+          "autoLockMinutes": 0,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781521200001,
+          "autoLockMinutes": 1,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781521200001,
+          "autoLockMinutes": 5,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781521200001,
+          "autoLockMinutes": 15,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 1781521200001,
+          "autoLockMinutes": 60,
+          "now": 1781524800000
+        }
+      ],
+      "out": false
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 0,
+          "autoLockMinutes": -1,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 0,
+          "autoLockMinutes": 0,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 0,
+          "autoLockMinutes": 1,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 0,
+          "autoLockMinutes": 5,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 0,
+          "autoLockMinutes": 15,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "shouldLockOnResume",
+      "args": [
+        {
+          "backgroundedAt": 0,
+          "autoLockMinutes": 60,
+          "now": 1781524800000
+        }
+      ],
+      "out": true
+    },
+    {
+      "fn": "penaltyForAttempts",
+      "args": [
+        -1
+      ],
+      "out": 0
+    },
+    {
+      "fn": "penaltyForAttempts",
+      "args": [
+        0
+      ],
+      "out": 0
+    },
+    {
+      "fn": "penaltyForAttempts",
+      "args": [
+        1
+      ],
+      "out": 0
+    },
+    {
+      "fn": "penaltyForAttempts",
+      "args": [
+        2
+      ],
+      "out": 0
+    },
+    {
+      "fn": "penaltyForAttempts",
+      "args": [
+        3
+      ],
+      "out": 0
+    },
+    {
+      "fn": "penaltyForAttempts",
+      "args": [
+        4
+      ],
+      "out": 0
+    },
+    {
+      "fn": "penaltyForAttempts",
+      "args": [
+        5
+      ],
+      "out": 15000
+    },
+    {
+      "fn": "penaltyForAttempts",
+      "args": [
+        6
+      ],
+      "out": 30000
+    },
+    {
+      "fn": "penaltyForAttempts",
+      "args": [
+        7
+      ],
+      "out": 60000
+    },
+    {
+      "fn": "penaltyForAttempts",
+      "args": [
+        8
+      ],
+      "out": 120000
+    },
+    {
+      "fn": "penaltyForAttempts",
+      "args": [
+        9
+      ],
+      "out": 300000
+    },
+    {
+      "fn": "penaltyForAttempts",
+      "args": [
+        10
+      ],
+      "out": 300000
+    },
+    {
+      "fn": "penaltyForAttempts",
+      "args": [
+        11
+      ],
+      "out": 300000
+    },
+    {
+      "fn": "penaltyForAttempts",
+      "args": [
+        12
+      ],
+      "out": 300000
+    },
+    {
+      "fn": "penaltyForAttempts",
+      "args": [
+        13
+      ],
+      "out": 300000
+    },
+    {
+      "fn": "penaltyForAttempts",
+      "args": [
+        14
+      ],
+      "out": 300000
+    },
+    {
+      "fn": "penaltyForAttempts",
+      "args": [
+        15
+      ],
+      "out": 300000
+    },
+    {
+      "fn": "penaltyForAttempts",
+      "args": [
+        16
+      ],
+      "out": 300000
+    },
+    {
+      "fn": "penaltyForAttempts",
+      "args": [
+        17
+      ],
+      "out": 300000
+    },
+    {
+      "fn": "penaltyForAttempts",
+      "args": [
+        18
+      ],
+      "out": 300000
+    },
+    {
+      "fn": "penaltyForAttempts",
+      "args": [
+        19
+      ],
+      "out": 300000
+    },
+    {
+      "fn": "penaltyForAttempts",
+      "args": [
+        20
+      ],
+      "out": 300000
+    },
+    {
+      "fn": "penaltyForAttempts",
+      "args": [
+        21
+      ],
+      "out": 300000
+    },
+    {
+      "fn": "penaltyForAttempts",
+      "args": [
+        22
+      ],
+      "out": 300000
+    },
+    {
+      "fn": "penaltyForAttempts",
+      "args": [
+        23
+      ],
+      "out": 300000
+    },
+    {
+      "fn": "penaltyForAttempts",
+      "args": [
+        24
+      ],
+      "out": 300000
+    },
+    {
+      "fn": "penaltyForAttempts",
+      "args": [
+        25
+      ],
+      "out": 300000
+    },
+    {
+      "fn": "penaltyForAttempts",
+      "args": [
+        500
+      ],
+      "out": 300000
+    },
+    {
+      "fn": "nextLockoutUntil",
+      "args": [
+        0,
+        1781524800000
+      ],
+      "out": null
+    },
+    {
+      "fn": "nextLockoutUntil",
+      "args": [
+        3,
+        1781524800000
+      ],
+      "out": null
+    },
+    {
+      "fn": "nextLockoutUntil",
+      "args": [
+        4,
+        1781524800000
+      ],
+      "out": null
+    },
+    {
+      "fn": "nextLockoutUntil",
+      "args": [
+        5,
+        1781524800000
+      ],
+      "out": 1781524815000
+    },
+    {
+      "fn": "nextLockoutUntil",
+      "args": [
+        6,
+        1781524800000
+      ],
+      "out": 1781524830000
+    },
+    {
+      "fn": "nextLockoutUntil",
+      "args": [
+        9,
+        1781524800000
+      ],
+      "out": 1781525100000
+    },
+    {
+      "fn": "nextLockoutUntil",
+      "args": [
+        10,
+        1781524800000
+      ],
+      "out": 1781525100000
+    },
+    {
+      "fn": "nextLockoutUntil",
+      "args": [
+        100,
+        1781524800000
+      ],
+      "out": 1781525100000
+    },
+    {
+      "fn": "remainingLockoutMs",
+      "args": [
+        null,
+        1781524800000
+      ],
+      "out": 0
+    },
+    {
+      "fn": "remainingLockoutMs",
+      "args": [
+        1781524799000,
+        1781524800000
+      ],
+      "out": 0
+    },
+    {
+      "fn": "remainingLockoutMs",
+      "args": [
+        1781524800000,
+        1781524800000
+      ],
+      "out": 0
+    },
+    {
+      "fn": "remainingLockoutMs",
+      "args": [
+        1781524800001,
+        1781524800000
+      ],
+      "out": 1
+    },
+    {
+      "fn": "remainingLockoutMs",
+      "args": [
+        1781524814200,
+        1781524800000
+      ],
+      "out": 14200
+    },
+    {
+      "fn": "remainingLockoutMs",
+      "args": [
+        1781525100000,
+        1781524800000
+      ],
+      "out": 300000
+    },
+    {
+      "fn": "formatLockoutCountdown",
+      "args": [
+        -61000
+      ],
+      "out": "-2:-1"
+    },
+    {
+      "fn": "formatLockoutCountdown",
+      "args": [
+        -1000
+      ],
+      "out": "-1:-1"
+    },
+    {
+      "fn": "formatLockoutCountdown",
+      "args": [
+        -500
+      ],
+      "out": "0:00"
+    },
+    {
+      "fn": "formatLockoutCountdown",
+      "args": [
+        -1
+      ],
+      "out": "0:00"
+    },
+    {
+      "fn": "formatLockoutCountdown",
+      "args": [
+        0
+      ],
+      "out": "0:00"
+    },
+    {
+      "fn": "formatLockoutCountdown",
+      "args": [
+        1
+      ],
+      "out": "0:01"
+    },
+    {
+      "fn": "formatLockoutCountdown",
+      "args": [
+        999
+      ],
+      "out": "0:01"
+    },
+    {
+      "fn": "formatLockoutCountdown",
+      "args": [
+        1000
+      ],
+      "out": "0:01"
+    },
+    {
+      "fn": "formatLockoutCountdown",
+      "args": [
+        1001
+      ],
+      "out": "0:02"
+    },
+    {
+      "fn": "formatLockoutCountdown",
+      "args": [
+        14200
+      ],
+      "out": "0:15"
+    },
+    {
+      "fn": "formatLockoutCountdown",
+      "args": [
+        59000
+      ],
+      "out": "0:59"
+    },
+    {
+      "fn": "formatLockoutCountdown",
+      "args": [
+        59001
+      ],
+      "out": "1:00"
+    },
+    {
+      "fn": "formatLockoutCountdown",
+      "args": [
+        60000
+      ],
+      "out": "1:00"
+    },
+    {
+      "fn": "formatLockoutCountdown",
+      "args": [
+        61000
+      ],
+      "out": "1:01"
+    },
+    {
+      "fn": "formatLockoutCountdown",
+      "args": [
+        299999
+      ],
+      "out": "5:00"
+    },
+    {
+      "fn": "formatLockoutCountdown",
+      "args": [
+        300000
+      ],
+      "out": "5:00"
+    },
+    {
+      "fn": "formatLockoutCountdown",
+      "args": [
+        599999
+      ],
+      "out": "10:00"
+    },
+    {
+      "fn": "formatLockoutCountdown",
+      "args": [
+        3600000
+      ],
+      "out": "60:00"
+    },
+    {
+      "fn": "formatLockoutCountdown",
+      "args": [
+        6000000
+      ],
+      "out": "100:00"
+    },
+    {
+      "fn": "autoLockLabel",
+      "args": [
+        -5
+      ],
+      "out": "Immediately"
+    },
+    {
+      "fn": "autoLockLabel",
+      "args": [
+        0
+      ],
+      "out": "Immediately"
+    },
+    {
+      "fn": "autoLockLabel",
+      "args": [
+        1
+      ],
+      "out": "After 1 minute"
+    },
+    {
+      "fn": "autoLockLabel",
+      "args": [
+        2
+      ],
+      "out": "After 2 minutes"
+    },
+    {
+      "fn": "autoLockLabel",
+      "args": [
+        5
+      ],
+      "out": "After 5 minutes"
+    },
+    {
+      "fn": "autoLockLabel",
+      "args": [
+        15
+      ],
+      "out": "After 15 minutes"
+    },
+    {
+      "fn": "autoLockLabel",
+      "args": [
+        59
+      ],
+      "out": "After 59 minutes"
+    },
+    {
+      "fn": "autoLockLabel",
+      "args": [
+        60
+      ],
+      "out": "After 1 hour"
+    },
+    {
+      "fn": "autoLockLabel",
+      "args": [
+        61
+      ],
+      "out": "After 61 minutes"
+    },
+    {
+      "fn": "autoLockLabel",
+      "args": [
+        120
+      ],
+      "out": "After 120 minutes"
+    }
+  ]
+}

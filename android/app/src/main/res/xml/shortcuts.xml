@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Mirrors the PWA manifest's `shortcuts` (web/vite.config.ts), capped at four for the same
+     reason: launchers surface 3–4. Each is a finio:// deep link parsed by platform/share. -->
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="add-expense"
+        android:enabled="true"
+        android:icon="@mipmap/ic_shortcut_expense"
+        android:shortcutShortLabel="@string/shortcut_add_expense_short"
+        android:shortcutLongLabel="@string/shortcut_add_expense_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="finio://open?path=%2Fadd-transaction%3Ftype%3Dexpense"
+            android:targetPackage="com.slowatcoding.finio"
+            android:targetClass="com.slowatcoding.finio.MainActivity" />
+    </shortcut>
+    <shortcut
+        android:shortcutId="add-income"
+        android:enabled="true"
+        android:icon="@mipmap/ic_shortcut_income"
+        android:shortcutShortLabel="@string/shortcut_add_income_short"
+        android:shortcutLongLabel="@string/shortcut_add_income_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="finio://open?path=%2Fadd-transaction%3Ftype%3Dincome"
+            android:targetPackage="com.slowatcoding.finio"
+            android:targetClass="com.slowatcoding.finio.MainActivity" />
+    </shortcut>
+    <shortcut
+        android:shortcutId="transactions"
+        android:enabled="true"
+        android:icon="@mipmap/ic_shortcut_transactions"
+        android:shortcutShortLabel="@string/shortcut_transactions_short"
+        android:shortcutLongLabel="@string/shortcut_transactions_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="finio://open?path=%2Ftransactions"
+            android:targetPackage="com.slowatcoding.finio"
+            android:targetClass="com.slowatcoding.finio.MainActivity" />
+    </shortcut>
+    <shortcut
+        android:shortcutId="budgets"
+        android:enabled="true"
+        android:icon="@mipmap/ic_shortcut_budgets"
+        android:shortcutShortLabel="@string/shortcut_budgets_short"
+        android:shortcutLongLabel="@string/shortcut_budgets_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="finio://open?path=%2Fbudgets"
+            android:targetPackage="com.slowatcoding.finio"
+            android:targetClass="com.slowatcoding.finio.MainActivity" />
+    </shortcut>
+</shortcuts>

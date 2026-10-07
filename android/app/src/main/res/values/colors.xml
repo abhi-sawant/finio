@@ -1,0 +1,8 @@
+<resources>
+    <!-- Pre-first-frame only: the note paper (index.css paper / background tokens). Compose owns
+         every colour after that — see ui/theme/FinioColors.kt. -->
+    <color name="paper_top">#FFF1EDFF</color>
+    <color name="paper_middle">#FFEBF6F1</color>
+    <color name="paper_bottom">#FFFFF1E3</color>
+    <color name="paper_background">#FFF1EEFB</color>
+</resources>

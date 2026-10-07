@@ -1,0 +1,1895 @@
+{
+  "module": "validation",
+  "tz": "Asia/Kolkata",
+  "cases": [
+    {
+      "fn": "constants",
+      "args": [],
+      "out": {
+        "MAX_NAME_LENGTH": 40,
+        "MAX_NOTE_LENGTH": 200,
+        "MAX_PATTERN_LENGTH": 100
+      }
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "",
+        0
+      ],
+      "out": ""
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "",
+        1
+      ],
+      "out": ""
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "",
+        2
+      ],
+      "out": ""
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "",
+        3
+      ],
+      "out": ""
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "",
+        5
+      ],
+      "out": ""
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "",
+        40
+      ],
+      "out": ""
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "",
+        200
+      ],
+      "out": ""
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "",
+        -1
+      ],
+      "out": ""
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "",
+        -3
+      ],
+      "out": ""
+    },
+    {
+      "fn": "stripLeading",
+      "args": [
+        ""
+      ],
+      "out": ""
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "hello",
+        0
+      ],
+      "out": ""
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "hello",
+        1
+      ],
+      "out": "h"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "hello",
+        2
+      ],
+      "out": "he"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "hello",
+        3
+      ],
+      "out": "hel"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "hello",
+        5
+      ],
+      "out": "hello"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "hello",
+        40
+      ],
+      "out": "hello"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "hello",
+        200
+      ],
+      "out": "hello"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "hello",
+        -1
+      ],
+      "out": "hell"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "hello",
+        -3
+      ],
+      "out": "he"
+    },
+    {
+      "fn": "stripLeading",
+      "args": [
+        "hello"
+      ],
+      "out": "hello"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "  hello  ",
+        0
+      ],
+      "out": ""
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "  hello  ",
+        1
+      ],
+      "out": "h"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "  hello  ",
+        2
+      ],
+      "out": "he"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "  hello  ",
+        3
+      ],
+      "out": "hel"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "  hello  ",
+        5
+      ],
+      "out": "hello"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "  hello  ",
+        40
+      ],
+      "out": "hello"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "  hello  ",
+        200
+      ],
+      "out": "hello"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "  hello  ",
+        -1
+      ],
+      "out": "hell"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "  hello  ",
+        -3
+      ],
+      "out": "he"
+    },
+    {
+      "fn": "stripLeading",
+      "args": [
+        "  hello  "
+      ],
+      "out": "hello  "
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "\t\n hello world \r\n",
+        0
+      ],
+      "out": ""
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "\t\n hello world \r\n",
+        1
+      ],
+      "out": "h"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "\t\n hello world \r\n",
+        2
+      ],
+      "out": "he"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "\t\n hello world \r\n",
+        3
+      ],
+      "out": "hel"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "\t\n hello world \r\n",
+        5
+      ],
+      "out": "hello"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "\t\n hello world \r\n",
+        40
+      ],
+      "out": "hello world"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "\t\n hello world \r\n",
+        200
+      ],
+      "out": "hello world"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "\t\n hello world \r\n",
+        -1
+      ],
+      "out": "hello worl"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "\t\n hello world \r\n",
+        -3
+      ],
+      "out": "hello wo"
+    },
+    {
+      "fn": "stripLeading",
+      "args": [
+        "\t\n hello world \r\n"
+      ],
+      "out": "hello world \r\n"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        " nbsp ",
+        0
+      ],
+      "out": ""
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        " nbsp ",
+        1
+      ],
+      "out": "n"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        " nbsp ",
+        2
+      ],
+      "out": "nb"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        " nbsp ",
+        3
+      ],
+      "out": "nbs"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        " nbsp ",
+        5
+      ],
+      "out": "nbsp"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        " nbsp ",
+        40
+      ],
+      "out": "nbsp"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        " nbsp ",
+        200
+      ],
+      "out": "nbsp"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        " nbsp ",
+        -1
+      ],
+      "out": "nbs"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        " nbsp ",
+        -3
+      ],
+      "out": "n"
+    },
+    {
+      "fn": "stripLeading",
+      "args": [
+        " nbsp "
+      ],
+      "out": "nbsp "
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "　ideographic　",
+        0
+      ],
+      "out": ""
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "　ideographic　",
+        1
+      ],
+      "out": "i"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "　ideographic　",
+        2
+      ],
+      "out": "id"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "　ideographic　",
+        3
+      ],
+      "out": "ide"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "　ideographic　",
+        5
+      ],
+      "out": "ideog"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "　ideographic　",
+        40
+      ],
+      "out": "ideographic"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "　ideographic　",
+        200
+      ],
+      "out": "ideographic"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "　ideographic　",
+        -1
+      ],
+      "out": "ideographi"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "　ideographic　",
+        -3
+      ],
+      "out": "ideograp"
+    },
+    {
+      "fn": "stripLeading",
+      "args": [
+        "　ideographic　"
+      ],
+      "out": "ideographic　"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "﻿bom﻿",
+        0
+      ],
+      "out": ""
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "﻿bom﻿",
+        1
+      ],
+      "out": "b"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "﻿bom﻿",
+        2
+      ],
+      "out": "bo"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "﻿bom﻿",
+        3
+      ],
+      "out": "bom"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "﻿bom﻿",
+        5
+      ],
+      "out": "bom"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "﻿bom﻿",
+        40
+      ],
+      "out": "bom"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "﻿bom﻿",
+        200
+      ],
+      "out": "bom"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "﻿bom﻿",
+        -1
+      ],
+      "out": "bo"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "﻿bom﻿",
+        -3
+      ],
+      "out": ""
+    },
+    {
+      "fn": "stripLeading",
+      "args": [
+        "﻿bom﻿"
+      ],
+      "out": "bom﻿"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        " line ",
+        0
+      ],
+      "out": ""
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        " line ",
+        1
+      ],
+      "out": "l"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        " line ",
+        2
+      ],
+      "out": "li"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        " line ",
+        3
+      ],
+      "out": "lin"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        " line ",
+        5
+      ],
+      "out": "line"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        " line ",
+        40
+      ],
+      "out": "line"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        " line ",
+        200
+      ],
+      "out": "line"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        " line ",
+        -1
+      ],
+      "out": "lin"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        " line ",
+        -3
+      ],
+      "out": "l"
+    },
+    {
+      "fn": "stripLeading",
+      "args": [
+        " line "
+      ],
+      "out": "line "
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "\u001cnot-js-space\u001f",
+        0
+      ],
+      "out": ""
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "\u001cnot-js-space\u001f",
+        1
+      ],
+      "out": "\u001c"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "\u001cnot-js-space\u001f",
+        2
+      ],
+      "out": "\u001cn"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "\u001cnot-js-space\u001f",
+        3
+      ],
+      "out": "\u001cno"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "\u001cnot-js-space\u001f",
+        5
+      ],
+      "out": "\u001cnot-"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "\u001cnot-js-space\u001f",
+        40
+      ],
+      "out": "\u001cnot-js-space\u001f"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "\u001cnot-js-space\u001f",
+        200
+      ],
+      "out": "\u001cnot-js-space\u001f"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "\u001cnot-js-space\u001f",
+        -1
+      ],
+      "out": "\u001cnot-js-space"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "\u001cnot-js-space\u001f",
+        -3
+      ],
+      "out": "\u001cnot-js-spa"
+    },
+    {
+      "fn": "stripLeading",
+      "args": [
+        "\u001cnot-js-space\u001f"
+      ],
+      "out": "\u001cnot-js-space\u001f"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "nel",
+        0
+      ],
+      "out": ""
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "nel",
+        1
+      ],
+      "out": ""
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "nel",
+        2
+      ],
+      "out": "n"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "nel",
+        3
+      ],
+      "out": "ne"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "nel",
+        5
+      ],
+      "out": "nel"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "nel",
+        40
+      ],
+      "out": "nel"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "nel",
+        200
+      ],
+      "out": "nel"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "nel",
+        -1
+      ],
+      "out": "nel"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "nel",
+        -3
+      ],
+      "out": "n"
+    },
+    {
+      "fn": "stripLeading",
+      "args": [
+        "nel"
+      ],
+      "out": "nel"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "​zero-width​",
+        0
+      ],
+      "out": ""
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "​zero-width​",
+        1
+      ],
+      "out": "​"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "​zero-width​",
+        2
+      ],
+      "out": "​z"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "​zero-width​",
+        3
+      ],
+      "out": "​ze"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "​zero-width​",
+        5
+      ],
+      "out": "​zero"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "​zero-width​",
+        40
+      ],
+      "out": "​zero-width​"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "​zero-width​",
+        200
+      ],
+      "out": "​zero-width​"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "​zero-width​",
+        -1
+      ],
+      "out": "​zero-width"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "​zero-width​",
+        -3
+      ],
+      "out": "​zero-wid"
+    },
+    {
+      "fn": "stripLeading",
+      "args": [
+        "​zero-width​"
+      ],
+      "out": "​zero-width​"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        0
+      ],
+      "out": ""
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        1
+      ],
+      "out": "a"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        2
+      ],
+      "out": "aa"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        3
+      ],
+      "out": "aaa"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        5
+      ],
+      "out": "aaaaa"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        40
+      ],
+      "out": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        200
+      ],
+      "out": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        -1
+      ],
+      "out": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        -3
+      ],
+      "out": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    {
+      "fn": "stripLeading",
+      "args": [
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      ],
+      "out": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀",
+        0
+      ],
+      "out": ""
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀",
+        1
+      ],
+      "out": "😀"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀",
+        2
+      ],
+      "out": "😀😀"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀",
+        3
+      ],
+      "out": "😀😀😀"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀",
+        5
+      ],
+      "out": "😀😀😀😀😀"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀",
+        40
+      ],
+      "out": "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀",
+        200
+      ],
+      "out": "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀",
+        -1
+      ],
+      "out": "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀",
+        -3
+      ],
+      "out": "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀"
+    },
+    {
+      "fn": "stripLeading",
+      "args": [
+        "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀"
+      ],
+      "out": "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "ab😀cd",
+        0
+      ],
+      "out": ""
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "ab😀cd",
+        1
+      ],
+      "out": "a"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "ab😀cd",
+        2
+      ],
+      "out": "ab"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "ab😀cd",
+        3
+      ],
+      "out": "ab😀"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "ab😀cd",
+        5
+      ],
+      "out": "ab😀cd"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "ab😀cd",
+        40
+      ],
+      "out": "ab😀cd"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "ab😀cd",
+        200
+      ],
+      "out": "ab😀cd"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "ab😀cd",
+        -1
+      ],
+      "out": "ab😀c"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "ab😀cd",
+        -3
+      ],
+      "out": "ab"
+    },
+    {
+      "fn": "stripLeading",
+      "args": [
+        "ab😀cd"
+      ],
+      "out": "ab😀cd"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "👨‍👩‍👧 family",
+        0
+      ],
+      "out": ""
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "👨‍👩‍👧 family",
+        1
+      ],
+      "out": "👨"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "👨‍👩‍👧 family",
+        2
+      ],
+      "out": "👨‍"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "👨‍👩‍👧 family",
+        3
+      ],
+      "out": "👨‍👩"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "👨‍👩‍👧 family",
+        5
+      ],
+      "out": "👨‍👩‍👧"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "👨‍👩‍👧 family",
+        40
+      ],
+      "out": "👨‍👩‍👧 family"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "👨‍👩‍👧 family",
+        200
+      ],
+      "out": "👨‍👩‍👧 family"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "👨‍👩‍👧 family",
+        -1
+      ],
+      "out": "👨‍👩‍👧 famil"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "👨‍👩‍👧 family",
+        -3
+      ],
+      "out": "👨‍👩‍👧 fam"
+    },
+    {
+      "fn": "stripLeading",
+      "args": [
+        "👨‍👩‍👧 family"
+      ],
+      "out": "👨‍👩‍👧 family"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "é combining",
+        0
+      ],
+      "out": ""
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "é combining",
+        1
+      ],
+      "out": "e"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "é combining",
+        2
+      ],
+      "out": "é"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "é combining",
+        3
+      ],
+      "out": "é "
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "é combining",
+        5
+      ],
+      "out": "é co"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "é combining",
+        40
+      ],
+      "out": "é combining"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "é combining",
+        200
+      ],
+      "out": "é combining"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "é combining",
+        -1
+      ],
+      "out": "é combinin"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "é combining",
+        -3
+      ],
+      "out": "é combin"
+    },
+    {
+      "fn": "stripLeading",
+      "args": [
+        "é combining"
+      ],
+      "out": "é combining"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "\ud83d lone high",
+        0
+      ],
+      "out": ""
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "\ud83d lone high",
+        1
+      ],
+      "out": "\ud83d"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "\ud83d lone high",
+        2
+      ],
+      "out": "\ud83d "
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "\ud83d lone high",
+        3
+      ],
+      "out": "\ud83d l"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "\ud83d lone high",
+        5
+      ],
+      "out": "\ud83d lon"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "\ud83d lone high",
+        40
+      ],
+      "out": "\ud83d lone high"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "\ud83d lone high",
+        200
+      ],
+      "out": "\ud83d lone high"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "\ud83d lone high",
+        -1
+      ],
+      "out": "\ud83d lone hig"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "\ud83d lone high",
+        -3
+      ],
+      "out": "\ud83d lone h"
+    },
+    {
+      "fn": "stripLeading",
+      "args": [
+        "\ud83d lone high"
+      ],
+      "out": "\ud83d lone high"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "x\ud83d",
+        0
+      ],
+      "out": ""
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "x\ud83d",
+        1
+      ],
+      "out": "x"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "x\ud83d",
+        2
+      ],
+      "out": "x\ud83d"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "x\ud83d",
+        3
+      ],
+      "out": "x\ud83d"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "x\ud83d",
+        5
+      ],
+      "out": "x\ud83d"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "x\ud83d",
+        40
+      ],
+      "out": "x\ud83d"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "x\ud83d",
+        200
+      ],
+      "out": "x\ud83d"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "x\ud83d",
+        -1
+      ],
+      "out": "x"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "x\ud83d",
+        -3
+      ],
+      "out": ""
+    },
+    {
+      "fn": "stripLeading",
+      "args": [
+        "x\ud83d"
+      ],
+      "out": "x\ud83d"
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "   ",
+        0
+      ],
+      "out": ""
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "   ",
+        1
+      ],
+      "out": ""
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "   ",
+        2
+      ],
+      "out": ""
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "   ",
+        3
+      ],
+      "out": ""
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "   ",
+        5
+      ],
+      "out": ""
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "   ",
+        40
+      ],
+      "out": ""
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "   ",
+        200
+      ],
+      "out": ""
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "   ",
+        -1
+      ],
+      "out": ""
+    },
+    {
+      "fn": "cleanText",
+      "args": [
+        "   ",
+        -3
+      ],
+      "out": ""
+    },
+    {
+      "fn": "stripLeading",
+      "args": [
+        "   "
+      ],
+      "out": ""
+    },
+    {
+      "fn": "isValidEmail",
+      "args": [
+        ""
+      ],
+      "out": false
+    },
+    {
+      "fn": "isValidEmail",
+      "args": [
+        "a@b.co"
+      ],
+      "out": true
+    },
+    {
+      "fn": "isValidEmail",
+      "args": [
+        "a@b.c"
+      ],
+      "out": false
+    },
+    {
+      "fn": "isValidEmail",
+      "args": [
+        " a@b.co "
+      ],
+      "out": true
+    },
+    {
+      "fn": "isValidEmail",
+      "args": [
+        "a@@b.co"
+      ],
+      "out": false
+    },
+    {
+      "fn": "isValidEmail",
+      "args": [
+        "a b@c.co"
+      ],
+      "out": false
+    },
+    {
+      "fn": "isValidEmail",
+      "args": [
+        "@b.co"
+      ],
+      "out": false
+    },
+    {
+      "fn": "isValidEmail",
+      "args": [
+        "a@.co"
+      ],
+      "out": false
+    },
+    {
+      "fn": "isValidEmail",
+      "args": [
+        "a@b."
+      ],
+      "out": false
+    },
+    {
+      "fn": "isValidEmail",
+      "args": [
+        "a@b..co"
+      ],
+      "out": true
+    },
+    {
+      "fn": "isValidEmail",
+      "args": [
+        "a@b.c.d"
+      ],
+      "out": true
+    },
+    {
+      "fn": "isValidEmail",
+      "args": [
+        "a@b.c.de"
+      ],
+      "out": true
+    },
+    {
+      "fn": "isValidEmail",
+      "args": [
+        "first.last@sub.example.com"
+      ],
+      "out": true
+    },
+    {
+      "fn": "isValidEmail",
+      "args": [
+        "a@b .co"
+      ],
+      "out": false
+    },
+    {
+      "fn": "isValidEmail",
+      "args": [
+        "a@b.😀"
+      ],
+      "out": true
+    },
+    {
+      "fn": "isValidEmail",
+      "args": [
+        "a@b.é"
+      ],
+      "out": false
+    },
+    {
+      "fn": "isValidEmail",
+      "args": [
+        "a@b.co\n"
+      ],
+      "out": true
+    },
+    {
+      "fn": "isValidEmail",
+      "args": [
+        "user+tag@example.in"
+      ],
+      "out": true
+    },
+    {
+      "fn": "isValidEmail",
+      "args": [
+        "a@b"
+      ],
+      "out": false
+    },
+    {
+      "fn": "isValidEmail",
+      "args": [
+        "a.b@c"
+      ],
+      "out": false
+    },
+    {
+      "fn": "isValidEmail",
+      "args": [
+        "a@b.co@d.ef"
+      ],
+      "out": false
+    },
+    {
+      "fn": "isValidEmail",
+      "args": [
+        "a@b.﻿co"
+      ],
+      "out": false
+    },
+    {
+      "fn": "isValidEmail",
+      "args": [
+        "a@.b.co"
+      ],
+      "out": true
+    },
+    {
+      "fn": "isValidEmail",
+      "args": [
+        "a@b.co."
+      ],
+      "out": true
+    },
+    {
+      "fn": "isValidEmail",
+      "args": [
+        "x@y.zz"
+      ],
+      "out": true
+    },
+    {
+      "fn": "isValidEmail",
+      "args": [
+        "x@y.z　z"
+      ],
+      "out": false
+    },
+    {
+      "fn": "isPastDay",
+      "args": [
+        "2026-10-04",
+        "2026-10-05"
+      ],
+      "out": true
+    },
+    {
+      "fn": "isRangeInverted",
+      "args": [
+        "2026-10-04",
+        "2026-10-05"
+      ],
+      "out": false
+    },
+    {
+      "fn": "isPastDay",
+      "args": [
+        "2026-10-05",
+        "2026-10-05"
+      ],
+      "out": false
+    },
+    {
+      "fn": "isRangeInverted",
+      "args": [
+        "2026-10-05",
+        "2026-10-05"
+      ],
+      "out": false
+    },
+    {
+      "fn": "isPastDay",
+      "args": [
+        "2026-10-06",
+        "2026-10-05"
+      ],
+      "out": false
+    },
+    {
+      "fn": "isRangeInverted",
+      "args": [
+        "2026-10-06",
+        "2026-10-05"
+      ],
+      "out": true
+    },
+    {
+      "fn": "isPastDay",
+      "args": [
+        "2025-12-31",
+        "2026-01-01"
+      ],
+      "out": true
+    },
+    {
+      "fn": "isRangeInverted",
+      "args": [
+        "2025-12-31",
+        "2026-01-01"
+      ],
+      "out": false
+    },
+    {
+      "fn": "isPastDay",
+      "args": [
+        "",
+        "2026-01-01"
+      ],
+      "out": true
+    },
+    {
+      "fn": "isRangeInverted",
+      "args": [
+        "",
+        "2026-01-01"
+      ],
+      "out": false
+    },
+    {
+      "fn": "isPastDay",
+      "args": [
+        "2026-01-01",
+        ""
+      ],
+      "out": false
+    },
+    {
+      "fn": "isRangeInverted",
+      "args": [
+        "2026-01-01",
+        ""
+      ],
+      "out": false
+    },
+    {
+      "fn": "isPastDay",
+      "args": [
+        "",
+        ""
+      ],
+      "out": false
+    },
+    {
+      "fn": "isRangeInverted",
+      "args": [
+        "",
+        ""
+      ],
+      "out": false
+    },
+    {
+      "fn": "firstFreeScope",
+      "args": [
+        [
+          "",
+          "cat-1",
+          "cat-2",
+          "lbl:lbl-1"
+        ],
+        []
+      ],
+      "out": ""
+    },
+    {
+      "fn": "firstFreeScope",
+      "args": [
+        [
+          "",
+          "cat-1",
+          "cat-2",
+          "lbl:lbl-1"
+        ],
+        [
+          ""
+        ]
+      ],
+      "out": "cat-1"
+    },
+    {
+      "fn": "firstFreeScope",
+      "args": [
+        [
+          "",
+          "cat-1",
+          "cat-2",
+          "lbl:lbl-1"
+        ],
+        [
+          "",
+          "cat-1"
+        ]
+      ],
+      "out": "cat-2"
+    },
+    {
+      "fn": "firstFreeScope",
+      "args": [
+        [
+          "",
+          "cat-1",
+          "cat-2",
+          "lbl:lbl-1"
+        ],
+        [
+          "",
+          "cat-1",
+          "cat-2",
+          "lbl:lbl-1"
+        ]
+      ],
+      "out": null
+    },
+    {
+      "fn": "firstFreeScope",
+      "args": [
+        [
+          "",
+          "cat-1",
+          "cat-2",
+          "lbl:lbl-1"
+        ],
+        [
+          "cat-2"
+        ]
+      ],
+      "out": ""
+    },
+    {
+      "fn": "firstFreeScope",
+      "args": [
+        [],
+        []
+      ],
+      "out": null
+    }
+  ]
+}
