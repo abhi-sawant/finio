@@ -3,6 +3,29 @@
 Finio follows [Semantic Versioning](https://semver.org). The repo-root `VERSION` file is the single
 source of truth for both clients; see "Releasing" in [CLAUDE.md](CLAUDE.md).
 
+## 2.0.3 — 2026-10-08
+
+### Added
+
+- **Merchant and For on transactions (both clients).** Add Transaction has two new optional fields:
+  **Merchant** (who the money went to or came from) and **For** (who it was for, e.g. "Mom"), both
+  with suggestions drawn from your history. A transaction with no note shows its merchant as the
+  row title, search matches both fields, and duplicating a transaction carries them over.
+- **In-app update prompt (Android).** On every app open Finio checks GitHub for the latest release
+  and, if it is newer than the installed version, shows its changelog with **Update** (opens the
+  release page to download the APK), **Not now** (asks again next open) and **Skip this version**
+  (stays quiet until a newer release is published). The PWA already updates itself, so it has no prompt.
+
+### Fixed
+
+- The selected category tile's ring and shadow are no longer clipped by the category grid's scroll
+  area on either client.
+
+### Backup format
+
+- `merchant` and `forWhom` are new optional transaction fields, omitted when blank. Backups without
+  them import unchanged, and older apps ignore them. See [spec/backup-format.md](spec/backup-format.md).
+
 ## 2.0.2 — 2026-10-07
 
 ### Changed

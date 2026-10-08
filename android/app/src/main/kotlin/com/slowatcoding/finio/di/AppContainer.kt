@@ -24,6 +24,8 @@ import com.slowatcoding.finio.core.store.PersistedAppLock
 import com.slowatcoding.finio.core.store.PersistedAuth
 import com.slowatcoding.finio.core.store.PersistedBackupCrypto
 import com.slowatcoding.finio.core.store.decodePersisted
+import com.slowatcoding.finio.core.update.ReleaseInfo
+import com.slowatcoding.finio.core.update.shouldPromptUpdate
 import com.slowatcoding.finio.core.store.encodePersisted
 import com.slowatcoding.finio.platform.api.FinioApi
 import com.slowatcoding.finio.platform.backup.AutoBackup
@@ -37,10 +39,13 @@ import com.slowatcoding.finio.platform.notify.NotificationPermission
 import com.slowatcoding.finio.platform.notify.NotificationScheduler
 import com.slowatcoding.finio.platform.notify.NotificationStore
 import com.slowatcoding.finio.platform.share.LaunchTarget
+import com.slowatcoding.finio.platform.update.SkippedUpdateStore
+import com.slowatcoding.finio.platform.update.UpdateChecker
 import com.slowatcoding.finio.platform.storage.DebouncedJsonWriter
 import com.slowatcoding.finio.platform.storage.JsonFileStore
 import com.slowatcoding.finio.platform.storage.PlatformJson
 import com.slowatcoding.finio.platform.storage.StoreFiles
+import com.slowatcoding.finio.BuildConfig
 import com.slowatcoding.finio.ui.components.ToastAction
 import com.slowatcoding.finio.ui.components.toast
 import kotlinx.coroutines.CoroutineScope
@@ -279,11 +284,47 @@ class AppContainer(private val app: Application) {
 
         scope.launch { refreshReminders() }
 
+        checkForUpdate()
+
         AutoBackupScheduler.ensureScheduled(app)
         scope.launch(Dispatchers.IO) {
             runCatching { AutoBackup.autoBackupIfNeeded(backupDataSource, cloudBackupSession, api) }
             runCatching { AutoBackup.autoLocalBackupIfNeeded(app, backupDataSource) }
         }
+    }
+
+    // ---- App updates ------------------------------------------------------------------------
+
+    private val updateChecker = UpdateChecker()
+    private val skippedUpdate = SkippedUpdateStore(app)
+    private var updateChecked = false
+
+    private val _availableUpdate = MutableStateFlow<ReleaseInfo?>(null)
+
+    /** A newer, not-skipped release to offer; the dialog shows while this is non-null. */
+    val availableUpdate: StateFlow<ReleaseInfo?> = _availableUpdate.asStateFlow()
+
+    /** Once per process (every app open), after the gates lift — never over the lock screen. */
+    private fun checkForUpdate() {
+        if (updateChecked) return
+        updateChecked = true
+        scope.launch {
+            val release = updateChecker.fetchLatest() ?: return@launch
+            if (shouldPromptUpdate(release, BuildConfig.VERSION_NAME, skippedUpdate.get())) {
+                _availableUpdate.value = release
+            }
+        }
+    }
+
+    /** "Not now": hide the dialog; the next app open asks again. */
+    fun dismissUpdate() {
+        _availableUpdate.value = null
+    }
+
+    /** "Skip this version": hide it and stay quiet until a newer release is published. */
+    fun skipUpdate(release: ReleaseInfo) {
+        skippedUpdate.set(release.version)
+        _availableUpdate.value = null
     }
 
     // ---- Reminders (web services/notifications.ts) ------------------------------------------

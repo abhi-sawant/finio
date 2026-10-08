@@ -140,6 +140,8 @@ These rules apply to every import, whether it comes from a file or the cloud.
 - **Transaction:**
   - `amount` must be ≥ 0.
   - A transfer needs `toAccountId`.
+  - `merchant` and `forWhom` are optional free text, trimmed; they are omitted from the row (never
+    written as `""`) when blank, and files without them import unchanged.
   - `splits` are kept only on expenses that pass the split rule in §1.
 - **Budget:** `amount` > 0. `rollover` is true only when the file says exactly `true`.
 - **Recurring:**

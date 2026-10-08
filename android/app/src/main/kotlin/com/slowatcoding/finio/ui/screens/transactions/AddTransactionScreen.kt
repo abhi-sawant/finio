@@ -61,6 +61,7 @@ import com.slowatcoding.finio.core.js.jsNumberToString
 import com.slowatcoding.finio.core.js.nowInstant
 import com.slowatcoding.finio.core.js.toIso
 import com.slowatcoding.finio.core.model.CategoryRule
+import com.slowatcoding.finio.core.model.Transaction
 import com.slowatcoding.finio.core.model.TransactionSplit
 import com.slowatcoding.finio.core.model.TransactionType
 import com.slowatcoding.finio.core.money.roundMoney
@@ -68,6 +69,7 @@ import com.slowatcoding.finio.core.rules.findMatchingRule
 import com.slowatcoding.finio.core.rules.mergeLabels
 import com.slowatcoding.finio.core.share.SharedTransactionDraft
 import com.slowatcoding.finio.core.store.NewTransaction
+import com.slowatcoding.finio.core.util.MAX_NAME_LENGTH
 import com.slowatcoding.finio.core.util.MAX_NOTE_LENGTH
 import com.slowatcoding.finio.core.util.cleanText
 import com.slowatcoding.finio.ui.common.BackButton
@@ -159,6 +161,8 @@ fun AddTransactionScreen(nav: FinioNavigator, transactionId: String?, draft: Sha
         )
     }
     var note by remember { mutableStateOf(existing?.note ?: shared?.note ?: "") }
+    var merchant by remember { mutableStateOf(existing?.merchant ?: "") }
+    var forWhom by remember { mutableStateOf(existing?.forWhom ?: "") }
     var selectedLabels by remember { mutableStateOf(existing?.labels ?: mergeLabels(emptyList(), sharedRule?.labelIds ?: emptyList())) }
 
     var splitMode by remember { mutableStateOf(!existing?.splits.isNullOrEmpty()) }
@@ -248,14 +252,9 @@ fun AddTransactionScreen(nav: FinioNavigator, transactionId: String?, draft: Sha
         categoryId = id
     }
 
-    val noteSuggestions = remember(state.transactions) {
-        val seen = LinkedHashSet<String>()
-        for (t in state.transactions) {
-            val n = t.note.trim()
-            if (n.isNotEmpty()) seen += n
-        }
-        seen.toList()
-    }
+    val noteSuggestions = remember(state.transactions) { distinctValues(state.transactions) { it.note } }
+    val merchantSuggestions = remember(state.transactions) { distinctValues(state.transactions) { it.merchant } }
+    val forWhomSuggestions = remember(state.transactions) { distinctValues(state.transactions) { it.forWhom } }
 
     // Archived accounts are hidden, but keep one an existing transaction already sits on.
     val selectableAccounts = remember(accounts, existing) {
@@ -354,6 +353,8 @@ fun AddTransactionScreen(nav: FinioNavigator, transactionId: String?, draft: Sha
         }
         val isoDate = date.atZone(finioZone).toInstant().toIso()
         val cleanNote = cleanText(note, MAX_NOTE_LENGTH)
+        val cleanMerchant = cleanText(merchant, MAX_NAME_LENGTH).ifEmpty { null }
+        val cleanFor = cleanText(forWhom, MAX_NAME_LENGTH).ifEmpty { null }
         val splits = if (useSplits) splitRows.map { TransactionSplit(it.categoryId, roundMoney(parseFloatJs(it.amount))) } else null
         val to = if (type == TransactionType.Transfer) toAccountId else null
 
@@ -361,7 +362,7 @@ fun AddTransactionScreen(nav: FinioNavigator, transactionId: String?, draft: Sha
             store.updateTransaction(existing.id) {
                 it.copy(
                     type = type, amount = parsedAmount, accountId = accountId, toAccountId = to,
-                    categoryId = finalCategoryId, date = isoDate, note = cleanNote, labels = selectedLabels, splits = splits,
+                    categoryId = finalCategoryId, date = isoDate, note = cleanNote, merchant = cleanMerchant, forWhom = cleanFor, labels = selectedLabels, splits = splits,
                 )
             }
             toast.success("Transaction updated")
@@ -369,7 +370,7 @@ fun AddTransactionScreen(nav: FinioNavigator, transactionId: String?, draft: Sha
             store.addTransaction(
                 NewTransaction(
                     type = type, amount = parsedAmount, accountId = accountId, toAccountId = to,
-                    categoryId = finalCategoryId, date = isoDate, note = cleanNote, labels = selectedLabels, splits = splits,
+                    categoryId = finalCategoryId, date = isoDate, note = cleanNote, merchant = cleanMerchant, forWhom = cleanFor, labels = selectedLabels, splits = splits,
                 ),
             )
             toast.success("Transaction added")
@@ -534,6 +535,8 @@ fun AddTransactionScreen(nav: FinioNavigator, transactionId: String?, draft: Sha
                 FinioDateTimePicker(value = date, onValueChange = { date = it })
             }
 
+            SuggestingField("Merchant", "Who was it with...", merchant, merchantSuggestions) { merchant = it }
+
             Column {
                 FieldLabel("Note")
                 val noteInteraction = remember { MutableInteractionSource() }
@@ -578,6 +581,8 @@ fun AddTransactionScreen(nav: FinioNavigator, transactionId: String?, draft: Sha
                     }
                 }
             }
+
+            SuggestingField("For", "Who is it for...", forWhom, forWhomSuggestions) { forWhom = it }
 
             if (labels.isNotEmpty()) {
                 Column {
@@ -633,6 +638,45 @@ private fun LabelToggle(name: String, color: Color, active: Boolean, onClick: ()
     ) {
         Box(Modifier.size(8.dp).clip(FinioShapes.full).background(color))
         Text(name, style = FinioType.label, color = if (active) colors.foreground else colors.mutedForeground)
+    }
+}
+
+/** Distinct, trimmed, non-empty values of one transaction field, newest first — feeds a field's suggestions. */
+private fun distinctValues(transactions: List<Transaction>, pick: (Transaction) -> String?): List<String> {
+    val seen = LinkedHashSet<String>()
+    for (t in transactions) {
+        val v = pick(t)?.trim()
+        if (!v.isNullOrEmpty()) seen += v
+    }
+    return seen.toList()
+}
+
+/** A short optional text field (Merchant / For) with the same suggestions-as-you-type as Note. */
+@Composable
+private fun SuggestingField(
+    label: String,
+    placeholder: String,
+    value: String,
+    suggestions: List<String>,
+    onChange: (String) -> Unit,
+) {
+    Column {
+        FieldLabel(label)
+        val interaction = remember { MutableInteractionSource() }
+        val focused by interaction.collectIsFocusedAsState()
+        FinioTextField(
+            value = value,
+            onValueChange = { v -> if (withinLength(v, MAX_NAME_LENGTH)) onChange(v) },
+            placeholder = placeholder,
+            interactionSource = interaction,
+        )
+        val query = value.trim().lowercase()
+        val matches = if (focused && query.isNotEmpty()) {
+            suggestions.filter { it.lowercase().contains(query) && it != value }.take(5)
+        } else {
+            emptyList()
+        }
+        if (matches.isNotEmpty()) NoteSuggestions(matches, onPick = onChange)
     }
 }
 

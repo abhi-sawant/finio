@@ -98,7 +98,7 @@ export const TransactionItem = memo(function TransactionItem({
         .join(' + ')
     : undefined;
 
-  const primaryText = transaction.note || splitTitle || category?.name || 'Transaction';
+  const primaryText = transaction.note || transaction.merchant || splitTitle || category?.name || 'Transaction';
 
   const rowLabels = labels
     ? transaction.labels.map((id) => labels.find((l) => l.id === id)).filter((l): l is Label => !!l)

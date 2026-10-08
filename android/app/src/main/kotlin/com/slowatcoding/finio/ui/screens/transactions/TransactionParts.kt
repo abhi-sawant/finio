@@ -60,7 +60,7 @@ internal fun TransactionItem(
     val account = accounts[t.accountId]
     val toAccount = t.toAccountId?.takeIf { it.isNotEmpty() }?.let { accounts[it] }
     val splitTitle = if (isSplit) t.splits!!.joinToString(" + ") { categories[it.categoryId]?.name ?: "Unknown" } else null
-    val primary = t.note.ifEmpty { splitTitle ?: category?.name ?: "Transaction" }
+    val primary = t.note.ifEmpty { t.merchant ?: splitTitle ?: category?.name ?: "Transaction" }
     val secondary = if (t.type == TransactionType.Transfer && toAccount != null) {
         "${account?.name ?: "?"} → ${toAccount.name}"
     } else {

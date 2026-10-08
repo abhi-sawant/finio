@@ -260,6 +260,8 @@ export function transactionMatchesQuery(
   if (!q) return true;
 
   if (transaction.note.toLowerCase().includes(q)) return true;
+  if (transaction.merchant?.toLowerCase().includes(q)) return true;
+  if (transaction.forWhom?.toLowerCase().includes(q)) return true;
   if (index.categoryNames.get(transaction.categoryId)?.includes(q)) return true;
   for (const split of transaction.splits ?? []) {
     if (index.categoryNames.get(split.categoryId)?.includes(q)) return true;

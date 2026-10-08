@@ -332,8 +332,8 @@ only adds user accounts and cloud backup storage.
 **Requirements:** Node.js 18+ and npm.
 
 ```bash
-git clone https://github.com/abhi-sawant/finio-web.git
-cd finio-web/web
+git clone https://github.com/abhi-sawant/finio.git
+cd finio/web
 npm install
 npm run dev
 ```
@@ -421,7 +421,7 @@ Read [CLAUDE.md](CLAUDE.md) for the full set. The short version:
 ### Project Layout
 
 ```
-finio-web/
+finio/
 ├── web/                     # The PWA (React + Vite) — run npm commands from here
 │   ├── src/
 │   │   ├── App.tsx          # Router + the hydration / lock / onboarding gates
@@ -580,7 +580,7 @@ Two more knobs worth knowing about, both with sane defaults:
 **Via File Manager (recommended):**
 
 ```bash
-cd /path/to/finio-web
+cd /path/to/finio
 zip -r backend.zip backend/ --exclude "backend/vendor/*"
 ```
 

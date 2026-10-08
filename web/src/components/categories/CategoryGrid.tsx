@@ -60,7 +60,7 @@ export function CategoryGrid({ children, className }: CategoryGridProps) {
       <div
         ref={ref}
         onScroll={measure}
-        className={cn('relative grid max-h-54 grid-cols-4 gap-2 overflow-y-auto pr-1', className)}
+        className={cn('relative grid max-h-54 grid-cols-4 gap-2 overflow-y-auto p-1', className)}
       >
         {children}
       </div>

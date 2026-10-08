@@ -8,7 +8,7 @@ import { useFinanceStore } from '@/store/useFinanceStore';
 import { roundMoney } from '@/store/balance';
 import { findMatchingRule, mergeLabels } from '@/utils/autoCategorize';
 import { findTransferCategory, isCategoryValidForType, miscLast } from '@/utils/calculations';
-import { MAX_NOTE_LENGTH, cleanText } from '@/utils/validation';
+import { MAX_NAME_LENGTH, MAX_NOTE_LENGTH, cleanText } from '@/utils/validation';
 import { parseSharePayload } from '@/utils/shareTarget';
 import { formatCurrency, toLocalDateTimeInputValue } from '@/utils/formatters';
 import { Button } from '@/components/ui/button';
@@ -23,11 +23,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import type { Account, CategoryRule, TransactionType } from '@/types';
+import type { Account, CategoryRule, Transaction, TransactionType } from '@/types';
 import { ACCOUNT_TYPE_LABEL } from '@/components/accounts/note';
 import Main from '@/components/ui/main';
 import Header from '@/components/ui/header';
 import { HeaderIconButton, HeaderIconSpacer } from '@/components/ui/header-icon-button';
+
+/** Distinct, trimmed, non-empty values of one transaction field — feeds a field's datalist. */
+function distinctValues(
+  transactions: Transaction[],
+  pick: (t: Transaction) => string | undefined,
+): string[] {
+  const seen = new Set<string>();
+  return transactions
+    .map((t) => pick(t)?.trim())
+    .filter((n): n is string => !!n && !seen.has(n) && seen.add(n) !== undefined);
+}
 
 export default function AddTransaction() {
   const navigate = useNavigate();
@@ -91,6 +102,8 @@ export default function AddTransaction() {
       : toLocalDateTimeInputValue(new Date()),
   );
   const [note, setNote] = useState(existing?.note ?? shared?.note ?? '');
+  const [merchant, setMerchant] = useState(existing?.merchant ?? '');
+  const [forWhom, setForWhom] = useState(existing?.forWhom ?? '');
   const [selectedLabels, setSelectedLabels] = useState<string[]>(
     existing?.labels ?? mergeLabels([], sharedRule?.labelIds ?? []),
   );
@@ -215,12 +228,18 @@ export default function AddTransaction() {
     setCategoryId(id);
   };
 
-  const notesSuggestions = useMemo(() => {
-    const seen = new Set<string>();
-    return transactions
-      .map((t) => t.note?.trim())
-      .filter((n): n is string => !!n && !seen.has(n) && seen.add(n) !== undefined);
-  }, [transactions]);
+  const notesSuggestions = useMemo(
+    () => distinctValues(transactions, (t) => t.note),
+    [transactions],
+  );
+  const merchantSuggestions = useMemo(
+    () => distinctValues(transactions, (t) => t.merchant),
+    [transactions],
+  );
+  const forWhomSuggestions = useMemo(
+    () => distinctValues(transactions, (t) => t.forWhom),
+    [transactions],
+  );
 
   // Archived accounts are hidden from the picker, but an existing transaction may already sit
   // on one — keep that account selectable so editing the row cannot silently reassign it.
@@ -351,6 +370,9 @@ export default function AddTransaction() {
             : categoryId,
       date: new Date(date).toISOString(),
       note: cleanText(note, MAX_NOTE_LENGTH),
+      // `undefined` (not '') when blank, so an edit clears the field and old rows stay unchanged.
+      merchant: cleanText(merchant, MAX_NAME_LENGTH) || undefined,
+      forWhom: cleanText(forWhom, MAX_NAME_LENGTH) || undefined,
       labels: selectedLabels,
       splits: useSplits
         ? splitRows.map((r) => ({
@@ -622,6 +644,25 @@ export default function AddTransaction() {
           <DateTimePicker value={date} onChange={setDate} />
         </div>
 
+        {/* Merchant */}
+        <div>
+          <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">Merchant</Label>
+          <Input
+            type="text"
+            placeholder="Who was it with..."
+            value={merchant}
+            maxLength={MAX_NAME_LENGTH}
+            onChange={(e) => setMerchant(e.target.value)}
+            list="merchant-suggestions"
+            className="[&::-webkit-calendar-picker-indicator]:hidden! [&::-webkit-list-button]:hidden!"
+          />
+          <datalist id="merchant-suggestions">
+            {merchantSuggestions.map((n) => (
+              <option key={n} value={n} />
+            ))}
+          </datalist>
+        </div>
+
         {/* Note */}
         <div>
           <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">Note</Label>
@@ -655,6 +696,25 @@ export default function AddTransaction() {
               </button>
             </div>
           )}
+        </div>
+
+        {/* For */}
+        <div>
+          <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">For</Label>
+          <Input
+            type="text"
+            placeholder="Who is it for..."
+            value={forWhom}
+            maxLength={MAX_NAME_LENGTH}
+            onChange={(e) => setForWhom(e.target.value)}
+            list="for-suggestions"
+            className="[&::-webkit-calendar-picker-indicator]:hidden! [&::-webkit-list-button]:hidden!"
+          />
+          <datalist id="for-suggestions">
+            {forWhomSuggestions.map((n) => (
+              <option key={n} value={n} />
+            ))}
+          </datalist>
         </div>
 
         {/* Labels */}

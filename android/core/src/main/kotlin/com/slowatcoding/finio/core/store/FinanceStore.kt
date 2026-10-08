@@ -190,14 +190,16 @@ data class NewTransaction(
     val categoryId: String,
     val date: String,
     val note: String = "",
+    val merchant: String? = null,
+    val forWhom: String? = null,
     val labels: List<String> = emptyList(),
     val recurringId: String? = null,
     val splits: List<TransactionSplit>? = null,
 ) {
     fun toTransaction(id: String, createdAt: String, note: String = this.note) = Transaction(
         id = id, type = type, amount = amount, accountId = accountId, toAccountId = toAccountId,
-        categoryId = categoryId, date = date, note = note, labels = labels, createdAt = createdAt,
-        recurringId = recurringId, splits = splits,
+        categoryId = categoryId, date = date, note = note, merchant = merchant, forWhom = forWhom,
+        labels = labels, createdAt = createdAt, recurringId = recurringId, splits = splits,
     )
 }
 

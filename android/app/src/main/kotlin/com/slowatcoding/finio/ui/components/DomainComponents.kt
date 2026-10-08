@@ -198,13 +198,15 @@ fun CategoryGrid(
     var viewport by remember { mutableIntStateOf(0) }
     var rowHeight by remember { mutableIntStateOf(0) }
     val gap = with(density) { 8.dp.roundToPx() }
+    // Room for the selected tile's ring + shadow, which the scroll container would otherwise clip.
+    val edge = with(density) { 4.dp.roundToPx() }
     val rows = ceil(categories.size / 4.0).toInt()
 
     // Scroll only the grid, never the page, so the selected tile sits mid-view.
     LaunchedEffect(rowHeight, viewport) {
         val index = categories.indexOfFirst { it.id == selectedId }
         if (index >= 0 && rowHeight > 0 && viewport > 0) {
-            val top = (index / 4) * (rowHeight + gap)
+            val top = edge + (index / 4) * (rowHeight + gap)
             scrollState.scrollTo((top - (viewport - rowHeight) / 2).coerceAtLeast(0))
         }
     }
@@ -216,7 +218,7 @@ fun CategoryGrid(
         val bottom = scrollState.value + viewport
         categories.indices.count { i ->
             val row = i / 4
-            row * (rowHeight + gap) + rowHeight / 2 > bottom + 1
+            edge + row * (rowHeight + gap) + rowHeight / 2 > bottom + 1
         }
     }
 
@@ -227,7 +229,7 @@ fun CategoryGrid(
                 .heightIn(max = maxHeight)
                 .onSizeChanged { viewport = it.height }
                 .verticalScroll(scrollState)
-                .padding(end = 4.dp),
+                .padding(start = 4.dp, top = 4.dp, end = 4.dp, bottom = 4.dp),
         ) {
             Layout(
                 content = {

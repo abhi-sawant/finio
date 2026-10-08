@@ -229,6 +229,12 @@ entry) — a screen that deletes its own entity just calls `nav.back()`.
 
 ## Gotchas
 
+- **The update prompt reads the GitHub *release*, not CHANGELOG.md.** `AppContainer.checkForUpdate()`
+  (once per process, from the first foreground pass) hits `releases/latest` of `abhi-sawant/finio`;
+  the release body is the changelog shown, so publish each release with its CHANGELOG section as the
+  notes (already the release step). Drafts, prereleases and non-SemVer tags are ignored. The skipped
+  version lives in its own SharedPreferences file, never in `FinanceState` (it must not enter a
+  backup). Logic: `core/.../update/AppUpdate.kt`. Web has no equivalent — the PWA self-updates.
 - **`MainActivity` must extend `FragmentActivity`.** androidx `BiometricPrompt` hosts itself in a
   fragment; a plain `ComponentActivity` crashes the biometric unlock.
 - **Hold the `LaunchTarget` until the gates lift.** Never navigate from `MainActivity`, the lock

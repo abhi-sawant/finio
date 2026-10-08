@@ -223,6 +223,8 @@ fun transactionMatchesQuery(transaction: Transaction, rawQuery: String, index: S
     if (q.isEmpty()) return true
 
     if (transaction.note.lowercase().contains(q)) return true
+    if (transaction.merchant?.lowercase()?.contains(q) == true) return true
+    if (transaction.forWhom?.lowercase()?.contains(q) == true) return true
     if (index.categoryNames[transaction.categoryId]?.contains(q) == true) return true
     for (split in transaction.splits ?: emptyList()) {
         if (index.categoryNames[split.categoryId]?.contains(q) == true) return true
