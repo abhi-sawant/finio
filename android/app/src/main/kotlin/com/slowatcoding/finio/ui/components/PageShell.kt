@@ -41,16 +41,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.slowatcoding.finio.ui.mudra.PaperBackground
 import com.slowatcoding.finio.ui.theme.FinioTheme
 import com.slowatcoding.finio.ui.theme.FinioType
 
@@ -204,7 +206,46 @@ fun FinioScreen(
     val headerSpec = remember(innerSpec) {
         UnobscuredBringIntoViewSpec(innerSpec) { headerHeight.toFloat() to bottomPx }
     }
-    Box(modifier.fillMaxSize()) {
+    // The header is measured *before* the body in this same pass and its height lands in
+    // [headerHeight] before the body's spacer is measured. A Box + onSizeChanged would learn the
+    // height a frame late, so every page opened with its body jammed under the header and then
+    // visibly jumped down.
+    // The page paints its own (identical) paper: while a navigation swaps, the outgoing page is
+    // still composed for a frame and would otherwise show through this transparent one.
+    PaperBackground(modifier) {
+    Layout(
+        modifier = Modifier.fillMaxSize(),
+        content = {
+            ScreenBody(headerSpec, innerSpec, scrollState, bottomPadding, content) { headerHeight }
+            FinioHeader(
+                scrolled = scrollState.headerScrolled(),
+                content = header,
+            )
+        },
+    ) { measurables, constraints ->
+        val loose = constraints.copy(minWidth = 0, minHeight = 0)
+        val header = measurables[1].measure(loose)
+        headerHeight = header.height
+        val body = measurables[0].measure(constraints)
+        layout(constraints.maxWidth, constraints.maxHeight) {
+            body.place(0, 0)
+            header.place(0, 0)
+        }
+    }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun ScreenBody(
+    headerSpec: BringIntoViewSpec,
+    innerSpec: BringIntoViewSpec,
+    scrollState: ScrollState,
+    bottomPadding: Dp?,
+    content: @Composable ColumnScope.() -> Unit,
+    headerHeight: () -> Int,
+) {
+    Box(Modifier.fillMaxSize()) {
         // The header floats over the scroll viewport, so a focused field brought "into view" at
         // the viewport top would sit under it: the page's own scroller treats the band beneath
         // the header as off-screen. Nested scrollers get the default spec back.
@@ -213,16 +254,16 @@ fun FinioScreen(
             // viewport must end at the keyboard or a focused field is "in view" behind it.
             Column(Modifier.fillMaxSize().imePadding().verticalScroll(scrollState)) {
                 CompositionLocalProvider(LocalBringIntoViewSpec provides innerSpec) {
-                    Spacer(Modifier.height(with(density) { headerHeight.toDp() }))
+                    Spacer(
+                        Modifier.layout { measurable, constraints ->
+                            val placeable = measurable.measure(constraints.copy(minHeight = headerHeight(), maxHeight = headerHeight()))
+                            layout(placeable.width, placeable.height) {}
+                        },
+                    )
                     FinioMain(bottomPadding = bottomPadding, content = content)
                 }
             }
         }
-        FinioHeader(
-            scrolled = scrollState.headerScrolled(),
-            modifier = Modifier.onSizeChanged { headerHeight = it.height },
-            content = header,
-        )
     }
 }
 

@@ -3,6 +3,15 @@
 Finio follows [Semantic Versioning](https://semver.org). The repo-root `VERSION` file is the single
 source of truth for both clients; see "Releasing" in [CLAUDE.md](CLAUDE.md).
 
+## 2.0.4 — 2026-10-08
+
+### Fixed
+
+- **Smoother screen changes (Android).** Switching between screens no longer flashes a loading
+  spinner in the top half of the screen or makes the page jump. Pages now open with their content
+  already positioned below the header, screens you have just visited show their data immediately,
+  and the outgoing screen no longer shows through the incoming one for a frame.
+
 ## 2.0.3 — 2026-10-08
 
 ### Added

@@ -2,6 +2,8 @@ package com.slowatcoding.finio.ui.shell
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.snap
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
@@ -29,6 +31,8 @@ import com.slowatcoding.finio.ui.navigation.hidesFab
 import com.slowatcoding.finio.ui.navigation.isLayoutRoute
 import com.slowatcoding.finio.ui.navigation.routeForLaunch
 import androidx.navigation.NavDestination.Companion.hasRoute
+
+private val instantExit: ExitTransition = fadeOut(animationSpec = snap())
 
 /**
  * The app once every gate has lifted — `<Routes>` plus Layout.tsx's chrome. One NavHost holds
@@ -58,11 +62,13 @@ fun AppShell(navController: NavHostController, graph: NavGraph, navigator: Finio
             navController = navController,
             graph = graph,
             modifier = Modifier.fillMaxSize(),
-            // The web swaps pages instantly; so do we.
+            // The web swaps pages instantly; so do we. The outgoing screen is kept for one frame
+            // while the transition settles, so it must vanish at once or it shows through the
+            // incoming (transparent) page as a double exposure.
             enterTransition = { EnterTransition.None },
-            exitTransition = { ExitTransition.None },
+            exitTransition = { instantExit },
             popEnterTransition = { EnterTransition.None },
-            popExitTransition = { ExitTransition.None },
+            popExitTransition = { instantExit },
         )
 
         if (destination != null && destination.isLayoutRoute() && !imeVisible) {

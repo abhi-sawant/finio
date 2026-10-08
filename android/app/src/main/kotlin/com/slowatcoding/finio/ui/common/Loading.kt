@@ -14,6 +14,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import kotlinx.coroutines.delay
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -60,8 +65,21 @@ fun PageLoader(modifier: Modifier = Modifier) {
     Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) { Spinner() }
 }
 
-/** A spinner centred in a content-height block — for a section still computing. */
+/**
+ * A spinner centred in a content-height block — for a section still computing. The block holds
+ * its space immediately, but the spinner only appears if the wait outlasts [LOADER_DELAY_MS]: a
+ * result that lands within a few frames never flashes a loader that is gone before it is read.
+ */
 @Composable
 fun SectionLoader(modifier: Modifier = Modifier) {
-    Box(modifier.fillMaxWidth().padding(vertical = 48.dp), contentAlignment = Alignment.Center) { Spinner() }
+    var visible by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        delay(LOADER_DELAY_MS)
+        visible = true
+    }
+    Box(modifier.fillMaxWidth().padding(vertical = 48.dp), contentAlignment = Alignment.Center) {
+        if (visible) Spinner() else Box(Modifier.size(32.dp))
+    }
 }
+
+private const val LOADER_DELAY_MS = 250L
