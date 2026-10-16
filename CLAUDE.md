@@ -317,6 +317,20 @@ Enums: `AccountType`, `TransactionType` (expense/income/transfer), `RecurrenceFr
   `key` string rather than a minted id (the store assigns those on creation), which `loadSampleData`
   resolves once each entity actually exists. That determinism is also what makes the dataset a
   reusable manual-QA fixture, not just an onboarding nicety.
+- **`/` is a marketing page for first-time browser visitors, and the app for everyone else.**
+  [`web/src/landing/mode.ts`](web/src/landing/mode.ts) decides: the landing page shows only on `/`, in a plain
+  browser tab (not `display-mode: standalone|fullscreen|minimal-ui`), when `finio-storage` holds no
+  `onboardedAt` (a pre-v6 or unreadable state counts as "used"), and this tab hasn't pressed "Open
+  Monilock" (`sessionStorage`). Deep links, the installed PWA and onboarded users go straight to the app.
+  `index.html` carries an ES5 copy of that decision in a head script (it hides the prerendered page and
+  applies the stored theme before first paint) — change both together. The page is **prerendered into
+  `#root` at build time** by [`vite-plugins/landingPrerender`](web/vite-plugins/landingPrerender.ts) (in
+  `transformIndexHtml`, so the precached index.html carries it): `Landing.tsx` must render identically on
+  server and client — no `window`, storage or randomness during render, and no CSS import (its styles ship
+  in the main stylesheet from `main.tsx`, so the markup is never unstyled). The app and store are a
+  separate dynamic chunk, so landing visitors never download them. The screenshots in `web/public/landing/`
+  are real captures of the app on its sample data; retake them when the UI changes noticeably. `/privacy`
+  and `/terms` are readable before onboarding (the landing footer links to them).
 - **Auth state:** Always call `useAuthStore.getState().loadAuth()` (or rely on Zustand hydration) before making authenticated API calls.
 - **JWT sessions are invalidated by a version counter, not just by expiry.** A stateless JWT can't
   be revoked on its own, so every token carries a `tv` claim, and `AuthMiddleware::handle()` checks

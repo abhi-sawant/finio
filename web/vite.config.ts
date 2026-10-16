@@ -4,6 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 import path from "path"
 import { readFileSync } from "fs"
+import { landingPrerender } from "./vite-plugins/landingPrerender"
 
 // One version for the whole product: the repo-root VERSION file (Android reads it too).
 const APP_VERSION = readFileSync(path.resolve(__dirname, "../VERSION"), "utf8").trim()
@@ -16,6 +17,7 @@ export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
+    landingPrerender(),
     VitePWA({
       // A hand-written worker, because `generateSW` cannot host the `periodicsync` handler that
       // lets a reminder fire while the app is closed. Note that `workbox.runtimeCaching`,

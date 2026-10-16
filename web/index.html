@@ -13,6 +13,41 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
+    <!-- Decides before first paint whether the prerendered landing page stays visible. This is
+         an ES5 copy of src/landing/mode.ts (shouldShowLanding + hasUsedApp); keep them in sync.
+         It also applies the stored theme so the landing page never flashes the wrong one. -->
+    <script>
+      (function () {
+        try {
+          var d = document.documentElement;
+          var raw = null;
+          var entered = false;
+          try { raw = localStorage.getItem('finio-storage'); } catch (e) {}
+          try { entered = sessionStorage.getItem('monilock-entered') === '1'; } catch (e) {}
+          var used = false;
+          var theme = 'system';
+          if (raw !== null) {
+            try {
+              var p = JSON.parse(raw);
+              if (!p || typeof p !== 'object') used = true;
+              else {
+                var st = (p.state && p.state.settings) || {};
+                theme = st.theme || 'system';
+                used = !!st.onboardedAt || (typeof p.version === 'number' && p.version < 6);
+              }
+            } catch (e) { used = true; }
+          }
+          var dark = theme === 'dark' || (theme !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
+          d.classList.toggle('dark', dark);
+          var standalone = navigator.standalone === true ||
+            matchMedia('(display-mode: standalone)').matches ||
+            matchMedia('(display-mode: fullscreen)').matches ||
+            matchMedia('(display-mode: minimal-ui)').matches;
+          d.dataset.mode = location.pathname === '/' && !standalone && !entered && !used ? 'landing' : 'app';
+        } catch (e) {}
+      })();
+    </script>
+
     <!-- Primary SEO -->
     <title>Monilock — Personal Finance Tracker</title>
     <meta name="description" content="Monilock is a privacy-first, fully offline personal finance tracker — your data stays on your device, with optional end-to-end encrypted, self-hostable cloud backup." />
@@ -40,9 +75,22 @@
     <meta name="twitter:description" content="Monilock is a privacy-first, fully offline personal finance tracker — your data stays on your device, with optional end-to-end encrypted, self-hostable cloud backup." />
     <meta name="twitter:image" content="https://finio.slowatcoding.com/og-image.png" />
     <meta name="twitter:image:alt" content="Monilock — Personal Finance Tracker" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Monilock",
+        "url": "https://finio.slowatcoding.com/",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Web, Android, iOS",
+        "description": "A privacy-first personal finance tracker for India. Your data stays on your device, with optional end-to-end encrypted, self-hostable cloud backup.",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" }
+      }
+    </script>
   </head>
   <body>
-    <div id="root" class="flex min-h-screen flex-col"></div>
+    <div id="root" class="flex min-h-screen flex-col"><!--landing--></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
