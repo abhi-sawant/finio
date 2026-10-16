@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://finio.slowatcoding.com/sitemap.xml

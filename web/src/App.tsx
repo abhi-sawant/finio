@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, useParams } from 'react-router';
+import { BrowserRouter, Routes, Route, Navigate, useParams, useLocation } from 'react-router';
 import { Toaster } from 'sonner';
 import { Layout } from '@/components/layout/Layout';
 import { DesktopShell } from '@/components/layout/DesktopShell';
@@ -81,7 +81,11 @@ const hasTransaction = (id: string) =>
   useFinanceStore.getState().transactions.some((t) => t.id === id);
 const hasLoan = (id: string) => useFinanceStore.getState().loans.some((l) => l.id === id);
 
+/** Readable before setup, so the landing page's footer links work for a first-time visitor. */
+const PRE_ONBOARDING_PATHS = new Set(['/privacy', '/terms']);
+
 function AppRoutes() {
+  const { pathname } = useLocation();
   const isHydrated = useFinanceStore((s) => s.isHydrated);
   const onboardedAt = useFinanceStore((s) => s.settings.onboardedAt);
   const isLockReady = useAppLockStore((s) => s.isReady);
@@ -99,7 +103,7 @@ function AppRoutes() {
   // locked app must not show a wizard that a stranger could complete.
   if (!isHydrated || !isLockReady) return <PageLoader />;
   if (isLocked) return <LockScreen />;
-  if (!onboardedAt) return <Onboarding />;
+  if (!onboardedAt && !PRE_ONBOARDING_PATHS.has(pathname)) return <Onboarding />;
 
   return (
     <Routes>
