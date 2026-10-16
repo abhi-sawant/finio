@@ -35,8 +35,8 @@ If `gen:fixtures` modified `spec/fixtures/`, mention it in the summary.
 
 ## 4. Assemble `releases/vX.Y.Z/` (gitignored)
 
-- `finio-X.Y.Z.apk`: copy `android/app/build/outputs/apk/release/app-release.apk`.
-- `finio-web-X.Y.Z.zip`: zip the *contents* of `web/dist/` (files at the zip root, no `.DS_Store`): `cd web/dist && zip -qr ../../releases/vX.Y.Z/finio-web-X.Y.Z.zip . -x '.DS_Store'`.
+- `monilock-X.Y.Z.apk`: copy `android/app/build/outputs/apk/release/app-release.apk`.
+- `monilock-web-X.Y.Z.zip`: zip the *contents* of `web/dist/` (files at the zip root, no `.DS_Store`): `cd web/dist && zip -qr ../../releases/vX.Y.Z/monilock-web-X.Y.Z.zip . -x '.DS_Store'`.
 - `SHA256SUMS.txt`: `shasum -a 256` of the two files, run inside the folder, two-space separator, bare filenames.
 - `RELEASE_NOTES.md`: model it on the previous `releases/v*/RELEASE_NOTES.md` — title `# Monilock X.Y.Z — <headline>`, plain-language sections for what's new, a Downloads table, and the APK signing certificate line. Read the cert with `~/Library/Android/sdk/build-tools/<latest>/apksigner verify --print-certs <apk>` (needs `JAVA_HOME` on PATH as above) and format it as colon-separated lowercase hex. It must equal the previous release's cert; if not, warn loudly because Android will refuse the update.
 
