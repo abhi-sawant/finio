@@ -1,5 +1,5 @@
 # R8 rules for the release build. kotlinx.serialization and androidx ship their own consumer rules;
-# these cover the two places Monilock itself uses reflection.
+# these cover the two places Finio itself uses reflection.
 
 # model/Model.kt `wireName(enum)` reads the @SerialName annotation off the enum constant's field,
 # looked up by its source name — so enum fields must keep their names and their annotations.

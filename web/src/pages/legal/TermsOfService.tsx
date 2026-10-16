@@ -30,7 +30,7 @@ export default function TermsOfService() {
       <Main className="lg:max-w-2xl">
         <div className="card-elevated space-y-6 rounded-md p-5">
           <p className="text-muted-foreground text-xs">
-            Last updated: 13 August 2026. These terms cover the hosted Monilock app and its optional
+            Last updated: 13 August 2026. These terms cover the hosted Finio app and its optional
             cloud backup service. See the{' '}
             <Link to="/privacy" className="text-primary underline-offset-4 hover:underline">
               Privacy Policy
@@ -39,15 +39,15 @@ export default function TermsOfService() {
           </p>
 
           <Section title="1. Acceptance">
-            By creating a cloud account, or by using Monilock at all, you agree to these terms. If you
+            By creating a cloud account, or by using Finio at all, you agree to these terms. If you
             don't agree, you can still use the app fully offline without an account — no terms apply
             to purely local use.
           </Section>
 
           <Section title="2. The service">
-            Monilock is a personal finance tracker. Cloud backup is an optional add-on that stores a
+            Finio is a personal finance tracker. Cloud backup is an optional add-on that stores a
             copy of your data on a server so you can restore it on another device; it is not
-            required for the app to work. Monilock does not connect to your bank, does not initiate or
+            required for the app to work. Finio does not connect to your bank, does not initiate or
             process payments, and does not provide investment or financial advice — it is a
             record-keeping tool, and any totals, forecasts, or insights it shows are informational
             estimates based only on the data you entered.
@@ -66,7 +66,7 @@ export default function TermsOfService() {
           </Section>
 
           <Section title="4. Your data">
-            You own the data you put into Monilock. We don't claim any rights over it, we don't use it
+            You own the data you put into Finio. We don't claim any rights over it, we don't use it
             for anything other than providing the backup/restore feature you asked for, and you can
             export or delete it at any time (see the{' '}
             <Link to="/privacy" className="text-primary underline-offset-4 hover:underline">
@@ -76,7 +76,7 @@ export default function TermsOfService() {
           </Section>
 
           <Section title="5. Acceptable use">
-            <p>Don't use Monilock to:</p>
+            <p>Don't use Finio to:</p>
             <ul className="list-disc space-y-1 pl-5">
               <li>Attempt to access another user's account or data.</li>
               <li>Interfere with, overload, or probe the service's infrastructure.</li>
@@ -109,7 +109,7 @@ export default function TermsOfService() {
           </Section>
 
           <Section title="9. Self-hosted deployments">
-            Monilock's source is open, and these terms apply only to the officially hosted instance. If
+            Finio's source is open, and these terms apply only to the officially hosted instance. If
             you connect the app to a self-hosted backend, your relationship — and these terms — are
             with whoever operates that server, not with us.
           </Section>

@@ -743,7 +743,7 @@ function collect<T extends { id: string }>(
  * importable at all; otherwise always returns data plus a report to preview.
  */
 export function validateBackup(raw: unknown): ValidatedBackup {
-  if (!isRecord(raw)) throw new Error('Not a Monilock backup file');
+  if (!isRecord(raw)) throw new Error('Not a Finio backup file');
 
   const accounts = collect(raw.accounts, 'accounts', parseAccount);
   const transactions = collect(raw.transactions, 'transactions', parseTransaction);
@@ -789,7 +789,7 @@ export function validateBackup(raw: unknown): ValidatedBackup {
   };
 
   const anyPresent = IMPORT_ENTITIES.some((e) => counts[e].present) || settings !== undefined;
-  if (!anyPresent) throw new Error('Not a Monilock backup file');
+  if (!anyPresent) throw new Error('Not a Finio backup file');
 
   const allIssues = [
     ...accounts.issues,
@@ -955,7 +955,7 @@ export function validateBackup(raw: unknown): ValidatedBackup {
   const meta = readBackupMeta(raw);
   if (meta.version !== undefined && meta.version > BACKUP_SCHEMA_VERSION) {
     warnings.push(
-      `This backup was made by a newer version of Monilock (format v${meta.version}; this app understands v${BACKUP_SCHEMA_VERSION}). It will import, but some data may be missed`,
+      `This backup was made by a newer version of Finio (format v${meta.version}; this app understands v${BACKUP_SCHEMA_VERSION}). It will import, but some data may be missed`,
     );
   }
 

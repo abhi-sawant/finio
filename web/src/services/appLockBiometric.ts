@@ -43,7 +43,7 @@ export async function isPlatformAuthenticatorAvailable(): Promise<boolean> {
 
 /** Returns the base64url rawId to store. Throws on cancellation or failure. */
 export async function registerBiometric(userName: string): Promise<string> {
-  const label = userName.trim() || 'Monilock';
+  const label = userName.trim() || 'Finio';
 
   const credential = (await navigator.credentials.create({
     publicKey: {
@@ -51,7 +51,7 @@ export async function registerBiometric(userName: string): Promise<string> {
       // `rp.id` omitted deliberately: the browser defaults it to the current effective domain.
       // Hard-coding it throws SecurityError and has no single correct value across localhost,
       // a preview deploy and production.
-      rp: { name: 'Monilock' },
+      rp: { name: 'Finio' },
       user: {
         id: crypto.getRandomValues(new Uint8Array(USER_ID_BYTES)),
         name: label,

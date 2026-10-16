@@ -1,4 +1,4 @@
-# Monilock backup format — the contract between web/ and android/
+# Finio backup format — the contract between web/ and android/
 
 Both clients read and write this format. **A file exported by one client must import into the
 other unchanged.** The web implementation is the reference:
@@ -113,7 +113,7 @@ These rules apply to every import, whether it comes from a file or the cloud.
 
 **Whole-file rejection**
 - The input must be an object containing at least one known collection or `settings`.
-  Otherwise the reader throws "Not a Monilock backup file".
+  Otherwise the reader throws "Not a Finio backup file".
 
 **Row handling**
 - A collection that isn't an array is skipped and reported as an issue.

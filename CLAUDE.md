@@ -1,8 +1,8 @@
-# Monilock — CLAUDE.md
+# Finio — CLAUDE.md
 
 ## Project Overview
 
-**Monilock** is a privacy-first personal finance app for India (INR only). All finance data lives on
+**Finio** is a privacy-first personal finance app for India (INR only). All finance data lives on
 the device; the optional PHP backend adds JWT-authenticated, optionally end-to-end-encrypted cloud
 backup only. The repo is a monorepo with one product shipped on two clients:
 
@@ -15,17 +15,6 @@ backup only. The repo is a monorepo with one product shipped on two clients:
 
 Shared docs stay at the root: [README.md](README.md) (user/self-hoster facing),
 [design.md](design.md) (the "Mudra" visual system — both clients implement it), PRODUCT.md.
-
-## Naming: the product is Monilock, the identifiers are still `finio`
-
-The product was rebranded **Finio → Monilock** as a display-only change. User-visible text, docs,
-the PWA manifest, the icons and the notification/launcher marks say Monilock; everything the
-running system keys off keeps its old name so nothing breaks: localStorage keys (`finio-storage`,
-`finio-lock`, `finio-backup-crypto`, …), the IndexedDB name, the Android `applicationId` and
-`com.slowatcoding.finio` packages, `Theme.Finio`, the `Finio*` Kotlin composables, backup/file
-names, the PHP `Finio\` namespace and the deployed `finio.slowatcoding.com` URLs. Don't "finish"
-the rename in those places without a migration. The logo geometry lives in
-[`web/scripts/monilock-mark.mjs`](web/scripts/monilock-mark.mjs) and feeds both icon generators.
 
 ## Two clients, one product — parity rules
 
@@ -224,7 +213,7 @@ Enums: `AccountType`, `TransactionType` (expense/income/transfer), `RecurrenceFr
   `RecurringTransaction` (`Loan.recurringId`) that actually posts the EMI each month; `updateLoan`
   keeps that rule's amount and destination current, `setLoanClosed` pauses/resumes it, and
   `deleteLoan` deletes it — but never the EMI transactions it already posted. A loan whose first EMI
-  date is already in the past treats the EMIs that fell due as paid outside Monilock by default:
+  date is already in the past treats the EMIs that fell due as paid outside Finio by default:
   `addLoan` advances the rule's `occurrenceCount`/`lastRunDate` past them (the RD "fold" pattern),
   so nothing is back-posted. `addLoan(data, { logPastEmis: true })` — the "Log past EMIs as
   transactions" switch on Add Loan — leaves the rule's history empty and the page runs
@@ -321,7 +310,7 @@ Enums: `AccountType`, `TransactionType` (expense/income/transfer), `RecurrenceFr
   [`web/src/landing/mode.ts`](web/src/landing/mode.ts) decides: the landing page shows only on `/`, in a plain
   browser tab (not `display-mode: standalone|fullscreen|minimal-ui`), when `finio-storage` holds no
   `onboardedAt` (a pre-v6 or unreadable state counts as "used"), and this tab hasn't pressed "Open
-  Monilock" (`sessionStorage`). Deep links, the installed PWA and onboarded users go straight to the app.
+  Finio" (`sessionStorage`). Deep links, the installed PWA and onboarded users go straight to the app.
   `index.html` carries an ES5 copy of that decision in a head script (it hides the prerendered page and
   applies the stored theme before first paint) — change both together. The page is **prerendered into
   `#root` at build time** by [`vite-plugins/landingPrerender`](web/vite-plugins/landingPrerender.ts) (in

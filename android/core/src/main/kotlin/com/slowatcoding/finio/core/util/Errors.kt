@@ -14,7 +14,7 @@ import kotlin.coroutines.cancellation.CancellationException
 // (an aborted call), neither of which is a connectivity problem.
 
 /** Copy shown when a request never reached the server (offline, DNS, blocked). */
-const val NETWORK_ERROR_MESSAGE = "Can't reach the Monilock server. Check your connection and try again."
+const val NETWORK_ERROR_MESSAGE = "Can't reach the Finio server. Check your connection and try again."
 
 private val NETWORK_PREFIX =
     Regex("^(failed to fetch|networkerror|load failed|network request failed)", RegexOption.IGNORE_CASE)

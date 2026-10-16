@@ -19,14 +19,14 @@ const PLACEHOLDER = '<!--landing-->';
 export function landingPrerender(): Plugin {
   let root = process.cwd();
   return {
-    name: 'monilock-landing-prerender',
+    name: 'finio-landing-prerender',
     apply: 'build',
     configResolved(config) {
       root = config.root;
     },
     async transformIndexHtml(html) {
       if (!html.includes(PLACEHOLDER)) return html;
-      const outDir = path.resolve(root, 'node_modules/.cache/monilock-landing-ssr');
+      const outDir = path.resolve(root, 'node_modules/.cache/finio-landing-ssr');
       await build({
         root,
         configFile: false,

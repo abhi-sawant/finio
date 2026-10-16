@@ -1,4 +1,4 @@
-# Monilock Android — CLAUDE.md
+# Finio Android — CLAUDE.md
 
 Native Android client: Kotlin + Jetpack Compose, a **1:1 port of the PWA in `web/`**. The web app
 is the reference implementation — read the matching web file before building or changing a screen.

@@ -1,11 +1,11 @@
 ---
 name: release
-description: Build a Monilock release folder (web zip, signed APK, checksums, release notes) for a given version.
+description: Build a Finio release folder (web zip, signed APK, checksums, release notes) for a given version.
 disable-model-invocation: true
 argument-hint: <version, e.g. 2.0.1>
 ---
 
-Create the release `$ARGUMENTS` for Monilock, following "Releasing" in the root CLAUDE.md. Work from the repo root.
+Create the release `$ARGUMENTS` for Finio, following "Releasing" in the root CLAUDE.md. Work from the repo root.
 
 ## 0. Validate
 
@@ -38,7 +38,7 @@ If `gen:fixtures` modified `spec/fixtures/`, mention it in the summary.
 - `finio-X.Y.Z.apk`: copy `android/app/build/outputs/apk/release/app-release.apk`.
 - `finio-web-X.Y.Z.zip`: zip the *contents* of `web/dist/` (files at the zip root, no `.DS_Store`): `cd web/dist && zip -qr ../../releases/vX.Y.Z/finio-web-X.Y.Z.zip . -x '.DS_Store'`.
 - `SHA256SUMS.txt`: `shasum -a 256` of the two files, run inside the folder, two-space separator, bare filenames.
-- `RELEASE_NOTES.md`: model it on the previous `releases/v*/RELEASE_NOTES.md` — title `# Monilock X.Y.Z — <headline>`, plain-language sections for what's new, a Downloads table, and the APK signing certificate line. Read the cert with `~/Library/Android/sdk/build-tools/<latest>/apksigner verify --print-certs <apk>` (needs `JAVA_HOME` on PATH as above) and format it as colon-separated lowercase hex. It must equal the previous release's cert; if not, warn loudly because Android will refuse the update.
+- `RELEASE_NOTES.md`: model it on the previous `releases/v*/RELEASE_NOTES.md` — title `# Finio X.Y.Z — <headline>`, plain-language sections for what's new, a Downloads table, and the APK signing certificate line. Read the cert with `~/Library/Android/sdk/build-tools/<latest>/apksigner verify --print-certs <apk>` (needs `JAVA_HOME` on PATH as above) and format it as colon-separated lowercase hex. It must equal the previous release's cert; if not, warn loudly because Android will refuse the update.
 
 ## 5. Report
 

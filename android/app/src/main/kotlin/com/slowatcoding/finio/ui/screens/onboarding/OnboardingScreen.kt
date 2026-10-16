@@ -169,7 +169,7 @@ fun OnboardingScreen() {
 
             when (step) {
                 Step.Name -> StepColumn {
-                    Heading("Welcome to Monilock", "Everything stays on this device. Let’s start with your name.")
+                    Heading("Welcome to Finio", "Everything stays on this device. Let’s start with your name.")
                     Column {
                         FieldCaption("What should we call you?")
                         val focus = remember { FocusRequester() }

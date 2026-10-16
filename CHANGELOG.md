@@ -1,25 +1,27 @@
 # Changelog
 
-Monilock follows [Semantic Versioning](https://semver.org). The repo-root `VERSION` file is the single
+Finio follows [Semantic Versioning](https://semver.org). The repo-root `VERSION` file is the single
 source of truth for both clients; see "Releasing" in [CLAUDE.md](CLAUDE.md).
+
+## 3.0.1 — 2026-10-16
+
+### Changed
+
+- **Back to Finio.** The 3.0.0 rename to Monilock is undone: the name, logo, install icon,
+  notifications, legal pages and home page all say Finio again. Your data, backups, settings and
+  installed copy carry over untouched, and the Android update installs over 3.0.0. The first-time
+  home page and the Privacy Policy / Terms access from 3.0.0 stay. The backup format is unchanged.
 
 ## 3.0.0 — 2026-10-16
 
 ### Changed
 
-- **Finio is now Monilock.** The app has a new name and a new logo: a padlock whose shackle is the
-  banknote security thread and whose body has an "M" cut out. The name changes everywhere you see it
-  — the web app, the Android app, the install icon, notifications and the legal pages. Nothing about
-  your data changes: your accounts, backups, settings and installed copy carry straight over, and the
-  Android update installs over your existing app. Internal identifiers (storage keys, backup file
-  names, the Android package) keep their old names on purpose, so no migration is needed.
-- Two import error messages were reworded to say Monilock. The backup format is unchanged.
 - **Privacy Policy and Terms (web)** can now be read before you have set the app up.
 
 ### Added
 
 - **A home page for first-time visitors (web).** Opening the site in a browser before you have set
-  the app up now shows a Monilock home page that explains what the app is, with real screenshots,
+  the app up now shows a Finio home page that explains what the app is, with real screenshots,
   instead of dropping straight into setup. If you have already set the app up, or you open the
   installed app, nothing changes: you go straight to your data. The page is readable by search
   engines without JavaScript.
@@ -50,7 +52,7 @@ source of truth for both clients; see "Releasing" in [CLAUDE.md](CLAUDE.md).
   **Merchant** (who the money went to or came from) and **For** (who it was for, e.g. "Mom"), both
   with suggestions drawn from your history. A transaction with no note shows its merchant as the
   row title, search matches both fields, and duplicating a transaction carries them over.
-- **In-app update prompt (Android).** On every app open Monilock checks GitHub for the latest release
+- **In-app update prompt (Android).** On every app open Finio checks GitHub for the latest release
   and, if it is newer than the installed version, shows its changelog with **Update** (opens the
   release page to download the APK), **Not now** (asks again next open) and **Skip this version**
   (stays quiet until a newer release is published). The PWA already updates itself, so it has no prompt.
@@ -86,7 +88,7 @@ source of truth for both clients; see "Releasing" in [CLAUDE.md](CLAUDE.md).
 
 ## 2.0.0 — 2026-10-07
 
-The first versioned release: Monilock is now one product on two clients, the PWA and a native Android
+The first versioned release: Finio is now one product on two clients, the PWA and a native Android
 app, maintained in one monorepo.
 
 ### Added
@@ -103,7 +105,7 @@ app, maintained in one monorepo.
   - Reminders that fire while the app is closed (via WorkManager).
   - Daily auto-backup to a folder you choose.
   - Opt-in cloud backup, with the same end-to-end encryption as the web app.
-  - Share an SMS or text into Monilock to pre-fill a transaction.
+  - Share an SMS or text into Finio to pre-fill a transaction.
   - Launcher shortcuts for Add Expense, Add Income, Transactions and Budgets.
 - **Cross-client backups.** A backup exported by either app restores in the other, and both use the
   same cloud backups, encrypted or not. The format is specified in

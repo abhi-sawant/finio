@@ -240,7 +240,7 @@ export default function ImportCsv() {
                 <div className="card-elevated space-y-3 rounded-md p-4">
                   <p className="text-sm">
                     Import transactions from a bank or card statement CSV. You'll map its columns to
-                    Monilock's fields on the next step, and review everything before it's added.
+                    Finio's fields on the next step, and review everything before it's added.
                   </p>
                   <div>
                     <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">

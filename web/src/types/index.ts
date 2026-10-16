@@ -614,7 +614,7 @@ export interface FinanceStore {
   /**
    * `logPastEmis` (default false): when the first EMI date is in the past, post the EMIs that
    * already fell due as real expense transactions (via `processRecurring`) instead of treating
-   * them as paid outside Monilock.
+   * them as paid outside Finio.
    */
   addLoan: (
     loan: Omit<Loan, 'id' | 'createdAt' | 'recurringId'>,

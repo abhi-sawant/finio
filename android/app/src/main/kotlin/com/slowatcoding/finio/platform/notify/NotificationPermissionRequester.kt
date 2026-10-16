@@ -53,7 +53,7 @@ fun rememberNotificationPermissionRequester(onResult: (granted: Boolean) -> Unit
 
 /**
  * Once the user has denied twice the OS stops showing the prompt (the web's "denied" state);
- * this opens Monilock's notification settings page so they can turn it on by hand.
+ * this opens Finio's notification settings page so they can turn it on by hand.
  */
 fun appNotificationSettingsIntent(context: Context): Intent =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

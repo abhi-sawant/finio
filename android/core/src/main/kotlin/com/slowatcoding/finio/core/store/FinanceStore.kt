@@ -1240,7 +1240,7 @@ class FinanceStore(
 
     /**
      * Also creates the recurring rule that posts the EMI monthly. EMIs already due are treated as
-     * paid outside Monilock (the rule is advanced past them) unless [logPastEmis], in which case
+     * paid outside Finio (the rule is advanced past them) unless [logPastEmis], in which case
      * the caller runs [processRecurring] to post them.
      */
     fun addLoan(loan: NewLoan, logPastEmis: Boolean = false): String = atomically { s ->

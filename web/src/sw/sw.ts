@@ -13,7 +13,7 @@ import { fireDueNotifications } from '../services/notificationRunner';
 import { NOTIFICATION_SYNC_TAG } from '../utils/notifications';
 
 /**
- * Monilock's service worker.
+ * Finio's service worker.
  *
  * Hand-written because `generateSW` cannot host a `periodicsync` handler, which is the only way
  * a reminder fires while the app is closed. Everything the generated worker used to do for free
@@ -22,7 +22,7 @@ import { NOTIFICATION_SYNC_TAG } from '../utils/notifications';
  * here, because `workbox.runtimeCaching` and friends are `generateSW`-only options that are
  * *silently ignored* under `injectManifest`.
  *
- * Hard constraint to remember: a service worker cannot read localStorage, where all of Monilock's
+ * Hard constraint to remember: a service worker cannot read localStorage, where all of Finio's
  * finance data lives. That is why it only ever reads a precomputed schedule out of IndexedDB —
  * see `services/notificationDb.ts`. Any future trigger must be baked into that schedule by the
  * app, not derived here.

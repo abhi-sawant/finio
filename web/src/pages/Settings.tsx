@@ -108,7 +108,7 @@ export default function Settings() {
           </Link>
         </p>
         <p className="text-muted-foreground text-center text-[11px]">
-          Monilock · Personal Finance · v{__APP_VERSION__}
+          Finio · Personal Finance · v{__APP_VERSION__}
         </p>
       </Main>
     </>

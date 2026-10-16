@@ -262,7 +262,7 @@ fun ImportCsvScreen(nav: FinioNavigator) {
                     FinioCard(Modifier.fillMaxWidth()) {
                         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                             Text(
-                                "Import transactions from a bank or card statement CSV. You'll map its columns to Monilock's fields on the next step, and review everything before it's added.",
+                                "Import transactions from a bank or card statement CSV. You'll map its columns to Finio's fields on the next step, and review everything before it's added.",
                                 style = FinioType.body,
                                 color = colors.foreground,
                             )

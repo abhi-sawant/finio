@@ -214,7 +214,7 @@ fun AppLockSection() {
         } else {
             SwitchField(
                 title = "App lock",
-                description = "Ask for a PIN before opening Monilock. Data on this device is not encrypted.",
+                description = "Ask for a PIN before opening Finio. Data on this device is not encrypted.",
                 checked = lockEnabled,
                 // Both directions need input, so the switch opens a dialog rather than writing state.
                 onCheckedChange = { next -> openLockDialog(if (next) LockDialogKind.Set else LockDialogKind.Disable) },
@@ -254,7 +254,7 @@ fun AppLockSection() {
         FinioDialog(
             onDismissRequest = { showAutoLockPicker = false },
             title = "Auto-lock",
-            description = "How long Monilock can sit in the background before it asks for your PIN again.",
+            description = "How long Finio can sit in the background before it asks for your PIN again.",
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 AUTO_LOCK_OPTIONS.forEach { minutes ->
@@ -290,7 +290,7 @@ fun AppLockSection() {
                 pinPhase == PinPhase.Current -> "Enter your current PIN first."
                 pinPhase == PinPhase.Confirm -> "Enter it once more to confirm."
                 pinPhase == PinPhase.Enter -> "Choose a PIN you will remember — it cannot be recovered."
-                else -> "Monilock will ask for this PIN when you open it. This is a screen lock, not encryption: " +
+                else -> "Finio will ask for this PIN when you open it. This is a screen lock, not encryption: " +
                     "your data stays stored unencrypted on this device."
             },
         ) {

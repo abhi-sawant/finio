@@ -15,7 +15,7 @@ User decisions (2026-10-04): Mudra chosen over Kaanch and Gulal; Familjen Grotes
 
 ## Direction contract
 
-THESIS: Monilock's money looks like money. The screen is printed the way a rupee note is: guilloche linework, microprint, a windowed colour-shift thread, denomination tints. It refuses the category default of flat neutral cards with one accent, and the fintech default of neon-on-black.
+THESIS: Finio's money looks like money. The screen is printed the way a rupee note is: guilloche linework, microprint, a windowed colour-shift thread, denomination tints. It refuses the category default of flat neutral cards with one accent, and the fintech default of neon-on-black.
 
 OWN-WORLD: Light is note paper in daylight (lavender to mint to peach paper, indigo ink #1d1747, ₹100-lavender accent #4b36c7). Dark is the note under a UV lamp (indigo field #191440, engraving lit lavender, accent #b9adff). Frosted glass panels with white hairlines and lavender-tinted shadows; faint guilloche rosettes; denomination tints per account type; Familjen Grotesk for figures and titles.
 
