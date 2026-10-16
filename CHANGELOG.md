@@ -3,6 +3,15 @@
 Finio follows [Semantic Versioning](https://semver.org). The repo-root `VERSION` file is the single
 source of truth for both clients; see "Releasing" in [CLAUDE.md](CLAUDE.md).
 
+## 3.0.1 — 2026-10-16
+
+### Changed
+
+- **Back to Finio.** The 3.0.0 rename to Monilock is undone: the name, logo, install icon,
+  notifications, legal pages and home page all say Finio again. Your data, backups, settings and
+  installed copy carry over untouched, and the Android update installs over 3.0.0. The first-time
+  home page and the Privacy Policy / Terms access from 3.0.0 stay. The backup format is unchanged.
+
 ## 3.0.0 — 2026-10-16
 
 ### Changed
