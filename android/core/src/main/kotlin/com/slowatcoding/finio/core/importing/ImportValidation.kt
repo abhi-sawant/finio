@@ -135,7 +135,7 @@ data class ValidatedBackup(
 )
 
 /** Thrown when the input carries nothing importable at all. */
-class InvalidBackupException : IllegalArgumentException("Not a Finio backup file")
+class InvalidBackupException : IllegalArgumentException("Not a Monilock backup file")
 
 /** The accounts with their opening balance as the store's balance math wants it (null = absent). */
 fun ImportPayload.importedAccounts(): List<ImportedAccount>? = accounts?.map {
@@ -784,7 +784,7 @@ fun validateBackup(raw: JsonElement?, now: Instant = nowInstant()): ValidatedBac
     val meta = readBackupMeta(raw)
     val version = meta.version
     if (version != null && version > BACKUP_SCHEMA_VERSION) {
-        warnings += "This backup was made by a newer version of Finio (format v$version; this app understands v$BACKUP_SCHEMA_VERSION). It will import, but some data may be missed"
+        warnings += "This backup was made by a newer version of Monilock (format v$version; this app understands v$BACKUP_SCHEMA_VERSION). It will import, but some data may be missed"
     }
 
     return ValidatedBackup(

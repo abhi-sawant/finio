@@ -12,7 +12,7 @@ Individuals in India tracking personal money day to day on their phone (installe
 
 ## Product Purpose
 
-Finio is a privacy-first personal finance app. It lets someone record and understand their money without handing data to a server or linking a bank. Success is a user who logs transactions habitually and trusts the numbers (balances, budgets, net worth, forecast) without friction.
+Monilock is a privacy-first personal finance app. It lets someone record and understand their money without handing data to a server or linking a bank. Success is a user who logs transactions habitually and trusts the numbers (balances, budgets, net worth, forecast) without friction.
 
 ## Positioning
 
@@ -33,7 +33,7 @@ Used in short, frequent sessions (quick add of an expense, often via the FAB, sh
 
 ## Brand Commitments
 
-Name: Finio. The visual world is **Mudra** (adopted 2026-10-04, replacing the earlier "Focus" ledger look): the app is printed the way a rupee note is, with guilloche linework, microprint, a windowed colour-shift thread, denomination tints, frosted glass and soft gradients. DESIGN.md is the authority on how it is built.
+Name: Monilock. The visual world is **Mudra** (adopted 2026-10-04, replacing the earlier "Focus" ledger look): the app is printed the way a rupee note is, with guilloche linework, microprint, a windowed colour-shift thread, denomination tints, frosted glass and soft gradients. DESIGN.md is the authority on how it is built.
 
 - Chosen by the owner from three prototyped directions (Kaanch, Mudra, Gulal), in both light ("note paper in daylight") and dark ("the note under a UV lamp"); both modes are first-class.
 - Familjen Grotesk (the banknote numeral) sets page titles, dialog titles and headline money; Instrument Sans sets everything people read or type.

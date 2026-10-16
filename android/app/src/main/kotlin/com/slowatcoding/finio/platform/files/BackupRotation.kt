@@ -2,7 +2,7 @@ package com.slowatcoding.finio.platform.files
 
 /*
  * Pure half of web/src/services/backupFolder.ts `writeBackupAndRotate`: which files in the backup
- * folder are Finio auto-backups, and which of them fall outside the newest [keep].
+ * folder are Monilock auto-backups, and which of them fall outside the newest [keep].
  */
 
 /** Same pattern as the web: only `finio-backup-YYYY-MM-DD.json` is ever rotated. */

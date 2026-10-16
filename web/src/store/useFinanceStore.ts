@@ -1233,7 +1233,7 @@ export const useFinanceStore = create<FinanceStore>()(
           createdAt,
         };
         // EMIs that already fell due before the loan was entered. By default they were paid
-        // outside Finio: advance the rule past them (the RD "fold" pattern) so nothing is ever
+        // outside Monilock: advance the rule past them (the RD "fold" pattern) so nothing is ever
         // back-posted. With `logPastEmis`, leave the rule's history empty and let
         // `processRecurring` post them as real transactions from the paying account.
         if (!logPastEmis) {

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import { Button } from '@/components/ui/button';
 
 /**
- * Shared frame for every cloud-account screen: the Finio wordmark, a heading, the form, and a
+ * Shared frame for every cloud-account screen: the Monilock wordmark, a heading, the form, and a
  * way out. The app works fully signed-out, so each of these screens must offer to leave the
  * flow — not only Login.
  */
@@ -25,7 +25,7 @@ export function AuthShell({
       <div className="mx-auto w-full max-w-sm">
         <div className="mb-8 text-center">
           <p className="text-grad-primary text-4xl font-extrabold" aria-hidden="true">
-            Finio
+            Monilock
           </p>
           <h1 className="text-foreground mt-3 text-xl font-bold">{heading}</h1>
           {description && <div className="text-muted-foreground mt-2 text-sm">{description}</div>}

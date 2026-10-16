@@ -10,7 +10,7 @@ import type { AppLockConfig } from '@/types';
  *
  * What it actually buys: the PIN is not sitting in plaintext where a glance at localStorage or
  * a stray DevTools screenshot reveals it, and a PIN reused from someone's phone unlock is not
- * handed over in the clear. Since Finio's data itself is unencrypted, reading `finio-storage`
+ * handed over in the clear. Since Monilock's data itself is unencrypted, reading `finio-storage`
  * directly is strictly *easier* than attacking this hash — the app lock is a screen gate, and
  * this module is the part of it that avoids being gratuitously careless.
  */

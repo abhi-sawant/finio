@@ -131,7 +131,7 @@ export function LockScreen() {
               tabIndex={-1}
               className="text-2xl font-bold tracking-tight outline-none"
             >
-              Finio is locked
+              Monilock is locked
             </h1>
             <p className="text-muted-foreground text-sm">Enter your PIN to continue.</p>
           </div>
@@ -205,14 +205,14 @@ export function LockScreen() {
             <div className="text-muted-foreground space-y-3 text-sm">
               <p>
                 The lock is a screen gate, not encryption — your data is still stored on this
-                device. The way back in is to clear Finio&rsquo;s site data in your browser, which
+                device. The way back in is to clear Monilock&rsquo;s site data in your browser, which
                 removes the lock{' '}
                 <strong className="text-foreground">and every transaction on this device</strong>.
               </p>
               <ul className="list-disc space-y-1 pl-5">
                 <li>Chrome: Settings → Privacy and security → Site settings</li>
                 <li>iOS Safari: Settings → Safari → Advanced → Website Data</li>
-                <li>Installed app: uninstall and reinstall Finio</li>
+                <li>Installed app: uninstall and reinstall Monilock</li>
               </ul>
               <p>
                 {hasCloudBackup

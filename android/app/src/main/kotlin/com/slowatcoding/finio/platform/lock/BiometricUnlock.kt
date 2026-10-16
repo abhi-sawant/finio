@@ -14,7 +14,7 @@ import kotlin.coroutines.resume
  * Port of web/src/services/appLockBiometric.ts — a *convenience* unlock layered on the PIN, never
  * a replacement for it. The web uses a WebAuthn platform authenticator with user verification;
  * the closest Android equivalent is a Class 3 (BIOMETRIC_STRONG) prompt. Device credential is
- * deliberately NOT allowed: the device PIN is not the Finio PIN, and the fallback is our own pad
+ * deliberately NOT allowed: the device PIN is not the Monilock PIN, and the fallback is our own pad
  * (the negative button, "Use PIN").
  *
  * There is no credential id to store on Android — `AppLockConfig.webauthnCredentialId` can hold a

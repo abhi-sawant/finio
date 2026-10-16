@@ -29,14 +29,14 @@ export default function PrivacyPolicy() {
       <Main className="lg:max-w-2xl">
         <div className="card-elevated space-y-6 rounded-md p-5">
           <p className="text-muted-foreground text-xs">
-            Last updated: 13 August 2026. This policy covers the hosted Finio app and the optional
+            Last updated: 13 August 2026. This policy covers the hosted Monilock app and the optional
             cloud backup service. If you are using a self-hosted deployment, the person or
             organization operating that server — not us — controls your data; ask them for their
             policy.
           </p>
 
           <Section title="1. Local-first by default">
-            Finio is built to work entirely on your device. Accounts, transactions, budgets,
+            Monilock is built to work entirely on your device. Accounts, transactions, budgets,
             categories, goals, debts, and every other record you create are stored in your browser's
             local storage. None of this data is transmitted anywhere unless you explicitly turn on
             cloud backup or cloud sync. Uninstalling the app or clearing site data deletes it, since
@@ -131,7 +131,7 @@ export default function PrivacyPolicy() {
           </Section>
 
           <Section title="8. Children">
-            Finio is not directed at children, and we do not knowingly collect data from anyone
+            Monilock is not directed at children, and we do not knowingly collect data from anyone
             under 16.
           </Section>
 

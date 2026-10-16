@@ -1,5 +1,5 @@
 ---
-name: Finio
+name: Monilock
 description: A privacy-first rupee ledger printed like a banknote — note-paper gradients, frosted glass, guilloche linework and denomination tints, with every figure legible first and ornamental second.
 colors:
   primary: "#4b36c7"
@@ -150,7 +150,7 @@ components:
     padding: "12px"
 ---
 
-# Design System: Finio
+# Design System: Monilock
 
 Tokens live in [`web/src/index.css`](web/src/index.css) (`:root` for light, `.dark` for dark). Every value
 in this file is taken from the shipped build; where a token is a gradient, the frontmatter records
@@ -160,7 +160,7 @@ its key stops and the full CSS value is in `.impeccable/design.json`.
 
 **Creative North Star: "Mudra" — the money looks like money.**
 
-Finio is printed the way a rupee note is printed. Light mode is note paper in daylight: a fixed
+Monilock is printed the way a rupee note is printed. Light mode is note paper in daylight: a fixed
 lavender-to-mint-to-peach paper gradient, indigo ink, and the ₹100 lavender as the one accent.
 Dark mode is the same note under a UV lamp: an indigo field, the engraving lit in lavender, and
 security fibres that only fluoresce in the dark. The security-printing vocabulary — guilloche
@@ -440,7 +440,7 @@ The one banknote per money screen (Dashboard "Safe to spend today", Accounts net
   up to 140° as the pointer crosses the note; the note also tilts up to ±2°/±3° (perspective 900px,
   0.5s ease-out-expo). Touch input does not tilt; reduced motion removes the transform.
 - A thin-film conic sheen over the note (soft-light in light, screen at 30% in dark).
-- **Microprint**: 6px 600 tracked uppercase text repeating the privacy promise ("FINIO · KEPT ON
+- **Microprint**: 6px 600 tracked uppercase text repeating the privacy promise ("MONILOCK · KEPT ON
   THIS DEVICE · NOT A BANK · YOUR DATA STAYS YOURS") along the bottom edge at 36% ink,
   `aria-hidden`. It is engraving texture, not a label.
 - **UV fibres**: 26 seeded curved strokes (cyan, pink, yellow) on the right half only, so none

@@ -101,7 +101,7 @@ let backupInProgress = false;
 const MAX_LOCAL_BACKUPS = 10;
 
 /**
- * Saves a local backup file. If a Finio backup folder is connected (Chromium-only File
+ * Saves a local backup file. If a Monilock backup folder is connected (Chromium-only File
  * System Access API) and permission is available, writes into it and rotates old backups
  * beyond MAX_LOCAL_BACKUPS. Otherwise falls back to a plain browser download.
  */

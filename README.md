@@ -1,6 +1,6 @@
-# Finio — Personal Finance Tracker
+# Monilock — Personal Finance Tracker
 
-**Your money, on your device.** Finio is a privacy-first personal finance app that runs entirely
+**Your money, on your device.** Monilock is a privacy-first personal finance app that runs entirely
 in your browser. Every rupee you record stays in local storage on your phone or laptop — there is
 no account to create, no server watching, and no analytics of any kind. Cloud backup exists, it is
 opt-in, and it can be end-to-end encrypted so even the backup server can't read it.
@@ -10,7 +10,7 @@ sign-up, works offline the moment it loads.
 
 This README has two halves:
 
-- **[Part 1 — For Everyone](#part-1--for-everyone)** — what Finio does and how to use it.
+- **[Part 1 — For Everyone](#part-1--for-everyone)** — what Monilock does and how to use it.
 - **[Part 2 — For Developers](#part-2--for-developers)** — running it locally and self-hosting the
   optional backend.
 
@@ -18,9 +18,9 @@ This README has two halves:
 
 # Part 1 — For Everyone
 
-## Why Finio
+## Why Monilock
 
-Most finance apps ask you to hand over your bank login and then monetize what they learn. Finio
+Most finance apps ask you to hand over your bank login and then monetize what they learn. Monilock
 takes the opposite approach: it is a plain web app that keeps a ledger for you, and that's it.
 
 |                               | What it means                                                                                                                    |
@@ -36,7 +36,7 @@ takes the opposite approach: it is a plain web app that keeps a ledger for you, 
 
 ## Getting Started
 
-The first time you open Finio, a short wizard asks for your name, your first account, and its
+The first time you open Monilock, a short wizard asks for your name, your first account, and its
 current balance. You can skip past the account step — handy if you're reinstalling and want to go
 straight to Settings and restore a backup. If you'd rather look around before entering real
 numbers, the wizard also offers to load a **sample dataset** — a small, realistic set of accounts,
@@ -48,7 +48,7 @@ After that:
    amount on the number pad, choose the account and category, add a note, and save.
 2. **Set a budget** — Settings → Budgets → **+**. Pick a category (or "Overall"), a limit, and
    whether it resets weekly, monthly, or yearly.
-3. **Automate the regulars** — Settings → Recurring → **+** for rent, salary, subscriptions. Finio
+3. **Automate the regulars** — Settings → Recurring → **+** for rent, salary, subscriptions. Monilock
    files them for you.
 4. **Watch it come together** — the Analytics tab fills in as your history grows.
 
@@ -64,10 +64,10 @@ one tap, and long-press any transaction row for Duplicate / Save as template / S
 **iPhone / iPad (Safari)** — open the app, tap **Share** → **Add to Home Screen** → **Add**.
 
 **Desktop (Chrome / Edge)** — click the install icon in the address bar, or menu → **Install
-Finio**.
+Monilock**.
 
 Once installed you also get **home-screen shortcuts** (long-press the icon for Add Expense, Add
-Income, Transactions, Budgets) and Finio appears in your phone's **share sheet** — share a payment
+Income, Transactions, Budgets) and Monilock appears in your phone's **share sheet** — share a payment
 SMS or a note to it and the Add Transaction screen opens with the amount already filled in.
 
 ---
@@ -99,10 +99,10 @@ icon, and colour.
 
 Credit cards get a full lifecycle: a credit limit with a utilization reading, plus an optional
 statement cycle (close day, days until payment is due, minimum-due percentage). Set it once and
-Finio tracks the due date and warns you before it arrives.
+Monilock tracks the due date and warns you before it arrives.
 
 Balance drifted from your real bank or card statement? Open the account and tap **Reconcile
-Balance** — enter the statement figure and Finio posts a single adjustment transaction to close
+Balance** — enter the statement figure and Monilock posts a single adjustment transaction to close
 the gap, with a note you can edit. (There's also a global, non-destructive **Reconcile Balances**
 in Settings that just recomputes every cached balance from history — see below.)
 
@@ -137,7 +137,7 @@ history so you can see whether you actually hit it last month.
 ### Savings Goals
 
 Set a target amount and an optional deadline, then log contributions and withdrawals against the
-goal. Finio shows the percentage complete, what's left, and — once it has enough history — a
+goal. Monilock shows the percentage complete, what's left, and — once it has enough history — a
 projected completion date based on your actual pace. You can also point a recurring rule at a
 goal so every occurrence auto-logs a contribution, instead of remembering to do it by hand.
 
@@ -149,17 +149,17 @@ goal can never accidentally move a real balance.
 Track who owes you and who you owe, per person. Log entries as **They owe me** or **I owe them**,
 and see each person's running balance.
 
-**Settle up** is the one moment real money moves: enter the amount and the account, and Finio
+**Settle up** is the one moment real money moves: enter the amount and the account, and Monilock
 creates a genuine income or expense transaction _and_ balances the person's ledger in one step.
 
 ### Loans & EMI
 
-Add a loan with its principal, annual interest rate, and tenure, and Finio computes the EMI and
+Add a loan with its principal, annual interest rate, and tenure, and Monilock computes the EMI and
 creates a recurring rule that posts it automatically every month — no manual entry, no risk of
 the EMI drifting out of sync with the numbers that produced it. Each loan's card shows the full
 amortization picture: outstanding balance, interest paid so far, next due date, and payoff date.
 
-Made an extra payment? Log a **prepayment** and Finio shows exactly how many months and how much
+Made an extra payment? Log a **prepayment** and Monilock shows exactly how many months and how much
 interest it saves, before you confirm — prepayments are real money leaving an account, so they
 post a genuine expense transaction alongside the ledger entry. Mark a loan paid off (or reopen it)
 any time; closing pauses its EMI rule without touching what it already posted.
@@ -167,7 +167,7 @@ any time; closing pauses its EMI rule without touching what it already posted.
 ### Merchants
 
 A grouped view of where your money actually goes — and comes from — built entirely from your
-existing notes, no setup required. Finio recognizes that "Swiggy 449" and "Swiggy/9921" are the
+existing notes, no setup required. Monilock recognizes that "Swiggy 449" and "Swiggy/9921" are the
 same merchant and rolls them into one card with a running total, transaction count, and every
 transaction underneath. A **Top Merchants** card on the Analytics page surfaces the five biggest
 at a glance.
@@ -179,7 +179,7 @@ week away and everything you missed is filed automatically.
 
 Rules are fully editable — pause and resume them, set an end date or a maximum number of
 occurrences, and see "next due", "3 of 12", or "until 31 Dec" on each card. Create a rule dated in
-the past and Finio asks first, showing you exactly how many transactions it would add and their
+the past and Monilock asks first, showing you exactly how many transactions it would add and their
 total, so you can add them or just start from today.
 
 ### Analytics
@@ -219,7 +219,7 @@ change before you commit, and a single-tap undo after.
 ### Import from Your Bank
 
 Settings → **Import from CSV** walks a bank statement through three steps: upload, map the columns,
-review. Finio auto-detects the date, amount, and note columns and the date format; handles either a
+review. Monilock auto-detects the date, amount, and note columns and the date format; handles either a
 single signed amount column or separate debit/credit columns; understands currency symbols,
 thousand separators, and accounting-style parentheses; and flags likely duplicates against what's
 already in your ledger before anything is added.
@@ -235,24 +235,24 @@ you open the app, and the Settings screen says so plainly rather than pretending
 
 ### App Lock
 
-Lock Finio behind a 4- or 6-digit PIN, with optional face or fingerprint unlock, and auto-lock
+Lock Monilock behind a 4- or 6-digit PIN, with optional face or fingerprint unlock, and auto-lock
 after 0, 1, 5, 15, or 60 minutes in the background. Repeated wrong PINs trigger a growing delay.
 
-Finio is straight with you about what this is: **a screen gate, not encryption.** Your data behind
+Monilock is straight with you about what this is: **a screen gate, not encryption.** Your data behind
 it is still stored unencrypted, and there is deliberately no wipe-after-N-attempts, because in a
 local-only app that turns a forgotten PIN into permanent data loss.
 
 ### Backups
 
-Finio gives you four ways to not lose your data, and you can use any combination:
+Monilock gives you four ways to not lose your data, and you can use any combination:
 
 1. **Export / Import a JSON file** — no account needed. Every import runs a dry-run preview first,
    showing you exactly what will be accepted, what's malformed, and what references are missing,
    then lets you **Merge** or **Replace**.
-2. **Automatic daily local backup** — Finio downloads a backup file once a day when you open it.
+2. **Automatic daily local backup** — Monilock downloads a backup file once a day when you open it.
    On supporting browsers you can point it at a folder and it keeps the 10 most recent, tidying up
    the older ones for you.
-3. **Cloud backup** — register with an email, verify the OTP, and Finio uploads a backup once a
+3. **Cloud backup** — register with an email, verify the OTP, and Monilock uploads a backup once a
    day. **Backup History** lists every version by date and size so you can restore or delete a
    specific one.
 4. **End-to-end encrypted cloud backup** — turn on a passphrase and your backup is encrypted in
@@ -272,7 +272,7 @@ opening balance and its transactions and reports what it corrected — a safety 
 never need day-to-day (see Accounts, above, for reconciling a single account against a real
 statement instead).
 
-The footer links to Finio's **Privacy Policy** and **Terms of Service**.
+The footer links to Monilock's **Privacy Policy** and **Terms of Service**.
 
 ---
 
@@ -283,7 +283,7 @@ The footer links to Finio's **Privacy Policy** and **Terms of Service**.
 **Where is my data?** In your browser's local storage on that device. Clearing your browser data
 for the site deletes it — which is why the backup options above are worth setting up.
 
-**Can I use it on two devices?** Yes, via cloud backup: back up on one, restore on the other. Finio
+**Can I use it on two devices?** Yes, via cloud backup: back up on one, restore on the other. Monilock
 doesn't do live sync between devices.
 
 **Does it connect to my bank?** No. You add transactions manually, or import a CSV statement.
@@ -296,7 +296,7 @@ doesn't do live sync between devices.
 
 # Part 2 — For Developers
 
-Finio is a React 19 + TypeScript PWA. The optional backend is a small PHP 8 app built to run on
+Monilock is a React 19 + TypeScript PWA. The optional backend is a small PHP 8 app built to run on
 ordinary cPanel shared hosting.
 
 **You do not need the backend.** The frontend is a complete application on its own; the backend

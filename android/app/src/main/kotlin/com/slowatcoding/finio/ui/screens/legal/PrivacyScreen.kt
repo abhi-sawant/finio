@@ -17,14 +17,14 @@ fun PrivacyScreen(nav: FinioNavigator) {
         nav,
         "Privacy Policy",
         AnnotatedString(
-            "Last updated: 13 August 2026. This policy covers the hosted Finio app and the optional cloud backup " +
+            "Last updated: 13 August 2026. This policy covers the hosted Monilock app and the optional cloud backup " +
                 "service. If you are using a self-hosted deployment, the person or organization operating that server " +
                 "— not us — controls your data; ask them for their policy.",
         ),
     ) {
         LegalSection("1. Local-first by default") {
             LegalParagraph(
-                "Finio is built to work entirely on your device. Accounts, transactions, budgets, categories, goals, " +
+                "Monilock is built to work entirely on your device. Accounts, transactions, budgets, categories, goals, " +
                     "debts, and every other record you create are stored in the app's private storage on this device. " +
                     "None of this data is transmitted anywhere unless you explicitly turn on cloud backup or cloud sync. " +
                     "Uninstalling the app or clearing its storage deletes it, since we never receive a copy in the first place.",
@@ -119,7 +119,7 @@ fun PrivacyScreen(nav: FinioNavigator) {
 
         LegalSection("8. Children") {
             LegalParagraph(
-                "Finio is not directed at children, and we do not knowingly collect data from anyone under 16.",
+                "Monilock is not directed at children, and we do not knowingly collect data from anyone under 16.",
             )
         }
 

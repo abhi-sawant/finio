@@ -40,7 +40,7 @@ private val leadDayOptions = (0..MAX_NOTIFY_LEAD_DAYS).toList()
 /**
  * Port of web/src/components/settings/NotificationsSection.tsx — the reminders master switch
  * (the one place notification permission is requested), per-kind switches, lead time and a
- * test reminder. Delivery is WorkManager-backed, so reminders always arrive with Finio closed.
+ * test reminder. Delivery is WorkManager-backed, so reminders always arrive with Monilock closed.
  */
 @Composable
 fun NotificationsSection() {
@@ -61,7 +61,7 @@ fun NotificationsSection() {
         granted = NotificationPermission.isGranted(context)
         if (granted) denied = false
     }
-    // Permission held but notifications switched off for Finio in system settings.
+    // Permission held but notifications switched off for Monilock in system settings.
     val blocked = denied || (!granted && !NotificationPermission.needsRuntimeRequest(context))
     val remindersOn = settings.notificationsEnabled && granted
 
@@ -77,7 +77,7 @@ fun NotificationsSection() {
         if (!result) {
             denied = true
             toast.error(
-                "Notifications are blocked for Finio. Turn them on in your device settings.",
+                "Notifications are blocked for Monilock. Turn them on in your device settings.",
                 action = ToastAction("Settings") { context.startActivity(appNotificationSettingsIntent(context)) },
             )
             return@rememberNotificationPermissionRequester
@@ -122,8 +122,8 @@ fun NotificationsSection() {
     FinioCard(contentPadding = PaddingValues(0.dp)) {
         SwitchField(
             title = "Reminders",
-            description = if (blocked) "Blocked in your device settings for Finio"
-            else "Bill, budget and card alerts, even when Finio is closed",
+            description = if (blocked) "Blocked in your device settings for Monilock"
+            else "Bill, budget and card alerts, even when Monilock is closed",
             checked = remindersOn,
             // Unlike the web, a blocked switch stays tappable: Android may still re-prompt, and
             // otherwise the toast offers a way to the system settings.

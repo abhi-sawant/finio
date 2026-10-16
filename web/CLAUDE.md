@@ -1,4 +1,4 @@
-# Finio Web (PWA) — web/CLAUDE.md
+# Monilock Web (PWA) — web/CLAUDE.md
 
 The React PWA. Run every command below from `web/`. Repo-wide context — the domain model, the
 cross-app gotchas, the backend and the backup contract both apps share — is in the
@@ -240,7 +240,7 @@ page.
 Configured in [vite.config.ts](vite.config.ts) via `vite-plugin-pwa`, using **`strategies:
 'injectManifest'`** with a hand-written worker at [`src/sw/sw.ts`](src/sw/sw.ts).
 
-- App name: "Finio - Finance Tracker", manifest theme color `#4b36c7`; `index.html` sets a light/dark `theme-color` pair matching the note paper
+- App name: "Monilock - Finance Tracker", manifest theme color `#4b36c7`; `index.html` sets a light/dark `theme-color` pair matching the note paper
 - Manifest icons: 64px, 96px, 192px, 512px, maskable 512px (in `public/`)
 - `shortcuts`: Add Expense, Add Income, Transactions, Budgets (96px icon each — capped at four,
   since Android surfaces 3–4 and silently drops the rest)
