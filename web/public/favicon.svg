@@ -5,17 +5,15 @@
       <stop offset="0.5" stop-color="#6c57d6"/>
       <stop offset="1" stop-color="#3d2bb0"/>
     </radialGradient>
-    <linearGradient id="thread" gradientUnits="userSpaceOnUse" x1="0" y1="70" x2="0" y2="442">
-      <stop offset="0" stop-color="#4fe0a8"/>
-      <stop offset="0.5" stop-color="#6fb4ff"/>
-      <stop offset="1" stop-color="#d8ceff"/>
+    <linearGradient id="thread" gradientUnits="userSpaceOnUse" x1="0" y1="85" x2="0" y2="250">
+      <stop offset="0" stop-color="#4fe0a8"/><stop offset="0.5" stop-color="#6fb4ff"/><stop offset="1" stop-color="#d8ceff"/>
     </linearGradient>
     <clipPath id="clip"><rect width="512" height="512" rx="116"/></clipPath>
   </defs>
   <rect width="512" height="512" rx="116" fill="url(#bg)"/>
   
   <g transform="translate(0 0) scale(1)">
-    <g fill="url(#thread)"><rect x="372" y="70" width="34" height="73.5" rx="8"/><rect x="372" y="169.5" width="34" height="73.5" rx="8"/><rect x="372" y="269" width="34" height="73.5" rx="8"/><rect x="372" y="368.5" width="34" height="73.5" rx="8"/></g>
-    <path fill="#fff" d="M128 118h196a24 24 0 0 1 24 24v32a24 24 0 0 1-24 24H212v40h92a22 22 0 0 1 22 22v28a22 22 0 0 1-22 22h-92v56a24 24 0 0 1-24 24h-36a24 24 0 0 1-24-24V142a24 24 0 0 1 24-24z"/>
+    <path fill="url(#thread)" d="M165 250V176A91 91 0 0 1 347 176V250H305V176A49 49 0 0 0 207 176V250Z"/>
+    <path fill="#fff" fill-rule="evenodd" d="M164 224h184a48 48 0 0 1 48 48v110a48 48 0 0 1 -48 48h-184a48 48 0 0 1 -48 -48v-110a48 48 0 0 1 48 -48zM180 392Q174 392 174 386L174 272Q174 266 180 266L206 266Q212 266 215.7 270.7L252.3 317.3Q256 322 259.7 317.3L296.3 270.7Q300 266 306 266L332 266Q338 266 338 272L338 386Q338 392 332 392L308 392Q302 392 302 386L302 330Q302 324 298.3 328.7L271.7 363.3Q268 368 262 368L250 368Q244 368 240.3 363.3L213.7 328.7Q210 324 210 330L210 386Q210 392 204 392Z"/>
   </g>
 </svg>

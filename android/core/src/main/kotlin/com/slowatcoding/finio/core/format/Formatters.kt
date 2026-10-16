@@ -16,7 +16,7 @@ import java.math.RoundingMode
 import java.time.Instant
 import kotlin.math.abs
 
-// Port of web/src/utils/formatters.ts. Finio is INR-only, and every number goes through a
+// Port of web/src/utils/formatters.ts. Monilock is INR-only, and every number goes through a
 // hand-rolled copy of `Intl.NumberFormat('en-IN', …)` ([intlFormat]) rather than the JVM's ICU,
 // whose data (and therefore output) differs between Android releases.
 

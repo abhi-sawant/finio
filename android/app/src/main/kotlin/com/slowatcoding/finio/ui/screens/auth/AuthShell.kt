@@ -72,7 +72,7 @@ fun ApiAuthUser.toStoreUser(): StoreAuthUser = StoreAuthUser(id.toInt(), name, e
 
 /**
  * Port of web/src/pages/auth/AuthShell.tsx — the shared frame of every cloud-account screen: the
- * Finio wordmark, a heading, the form, an optional footer, and the "Continue without an account"
+ * Monilock wordmark, a heading, the form, an optional footer, and the "Continue without an account"
  * escape (the app works fully signed out, so every screen offers to leave the flow).
  */
 @Composable
@@ -101,7 +101,7 @@ fun AuthShell(
             Column(Modifier.fillMaxWidth().padding(bottom = 32.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                 // `text-grad-primary text-4xl font-extrabold` — the wordmark, decorative.
                 Text(
-                    "Finio",
+                    "Monilock",
                     style = FinioType.title.copy(fontFamily = InstrumentSans, fontSize = 36.sp, lineHeight = 40.sp, fontWeight = FontWeight.ExtraBold),
                     color = colors.primary,
                 )

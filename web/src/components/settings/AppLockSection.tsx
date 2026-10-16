@@ -204,7 +204,7 @@ export function AppLockSection() {
             className="p-4"
             icon={<Lock size={18} className="text-muted-foreground shrink-0" />}
             title="App lock"
-            description="Ask for a PIN before opening Finio. Data on this device is not encrypted."
+            description="Ask for a PIN before opening Monilock. Data on this device is not encrypted."
             checked={lockEnabled}
             onCheckedChange={handleToggleAppLock}
           />
@@ -269,7 +269,7 @@ export function AppLockSection() {
           <DialogHeader>
             <DialogTitle>Auto-lock</DialogTitle>
             <DialogDescription>
-              How long Finio can sit in the background before it asks for your PIN again.
+              How long Monilock can sit in the background before it asks for your PIN again.
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-1.5">
@@ -316,7 +316,7 @@ export function AppLockSection() {
                 ? 'Enter it once more to confirm.'
                 : pinPhase === 'enter'
                   ? 'Choose a PIN you will remember — it cannot be recovered.'
-                  : 'Finio will ask for this PIN when you open it. This is a screen lock, not encryption: your data stays stored unencrypted on this device.'
+                  : 'Monilock will ask for this PIN when you open it. This is a screen lock, not encryption: your data stays stored unencrypted on this device.'
         }
       >
         {pinPhase === 'length' ? (

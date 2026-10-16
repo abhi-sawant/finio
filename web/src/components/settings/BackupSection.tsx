@@ -507,7 +507,7 @@ export function BackupSection() {
             className="p-4"
             icon={<ShieldCheck size={18} className="text-muted-foreground shrink-0" />}
             title="Encrypt cloud backups"
-            description="Encrypt backups with a passphrase before they leave this device. Finio never sees it and can't recover it if you forget it."
+            description="Encrypt backups with a passphrase before they leave this device. Monilock never sees it and can't recover it if you forget it."
             checked={cryptoEnabled}
             onCheckedChange={handleToggleBackupEncryption}
           />
@@ -670,9 +670,9 @@ export function BackupSection() {
               <DialogTitle>Set up backup folder</DialogTitle>
               <DialogDescription>
                 In the folder picker that opens next, create a new folder named{' '}
-                <strong className="text-foreground">"Finio"</strong> inside your Downloads folder,
+                <strong className="text-foreground">"Monilock"</strong> inside your Downloads folder,
                 then select it. This is the recommended setup — it keeps backups organized in one
-                place and lets Finio automatically keep only the 10 most recent, deleting older ones
+                place and lets Monilock automatically keep only the 10 most recent, deleting older ones
                 for you.
               </DialogDescription>
             </DialogHeader>

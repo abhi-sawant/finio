@@ -104,7 +104,7 @@ private fun LegalFooter(nav: FinioNavigator) {
         }
     }
     Text(
-        "Finio · Personal Finance · v${com.slowatcoding.finio.BuildConfig.VERSION_NAME}",
+        "Monilock · Personal Finance · v${com.slowatcoding.finio.BuildConfig.VERSION_NAME}",
         Modifier.fillMaxWidth(),
         style = small.copy(textAlign = androidx.compose.ui.text.style.TextAlign.Center),
         color = colors.mutedForeground,

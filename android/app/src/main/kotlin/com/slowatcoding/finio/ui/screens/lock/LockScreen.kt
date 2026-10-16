@@ -182,7 +182,7 @@ fun LockScreen() {
                 }
                 Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     Text(
-                        "Finio is locked",
+                        "Monilock is locked",
                         Modifier.semantics { heading() },
                         style = FinioType.pageTitle,
                         color = colors.foreground,
@@ -247,7 +247,7 @@ fun LockScreen() {
                 Text(
                     buildAnnotatedString {
                         append("The lock is a screen gate, not encryption — your data is still stored on this device. ")
-                        append("The way back in is to clear Finio’s storage, which removes the lock ")
+                        append("The way back in is to clear Monilock’s storage, which removes the lock ")
                         withStyle(SpanStyle(color = colors.foreground, fontWeight = FontWeight.SemiBold)) {
                             append("and every transaction on this device")
                         }
@@ -257,8 +257,8 @@ fun LockScreen() {
                     color = colors.mutedForeground,
                 )
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    Bullet("Settings → Apps → Finio → Storage → Clear storage")
-                    Bullet("Or uninstall and reinstall Finio")
+                    Bullet("Settings → Apps → Monilock → Storage → Clear storage")
+                    Bullet("Or uninstall and reinstall Monilock")
                 }
                 Text(
                     if (auth.isSignedIn) {

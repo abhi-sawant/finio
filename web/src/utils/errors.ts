@@ -1,6 +1,6 @@
 /** Copy shown when a request never reached the server (offline, DNS, CORS, blocked). */
 export const NETWORK_ERROR_MESSAGE =
-  "Can't reach the Finio server. Check your connection and try again.";
+  "Can't reach the Monilock server. Check your connection and try again.";
 
 /** True for a `fetch` rejection that means the request never got a response — browsers throw a
  * bare `TypeError` ("Failed to fetch", "NetworkError when attempting to fetch resource.",

@@ -500,7 +500,7 @@ fun BackupSection(nav: FinioNavigator) {
         FinioCard(contentPadding = PaddingValues(0.dp)) {
             SwitchField(
                 title = "Encrypt cloud backups",
-                description = "Encrypt backups with a passphrase before they leave this device. Finio never sees it " +
+                description = "Encrypt backups with a passphrase before they leave this device. Monilock never sees it " +
                     "and can't recover it if you forget it.",
                 checked = cryptoEnabled,
                 onCheckedChange = { next -> openCryptoDialog(if (next) CryptoDialogKind.Set else CryptoDialogKind.Disable) },
@@ -578,10 +578,10 @@ fun BackupSection(nav: FinioNavigator) {
             Text(
                 buildAnnotatedString {
                     append("In the folder picker that opens next, create a new folder named ")
-                    withStyle(SpanStyle(color = colors.foreground, fontWeight = FontWeight.Bold)) { append("\"Finio\"") }
+                    withStyle(SpanStyle(color = colors.foreground, fontWeight = FontWeight.Bold)) { append("\"Monilock\"") }
                     append(
                         " inside your Downloads folder, then select it. This is the recommended setup — it keeps " +
-                            "backups organized in one place and lets Finio automatically keep only the 10 most recent, " +
+                            "backups organized in one place and lets Monilock automatically keep only the 10 most recent, " +
                             "deleting older ones for you.",
                     )
                 },

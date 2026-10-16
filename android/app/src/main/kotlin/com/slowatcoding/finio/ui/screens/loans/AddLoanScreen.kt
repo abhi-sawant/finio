@@ -132,7 +132,7 @@ fun AddLoanScreen(nav: FinioNavigator, loanId: String?) {
     val previewEmi = calculateEmi(parsedPrincipal, parsedRate, parsedTenure)
 
     // A new loan whose first EMI date is already behind us: by default those EMIs were paid
-    // outside Finio; the switch posts them as real expenses instead (same choice FD/RD offer).
+    // outside Monilock; the switch posts them as real expenses instead (same choice FD/RD offer).
     val pastEmis = remember(existing == null, startDate, parsedTenure, previewEmi, accountId, categoryId) {
         val day = startDate
         if (existing != null || day == null || parsedTenure <= 0 || previewEmi <= 0 || accountId.isEmpty()) return@remember null

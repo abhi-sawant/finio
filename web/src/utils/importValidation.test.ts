@@ -32,7 +32,7 @@ describe('validateBackup', () => {
   });
 
   it('rejects an object with no importable keys', () => {
-    expect(() => validateBackup({ foo: 'bar' })).toThrow(/not a finio backup/i);
+    expect(() => validateBackup({ foo: 'bar' })).toThrow(/not a monilock backup/i);
   });
 
   it('accepts a well-formed backup untouched', () => {

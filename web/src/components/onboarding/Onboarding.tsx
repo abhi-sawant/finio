@@ -83,7 +83,7 @@ export function Onboarding() {
   };
 
   // Populates a few months of realistic-looking accounts, transactions, budgets, recurring
-  // rules and goals — so a first look at Finio shows the app doing something, not an empty
+  // rules and goals — so a first look at Monilock shows the app doing something, not an empty
   // dashboard, and completes onboarding the same way `finish(true)` does.
   const loadSample = () => {
     loadSampleData({
@@ -117,7 +117,7 @@ export function Onboarding() {
         {step === 'name' && (
           <div className="space-y-5">
             <div className="space-y-1.5">
-              <h1 className="text-2xl font-bold tracking-tight">Welcome to Finio</h1>
+              <h1 className="text-2xl font-bold tracking-tight">Welcome to Monilock</h1>
               <p className="text-muted-foreground text-sm">
                 Everything stays on this device. Let&rsquo;s start with your name.
               </p>

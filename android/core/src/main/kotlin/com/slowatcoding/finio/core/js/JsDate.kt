@@ -121,7 +121,7 @@ fun addYears(d: Instant, n: Int): Instant = addMonths(d, n * 12)
 fun addHours(d: Instant, n: Int): Instant = d.plusSeconds(n * 3600L)
 fun addMilliseconds(d: Instant, n: Long): Instant = d.plusMillis(n)
 
-/** weekStartsOn: 0 = Sunday, 1 = Monday (Finio always uses 1). */
+/** weekStartsOn: 0 = Sunday, 1 = Monday (Monilock always uses 1). */
 fun startOfWeek(d: Instant, weekStartsOn: Int = 1): Instant {
     val first = if (weekStartsOn == 0) DayOfWeek.SUNDAY else DayOfWeek.MONDAY
     return d.localDate().with(TemporalAdjusters.previousOrSame(first)).atStartOfDay(finioZone).toInstant()
@@ -156,7 +156,7 @@ fun getDaysInMonth(d: Instant): Int = d.localDate().lengthOfMonth()
 private val formatterCache = java.util.concurrent.ConcurrentHashMap<String, DateTimeFormatter>()
 
 /**
- * date-fns `format` for the token subset Finio uses (d dd M MM MMM MMMM yy yyyy EEE EEEE H HH
+ * date-fns `format` for the token subset Monilock uses (d dd M MM MMM MMMM yy yyyy EEE EEEE H HH
  * h hh m mm s ss a, and 'quoted' literals). Locale is en-US like date-fns' default — except
  * `a`, which date-fns renders as "AM"/"PM" too.
  */

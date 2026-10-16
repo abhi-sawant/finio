@@ -21,7 +21,7 @@ import com.slowatcoding.finio.ui.theme.FinioType
 
 /**
  * "New version available" — shown once per app open when GitHub has a newer release than the
- * running build. Update opens the release page (the APK is attached there; Finio is sideloaded,
+ * running build. Update opens the release page (the APK is attached there; Monilock is sideloaded,
  * so the app cannot install itself). Not now hides it until the next open; Skip this version
  * hides it until a newer release exists.
  */
@@ -37,7 +37,7 @@ fun UpdateDialog(
     FinioDialog(
         onDismissRequest = onNotNow,
         title = "Update available",
-        description = "Finio ${release.version} is out — you have ${BuildConfig.VERSION_NAME}.",
+        description = "Monilock ${release.version} is out — you have ${BuildConfig.VERSION_NAME}.",
         footer = {
             // Phones stack these in reverse, so Update lands on top.
             FinioButton("Skip this version", onClick = onSkip, variant = ButtonVariant.Ghost)

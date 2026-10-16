@@ -26,7 +26,7 @@ const FIBRES = (() => {
   });
 })();
 
-const MICROPRINT = 'FINIO · KEPT ON THIS DEVICE · NOT A BANK · YOUR DATA STAYS YOURS · '.repeat(6);
+const MICROPRINT = 'MONILOCK · KEPT ON THIS DEVICE · NOT A BANK · YOUR DATA STAYS YOURS · '.repeat(6);
 
 /**
  * The Mudra hero surface: a banknote. Guilloche rosette, a windowed security thread whose hue

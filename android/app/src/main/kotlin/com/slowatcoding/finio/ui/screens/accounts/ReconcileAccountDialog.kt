@@ -85,7 +85,7 @@ fun ReconcileAccountDialog(account: Account, onDismissRequest: () -> Unit) {
         if (!showResult) {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text(
-                    "Enter the balance from your ${if (isCredit) "card statement" else "bank statement"} and we'll show you the difference against what Finio has on record (${money(if (isCredit) abs(account.balance) else account.balance)}).",
+                    "Enter the balance from your ${if (isCredit) "card statement" else "bank statement"} and we'll show you the difference against what Monilock has on record (${money(if (isCredit) abs(account.balance) else account.balance)}).",
                     style = FinioType.caption,
                     color = colors.mutedForeground,
                 )
@@ -96,7 +96,7 @@ fun ReconcileAccountDialog(account: Account, onDismissRequest: () -> Unit) {
         } else {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 if (adjustment.type == null) {
-                    Text("You're all set — Finio already matches your statement.", style = FinioType.body, color = colors.foreground)
+                    Text("You're all set — Monilock already matches your statement.", style = FinioType.body, color = colors.foreground)
                 } else {
                     val income = adjustment.type == TransactionType.Income
                     Text(

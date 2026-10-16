@@ -114,8 +114,8 @@ export function NotificationsSection() {
           permission === 'denied'
             ? 'Blocked in your browser settings for this site'
             : backgroundDelivery
-              ? 'Bill, budget and card alerts, even when Finio is closed'
-              : 'Bill, budget and card alerts, shown when you open Finio'
+              ? 'Bill, budget and card alerts, even when Monilock is closed'
+              : 'Bill, budget and card alerts, shown when you open Monilock'
         }
         checked={remindersOn}
         disabled={permission === 'denied'}

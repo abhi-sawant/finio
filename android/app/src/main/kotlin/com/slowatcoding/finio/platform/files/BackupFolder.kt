@@ -38,7 +38,7 @@ class BackupFolder(context: Context) {
         }
     }
 
-    /** Human-readable folder name for Settings ("Backups in: Documents/Finio"). */
+    /** Human-readable folder name for Settings ("Backups in: Documents/Monilock"). */
     fun displayName(): String? = savedUri?.let { DocumentFile.fromTreeUri(app, it)?.name }
 
     /** Persist the grant for a tree the user just picked (the web's `chooseBackupFolder`). */
@@ -55,7 +55,7 @@ class BackupFolder(context: Context) {
     }
 
     /**
-     * Write [contents] as [filename] (overwriting a same-named file) and delete Finio backups
+     * Write [contents] as [filename] (overwriting a same-named file) and delete Monilock backups
      * beyond the newest [keep]. Throws [IOException] if the folder is gone or not writable.
      */
     suspend fun writeBackupAndRotate(

@@ -73,7 +73,7 @@ import kotlin.math.round
 import kotlin.math.roundToInt
 import kotlin.math.sin
 
-private const val MICROPRINT = "FINIO · KEPT ON THIS DEVICE · NOT A BANK · YOUR DATA STAYS YOURS · "
+private const val MICROPRINT = "MONILOCK · KEPT ON THIS DEVICE · NOT A BANK · YOUR DATA STAYS YOURS · "
 
 private class Fibre(
     val x: Float, val y: Float, val cx: Float, val cy: Float, val x2: Float, val y2: Float, val ink: Color,
