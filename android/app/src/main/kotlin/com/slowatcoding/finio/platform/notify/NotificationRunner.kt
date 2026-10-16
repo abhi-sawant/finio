@@ -125,7 +125,7 @@ object NotificationRunner {
         return show(context, entry)
     }
 
-    /** Remove every Monilock reminder from the shade (reminders turned off / data reset). */
+    /** Remove every Finio reminder from the shade (reminders turned off / data reset). */
     fun cancelAllShown(context: Context) = NotificationManagerCompat.from(context).cancelAll()
 
     /**
@@ -144,7 +144,7 @@ object NotificationRunner {
         )
     }
 
-    /** Every Monilock reminder shares one numeric id; the per-entry tag makes them distinct. */
+    /** Every Finio reminder shares one numeric id; the per-entry tag makes them distinct. */
     private const val NOTIFICATION_ID = 1
 
     /** `--primary` light (#4b36c7) tints the small icon / accent. */

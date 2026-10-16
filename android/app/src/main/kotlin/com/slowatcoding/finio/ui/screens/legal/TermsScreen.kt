@@ -15,23 +15,23 @@ fun TermsScreen(nav: FinioNavigator) {
         nav,
         "Terms of Service",
         buildAnnotatedString {
-            append("Last updated: 13 August 2026. These terms cover the hosted Monilock app and its optional cloud backup service. See the ")
+            append("Last updated: 13 August 2026. These terms cover the hosted Finio app and its optional cloud backup service. See the ")
             appendLink("Privacy Policy", primary, onClick = openPrivacy)
             append(" for how your data is handled.")
         },
     ) {
         LegalSection("1. Acceptance") {
             LegalParagraph(
-                "By creating a cloud account, or by using Monilock at all, you agree to these terms. If you don't agree, " +
+                "By creating a cloud account, or by using Finio at all, you agree to these terms. If you don't agree, " +
                     "you can still use the app fully offline without an account — no terms apply to purely local use.",
             )
         }
 
         LegalSection("2. The service") {
             LegalParagraph(
-                "Monilock is a personal finance tracker. Cloud backup is an optional add-on that stores a copy of your " +
+                "Finio is a personal finance tracker. Cloud backup is an optional add-on that stores a copy of your " +
                     "data on a server so you can restore it on another device; it is not required for the app to work. " +
-                    "Monilock does not connect to your bank, does not initiate or process payments, and does not provide " +
+                    "Finio does not connect to your bank, does not initiate or process payments, and does not provide " +
                     "investment or financial advice — it is a record-keeping tool, and any totals, forecasts, or " +
                     "insights it shows are informational estimates based only on the data you entered.",
             )
@@ -51,7 +51,7 @@ fun TermsScreen(nav: FinioNavigator) {
             LegalParagraph(
                 buildAnnotatedString {
                     append(
-                        "You own the data you put into Monilock. We don't claim any rights over it, we don't use it for " +
+                        "You own the data you put into Finio. We don't claim any rights over it, we don't use it for " +
                             "anything other than providing the backup/restore feature you asked for, and you can export " +
                             "or delete it at any time (see the ",
                     )
@@ -62,7 +62,7 @@ fun TermsScreen(nav: FinioNavigator) {
         }
 
         LegalSection("5. Acceptable use") {
-            LegalParagraph("Don't use Monilock to:")
+            LegalParagraph("Don't use Finio to:")
             LegalList(
                 "Attempt to access another user's account or data.",
                 "Interfere with, overload, or probe the service's infrastructure.",
@@ -99,7 +99,7 @@ fun TermsScreen(nav: FinioNavigator) {
 
         LegalSection("9. Self-hosted deployments") {
             LegalParagraph(
-                "Monilock's source is open, and these terms apply only to the officially hosted instance. If you connect " +
+                "Finio's source is open, and these terms apply only to the officially hosted instance. If you connect " +
                     "the app to a self-hosted backend, your relationship — and these terms — are with whoever operates " +
                     "that server, not with us.",
             )

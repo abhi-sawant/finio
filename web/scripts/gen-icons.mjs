@@ -1,17 +1,14 @@
-// Generates Monilock's Mudra icon set (favicon.svg/.ico, PWA, maskable, apple-touch) from one
-// vector source (scripts/monilock-mark.mjs): a ₹100-lavender tile carrying a padlock whose shackle
-// is the banknote's colour-shift security thread and whose body has an "M" cut out of it; larger
-// sizes add faint guilloche engraving.
+// Generates Finio's Mudra icon set (favicon.svg/.ico, PWA, maskable, apple-touch) from one
+// vector source: a ₹100-lavender tile, a heavy white "F", and a windowed colour-shift security
+// thread; larger sizes add faint guilloche engraving.
 //
-//   (from web/) node scripts/gen-icons.mjs public
+//   (from web/) npx -y -p playwright-core node scripts/gen-icons.mjs public
 //
-// Rasterises with sharp (librsvg), which ships with the repo's dev dependencies — no browser
-// needed. favicon.ico is the 48px render, converted with ffmpeg if it is installed:
-// `ffmpeg -i favicon-48.png public/favicon.ico` (the script prints the command otherwise).
+// Rasterises with a locally installed Chrome (override with CHROME_PATH). favicon.ico is the 48px
+// render converted with ffmpeg: `ffmpeg -i favicon-48.png public/favicon.ico`.
 import fs from 'node:fs';
 import path from 'node:path';
-import sharp from 'sharp';
-import { BODY_PATH, SHACKLE_PATH, THREAD_STOPS, THREAD_Y } from './monilock-mark.mjs';
+import { chromium } from 'playwright-core';
 
 const OUT = process.argv[2] ?? 'public';
 const r1 = (n) => Math.round(n * 10) / 10;
@@ -44,9 +41,15 @@ function svg(variant) {
   const tile = bleed
     ? '<rect width="512" height="512" fill="url(#bg)"/>'
     : '<rect width="512" height="512" rx="116" fill="url(#bg)"/>';
-  // Content group: the mark. Scaled into the 80% safe zone when full-bleed.
+  // Content group: F + thread. Scaled into the 80% safe zone when full-bleed.
   const s = bleed ? 0.78 : 1;
   const tr = `translate(${256 - 256 * s} ${256 - 256 * s}) scale(${s})`;
+  const thread = Array.from({ length: small ? 4 : 7 }, (_, i) => {
+    const n = small ? 4 : 7,
+      gap = small ? 26 : 16,
+      h = (512 - 2 * 70 - (n - 1) * gap) / n;
+    return `<rect x="372" y="${r1(70 + i * (h + gap))}" width="${small ? 34 : 26}" height="${r1(h)}" rx="${small ? 8 : 6}"/>`;
+  }).join('');
   const engraving = small
     ? ''
     : `<g fill="none" stroke="#fff" stroke-width="2.2" opacity="0.16" clip-path="url(#clip)">${rosette(400, 120, 6, 70, 22, 14)}</g>`;
@@ -57,16 +60,18 @@ function svg(variant) {
       <stop offset="0.5" stop-color="#6c57d6"/>
       <stop offset="1" stop-color="#3d2bb0"/>
     </radialGradient>
-    <linearGradient id="thread" gradientUnits="userSpaceOnUse" x1="0" y1="${THREAD_Y[0]}" x2="0" y2="${THREAD_Y[1]}">
-      ${THREAD_STOPS.map(([o, c]) => `<stop offset="${o}" stop-color="${c}"/>`).join('')}
+    <linearGradient id="thread" gradientUnits="userSpaceOnUse" x1="0" y1="70" x2="0" y2="442">
+      <stop offset="0" stop-color="#4fe0a8"/>
+      <stop offset="0.5" stop-color="#6fb4ff"/>
+      <stop offset="1" stop-color="#d8ceff"/>
     </linearGradient>
     <clipPath id="clip"><rect width="512" height="512" rx="${bleed ? 0 : 116}"/></clipPath>
   </defs>
   ${tile}
   ${engraving}
   <g transform="${tr}">
-    <path fill="url(#thread)" d="${SHACKLE_PATH}"/>
-    <path fill="#fff" fill-rule="evenodd" d="${BODY_PATH}"/>
+    <g fill="url(#thread)">${thread}</g>
+    <path fill="#fff" d="M128 118h196a24 24 0 0 1 24 24v32a24 24 0 0 1-24 24H212v40h92a22 22 0 0 1 22 22v28a22 22 0 0 1-22 22h-92v56a24 24 0 0 1-24 24h-36a24 24 0 0 1-24-24V142a24 24 0 0 1 24-24z"/>
   </g>
 </svg>`;
 }
@@ -83,11 +88,24 @@ const targets = [
   ['apple-touch-icon-180x180.png', 180, 'bleed'],
   ['favicon-48.png', 48, 'small'],
 ];
+const browser = await chromium.launch({
+  executablePath:
+    process.env.CHROME_PATH ?? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+});
+const page = await browser.newPage();
 for (const [name, size, variant] of targets) {
+  await page.setViewportSize({ width: size, height: size });
+  const uri = 'data:image/svg+xml;base64,' + Buffer.from(variants[variant]).toString('base64');
+  await page.setContent(
+    `<html><body style="margin:0;background:transparent"><img src="${uri}" width="${size}" height="${size}" style="display:block"></body></html>`,
+  );
+  await page.waitForTimeout(100);
   const dest = name === 'favicon-48.png' ? path.join(process.cwd(), name) : path.join(OUT, name);
-  await sharp(Buffer.from(variants[variant]), { density: (72 * size) / 512 * 2 })
-    .resize(size, size)
-    .png()
-    .toFile(dest);
+  await page.screenshot({
+    path: dest,
+    omitBackground: true,
+    clip: { x: 0, y: 0, width: size, height: size },
+  });
   console.log('wrote', name);
 }
+await browser.close();

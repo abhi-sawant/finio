@@ -5,9 +5,8 @@
 //      anywhere in src/, the kebab-case keys of every *_ICON_MAP, every `icon: '…'` literal in
 //      src/data, plus the few Android-only extras below), converted to stroke-only path data.
 //   2. ui/mudra/PageRosetteData.kt — public/guilloche.svg (the body::before engraving) verbatim.
-//   3. res/drawable/ic_launcher_{background,foreground,monochrome}.xml and ic_stat_finio.xml — the
-//      Monilock app mark, the same geometry (scripts/monilock-mark.mjs) gen-icons.mjs rasterises
-//      for the PWA.
+//   3. res/drawable/ic_launcher_{background,foreground,monochrome}.xml — the Mudra app mark, the
+//      same geometry scripts/gen-icons.mjs rasterises for the PWA.
 //
 //   (from web/) node scripts/gen-android-icons.mjs
 //
@@ -15,7 +14,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { BODY_PATH, SHACKLE_PATH, THREAD_STOPS, THREAD_Y, MARK_BOX, MARK_RADIUS } from './monilock-mark.mjs';
 
 const WEB = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const ANDROID_MAIN = path.resolve(WEB, '../android/app/src/main');
@@ -366,10 +364,29 @@ function rosette(cx, cy, rings, base, step, petals) {
   return out;
 }
 
+const F_PATH =
+  'M128 118h196a24 24 0 0 1 24 24v32a24 24 0 0 1-24 24H212v40h92a22 22 0 0 1 22 22v28a22 22 0 0 1-22 22h-92v56a24 24 0 0 1-24 24h-36a24 24 0 0 1-24-24V142a24 24 0 0 1 24-24z';
+
+function roundedRect(x, y, w, h, r) {
+  return (
+    `M${r1(x + r)} ${r1(y)}h${r1(w - 2 * r)}a${r} ${r} 0 0 1 ${r} ${r}v${r1(h - 2 * r)}` +
+    `a${r} ${r} 0 0 1 -${r} ${r}h${r1(-(w - 2 * r))}a${r} ${r} 0 0 1 -${r} -${r}v${r1(-(h - 2 * r))}` +
+    `a${r} ${r} 0 0 1 ${r} -${r}z`
+  );
+}
+
+// The 'full' variant's seven 26-unit windows (gen-icons.mjs) — the launcher is always ≥ 96px.
+const THREAD = Array.from({ length: 7 }, (_, i) => {
+  const count = 7;
+  const gap = 16;
+  const h = (512 - 2 * 70 - (count - 1) * gap) / count;
+  return roundedRect(372, 70 + i * (h + gap), 26, h, 6);
+}).join('');
+
 // 512-unit icon space → 108dp canvas, and the mark scaled into the 66dp safe circle: its farthest
-// point from the centre (the padlock body's rounded corner) lands at 33dp.
+// point from the centre (the thread's corner, ≈234 units out) lands at 33dp.
 const CANVAS = 108;
-const MARK_SCALE = 33 / MARK_RADIUS;
+const MARK_SCALE = 33 / 234;
 const MARK_OFFSET = CANVAS / 2 - 256 * MARK_SCALE;
 
 const AAPT = 'xmlns:aapt="http://schemas.android.com/aapt"';
@@ -405,25 +422,27 @@ ${rosette(400, 120, 6, 70, 22, 14)
 </vector>
 `;
 
-const markGroup = (shacklePaint) => `    <group
+const markGroup = (threadPath) => `    <group
         android:scaleX="${MARK_SCALE.toFixed(5)}"
         android:scaleY="${MARK_SCALE.toFixed(5)}"
         android:translateX="${MARK_OFFSET.toFixed(4)}"
         android:translateY="${MARK_OFFSET.toFixed(4)}">
-${shacklePaint}
-        <path android:pathData="${BODY_PATH}" android:fillColor="#FFFFFFFF" android:fillType="evenOdd" />
+${threadPath}
+        <path android:pathData="${F_PATH}" android:fillColor="#FFFFFFFF" />
     </group>`;
 
-// The security-thread gradient runs the length of the shackle.
-const gradientShackle = `        <path android:pathData="${SHACKLE_PATH}">
+// One continuous colour-shift gradient through all seven windows.
+const gradientThread = `        <path android:pathData="${THREAD}">
             <aapt:attr name="android:fillColor">
                 <gradient
                     android:type="linear"
                     android:startX="0"
-                    android:startY="${THREAD_Y[0]}"
+                    android:startY="70"
                     android:endX="0"
-                    android:endY="${THREAD_Y[1]}">
-${THREAD_STOPS.map(([o, c]) => `                    <item android:offset="${o}" android:color="#FF${c.slice(1).toUpperCase()}" />`).join('\n')}
+                    android:endY="442">
+                    <item android:offset="0" android:color="#FF4FE0A8" />
+                    <item android:offset="0.5" android:color="#FF6FB4FF" />
+                    <item android:offset="1" android:color="#FFD8CEFF" />
                 </gradient>
             </aapt:attr>
         </path>`;
@@ -434,7 +453,7 @@ const foreground = `${header}<vector xmlns:android="http://schemas.android.com/a
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-${markGroup(gradientShackle)}
+${markGroup(gradientThread)}
 </vector>
 `;
 
@@ -444,24 +463,7 @@ const monochrome = `${header}<vector xmlns:android="http://schemas.android.com/a
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-${markGroup(`        <path android:pathData="${SHACKLE_PATH}" android:fillColor="#FFFFFFFF" />`)}
-</vector>
-`;
-
-// Notification small icon: alpha-only, re-framed onto a 24dp status-bar canvas (a 400-unit square
-// holding the mark's ${MARK_BOX.w}×${MARK_BOX.h} box, centred).
-const STAT = 400;
-const stat = `${header}<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="24dp"
-    android:height="24dp"
-    android:viewportWidth="${STAT}"
-    android:viewportHeight="${STAT}">
-    <group
-        android:translateX="${STAT / 2 - (MARK_BOX.x + MARK_BOX.w / 2)}"
-        android:translateY="${STAT / 2 - (MARK_BOX.y + MARK_BOX.h / 2)}">
-        <path android:pathData="${SHACKLE_PATH}" android:fillColor="#FFFFFFFF" />
-        <path android:pathData="${BODY_PATH}" android:fillColor="#FFFFFFFF" android:fillType="evenOdd" />
-    </group>
+${markGroup(`        <path android:pathData="${THREAD}" android:fillColor="#FFFFFFFF" />`)}
 </vector>
 `;
 
@@ -470,5 +472,4 @@ fs.mkdirSync(drawable, { recursive: true });
 fs.writeFileSync(path.join(drawable, 'ic_launcher_background.xml'), background);
 fs.writeFileSync(path.join(drawable, 'ic_launcher_foreground.xml'), foreground);
 fs.writeFileSync(path.join(drawable, 'ic_launcher_monochrome.xml'), monochrome);
-fs.writeFileSync(path.join(drawable, 'ic_stat_finio.xml'), stat);
-console.log('wrote ic_launcher_{background,foreground,monochrome}.xml, ic_stat_finio.xml');
+console.log('wrote ic_launcher_{background,foreground,monochrome}.xml');

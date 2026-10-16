@@ -84,7 +84,7 @@ export function ReconcileAccountDialog({
           <div className="space-y-3">
             <p className="text-muted-foreground text-xs">
               Enter the balance from your {isCredit ? 'card statement' : 'bank statement'} and we'll
-              show you the difference against what Monilock has on record (
+              show you the difference against what Finio has on record (
               {formatCurrency(
                 isCredit ? Math.abs(account.balance) : account.balance,
                 false,
@@ -103,7 +103,7 @@ export function ReconcileAccountDialog({
         ) : (
           <div className="space-y-3">
             {adjustment.type === null ? (
-              <p className="text-sm">You're all set — Monilock already matches your statement.</p>
+              <p className="text-sm">You're all set — Finio already matches your statement.</p>
             ) : (
               <>
                 <p className="text-sm">

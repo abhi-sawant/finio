@@ -56,7 +56,7 @@ export async function requestNotificationPermission(): Promise<NotificationPermi
  * Whether a background wake-up is actually registered for this device.
  *
  * Checks the registered tags rather than merely probing for the API: only Chromium with the PWA
- * installed gets this far, and claiming "even when Monilock is closed" on the strength of the API
+ * installed gets this far, and claiming "even when Finio is closed" on the strength of the API
  * existing would overclaim on exactly the platforms where it silently does nothing.
  */
 export async function isPeriodicSyncActive(): Promise<boolean> {
@@ -204,7 +204,7 @@ export async function resetNotificationData(): Promise<void> {
 export async function showTestNotification(): Promise<void> {
   const registration = await navigator.serviceWorker.ready;
   await registration.showNotification('Reminders are on', {
-    body: 'This is what a Monilock reminder looks like.',
+    body: 'This is what a Finio reminder looks like.',
     tag: 'finio-test',
     icon: '/pwa-192x192.png',
     badge: '/pwa-96x96.png',

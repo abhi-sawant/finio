@@ -11,7 +11,7 @@
     <string name="notify_channel_daily">Daily log reminder</string>
     <string name="notify_channel_daily_desc">An evening nudge on days nothing was logged</string>
     <string name="notify_test_title">Reminders are on</string>
-    <string name="notify_test_body">This is how Monilock will remind you about bills, budgets and card dues.</string>
+    <string name="notify_test_body">This is how Finio will remind you about bills, budgets and card dues.</string>
 
     <!-- Launcher shortcuts (mirror the PWA manifest's `shortcuts`). -->
     <string name="shortcut_add_expense_short">Expense</string>
@@ -24,7 +24,7 @@
     <string name="shortcut_budgets_long">Budgets</string>
 
     <!-- App lock biometric prompt. -->
-    <string name="biometric_unlock_title">Unlock Monilock</string>
+    <string name="biometric_unlock_title">Unlock Finio</string>
     <string name="biometric_unlock_subtitle">Confirm it\'s you</string>
     <string name="biometric_unlock_negative">Use PIN</string>
 

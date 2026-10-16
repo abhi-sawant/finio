@@ -25,7 +25,7 @@ class ImportValidationTest {
             try {
                 validateBackup(raw, now); fail("expected a throw for $raw")
             } catch (e: InvalidBackupException) {
-                assertEquals("Not a Monilock backup file", e.message)
+                assertEquals("Not a Finio backup file", e.message)
             }
         }
     }

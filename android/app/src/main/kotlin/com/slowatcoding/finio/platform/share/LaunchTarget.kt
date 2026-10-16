@@ -7,7 +7,7 @@ import java.net.URLDecoder
 import java.net.URLEncoder
 
 /*
- * Everything that can launch Monilock "at" something — the share sheet (ACTION_SEND, the web's
+ * Everything that can launch Finio "at" something — the share sheet (ACTION_SEND, the web's
  * `/share-target`), launcher shortcuts and notification clicks (`finio://open?path=…`) — reduced
  * to one sealed [LaunchTarget]. Pure JVM (java.net only) so it's unit-tested; the Android
  * `Intent` adapter is [IncomingIntent].

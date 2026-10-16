@@ -11,8 +11,10 @@ export function Sidebar() {
     <aside className="glass-chrome fixed top-0 left-0 z-30 hidden h-dvh w-60 shrink-0 flex-col gap-1 overflow-y-auto border-r border-[var(--glass-border)] px-3 py-5 lg:flex">
       {/* Brand */}
       <div className="mb-4 flex items-center gap-2.5 px-2">
-        <img src="/favicon.svg" alt="" width={36} height={36} className="h-9 w-9 shrink-0" />
-        <span className="font-heading text-lg font-bold tracking-tight">Monilock</span>
+        <div className="bg-coin font-money flex h-9 w-9 items-center justify-center rounded-full text-sm">
+          F
+        </div>
+        <span className="font-heading text-lg font-bold tracking-tight">Finio</span>
       </div>
 
       {/* Add transaction */}

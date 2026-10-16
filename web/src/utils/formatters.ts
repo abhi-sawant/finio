@@ -1,6 +1,6 @@
 import { format, isToday, isYesterday, parseISO } from 'date-fns';
 
-/** Monilock is INR-only. */
+/** Finio is INR-only. */
 const LOCALE = 'en-IN';
 const CURRENCY = 'INR';
 

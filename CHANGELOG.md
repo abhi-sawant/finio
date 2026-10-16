@@ -1,6 +1,6 @@
 # Changelog
 
-Monilock follows [Semantic Versioning](https://semver.org). The repo-root `VERSION` file is the single
+Finio follows [Semantic Versioning](https://semver.org). The repo-root `VERSION` file is the single
 source of truth for both clients; see "Releasing" in [CLAUDE.md](CLAUDE.md).
 
 ## 3.0.0 — 2026-10-16
@@ -50,7 +50,7 @@ source of truth for both clients; see "Releasing" in [CLAUDE.md](CLAUDE.md).
   **Merchant** (who the money went to or came from) and **For** (who it was for, e.g. "Mom"), both
   with suggestions drawn from your history. A transaction with no note shows its merchant as the
   row title, search matches both fields, and duplicating a transaction carries them over.
-- **In-app update prompt (Android).** On every app open Monilock checks GitHub for the latest release
+- **In-app update prompt (Android).** On every app open Finio checks GitHub for the latest release
   and, if it is newer than the installed version, shows its changelog with **Update** (opens the
   release page to download the APK), **Not now** (asks again next open) and **Skip this version**
   (stays quiet until a newer release is published). The PWA already updates itself, so it has no prompt.
@@ -86,7 +86,7 @@ source of truth for both clients; see "Releasing" in [CLAUDE.md](CLAUDE.md).
 
 ## 2.0.0 — 2026-10-07
 
-The first versioned release: Monilock is now one product on two clients, the PWA and a native Android
+The first versioned release: Finio is now one product on two clients, the PWA and a native Android
 app, maintained in one monorepo.
 
 ### Added
@@ -103,7 +103,7 @@ app, maintained in one monorepo.
   - Reminders that fire while the app is closed (via WorkManager).
   - Daily auto-backup to a folder you choose.
   - Opt-in cloud backup, with the same end-to-end encryption as the web app.
-  - Share an SMS or text into Monilock to pre-fill a transaction.
+  - Share an SMS or text into Finio to pre-fill a transaction.
   - Launcher shortcuts for Add Expense, Add Income, Transactions and Budgets.
 - **Cross-client backups.** A backup exported by either app restores in the other, and both use the
   same cloud backups, encrypted or not. The format is specified in

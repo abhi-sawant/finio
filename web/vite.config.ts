@@ -29,8 +29,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'favicon.svg', 'apple-touch-icon-180x180.png', 'pwa-64x64.png', 'pwa-96x96.png', 'pwa-192x192.png', 'pwa-512x512.png', 'maskable-icon-512x512.png'],
       manifest: {
-        name: 'Monilock - Finance Tracker',
-        short_name: 'Monilock',
+        name: 'Finio - Finance Tracker',
+        short_name: 'Finio',
         description: 'Personal finance tracker - track expenses, income, and budgets',
         theme_color: '#4b36c7',
         background_color: '#f1edff',

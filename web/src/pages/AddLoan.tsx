@@ -75,7 +75,7 @@ export default function AddLoan() {
   const previewEmi = calculateEmi(parsedPrincipal, parsedRate, parsedTenure);
 
   // A new loan whose first EMI date is already behind us: by default those EMIs were paid
-  // outside Monilock; the switch posts them as real expenses instead (same choice FD/RD offer).
+  // outside Finio; the switch posts them as real expenses instead (same choice FD/RD offer).
   const [logPastEmis, setLogPastEmis] = useState(false);
   const pastEmis = useMemo(() => {
     if (existing || startDate === '' || parsedTenure <= 0 || previewEmi <= 0 || !accountId) {
