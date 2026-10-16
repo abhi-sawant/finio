@@ -9,8 +9,8 @@
  * right half of the page can be hidden before first paint. Change the two together.
  */
 
-/** sessionStorage flag: this tab chose "Open Monilock", so a reload stays in the app. */
-export const ENTERED_KEY = 'monilock-entered';
+/** sessionStorage flag: this tab chose "Open Finio", so a reload stays in the app. */
+export const ENTERED_KEY = 'finio-entered';
 
 /** The persist version that introduced `settings.onboardedAt` (see the store's `migrate`). */
 const ONBOARDED_AT_VERSION = 6;

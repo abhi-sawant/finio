@@ -7,19 +7,12 @@ source of truth for both clients; see "Releasing" in [CLAUDE.md](CLAUDE.md).
 
 ### Changed
 
-- **Finio is now Monilock.** The app has a new name and a new logo: a padlock whose shackle is the
-  banknote security thread and whose body has an "M" cut out. The name changes everywhere you see it
-  — the web app, the Android app, the install icon, notifications and the legal pages. Nothing about
-  your data changes: your accounts, backups, settings and installed copy carry straight over, and the
-  Android update installs over your existing app. Internal identifiers (storage keys, backup file
-  names, the Android package) keep their old names on purpose, so no migration is needed.
-- Two import error messages were reworded to say Monilock. The backup format is unchanged.
 - **Privacy Policy and Terms (web)** can now be read before you have set the app up.
 
 ### Added
 
 - **A home page for first-time visitors (web).** Opening the site in a browser before you have set
-  the app up now shows a Monilock home page that explains what the app is, with real screenshots,
+  the app up now shows a Finio home page that explains what the app is, with real screenshots,
   instead of dropping straight into setup. If you have already set the app up, or you open the
   installed app, nothing changes: you go straight to your data. The page is readable by search
   engines without JavaScript.

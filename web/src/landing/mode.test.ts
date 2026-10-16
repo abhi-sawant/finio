@@ -13,7 +13,7 @@ describe('shouldShowLanding', () => {
   it('never shows it once the app has been set up', () => {
     expect(shouldShowLanding({ ...base, usedApp: true })).toBe(false);
   });
-  it('stays in the app after "Open Monilock" in the same tab', () => {
+  it('stays in the app after "Open Finio" in the same tab', () => {
     expect(shouldShowLanding({ ...base, entered: true })).toBe(false);
   });
   it('leaves every deep link alone: share target, shortcuts, notification clicks', () => {

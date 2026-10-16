@@ -310,7 +310,7 @@ Enums: `AccountType`, `TransactionType` (expense/income/transfer), `RecurrenceFr
   [`web/src/landing/mode.ts`](web/src/landing/mode.ts) decides: the landing page shows only on `/`, in a plain
   browser tab (not `display-mode: standalone|fullscreen|minimal-ui`), when `finio-storage` holds no
   `onboardedAt` (a pre-v6 or unreadable state counts as "used"), and this tab hasn't pressed "Open
-  Monilock" (`sessionStorage`). Deep links, the installed PWA and onboarded users go straight to the app.
+  Finio" (`sessionStorage`). Deep links, the installed PWA and onboarded users go straight to the app.
   `index.html` carries an ES5 copy of that decision in a head script (it hides the prerendered page and
   applies the stored theme before first paint) — change both together. The page is **prerendered into
   `#root` at build time** by [`vite-plugins/landingPrerender`](web/vite-plugins/landingPrerender.ts) (in

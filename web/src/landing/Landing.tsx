@@ -48,7 +48,7 @@ const INSIDE: ReadonlyArray<[string, string]> = [
   ],
   [
     'SMS and statements',
-    'Share a payment SMS to Monilock, or import a bank statement CSV. Rules categorise as you go.',
+    'Share a payment SMS to Finio, or import a bank statement CSV. Rules categorise as you go.',
   ],
 ];
 
@@ -126,7 +126,7 @@ export function Landing({ onOpenApp }: { onOpenApp: () => void }) {
         <div className="lp-wrap">
           <a className="lp-brand" href="/" onClick={(e) => e.preventDefault()}>
             <img src="/favicon.svg" alt="" width="32" height="32" />
-            Monilock
+            Finio
           </a>
           <a className="lp-link" href="#privacy">
             Privacy
@@ -148,13 +148,13 @@ export function Landing({ onOpenApp }: { onOpenApp: () => void }) {
           <div className="lp-wrap">
             <h1 className="lp-rise">Your money, on your device.</h1>
             <p className="lp-lede lp-rise" style={{ '--i': 1 } as React.CSSProperties}>
-              Monilock is a rupee ledger that never asks for your bank login, an account, or your
+              Finio is a rupee ledger that never asks for your bank login, an account, or your
               data. Everything you record stays on your phone, and it works offline from the first
               tap.
             </p>
             <div className="lp-cta lp-rise" style={{ '--i': 2 } as React.CSSProperties}>
               <a className="lp-btn lp-btn-primary" href="/" onClick={open}>
-                Open Monilock
+                Open Finio
               </a>
               <a className="lp-btn lp-btn-outline" href="#install" onClick={install}>
                 <Download aria-hidden="true" />
@@ -170,7 +170,7 @@ export function Landing({ onOpenApp }: { onOpenApp: () => void }) {
                 ref={noteRef}
                 className="lp-banknote"
                 role="img"
-                aria-label="The Monilock dashboard: safe to spend today, ₹1,562"
+                aria-label="The Finio dashboard: safe to spend today, ₹1,562"
                 onPointerMove={tilt}
                 onPointerLeave={untilt}
               >
@@ -185,7 +185,7 @@ export function Landing({ onOpenApp }: { onOpenApp: () => void }) {
                   <p className="lp-sub">₹25,000 left this month · 16 days to go</p>
                 </div>
                 <div className="lp-microprint" aria-hidden="true">
-                  {'MONILOCK · ON YOUR DEVICE · NO ACCOUNT · NO TRACKING · '.repeat(4)}
+                  {'FINIO · ON YOUR DEVICE · NO ACCOUNT · NO TRACKING · '.repeat(4)}
                 </div>
               </div>
               <span className="lp-pin lp-p1">Stays on your device</span>
@@ -250,7 +250,7 @@ export function Landing({ onOpenApp }: { onOpenApp: () => void }) {
           <div className="lp-wrap">
             <h2 className="lp-narrow">This is the app, not a mock-up.</h2>
             <p className="lp-lede lp-mt">
-              Real screens, captured from Monilock running on its built-in sample data. Light or
+              Real screens, captured from Finio running on its built-in sample data. Light or
               dark, on a phone or a desktop.
             </p>
             <div className="lp-window">
@@ -259,7 +259,7 @@ export function Landing({ onOpenApp }: { onOpenApp: () => void }) {
                 <i />
                 <i />
               </div>
-              <Shot name="desktop" alt="The Monilock dashboard on desktop" w={1920} h={1204} />
+              <Shot name="desktop" alt="The Finio dashboard on desktop" w={1920} h={1204} />
             </div>
             <div className="lp-phones">
               <figure className="lp-device">
@@ -347,7 +347,7 @@ export function Landing({ onOpenApp }: { onOpenApp: () => void }) {
                 </p>
                 <div className="lp-cta">
                   <a className="lp-btn lp-btn-primary" href="/" onClick={open}>
-                    Open Monilock
+                    Open Finio
                   </a>
                 </div>
               </div>
@@ -380,7 +380,7 @@ export function Landing({ onOpenApp }: { onOpenApp: () => void }) {
         <div className="lp-wrap">
           <span className="lp-brand">
             <img src="/favicon.svg" alt="" width="24" height="24" />
-            Monilock
+            Finio
           </span>
           <span>Made in India, kept on your device.</span>
           <nav>
