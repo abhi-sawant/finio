@@ -285,7 +285,6 @@ export default function Transactions() {
         date: new Date().toISOString(),
         note: tx.note,
         ...(tx.merchant ? { merchant: tx.merchant } : {}),
-        ...(tx.forWhom ? { forWhom: tx.forWhom } : {}),
         labels: tx.labels,
         ...(tx.splits ? { splits: tx.splits } : {}),
       });

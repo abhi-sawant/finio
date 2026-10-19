@@ -162,7 +162,6 @@ fun AddTransactionScreen(nav: FinioNavigator, transactionId: String?, draft: Sha
     }
     var note by remember { mutableStateOf(existing?.note ?: shared?.note ?: "") }
     var merchant by remember { mutableStateOf(existing?.merchant ?: "") }
-    var forWhom by remember { mutableStateOf(existing?.forWhom ?: "") }
     var selectedLabels by remember { mutableStateOf(existing?.labels ?: mergeLabels(emptyList(), sharedRule?.labelIds ?: emptyList())) }
 
     var splitMode by remember { mutableStateOf(!existing?.splits.isNullOrEmpty()) }
@@ -254,7 +253,6 @@ fun AddTransactionScreen(nav: FinioNavigator, transactionId: String?, draft: Sha
 
     val noteSuggestions = remember(state.transactions) { distinctValues(state.transactions) { it.note } }
     val merchantSuggestions = remember(state.transactions) { distinctValues(state.transactions) { it.merchant } }
-    val forWhomSuggestions = remember(state.transactions) { distinctValues(state.transactions) { it.forWhom } }
 
     // Archived accounts are hidden, but keep one an existing transaction already sits on.
     val selectableAccounts = remember(accounts, existing) {
@@ -354,7 +352,6 @@ fun AddTransactionScreen(nav: FinioNavigator, transactionId: String?, draft: Sha
         val isoDate = date.atZone(finioZone).toInstant().toIso()
         val cleanNote = cleanText(note, MAX_NOTE_LENGTH)
         val cleanMerchant = cleanText(merchant, MAX_NAME_LENGTH).ifEmpty { null }
-        val cleanFor = cleanText(forWhom, MAX_NAME_LENGTH).ifEmpty { null }
         val splits = if (useSplits) splitRows.map { TransactionSplit(it.categoryId, roundMoney(parseFloatJs(it.amount))) } else null
         val to = if (type == TransactionType.Transfer) toAccountId else null
 
@@ -362,7 +359,7 @@ fun AddTransactionScreen(nav: FinioNavigator, transactionId: String?, draft: Sha
             store.updateTransaction(existing.id) {
                 it.copy(
                     type = type, amount = parsedAmount, accountId = accountId, toAccountId = to,
-                    categoryId = finalCategoryId, date = isoDate, note = cleanNote, merchant = cleanMerchant, forWhom = cleanFor, labels = selectedLabels, splits = splits,
+                    categoryId = finalCategoryId, date = isoDate, note = cleanNote, merchant = cleanMerchant, labels = selectedLabels, splits = splits,
                 )
             }
             toast.success("Transaction updated")
@@ -370,7 +367,7 @@ fun AddTransactionScreen(nav: FinioNavigator, transactionId: String?, draft: Sha
             store.addTransaction(
                 NewTransaction(
                     type = type, amount = parsedAmount, accountId = accountId, toAccountId = to,
-                    categoryId = finalCategoryId, date = isoDate, note = cleanNote, merchant = cleanMerchant, forWhom = cleanFor, labels = selectedLabels, splits = splits,
+                    categoryId = finalCategoryId, date = isoDate, note = cleanNote, merchant = cleanMerchant, labels = selectedLabels, splits = splits,
                 ),
             )
             toast.success("Transaction added")
@@ -581,8 +578,6 @@ fun AddTransactionScreen(nav: FinioNavigator, transactionId: String?, draft: Sha
                     }
                 }
             }
-
-            SuggestingField("For", "Who is it for...", forWhom, forWhomSuggestions) { forWhom = it }
 
             if (labels.isNotEmpty()) {
                 Column {

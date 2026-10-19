@@ -315,6 +315,31 @@
               "id": "lbl-9",
               "name": "For Others",
               "color": "#06b6d4"
+            },
+            {
+              "id": "lbl-10",
+              "name": "Reimbursable",
+              "color": "#14b8a6"
+            },
+            {
+              "id": "lbl-11",
+              "name": "Business",
+              "color": "#6366f1"
+            },
+            {
+              "id": "lbl-12",
+              "name": "One-time",
+              "color": "#f43f5e"
+            },
+            {
+              "id": "lbl-13",
+              "name": "Planned",
+              "color": "#0ea5e9"
+            },
+            {
+              "id": "lbl-14",
+              "name": "Family",
+              "color": "#eab308"
             }
           ]
         }
@@ -616,6 +641,31 @@
               "id": "lbl-9",
               "name": "For Others",
               "color": "#06b6d4"
+            },
+            {
+              "id": "lbl-10",
+              "name": "Reimbursable",
+              "color": "#14b8a6"
+            },
+            {
+              "id": "lbl-11",
+              "name": "Business",
+              "color": "#6366f1"
+            },
+            {
+              "id": "lbl-12",
+              "name": "One-time",
+              "color": "#f43f5e"
+            },
+            {
+              "id": "lbl-13",
+              "name": "Planned",
+              "color": "#0ea5e9"
+            },
+            {
+              "id": "lbl-14",
+              "name": "Family",
+              "color": "#eab308"
             }
           ],
           "budgets": [],
@@ -3375,6 +3425,31 @@
               "color": "#06b6d4"
             },
             {
+              "id": "lbl-10",
+              "name": "Reimbursable",
+              "color": "#14b8a6"
+            },
+            {
+              "id": "lbl-11",
+              "name": "Business",
+              "color": "#6366f1"
+            },
+            {
+              "id": "lbl-12",
+              "name": "One-time",
+              "color": "#f43f5e"
+            },
+            {
+              "id": "lbl-13",
+              "name": "Planned",
+              "color": "#0ea5e9"
+            },
+            {
+              "id": "lbl-14",
+              "name": "Family",
+              "color": "#eab308"
+            },
+            {
               "name": "Trip",
               "color": "#0ea5e9",
               "id": "f5000000-0000-4000-8000-000000000016"
@@ -3441,6 +3516,31 @@
               "id": "lbl-9",
               "name": "For Others",
               "color": "#06b6d4"
+            },
+            {
+              "id": "lbl-10",
+              "name": "Reimbursable",
+              "color": "#14b8a6"
+            },
+            {
+              "id": "lbl-11",
+              "name": "Business",
+              "color": "#6366f1"
+            },
+            {
+              "id": "lbl-12",
+              "name": "One-time",
+              "color": "#f43f5e"
+            },
+            {
+              "id": "lbl-13",
+              "name": "Planned",
+              "color": "#0ea5e9"
+            },
+            {
+              "id": "lbl-14",
+              "name": "Family",
+              "color": "#eab308"
             },
             {
               "name": "Trip",
@@ -3953,6 +4053,31 @@
               "id": "lbl-9",
               "name": "For Others",
               "color": "#06b6d4"
+            },
+            {
+              "id": "lbl-10",
+              "name": "Reimbursable",
+              "color": "#14b8a6"
+            },
+            {
+              "id": "lbl-11",
+              "name": "Business",
+              "color": "#6366f1"
+            },
+            {
+              "id": "lbl-12",
+              "name": "One-time",
+              "color": "#f43f5e"
+            },
+            {
+              "id": "lbl-13",
+              "name": "Planned",
+              "color": "#0ea5e9"
+            },
+            {
+              "id": "lbl-14",
+              "name": "Family",
+              "color": "#eab308"
             }
           ],
           "budgets": [
@@ -21624,6 +21749,31 @@
             "id": "lbl-9",
             "name": "For Others",
             "color": "#06b6d4"
+          },
+          {
+            "id": "lbl-10",
+            "name": "Reimbursable",
+            "color": "#14b8a6"
+          },
+          {
+            "id": "lbl-11",
+            "name": "Business",
+            "color": "#6366f1"
+          },
+          {
+            "id": "lbl-12",
+            "name": "One-time",
+            "color": "#f43f5e"
+          },
+          {
+            "id": "lbl-13",
+            "name": "Planned",
+            "color": "#0ea5e9"
+          },
+          {
+            "id": "lbl-14",
+            "name": "Family",
+            "color": "#eab308"
           }
         ],
         "budgets": [],
@@ -21990,6 +22140,31 @@
             "id": "lbl-9",
             "name": "For Others",
             "color": "#06b6d4"
+          },
+          {
+            "id": "lbl-10",
+            "name": "Reimbursable",
+            "color": "#14b8a6"
+          },
+          {
+            "id": "lbl-11",
+            "name": "Business",
+            "color": "#6366f1"
+          },
+          {
+            "id": "lbl-12",
+            "name": "One-time",
+            "color": "#f43f5e"
+          },
+          {
+            "id": "lbl-13",
+            "name": "Planned",
+            "color": "#0ea5e9"
+          },
+          {
+            "id": "lbl-14",
+            "name": "Family",
+            "color": "#eab308"
           }
         ],
         "budgets": [
@@ -22358,6 +22533,31 @@
             "id": "lbl-9",
             "name": "For Others",
             "color": "#06b6d4"
+          },
+          {
+            "id": "lbl-10",
+            "name": "Reimbursable",
+            "color": "#14b8a6"
+          },
+          {
+            "id": "lbl-11",
+            "name": "Business",
+            "color": "#6366f1"
+          },
+          {
+            "id": "lbl-12",
+            "name": "One-time",
+            "color": "#f43f5e"
+          },
+          {
+            "id": "lbl-13",
+            "name": "Planned",
+            "color": "#0ea5e9"
+          },
+          {
+            "id": "lbl-14",
+            "name": "Family",
+            "color": "#eab308"
           }
         ],
         "budgets": [
@@ -22711,6 +22911,31 @@
             "id": "lbl-9",
             "name": "For Others",
             "color": "#06b6d4"
+          },
+          {
+            "id": "lbl-10",
+            "name": "Reimbursable",
+            "color": "#14b8a6"
+          },
+          {
+            "id": "lbl-11",
+            "name": "Business",
+            "color": "#6366f1"
+          },
+          {
+            "id": "lbl-12",
+            "name": "One-time",
+            "color": "#f43f5e"
+          },
+          {
+            "id": "lbl-13",
+            "name": "Planned",
+            "color": "#0ea5e9"
+          },
+          {
+            "id": "lbl-14",
+            "name": "Family",
+            "color": "#eab308"
           }
         ],
         "budgets": [],
@@ -23044,6 +23269,31 @@
             "id": "lbl-9",
             "name": "For Others",
             "color": "#06b6d4"
+          },
+          {
+            "id": "lbl-10",
+            "name": "Reimbursable",
+            "color": "#14b8a6"
+          },
+          {
+            "id": "lbl-11",
+            "name": "Business",
+            "color": "#6366f1"
+          },
+          {
+            "id": "lbl-12",
+            "name": "One-time",
+            "color": "#f43f5e"
+          },
+          {
+            "id": "lbl-13",
+            "name": "Planned",
+            "color": "#0ea5e9"
+          },
+          {
+            "id": "lbl-14",
+            "name": "Family",
+            "color": "#eab308"
           }
         ],
         "budgets": [],
@@ -23377,6 +23627,31 @@
             "id": "lbl-9",
             "name": "For Others",
             "color": "#06b6d4"
+          },
+          {
+            "id": "lbl-10",
+            "name": "Reimbursable",
+            "color": "#14b8a6"
+          },
+          {
+            "id": "lbl-11",
+            "name": "Business",
+            "color": "#6366f1"
+          },
+          {
+            "id": "lbl-12",
+            "name": "One-time",
+            "color": "#f43f5e"
+          },
+          {
+            "id": "lbl-13",
+            "name": "Planned",
+            "color": "#0ea5e9"
+          },
+          {
+            "id": "lbl-14",
+            "name": "Family",
+            "color": "#eab308"
           }
         ],
         "budgets": [],
@@ -23721,6 +23996,31 @@
             "id": "lbl-9",
             "name": "For Others",
             "color": "#06b6d4"
+          },
+          {
+            "id": "lbl-10",
+            "name": "Reimbursable",
+            "color": "#14b8a6"
+          },
+          {
+            "id": "lbl-11",
+            "name": "Business",
+            "color": "#6366f1"
+          },
+          {
+            "id": "lbl-12",
+            "name": "One-time",
+            "color": "#f43f5e"
+          },
+          {
+            "id": "lbl-13",
+            "name": "Planned",
+            "color": "#0ea5e9"
+          },
+          {
+            "id": "lbl-14",
+            "name": "Family",
+            "color": "#eab308"
           }
         ],
         "budgets": [],

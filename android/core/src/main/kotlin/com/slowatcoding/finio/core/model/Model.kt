@@ -162,7 +162,6 @@ data class Transaction(
     /** Optional free text; `null` (omitted on the wire) when blank. */
     val merchant: String? = null,
     /** Who the transaction was for; `null` when blank. */
-    val forWhom: String? = null,
     val labels: List<String> = emptyList(),
     val createdAt: String,
     val recurringId: String? = null,

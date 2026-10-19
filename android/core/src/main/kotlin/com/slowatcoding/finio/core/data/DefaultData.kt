@@ -70,6 +70,11 @@ val defaultLabels: List<Label> = listOf(
     Label("lbl-7", "Lending", "#ec4899"),
     Label("lbl-8", "For Self", "#64748b"),
     Label("lbl-9", "For Others", "#06b6d4"),
+    Label("lbl-10", "Reimbursable", "#14b8a6"),
+    Label("lbl-11", "Business", "#6366f1"),
+    Label("lbl-12", "One-time", "#f43f5e"),
+    Label("lbl-13", "Planned", "#0ea5e9"),
+    Label("lbl-14", "Family", "#eab308"),
 )
 
 /**

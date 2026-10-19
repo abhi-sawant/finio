@@ -63787,6 +63787,31 @@
               "id": "lbl-9",
               "name": "For Others",
               "color": "#06b6d4"
+            },
+            {
+              "id": "lbl-10",
+              "name": "Reimbursable",
+              "color": "#14b8a6"
+            },
+            {
+              "id": "lbl-11",
+              "name": "Business",
+              "color": "#6366f1"
+            },
+            {
+              "id": "lbl-12",
+              "name": "One-time",
+              "color": "#f43f5e"
+            },
+            {
+              "id": "lbl-13",
+              "name": "Planned",
+              "color": "#0ea5e9"
+            },
+            {
+              "id": "lbl-14",
+              "name": "Family",
+              "color": "#eab308"
             }
           ],
           "budgets": [
@@ -64934,6 +64959,31 @@
               "id": "lbl-9",
               "name": "For Others",
               "color": "#06b6d4"
+            },
+            {
+              "id": "lbl-10",
+              "name": "Reimbursable",
+              "color": "#14b8a6"
+            },
+            {
+              "id": "lbl-11",
+              "name": "Business",
+              "color": "#6366f1"
+            },
+            {
+              "id": "lbl-12",
+              "name": "One-time",
+              "color": "#f43f5e"
+            },
+            {
+              "id": "lbl-13",
+              "name": "Planned",
+              "color": "#0ea5e9"
+            },
+            {
+              "id": "lbl-14",
+              "name": "Family",
+              "color": "#eab308"
             }
           ],
           "budgets": [
@@ -65086,8 +65136,8 @@
             },
             "labels": {
               "present": true,
-              "total": 9,
-              "accepted": 9,
+              "total": 14,
+              "accepted": 14,
               "rejected": 0
             },
             "budgets": {
@@ -65189,8 +65239,8 @@
             },
             "labels": {
               "present": true,
-              "total": 9,
-              "accepted": 9,
+              "total": 14,
+              "accepted": 14,
               "rejected": 0
             },
             "budgets": {
