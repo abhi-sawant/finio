@@ -3,6 +3,19 @@
 Finio follows [Semantic Versioning](https://semver.org). The repo-root `VERSION` file is the single
 source of truth for both clients; see "Releasing" in [CLAUDE.md](CLAUDE.md).
 
+## 3.0.2 — 2026-10-19
+
+### Added
+
+- **Five new starter labels:** Reimbursable, Business, One-time, Planned and Family. They appear on
+  new installs and after a reset to defaults; labels you already have are left alone.
+
+### Changed
+
+- **The "For" field is gone from Add Transaction.** The "For Self" and "For Others" labels cover the
+  same need. A "For" value in an older backup is ignored on import. The backup format otherwise is
+  unchanged; see [spec/backup-format.md](spec/backup-format.md).
+
 ## 3.0.1 — 2026-10-16
 
 ### Changed
