@@ -282,7 +282,6 @@ const parseTransaction: RowParser<Transaction> = (row) => {
   const recurringId = asId(row.recurringId);
   const splits = type === 'expense' ? asSplits(row.splits, amount) : undefined;
   const merchant = asString(row.merchant, '').trim();
-  const forWhom = asString(row.forWhom, '').trim();
 
   return {
     id,
@@ -298,7 +297,6 @@ const parseTransaction: RowParser<Transaction> = (row) => {
     ...(recurringId ? { recurringId } : {}),
     ...(splits ? { splits } : {}),
     ...(merchant ? { merchant } : {}),
-    ...(forWhom ? { forWhom } : {}),
   };
 };
 

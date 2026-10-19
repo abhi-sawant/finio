@@ -296,7 +296,6 @@ fun TransactionsScreen(nav: FinioNavigator) {
                         date = nowInstant().toIso(),
                         note = tx.note,
                         merchant = tx.merchant,
-                        forWhom = tx.forWhom,
                         labels = tx.labels,
                         splits = tx.splits,
                     ),

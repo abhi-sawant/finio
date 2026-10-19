@@ -2267,6 +2267,31 @@
             "id": "lbl-9",
             "name": "For Others",
             "color": "#06b6d4"
+          },
+          {
+            "id": "lbl-10",
+            "name": "Reimbursable",
+            "color": "#14b8a6"
+          },
+          {
+            "id": "lbl-11",
+            "name": "Business",
+            "color": "#6366f1"
+          },
+          {
+            "id": "lbl-12",
+            "name": "One-time",
+            "color": "#f43f5e"
+          },
+          {
+            "id": "lbl-13",
+            "name": "Planned",
+            "color": "#0ea5e9"
+          },
+          {
+            "id": "lbl-14",
+            "name": "Family",
+            "color": "#eab308"
           }
         ],
         "budgets": [
@@ -7732,7 +7757,12 @@
           "lbl-6": "investment",
           "lbl-7": "lending",
           "lbl-8": "for self",
-          "lbl-9": "for others"
+          "lbl-9": "for others",
+          "lbl-10": "reimbursable",
+          "lbl-11": "business",
+          "lbl-12": "one-time",
+          "lbl-13": "planned",
+          "lbl-14": "family"
         }
       }
     },

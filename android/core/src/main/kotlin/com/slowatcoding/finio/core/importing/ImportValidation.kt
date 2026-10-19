@@ -315,7 +315,6 @@ private fun parseTransaction(row: JsonObject): Transaction {
         recurringId = asId(row["recurringId"]),
         splits = splits,
         merchant = asString(row["merchant"], "").trim().ifEmpty { null },
-        forWhom = asString(row["forWhom"], "").trim().ifEmpty { null },
     )
 }
 

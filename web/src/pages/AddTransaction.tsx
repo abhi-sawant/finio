@@ -103,7 +103,6 @@ export default function AddTransaction() {
   );
   const [note, setNote] = useState(existing?.note ?? shared?.note ?? '');
   const [merchant, setMerchant] = useState(existing?.merchant ?? '');
-  const [forWhom, setForWhom] = useState(existing?.forWhom ?? '');
   const [selectedLabels, setSelectedLabels] = useState<string[]>(
     existing?.labels ?? mergeLabels([], sharedRule?.labelIds ?? []),
   );
@@ -234,10 +233,6 @@ export default function AddTransaction() {
   );
   const merchantSuggestions = useMemo(
     () => distinctValues(transactions, (t) => t.merchant),
-    [transactions],
-  );
-  const forWhomSuggestions = useMemo(
-    () => distinctValues(transactions, (t) => t.forWhom),
     [transactions],
   );
 
@@ -372,7 +367,6 @@ export default function AddTransaction() {
       note: cleanText(note, MAX_NOTE_LENGTH),
       // `undefined` (not '') when blank, so an edit clears the field and old rows stay unchanged.
       merchant: cleanText(merchant, MAX_NAME_LENGTH) || undefined,
-      forWhom: cleanText(forWhom, MAX_NAME_LENGTH) || undefined,
       labels: selectedLabels,
       splits: useSplits
         ? splitRows.map((r) => ({
@@ -696,25 +690,6 @@ export default function AddTransaction() {
               </button>
             </div>
           )}
-        </div>
-
-        {/* For */}
-        <div>
-          <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">For</Label>
-          <Input
-            type="text"
-            placeholder="Who is it for..."
-            value={forWhom}
-            maxLength={MAX_NAME_LENGTH}
-            onChange={(e) => setForWhom(e.target.value)}
-            list="for-suggestions"
-            className="[&::-webkit-calendar-picker-indicator]:hidden! [&::-webkit-list-button]:hidden!"
-          />
-          <datalist id="for-suggestions">
-            {forWhomSuggestions.map((n) => (
-              <option key={n} value={n} />
-            ))}
-          </datalist>
         </div>
 
         {/* Labels */}

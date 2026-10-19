@@ -75,6 +75,11 @@ export const defaultLabels: Label[] = [
   { id: 'lbl-7', name: 'Lending', color: '#ec4899' },
   { id: 'lbl-8', name: 'For Self', color: '#64748b' },
   { id: 'lbl-9', name: 'For Others', color: '#06b6d4' },
+  { id: 'lbl-10', name: 'Reimbursable', color: '#14b8a6' },
+  { id: 'lbl-11', name: 'Business', color: '#6366f1' },
+  { id: 'lbl-12', name: 'One-time', color: '#f43f5e' },
+  { id: 'lbl-13', name: 'Planned', color: '#0ea5e9' },
+  { id: 'lbl-14', name: 'Family', color: '#eab308' },
 ];
 
 export const defaultSettings: Settings = {
