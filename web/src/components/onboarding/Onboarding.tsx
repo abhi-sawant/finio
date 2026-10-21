@@ -18,7 +18,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { NumberPad } from '@/components/ui/number-pad';
-import type { AccountType } from '@/types';
+import type { AccountType, TrackingMode } from '@/types';
 import { MAX_NAME_LENGTH, cleanText, stripLeading } from '@/utils/validation';
 
 const ACCOUNT_TYPES: { value: AccountType; label: string; icon: string; Icon: LucideIcon }[] = [
@@ -30,12 +30,27 @@ const ACCOUNT_TYPES: { value: AccountType; label: string; icon: string; Icon: Lu
   { value: 'wallet', label: 'Wallet', icon: 'wallet', Icon: Wallet },
 ];
 
-type Step = 'name' | 'account' | 'balance';
+const MODES: { value: TrackingMode; title: string; description: string }[] = [
+  {
+    value: 'full',
+    title: 'Track everything',
+    description: 'Accounts with balances, net worth, cash-flow forecast and card dues.',
+  },
+  {
+    value: 'expenses',
+    title: 'Just track expenses',
+    description: 'Record transactions and see where your money goes. No balances to maintain.',
+  },
+];
 
-const STEPS: Step[] = ['name', 'account', 'balance'];
+type Step = 'name' | 'mode' | 'account' | 'balance';
+
+// Expense-tracker mode keeps no balances, so it never asks for one.
+const STEPS: Step[] = ['name', 'mode', 'account', 'balance'];
+const TRACKER_STEPS: Step[] = ['name', 'mode', 'account'];
 
 /**
- * First-run wizard: name → first account → opening balance.
+ * First-run wizard: name → mode → first account → opening balance (full mode only).
  *
  * Rendered instead of the app when `settings.onboardedAt` is unset. Every step past the name
  * is skippable so someone reinstalling can get straight to Settings and restore a backup
@@ -55,6 +70,7 @@ export function Onboarding() {
   const bulkAddTransactions = useFinanceStore((s) => s.bulkAddTransactions);
 
   const [step, setStep] = useState<Step>('name');
+  const [trackingMode, setTrackingMode] = useState<TrackingMode>('full');
   const [name, setName] = useState('');
   const [accountName, setAccountName] = useState('');
   const [accountType, setAccountType] = useState<AccountType>('savings');
@@ -64,12 +80,13 @@ export function Onboarding() {
 
   const trimmedName = cleanText(name, MAX_NAME_LENGTH);
   const trimmedAccountName = cleanText(accountName, MAX_NAME_LENGTH);
-  const stepIndex = STEPS.indexOf(step);
+  const steps = trackingMode === 'expenses' ? TRACKER_STEPS : STEPS;
+  const stepIndex = steps.indexOf(step);
 
   const finish = (withAccount: boolean) => {
     if (withAccount && trimmedAccountName) {
       const parsed = parseFloat(balance);
-      const opening = Number.isFinite(parsed) ? parsed : 0;
+      const opening = Number.isFinite(parsed) && trackingMode === 'full' ? parsed : 0;
       addAccount({
         name: trimmedAccountName,
         type: accountType,
@@ -79,13 +96,19 @@ export function Onboarding() {
         balance: accountType === 'credit' ? -Math.abs(opening) : opening,
       });
     }
-    updateSettings({ userName: trimmedName || 'there', onboardedAt: new Date().toISOString() });
+    updateSettings({
+      userName: trimmedName || 'there',
+      trackingMode,
+      onboardedAt: new Date().toISOString(),
+    });
   };
 
   // Populates a few months of realistic-looking accounts, transactions, budgets, recurring
   // rules and goals — so a first look at Finio shows the app doing something, not an empty
   // dashboard, and completes onboarding the same way `finish(true)` does.
   const loadSample = () => {
+    // The mode goes in first so the sample's transactions are posted under the right rules.
+    updateSettings({ trackingMode });
     loadSampleData({
       addAccount,
       addGoal,
@@ -104,7 +127,7 @@ export function Onboarding() {
       <div className="w-full max-w-sm space-y-6">
         {/* Progress */}
         <div className="flex gap-1.5" role="presentation">
-          {STEPS.map((s, i) => (
+          {steps.map((s, i) => (
             <span
               key={s}
               className={`h-1 flex-1 rounded-full transition-colors ${
@@ -133,7 +156,7 @@ export function Onboarding() {
                 maxLength={MAX_NAME_LENGTH}
                 onChange={(e) => setName(stripLeading(e.target.value))}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' && trimmedName) setStep('account');
+                  if (e.key === 'Enter' && trimmedName) setStep('mode');
                 }}
                 placeholder="Your name"
                 className="w-full"
@@ -143,19 +166,67 @@ export function Onboarding() {
               size="lg"
               className="bg-grad-primary shadow-glow-primary w-full text-white"
               disabled={!trimmedName}
-              onClick={() => setStep('account')}
+              onClick={() => setStep('mode')}
             >
               Continue <ArrowRight size={16} />
             </Button>
           </div>
         )}
 
+        {step === 'mode' && (
+          <div className="space-y-5">
+            <div className="space-y-1.5">
+              <h1 className="text-2xl font-bold tracking-tight">How will you use Finio?</h1>
+              <p className="text-muted-foreground text-sm">
+                You can switch any time in Settings — nothing is lost either way.
+              </p>
+            </div>
+            <div className="space-y-2">
+              {MODES.map(({ value, title, description }) => (
+                <button
+                  key={value}
+                  onClick={() => setTrackingMode(value)}
+                  aria-pressed={trackingMode === value}
+                  className={`w-full rounded-md border p-4 text-left transition-colors ${
+                    trackingMode === value
+                      ? 'bg-grad-primary shadow-glow-primary border-transparent text-white'
+                      : 'border-[var(--glass-border)] bg-[var(--glass-strong)]'
+                  }`}
+                >
+                  <p className="text-sm font-semibold">{title}</p>
+                  <p
+                    className={`mt-0.5 text-xs ${trackingMode === value ? 'opacity-90' : 'text-muted-foreground'}`}
+                  >
+                    {description}
+                  </p>
+                </button>
+              ))}
+            </div>
+            <div className="space-y-2">
+              <Button
+                size="lg"
+                className="bg-grad-primary shadow-glow-primary w-full text-white"
+                onClick={() => setStep('account')}
+              >
+                Continue <ArrowRight size={16} />
+              </Button>
+              <Button variant="ghost" size="sm" onClick={() => setStep('name')}>
+                <ArrowLeft size={14} /> Back
+              </Button>
+            </div>
+          </div>
+        )}
+
         {step === 'account' && (
           <div className="space-y-5">
             <div className="space-y-1.5">
-              <h1 className="text-2xl font-bold tracking-tight">Add your first account</h1>
+              <h1 className="text-2xl font-bold tracking-tight">
+                {trackingMode === 'expenses' ? 'Add a payment source' : 'Add your first account'}
+              </h1>
               <p className="text-muted-foreground text-sm">
-                A bank account, a card, or just the cash in your wallet.
+                {trackingMode === 'expenses'
+                  ? 'Where your spending comes from — a bank, a card or cash. No balance needed.'
+                  : 'A bank account, a card, or just the cash in your wallet.'}
               </p>
             </div>
 
@@ -200,12 +271,18 @@ export function Onboarding() {
                 size="lg"
                 className="bg-grad-primary shadow-glow-primary w-full text-white"
                 disabled={!trimmedAccountName}
-                onClick={() => setStep('balance')}
+                onClick={() => (trackingMode === 'expenses' ? finish(true) : setStep('balance'))}
               >
-                Continue <ArrowRight size={16} />
+                {trackingMode === 'expenses' ? (
+                  'Start tracking'
+                ) : (
+                  <>
+                    Continue <ArrowRight size={16} />
+                  </>
+                )}
               </Button>
               <div className="flex items-center justify-between">
-                <Button variant="ghost" size="sm" onClick={() => setStep('name')}>
+                <Button variant="ghost" size="sm" onClick={() => setStep('mode')}>
                   <ArrowLeft size={14} /> Back
                 </Button>
                 <Button variant="ghost" size="sm" onClick={() => finish(false)}>

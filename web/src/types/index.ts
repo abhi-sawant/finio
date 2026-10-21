@@ -188,8 +188,16 @@ export interface RecurringTransaction {
   goalId?: string;
 }
 
+/**
+ * `full` keeps every account's balance up to date. `expenses` is the expense-tracker mode:
+ * transactions are recorded but no balance is maintained or shown, so anything built on a
+ * balance (net worth, forecast, card dues) is unavailable.
+ */
+export type TrackingMode = 'full' | 'expenses';
+
 export interface Settings {
   theme: Theme;
+  trackingMode: TrackingMode;
   /**
    * Swap dark mode's indigo field for true black (`#000`) so an AMOLED panel can switch those
    * pixels off. Only takes effect while the resolved theme is dark — the setting is remembered

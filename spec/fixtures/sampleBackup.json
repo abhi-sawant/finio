@@ -1161,6 +1161,7 @@
         "loanPrepayments": [],
         "settings": {
           "theme": "system",
+          "trackingMode": "full",
           "amoledDark": false,
           "userName": "",
           "autoLocalBackup": false,

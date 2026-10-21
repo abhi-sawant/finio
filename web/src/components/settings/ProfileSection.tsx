@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { User, Palette, CalendarRange, Moon } from 'lucide-react';
+import { User, Palette, CalendarRange, Moon, Receipt } from 'lucide-react';
 import { useFinanceStore } from '@/store/useFinanceStore';
 import { useAuthStore } from '@/store/useAuthStore';
 import { api } from '@/services/api';
@@ -128,6 +128,14 @@ export function ProfileSection() {
           description="True black background that switches pixels off on OLED screens"
           checked={settings.amoledDark}
           onCheckedChange={(amoledDark) => updateSettings({ amoledDark })}
+        />
+        <SwitchField
+          className="p-4"
+          icon={<Receipt size={18} className="text-muted-foreground shrink-0" />}
+          title="Expense tracker only"
+          description="Record transactions without tracking account balances. Nothing is deleted — turning it off rebuilds balances"
+          checked={settings.trackingMode === 'expenses'}
+          onCheckedChange={(on) => updateSettings({ trackingMode: on ? 'expenses' : 'full' })}
         />
         <div className="flex items-center justify-between gap-3 p-4">
           <div className="flex min-w-0 flex-1 items-center gap-3">

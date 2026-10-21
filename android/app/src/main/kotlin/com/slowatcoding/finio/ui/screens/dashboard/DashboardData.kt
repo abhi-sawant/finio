@@ -31,6 +31,7 @@ import com.slowatcoding.finio.core.model.AccountType
 import com.slowatcoding.finio.core.model.BudgetPeriod
 import com.slowatcoding.finio.core.model.FinanceState
 import com.slowatcoding.finio.core.model.RecurringTransaction
+import com.slowatcoding.finio.core.model.TrackingMode
 import com.slowatcoding.finio.core.model.Transaction
 import com.slowatcoding.finio.core.model.TransactionType
 import com.slowatcoding.finio.core.period.PeriodType
@@ -61,6 +62,7 @@ data class DashboardData(
     val openAccounts: List<Account>,
     val accountValues: Map<String, Double>,
     val accountsCompact: Boolean,
+    val trackerMode: Boolean,
     val totalBalance: Double,
     val creditOutstanding: Double,
     val depositValue: Double,
@@ -146,7 +148,9 @@ fun computeDashboardData(s: FinanceState): DashboardData {
         .filter { it.balance != 0.0 }
         .sortedByDescending { kotlin.math.abs(it.balance) }
         .take(3)
-    val creditDues = openAccounts
+    // Card dues are worked out from the balance, which expense-tracker mode doesn't keep.
+    val trackerMode = s.settings.trackingMode == TrackingMode.Expenses
+    val creditDues = if (trackerMode) emptyList() else openAccounts
         .filter { it.type == AccountType.Credit }
         .mapNotNull { account -> getCreditCardDueInfo(account)?.takeIf { it.daysUntilDue <= 7 }?.let { account to it } }
         .sortedBy { it.second.daysUntilDue }
@@ -173,6 +177,7 @@ fun computeDashboardData(s: FinanceState): DashboardData {
         openAccounts = openAccounts,
         accountValues = accountValues,
         accountsCompact = accountsCompact,
+        trackerMode = trackerMode,
         totalBalance = totalBalance,
         creditOutstanding = creditOutstanding,
         depositValue = depositValue,

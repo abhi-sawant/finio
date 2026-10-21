@@ -34,6 +34,8 @@ export interface NotificationScheduleInput {
   labels: Label[];
   monthStartDay: number;
   prefs: NotificationPrefs;
+  /** Expense-tracker mode: no balances, so no card dues, and no balance talk in the nudge. */
+  trackerMode?: boolean;
 }
 
 /** `yyyy-MM-dd` in local time — the occurrence's identity, independent of the lead time. */
@@ -139,7 +141,7 @@ function buildBudgetEntries(input: NotificationScheduleInput, now: Date): Schedu
 
 function buildCreditEntries(input: NotificationScheduleInput, now: Date): ScheduledNotification[] {
   const { prefs, accounts } = input;
-  if (!prefs.notifyCreditDue) return [];
+  if (!prefs.notifyCreditDue || input.trackerMode) return [];
 
   const entries: ScheduledNotification[] = [];
 
@@ -194,7 +196,9 @@ function buildDailyLogEntries(
       fireAt: Math.max(now.getTime(), setHours(startOfDay(now), DAILY_LOG_HOUR).getTime()),
       expiresAt: startOfDay(addDays(now, 1)).getTime(),
       title: "Log today's transactions",
-      body: 'A quick add keeps your balances accurate.',
+      body: input.trackerMode
+        ? 'A quick add keeps your spending record complete.'
+        : 'A quick add keeps your balances accurate.',
       url: '/add-transaction',
     },
   ];

@@ -10,6 +10,7 @@ import {
   Trophy,
 } from 'lucide-react';
 import { useFinanceStore } from '@/store/useFinanceStore';
+import { useTrackerMode } from '@/hooks/useTrackerMode';
 import { buildYearInReview } from '@/utils/analytics';
 import { normalizeMonthStartDay, periodRange, shiftPeriod } from '@/utils/period';
 import {
@@ -52,6 +53,7 @@ export default function YearInReview() {
   const navigate = useNavigate();
   const transactions = useFinanceStore((s) => s.transactions);
   const accounts = useFinanceStore((s) => s.accounts);
+  const trackerMode = useTrackerMode();
   const categories = useFinanceStore((s) => s.categories);
   const hideAmounts = useFinanceStore((s) => s.settings.hideAmounts);
   const monthStartDay = normalizeMonthStartDay(useFinanceStore((s) => s.settings.monthStartDay));
@@ -176,29 +178,31 @@ export default function YearInReview() {
               </div>
             </div>
 
-            {/* Net worth */}
-            <div className="card-elevated rounded-md p-4">
-              <h3 className="mb-3 text-sm font-semibold">Net worth</h3>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-muted-foreground text-xs font-medium">Start of year</p>
-                  <p className="text-sm font-semibold">{money(review.netWorthStart)}</p>
+            {/* Net worth — built from balances, so absent in expense-tracker mode */}
+            {!trackerMode && (
+              <div className="card-elevated rounded-md p-4">
+                <h3 className="mb-3 text-sm font-semibold">Net worth</h3>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-muted-foreground text-xs font-medium">Start of year</p>
+                    <p className="text-sm font-semibold">{money(review.netWorthStart)}</p>
+                  </div>
+                  <ArrowRight size={16} className="text-muted-foreground shrink-0" />
+                  <div className="text-right">
+                    <p className="text-muted-foreground text-xs font-medium">
+                      {yearOffset === 0 ? 'Now' : 'End of year'}
+                    </p>
+                    <p className="text-sm font-semibold">{money(review.netWorthEnd)}</p>
+                  </div>
                 </div>
-                <ArrowRight size={16} className="text-muted-foreground shrink-0" />
-                <div className="text-right">
-                  <p className="text-muted-foreground text-xs font-medium">
-                    {yearOffset === 0 ? 'Now' : 'End of year'}
-                  </p>
-                  <p className="text-sm font-semibold">{money(review.netWorthEnd)}</p>
-                </div>
+                <p
+                  className={`mt-2 text-center text-xs font-medium ${review.netWorthChange >= 0 ? 'text-positive' : 'text-destructive'}`}
+                >
+                  {review.netWorthChange >= 0 ? '+' : ''}
+                  {money(review.netWorthChange)} this year
+                </p>
               </div>
-              <p
-                className={`mt-2 text-center text-xs font-medium ${review.netWorthChange >= 0 ? 'text-positive' : 'text-destructive'}`}
-              >
-                {review.netWorthChange >= 0 ? '+' : ''}
-                {money(review.netWorthChange)} this year
-              </p>
-            </div>
+            )}
 
             {/* Monthly breakdown */}
             <div className="card-elevated rounded-md p-4">

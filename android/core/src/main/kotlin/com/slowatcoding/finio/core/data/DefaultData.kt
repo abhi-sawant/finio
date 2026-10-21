@@ -4,6 +4,7 @@ import com.slowatcoding.finio.core.model.Category
 import com.slowatcoding.finio.core.model.CategoryType
 import com.slowatcoding.finio.core.model.Label
 import com.slowatcoding.finio.core.model.Settings
+import com.slowatcoding.finio.core.model.TrackingMode
 import com.slowatcoding.finio.core.model.Theme
 import com.slowatcoding.finio.core.period.DEFAULT_MONTH_START_DAY
 
@@ -83,6 +84,7 @@ val defaultLabels: List<Label> = listOf(
  */
 val defaultSettings: Settings = Settings(
     theme = Theme.System,
+    trackingMode = TrackingMode.Full,
     amoledDark = false,
     // Deliberately blank: the first-run wizard asks for a name.
     userName = "",

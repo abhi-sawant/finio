@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router';
 import { Plus, ChevronDown, ChevronRight } from 'lucide-react';
 import { toast } from 'sonner';
 import { useFinanceStore } from '@/store/useFinanceStore';
+import { useTrackerMode } from '@/hooks/useTrackerMode';
 import { formatCurrency, shouldCompactGroup } from '@/utils/formatters';
 import {
   activeAccounts,
@@ -29,6 +30,7 @@ export default function Accounts() {
   const deleteAccount = useFinanceStore((s) => s.deleteAccount);
   const setAccountArchived = useFinanceStore((s) => s.setAccountArchived);
   const hideAmounts = useFinanceStore((s) => s.settings.hideAmounts);
+  const trackerMode = useTrackerMode();
 
   const [showArchived, setShowArchived] = useState(false);
 
@@ -122,32 +124,35 @@ export default function Accounts() {
         </div>
       </Header>
       <Main>
-        {/* Summary */}
-        <NoteCard>
-          <p className="text-muted-foreground text-sm font-medium">Net balance</p>
-          <p
-            className={`font-money mt-1 leading-[1.05] ${noteFigureClass(formatCurrency(totalBalance, false, hideAmounts))}`}
-          >
-            {formatCurrency(totalBalance, false, hideAmounts)}
-          </p>
-          {creditAccounts.length > 0 && (
-            <p className="text-muted-foreground mt-1.5 text-xs text-balance">
-              <span className="block">
-                {formatCurrency(creditDue, false, hideAmounts)} owed on {creditAccounts.length} card
-                {creditAccounts.length === 1 ? '' : 's'}
-              </span>
-              <span className="block">
-                {formatCurrency(totalBalance - creditDue, false, hideAmounts)} after dues
-              </span>
+        {/* Summary — a balance total, so there is none in expense-tracker mode */}
+        {!trackerMode && (
+          <NoteCard>
+            <p className="text-muted-foreground text-sm font-medium">Net balance</p>
+            <p
+              className={`font-money mt-1 leading-[1.05] ${noteFigureClass(formatCurrency(totalBalance, false, hideAmounts))}`}
+            >
+              {formatCurrency(totalBalance, false, hideAmounts)}
             </p>
-          )}
-          {depositAccounts.length > 0 && (
-            <p className="text-muted-foreground mt-1 text-xs">
-              + {formatCurrency(depositValue, false, hideAmounts)} locked in{' '}
-              {depositAccounts.length} deposit{depositAccounts.length === 1 ? '' : 's'}
-            </p>
-          )}
-        </NoteCard>
+            {creditAccounts.length > 0 && (
+              <p className="text-muted-foreground mt-1.5 text-xs text-balance">
+                <span className="block">
+                  {formatCurrency(creditDue, false, hideAmounts)} owed on {creditAccounts.length}{' '}
+                  card
+                  {creditAccounts.length === 1 ? '' : 's'}
+                </span>
+                <span className="block">
+                  {formatCurrency(totalBalance - creditDue, false, hideAmounts)} after dues
+                </span>
+              </p>
+            )}
+            {depositAccounts.length > 0 && (
+              <p className="text-muted-foreground mt-1 text-xs">
+                + {formatCurrency(depositValue, false, hideAmounts)} locked in{' '}
+                {depositAccounts.length} deposit{depositAccounts.length === 1 ? '' : 's'}
+              </p>
+            )}
+          </NoteCard>
+        )}
 
         {/* Regular Accounts */}
         {regularAccounts.length > 0 && (

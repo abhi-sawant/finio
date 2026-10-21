@@ -29,6 +29,7 @@ import com.slowatcoding.finio.core.calc.buildInsights
 import com.slowatcoding.finio.core.format.formatCurrency
 import com.slowatcoding.finio.core.format.formatShortDate
 import com.slowatcoding.finio.core.js.nowInstant
+import com.slowatcoding.finio.core.model.TrackingMode
 import com.slowatcoding.finio.core.model.TransactionType
 import com.slowatcoding.finio.core.period.PeriodType
 import com.slowatcoding.finio.core.period.normalizeMonthStartDay
@@ -76,7 +77,7 @@ fun InsightsFeed(nav: FinioNavigator, modifier: Modifier = Modifier) {
     var dismissed by rememberSaveable { mutableStateOf(listOf<String>()) }
 
     val insights = rememberDerived(
-        state.transactions, state.categories, state.labels, state.budgets, state.recurring, state.accounts, monthStartDay, hideAmounts,
+        state.transactions, state.categories, state.labels, state.budgets, state.recurring, state.accounts, state.settings.trackingMode, monthStartDay, hideAmounts,
     ) {
         buildInsights(
             InsightInput(
@@ -85,7 +86,8 @@ fun InsightsFeed(nav: FinioNavigator, modifier: Modifier = Modifier) {
                 labels = state.labels,
                 budgets = state.budgets,
                 recurring = state.recurring,
-                accounts = state.accounts,
+                // Account balances aren't kept in expense-tracker mode, so there is nothing to flag.
+                accounts = if (state.settings.trackingMode == TrackingMode.Expenses) null else state.accounts,
                 monthStartDay = monthStartDay,
             ),
         ) { value -> formatCurrency(value, compact = true, hidden = hideAmounts, precise = false) }

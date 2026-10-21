@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import { useFinanceStore } from '@/store/useFinanceStore';
+import { useTrackerMode } from '@/hooks/useTrackerMode';
 import { formatCurrency } from '@/utils/formatters';
 import { getCreditCardDueInfo, getCreditUtilization } from '@/utils/calculations';
 import { accountDisplayValue, depositCaption, isDepositAccount } from '@/utils/deposit';
@@ -43,12 +44,16 @@ export const AccountCard = memo(function AccountCard({
   forceCompact = false,
 }: AccountCardProps) {
   const hideAmounts = useFinanceStore((s) => s.settings.hideAmounts);
+  const trackerMode = useTrackerMode();
   const isCredit = account.type === 'credit';
   const isArchived = !!account.archivedAt;
   const utilization = getCreditUtilization(account);
-  const dueInfo = getCreditCardDueInfo(account);
+  // Card dues and the amount shown are derived from the balance, which expense-tracker mode
+  // doesn't keep. An open deposit's accrued value comes from its terms, so it stays.
+  const dueInfo = trackerMode ? null : getCreditCardDueInfo(account);
   const isDeposit = isDepositAccount(account);
   const shownBalance = accountDisplayValue(account);
+  const showAmount = !trackerMode || (isDeposit && !isArchived);
 
   return (
     <div className="group flex w-full items-center gap-2 py-3">
@@ -85,19 +90,21 @@ export const AccountCard = memo(function AccountCard({
             </p>
           )}
         </div>
-        <div className="shrink-0 text-right">
-          <p className={cn('text-sm font-semibold', shownBalance < 0 && 'text-destructive')}>
-            {formatCurrency(shownBalance, true, hideAmounts, { forceCompact })}
-          </p>
-          {isDeposit && !isArchived && (
-            <p className="text-muted-foreground mt-0.5 text-xs">Current value</p>
-          )}
-          {isCredit && account.creditLimit && (
-            <p className="text-muted-foreground mt-0.5 text-xs">
-              {Math.round(utilization * 100)}% used
+        {showAmount && (
+          <div className="shrink-0 text-right">
+            <p className={cn('text-sm font-semibold', shownBalance < 0 && 'text-destructive')}>
+              {formatCurrency(shownBalance, true, hideAmounts, { forceCompact })}
             </p>
-          )}
-        </div>
+            {isDeposit && !isArchived && (
+              <p className="text-muted-foreground mt-0.5 text-xs">Current value</p>
+            )}
+            {!trackerMode && isCredit && account.creditLimit && (
+              <p className="text-muted-foreground mt-0.5 text-xs">
+                {Math.round(utilization * 100)}% used
+              </p>
+            )}
+          </div>
+        )}
       </button>
       {isArchived && onToggleArchive && (
         <button

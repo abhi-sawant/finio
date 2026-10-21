@@ -1,5 +1,6 @@
 package com.slowatcoding.finio.ui.screens.settings
 
+import com.slowatcoding.finio.core.model.TrackingMode
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -172,6 +173,17 @@ fun ProfileSection() {
             checked = settings.amoledDark,
             onCheckedChange = { on -> store.updateSettings { it.copy(amoledDark = on) } },
             icon = { Icon(LucideIcons.Moon, null, Modifier.size(18.dp), tint = colors.mutedForeground) },
+            modifier = Modifier.padding(16.dp),
+        )
+        FinioDivider()
+        SwitchField(
+            title = "Expense tracker only",
+            description = "Record transactions without tracking account balances. Nothing is deleted — turning it off rebuilds balances",
+            checked = settings.trackingMode == TrackingMode.Expenses,
+            onCheckedChange = { on ->
+                store.updateSettings { it.copy(trackingMode = if (on) TrackingMode.Expenses else TrackingMode.Full) }
+            },
+            icon = { Icon(LucideIcons.Receipt, null, Modifier.size(18.dp), tint = colors.mutedForeground) },
             modifier = Modifier.padding(16.dp),
         )
         FinioDivider()

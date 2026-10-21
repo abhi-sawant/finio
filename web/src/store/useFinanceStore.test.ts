@@ -2190,3 +2190,91 @@ describe('addLoanPrepayment', () => {
     expect(addLoanPrepayment({ loanId, amount: 1, date: today(), note: '' })).toBeNull();
   });
 });
+
+describe('expense-tracker mode', () => {
+  const day = (d: string) => new Date(`${d}T00:00:00`).toISOString();
+  const trackerOn = () => useFinanceStore.getState().updateSettings({ trackingMode: 'expenses' });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('records transactions without touching balances', () => {
+    seed([account('bank', 1000)]);
+    trackerOn();
+    const { addTransaction } = useFinanceStore.getState();
+    const id = addTransaction({
+      type: 'expense',
+      amount: 200,
+      accountId: 'bank',
+      categoryId: 'cat-1',
+      date: '2026-06-01T00:00:00.000Z',
+      note: '',
+      labels: [],
+    });
+    expect(useFinanceStore.getState().transactions).toHaveLength(1);
+    expect(useFinanceStore.getState().accounts[0].balance).toBe(1000);
+
+    useFinanceStore.getState().deleteTransaction(id);
+    expect(useFinanceStore.getState().accounts[0].balance).toBe(1000);
+  });
+
+  it('rebuilds balances from the transactions when switching back to full mode', () => {
+    seed([account('bank', 1000)]);
+    trackerOn();
+    useFinanceStore.getState().addTransaction({
+      type: 'expense',
+      amount: 200,
+      accountId: 'bank',
+      categoryId: 'cat-1',
+      date: '2026-06-01T00:00:00.000Z',
+      note: '',
+      labels: [],
+    });
+    useFinanceStore.getState().updateSettings({ trackingMode: 'full' });
+    expect(useFinanceStore.getState().accounts[0].balance).toBe(800);
+  });
+
+  it('does not freeze net worth snapshots', () => {
+    seed([account('bank', 1000)]);
+    trackerOn();
+    expect(useFinanceStore.getState().captureNetWorthSnapshots()).toBe(0);
+    expect(useFinanceStore.getState().netWorthSnapshots).toHaveLength(0);
+  });
+
+  it('pays out a matured FD with the same transactions, from terms rather than a balance', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(day('2026-10-01')));
+    seed([account('bank', 100000)]);
+    trackerOn();
+    const id = useFinanceStore.getState().addDeposit({
+      type: 'fd',
+      name: 'FD',
+      color: '#000',
+      terms: {
+        amount: 50000,
+        interestRate: 6.65,
+        startDate: day('2026-10-01'),
+        maturityDate: day('2029-09-01'),
+        linkedAccountId: 'bank',
+      },
+    });
+    // The funding transfer is recorded, but no balance moves.
+    expect(useFinanceStore.getState().transactions).toHaveLength(1);
+    expect(useFinanceStore.getState().accounts.map((a) => a.balance)).toEqual([100000, 0]);
+
+    vi.setSystemTime(new Date(day('2029-09-02')));
+    const posted = useFinanceStore.getState().processMaturities();
+    expect(posted.map((t) => t.type)).toEqual(['income', 'transfer']);
+    expect(posted[0].amount).toBe(10621.08);
+    // Principal + interest, even though the deposit's cached balance never held the principal.
+    expect(posted[1].amount).toBe(60621.08);
+    expect(useFinanceStore.getState().accounts.find((a) => a.id === id)?.archivedAt).toBeDefined();
+
+    // Back in full mode the balances match what full mode would have produced.
+    useFinanceStore.getState().updateSettings({ trackingMode: 'full' });
+    const { accounts } = useFinanceStore.getState();
+    expect(accounts.find((a) => a.id === 'bank')?.balance).toBe(110621.08);
+    expect(accounts.find((a) => a.id === id)?.balance).toBe(0);
+  });
+});

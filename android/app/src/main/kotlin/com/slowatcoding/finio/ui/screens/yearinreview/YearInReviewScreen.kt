@@ -48,6 +48,7 @@ import com.slowatcoding.finio.ui.common.BackButton
 import com.slowatcoding.finio.ui.common.HideAmountsToggle
 import com.slowatcoding.finio.ui.common.SectionLoader
 import com.slowatcoding.finio.ui.common.collectFinanceState
+import com.slowatcoding.finio.ui.common.rememberTrackerMode
 import com.slowatcoding.finio.ui.common.rememberDerived
 import com.slowatcoding.finio.ui.common.rememberMoneyFormatter
 import com.slowatcoding.finio.ui.components.FinioDivider
@@ -192,7 +193,8 @@ fun YearInReviewScreen(nav: FinioNavigator) {
             }
         }
 
-        ChartCard("Net worth") {
+        // Built from balances, so absent in expense-tracker mode.
+        if (!rememberTrackerMode()) ChartCard("Net worth") {
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
                 Column {
                     Text("Start of year", style = FinioType.label, color = colors.mutedForeground)

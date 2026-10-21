@@ -1,5 +1,6 @@
 package com.slowatcoding.finio.ui.screens.settings
 
+import com.slowatcoding.finio.core.model.TrackingMode
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -135,7 +136,9 @@ fun NotificationsSection() {
         if (remindersOn) {
             Kind(LucideIcons.Repeat, "Upcoming bills", "Recurring transactions coming due", settings.notifyBills) { s, v -> s.copy(notifyBills = v) }
             Kind(LucideIcons.Target, "Budget alerts", "When a budget passes 85% or goes over", settings.notifyBudgets) { s, v -> s.copy(notifyBudgets = v) }
-            Kind(LucideIcons.CreditCard, "Credit card dues", "Before a statement payment is due", settings.notifyCreditDue) { s, v -> s.copy(notifyCreditDue = v) }
+            if (settings.trackingMode != TrackingMode.Expenses) {
+                Kind(LucideIcons.CreditCard, "Credit card dues", "Before a statement payment is due", settings.notifyCreditDue) { s, v -> s.copy(notifyCreditDue = v) }
+            }
             Kind(LucideIcons.NotebookPen, "Daily reminder", "An evening nudge to log today's transactions", settings.notifyDailyLog) { s, v -> s.copy(notifyDailyLog = v) }
 
             FinioDivider()

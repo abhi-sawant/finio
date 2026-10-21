@@ -48,6 +48,16 @@ enum class Theme {
     @SerialName("system") System,
 }
 
+/**
+ * `Full` keeps every account's balance up to date; `Expenses` is the expense-tracker mode, where
+ * transactions are recorded but no balance is maintained or shown.
+ */
+@Serializable
+enum class TrackingMode {
+    @SerialName("full") Full,
+    @SerialName("expenses") Expenses,
+}
+
 @Serializable
 enum class RecurrenceFrequency {
     @SerialName("daily") Daily,
@@ -217,6 +227,7 @@ data class RecurringTransaction(
 @Serializable
 data class Settings(
     val theme: Theme = Theme.System,
+    val trackingMode: TrackingMode = TrackingMode.Full,
     /** True-black dark mode for AMOLED panels; inert unless the resolved theme is dark. */
     val amoledDark: Boolean = false,
     val userName: String = "",

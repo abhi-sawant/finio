@@ -1,5 +1,6 @@
 package com.slowatcoding.finio.ui.screens.settings
 
+import com.slowatcoding.finio.core.model.TrackingMode
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -560,13 +561,15 @@ fun BackupSection(nav: FinioNavigator) {
             subtitle = "Map columns from a bank or card statement export",
             onClick = { nav.navigate(Routes.ImportCsv) },
         )
-        FinioDivider()
-        SettingsRow(
-            LucideIcons.Scale,
-            "Reconcile balances",
-            subtitle = "Rebuild every account balance from its opening balance and transactions",
-            onClick = ::handleReconcile,
-        )
+        if (settings.trackingMode != TrackingMode.Expenses) {
+            FinioDivider()
+            SettingsRow(
+                LucideIcons.Scale,
+                "Reconcile balances",
+                subtitle = "Rebuild every account balance from its opening balance and transactions",
+                onClick = ::handleReconcile,
+            )
+        }
         FinioDivider()
         SettingsRow(LucideIcons.RotateCcw, "Reset to defaults", tone = RowTone.Destructive, onClick = ::handleReset)
     }

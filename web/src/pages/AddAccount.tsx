@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useFinanceStore } from '@/store/useFinanceStore';
+import { useTrackerMode } from '@/hooks/useTrackerMode';
 import { formatInputAmount } from '@/utils/formatters';
 import { COLOR_PALETTE } from '@/data/colorPalette';
 import { Button } from '@/components/ui/button';
@@ -76,6 +77,7 @@ export default function AddAccount() {
   const processRecurring = useFinanceStore((s) => s.processRecurring);
   const bulkDeleteTransactions = useFinanceStore((s) => s.bulkDeleteTransactions);
   const hideAmounts = useFinanceStore((s) => s.settings.hideAmounts);
+  const trackerMode = useTrackerMode();
 
   const existing = id ? accounts.find((a) => a.id === id) : null;
 
@@ -357,7 +359,7 @@ export default function AddAccount() {
             locked={Boolean(existing)}
             hideAmounts={hideAmounts}
           />
-        ) : type === 'credit' ? (
+        ) : trackerMode ? null : type === 'credit' ? (
           <div className="space-y-2">
             <div className="bg-muted grid grid-cols-2 gap-1 rounded-full p-1">
               {(
@@ -412,7 +414,7 @@ export default function AddAccount() {
         )}
 
         {/* Statement cycle — optional, unlocks the Dashboard payment-due card */}
-        {type === 'credit' && (
+        {type === 'credit' && !trackerMode && (
           <div>
             <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">
               Statement cycle (optional)
@@ -483,7 +485,7 @@ export default function AddAccount() {
           {existing ? 'Update Account' : 'Add Account'}
         </Button>
 
-        {existing && !isDepositAccount(existing) && (
+        {existing && !isDepositAccount(existing) && !trackerMode && (
           <Button
             variant="outline"
             size="lg"

@@ -84,6 +84,7 @@ export const defaultLabels: Label[] = [
 
 export const defaultSettings: Settings = {
   theme: 'system',
+  trackingMode: 'full',
   amoledDark: false,
   // Deliberately blank: the first-run wizard asks for a name rather than greeting a stranger
   // by a placeholder one.

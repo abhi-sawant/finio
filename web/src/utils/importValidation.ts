@@ -646,6 +646,7 @@ function parseSettings(value: unknown): Settings | undefined {
       typeof value.theme === 'string' && THEMES.has(value.theme)
         ? (value.theme as Settings['theme'])
         : defaultSettings.theme,
+    trackingMode: value.trackingMode === 'expenses' ? 'expenses' : defaultSettings.trackingMode,
     amoledDark:
       typeof value.amoledDark === 'boolean' ? value.amoledDark : defaultSettings.amoledDark,
     userName: asId(value.userName) ?? defaultSettings.userName,

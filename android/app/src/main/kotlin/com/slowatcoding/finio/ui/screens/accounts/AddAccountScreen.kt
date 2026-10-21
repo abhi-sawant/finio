@@ -62,6 +62,7 @@ import com.slowatcoding.finio.ui.components.HeaderIconSpacer
 import com.slowatcoding.finio.ui.components.HeaderIconTone
 import com.slowatcoding.finio.ui.components.LocalConfirm
 import com.slowatcoding.finio.ui.components.NumberPad
+import com.slowatcoding.finio.ui.common.rememberTrackerMode
 import com.slowatcoding.finio.ui.components.ScreenTitle
 import com.slowatcoding.finio.ui.components.toast
 import com.slowatcoding.finio.ui.icons.LucideIcons
@@ -102,6 +103,7 @@ fun AddAccountScreen(nav: FinioNavigator, accountId: String?) {
     val colors = FinioTheme.colors
 
     val accounts = state.accounts
+    val trackerMode = rememberTrackerMode()
     // Live, so a reconcile adjustment posted from here is reflected; frozen once deleted.
     val existing = accountId?.let { id -> accounts.find { it.id == id } }
     // The account as first opened seeds the form (the web's useState initialisers).
@@ -339,6 +341,7 @@ fun AddAccountScreen(nav: FinioNavigator, accountId: String?) {
                 locked = initial != null,
                 money = money,
             )
+            trackerMode -> Unit
             type == AccountType.Credit -> Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 CreditFieldToggle(
                     dueSelected = creditFieldIsDue,
@@ -365,7 +368,7 @@ fun AddAccountScreen(nav: FinioNavigator, accountId: String?) {
         }
 
         // Statement cycle — optional, unlocks the Dashboard payment-due card.
-        if (type == AccountType.Credit) {
+        if (type == AccountType.Credit && !trackerMode) {
             Column {
                 FieldLabel("Statement cycle (optional)")
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -389,7 +392,7 @@ fun AddAccountScreen(nav: FinioNavigator, accountId: String?) {
             size = ButtonSize.Lg,
         )
 
-        if (existing != null && !isDepositAccount(existing)) {
+        if (existing != null && !isDepositAccount(existing) && !trackerMode) {
             FinioButton(
                 "Reconcile Balance",
                 onClick = { showReconcile = true },

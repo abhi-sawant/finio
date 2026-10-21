@@ -49,6 +49,7 @@ import com.slowatcoding.finio.ui.charts.SpendingDonut
 import com.slowatcoding.finio.ui.common.HideAmountsToggle
 import com.slowatcoding.finio.ui.common.SectionLoader
 import com.slowatcoding.finio.ui.common.collectFinanceState
+import com.slowatcoding.finio.ui.common.rememberTrackerMode
 import com.slowatcoding.finio.ui.common.rememberDerived
 import com.slowatcoding.finio.ui.common.rememberMoneyFormatter
 import com.slowatcoding.finio.ui.components.ButtonSize
@@ -99,6 +100,7 @@ fun AnalyticsScreen(nav: FinioNavigator) {
     val state by collectFinanceState()
     val money = rememberMoneyFormatter()
     val colors = FinioTheme.colors
+    val trackerMode = rememberTrackerMode()
     val transactions = state.transactions
     val monthStartDay = normalizeMonthStartDay(state.settings.monthStartDay)
 
@@ -221,15 +223,17 @@ fun AnalyticsScreen(nav: FinioNavigator) {
                 } else {
                     SpendingDonut(view.filtered)
                     IncomeExpenseBar(view.filtered)
-                    BalanceTrend(view.from, view.to)
+                    if (!trackerMode) BalanceTrend(view.from, view.to)
                     LabelSpendingBar(view.filtered)
                     TopMerchants(view.filtered, nav)
                 }
 
                 // These carry their own window, anchored to "now" rather than to the chips above.
-                CashFlowForecastCard()
-                CashFlowCalendarCard()
-                NetWorthTrendCard()
+                if (!trackerMode) {
+                    CashFlowForecastCard()
+                    CashFlowCalendarCard()
+                    NetWorthTrendCard()
+                }
                 PeriodComparisonCard()
                 SpendingHeatmapCard()
             }

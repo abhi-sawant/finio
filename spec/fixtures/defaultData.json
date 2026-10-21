@@ -357,6 +357,7 @@
       "args": [],
       "out": {
         "theme": "system",
+        "trackingMode": "full",
         "amoledDark": false,
         "userName": "",
         "autoLocalBackup": false,
