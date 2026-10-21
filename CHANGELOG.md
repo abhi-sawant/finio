@@ -3,6 +3,24 @@
 Finio follows [Semantic Versioning](https://semver.org). The repo-root `VERSION` file is the single
 source of truth for both clients; see "Releasing" in [CLAUDE.md](CLAUDE.md).
 
+## 3.0.3 — 2026-10-21
+
+### Added
+
+- **Transactions mode.** If you only want to log what you earn and spend, pick "Transactions" in
+  onboarding or Settings. Finio then records transactions without keeping account balances: totals,
+  card dues, the forecast and net worth are hidden, and onboarding skips the opening-balance step.
+  Switching back to full tracking asks what each account holds today and sets the books to match,
+  without posting any adjustment. Fixed and recurring deposits still post their transactions. The new
+  `trackingMode` setting is part of the backup format; see [spec/backup-format.md](spec/backup-format.md).
+  Older backups import unchanged.
+
+### Fixed
+
+- **Fixed and recurring deposits no longer appear in the Add Transaction account picker.** They are
+  funded and paid out by the deposit flow, so they can't be picked, or be the default, by hand. A
+  transaction already on one keeps it.
+
 ## 3.0.2 — 2026-10-19
 
 ### Added
