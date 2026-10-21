@@ -27,3 +27,10 @@ fun financeStore(): FinanceStore = appContainer().financeStore
 /** The whole finance state as Compose state, lifecycle-aware. */
 @Composable
 fun collectFinanceState(): State<FinanceState> = appContainer().financeStore.state.collectAsStateWithLifecycle()
+
+/** True in transactions-only mode, where no account balance is maintained or shown (web: `useTrackerMode`). */
+@Composable
+fun rememberTrackerMode(): Boolean {
+    val settings = collectFinanceState().value.settings
+    return settings.trackingMode == com.slowatcoding.finio.core.model.TrackingMode.Transactions
+}

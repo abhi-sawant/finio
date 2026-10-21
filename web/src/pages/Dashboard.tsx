@@ -11,6 +11,7 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import { useFinanceStore } from '@/store/useFinanceStore';
+import { useTrackerMode } from '@/hooks/useTrackerMode';
 import { useAuthStore } from '@/store/useAuthStore';
 import { formatCurrency, formatPercentChange, shouldCompactGroup } from '@/utils/formatters';
 import {
@@ -72,6 +73,7 @@ export default function Dashboard() {
   const debtEntries = useFinanceStore((s) => s.debtEntries);
   const userName = useFinanceStore((s) => s.settings.userName);
   const hideAmounts = useFinanceStore((s) => s.settings.hideAmounts);
+  const trackerMode = useTrackerMode();
 
   const signedIn = useAuthStore((s) => s.token !== null);
   const lastBackupAt = useAuthStore((s) => s.lastBackupAt);
@@ -188,6 +190,8 @@ export default function Dashboard() {
     [people, debtEntries],
   );
   const creditDues = useMemo(() => {
+    // Card dues are worked out from the balance, which transactions-only mode doesn't keep.
+    if (trackerMode) return [];
     return openAccounts
       .filter((a) => a.type === 'credit')
       .flatMap((account) => {
@@ -195,7 +199,7 @@ export default function Dashboard() {
         return dueInfo && dueInfo.daysUntilDue <= 7 ? [{ account, dueInfo }] : [];
       })
       .sort((a, b) => a.dueInfo.daysUntilDue - b.dueInfo.daysUntilDue);
-  }, [openAccounts]);
+  }, [openAccounts, trackerMode]);
 
   const dueLabel = (daysUntil: number) =>
     daysUntil < 0
@@ -336,18 +340,25 @@ export default function Dashboard() {
             </>
           ) : (
             <>
-              <p className="text-muted-foreground text-sm font-medium">Total balance</p>
-              <p
-                className={`font-money mt-1 leading-[1.05] ${noteFigureClass(formatCurrency(totalBalance, false, hideAmounts))}`}
-              >
-                {formatCurrency(totalBalance, false, hideAmounts)}
+              <p className="text-muted-foreground text-sm font-medium">
+                {trackerMode ? 'Spent this month' : 'Total balance'}
               </p>
-              {creditOutstanding > 0 && (
+              <p
+                className={`font-money mt-1 leading-[1.05] ${noteFigureClass(formatCurrency(trackerMode ? monthExpenses : totalBalance, false, hideAmounts))}`}
+              >
+                {formatCurrency(trackerMode ? monthExpenses : totalBalance, false, hideAmounts)}
+              </p>
+              {trackerMode && monthIncome > 0 && (
+                <p className="text-muted-foreground mt-1.5 text-xs">
+                  {formatCurrency(monthIncome, false, hideAmounts)} income this month
+                </p>
+              )}
+              {!trackerMode && creditOutstanding > 0 && (
                 <p className="text-muted-foreground mt-1.5 text-xs">
                   {formatCurrency(afterDues, false, hideAmounts)} after card dues
                 </p>
               )}
-              {depositValue > 0 && (
+              {!trackerMode && depositValue > 0 && (
                 <p className="text-muted-foreground mt-1 text-xs">
                   + {formatCurrency(depositValue, false, hideAmounts)} locked in deposits
                 </p>
@@ -474,7 +485,7 @@ export default function Dashboard() {
                 See all
               </button>
             </div>
-            {overallBudget && accounts.length > 0 && (
+            {overallBudget && accounts.length > 0 && !trackerMode && (
               <div className="mb-3 flex items-baseline justify-between gap-3">
                 <span className="text-muted-foreground text-xs">Total balance</span>
                 <div className="text-right">
@@ -525,11 +536,13 @@ export default function Dashboard() {
                           ? `${account.type === 'rd' ? 'RD' : 'FD'} · current value`
                           : ACCOUNT_TYPE_LABEL[account.type]}
                       </span>
-                      <span className="font-money relative mt-auto pt-3 text-lg">
-                        {formatCurrency(value, true, hideAmounts, {
-                          forceCompact: accountsCompact,
-                        })}
-                      </span>
+                      {(!trackerMode || isDepositAccount(account)) && (
+                        <span className="font-money relative mt-auto pt-3 text-lg">
+                          {formatCurrency(value, true, hideAmounts, {
+                            forceCompact: accountsCompact,
+                          })}
+                        </span>
+                      )}
                     </button>
                   );
                 })}

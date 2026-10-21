@@ -43,6 +43,8 @@ data class NotificationScheduleInput(
     val labels: List<Label>,
     val monthStartDay: Int,
     val prefs: NotificationPrefs,
+    /** Expense-tracker mode: no balances, so no card dues, and no balance talk in the nudge. */
+    val trackerMode: Boolean = false,
 )
 
 /** `yyyy-MM-dd` in local time — the occurrence's identity, independent of the lead time. */
@@ -139,7 +141,7 @@ private fun buildBudgetEntries(input: NotificationScheduleInput, now: Instant): 
 
 private fun buildCreditEntries(input: NotificationScheduleInput, now: Instant): List<ScheduledNotification> {
     val prefs = input.prefs
-    if (!prefs.notifyCreditDue) return emptyList()
+    if (!prefs.notifyCreditDue || input.trackerMode) return emptyList()
 
     val entries = mutableListOf<ScheduledNotification>()
     for (account in activeAccounts(input.accounts).filter { it.type == AccountType.Credit }) {
@@ -182,7 +184,7 @@ private fun buildDailyLogEntries(input: NotificationScheduleInput, now: Instant)
             fireAt = max(now.toEpochMilli(), setHours(startOfDay(now), DAILY_LOG_HOUR).toEpochMilli()),
             expiresAt = startOfDay(addDays(now, 1)).toEpochMilli(),
             title = "Log today's transactions",
-            body = "A quick add keeps your balances accurate.",
+            body = if (input.trackerMode) "A quick add keeps your spending record complete." else "A quick add keeps your balances accurate.",
             url = "/add-transaction",
         ),
     )

@@ -374,6 +374,7 @@ class AppContainer(private val app: Application) {
             notifyDailyLog = state.settings.notifyDailyLog,
             hideAmounts = state.settings.hideAmounts,
         ),
+        trackerMode = state.settings.trackingMode == com.slowatcoding.finio.core.model.TrackingMode.Transactions,
     )
 
     // ---- Backup seams (workers + "Back up now") ---------------------------------------------

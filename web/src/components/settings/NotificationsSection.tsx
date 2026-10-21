@@ -146,17 +146,19 @@ export function NotificationsSection() {
               refreshNotificationSchedule();
             }}
           />
-          <SwitchField
-            className="p-4"
-            icon={<CreditCard size={18} className="text-muted-foreground shrink-0" />}
-            title="Credit card dues"
-            description="Before a statement payment is due"
-            checked={settings.notifyCreditDue}
-            onCheckedChange={(notifyCreditDue) => {
-              updateSettings({ notifyCreditDue });
-              refreshNotificationSchedule();
-            }}
-          />
+          {settings.trackingMode !== 'transactions' && (
+            <SwitchField
+              className="p-4"
+              icon={<CreditCard size={18} className="text-muted-foreground shrink-0" />}
+              title="Credit card dues"
+              description="Before a statement payment is due"
+              checked={settings.notifyCreditDue}
+              onCheckedChange={(notifyCreditDue) => {
+                updateSettings({ notifyCreditDue });
+                refreshNotificationSchedule();
+              }}
+            />
+          )}
           <SwitchField
             className="p-4"
             icon={<NotebookPen size={18} className="text-muted-foreground shrink-0" />}

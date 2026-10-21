@@ -712,18 +712,20 @@ export function BackupSection() {
             </p>
           </div>
         </button>
-        <button
-          onClick={handleReconcile}
-          className="hover:bg-muted/50 flex w-full items-center gap-3 p-4 transition-colors"
-        >
-          <Scale size={18} className="text-muted-foreground shrink-0" />
-          <div className="flex-1 text-left">
-            <p className="text-sm font-medium">Reconcile balances</p>
-            <p className="text-muted-foreground text-xs">
-              Rebuild every account balance from its opening balance and transactions
-            </p>
-          </div>
-        </button>
+        {settings.trackingMode !== 'transactions' && (
+          <button
+            onClick={handleReconcile}
+            className="hover:bg-muted/50 flex w-full items-center gap-3 p-4 transition-colors"
+          >
+            <Scale size={18} className="text-muted-foreground shrink-0" />
+            <div className="flex-1 text-left">
+              <p className="text-sm font-medium">Reconcile balances</p>
+              <p className="text-muted-foreground text-xs">
+                Rebuild every account balance from its opening balance and transactions
+              </p>
+            </div>
+          </button>
+        )}
         <button
           onClick={handleReset}
           className="hover:bg-muted/50 flex w-full items-center gap-3 p-4 transition-colors"

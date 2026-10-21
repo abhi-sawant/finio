@@ -32,6 +32,7 @@ import com.slowatcoding.finio.core.deposit.isDepositAccount
 import com.slowatcoding.finio.core.model.Account
 import com.slowatcoding.finio.core.model.AccountType
 import com.slowatcoding.finio.ui.common.MoneyFormatter
+import com.slowatcoding.finio.ui.common.rememberTrackerMode
 import com.slowatcoding.finio.ui.components.toast
 import com.slowatcoding.finio.ui.icons.LucideIcons
 import com.slowatcoding.finio.ui.mudra.NoteChip
@@ -69,10 +70,14 @@ fun AccountRow(
     val colors = FinioTheme.colors
     val isCredit = account.type == AccountType.Credit
     val isArchived = !account.archivedAt.isNullOrEmpty()
+    val trackerMode = rememberTrackerMode()
     val utilization = getCreditUtilization(account)
-    val dueInfo = getCreditCardDueInfo(account)
+    // Card dues and the amount shown come from the balance, which transactions-only mode doesn't
+    // keep. An open deposit's accrued value comes from its terms, so it stays.
+    val dueInfo = if (trackerMode) null else getCreditCardDueInfo(account)
     val isDeposit = isDepositAccount(account)
     val shownBalance = accountDisplayValue(account)
+    val showAmount = !trackerMode || (isDeposit && !isArchived)
 
     Row(
         modifier.fillMaxWidth().padding(vertical = 12.dp),
@@ -119,7 +124,7 @@ fun AccountRow(
                     )
                 }
             }
-            Column(horizontalAlignment = Alignment.End) {
+            if (showAmount) Column(horizontalAlignment = Alignment.End) {
                 Text(
                     money(shownBalance, compact = true, forceCompact = forceCompact),
                     style = FinioType.rowValue,
@@ -130,7 +135,7 @@ fun AccountRow(
                 if (isDeposit && !isArchived) {
                     Text("Current value", Modifier.padding(top = 2.dp), style = FinioType.caption, color = colors.mutedForeground)
                 }
-                if (isCredit && (account.creditLimit ?: 0.0) != 0.0) {
+                if (!trackerMode && isCredit && (account.creditLimit ?: 0.0) != 0.0) {
                     Text(
                         "${(utilization * 100).roundToInt()}% used",
                         Modifier.padding(top = 2.dp),

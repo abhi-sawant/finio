@@ -35,6 +35,7 @@ import com.slowatcoding.finio.ui.common.HideAmountsToggle
 import com.slowatcoding.finio.ui.common.MoneyFormatter
 import com.slowatcoding.finio.ui.common.collectFinanceState
 import com.slowatcoding.finio.ui.common.financeStore
+import com.slowatcoding.finio.ui.common.rememberTrackerMode
 import com.slowatcoding.finio.ui.common.rememberMoneyFormatter
 import com.slowatcoding.finio.ui.common.undoToast
 import com.slowatcoding.finio.ui.components.FinioButton
@@ -71,6 +72,7 @@ fun AccountsScreen(nav: FinioNavigator) {
 
     val accounts = state.accounts
     val transactions = state.transactions
+    val trackerMode = rememberTrackerMode()
     var showArchived by rememberSaveable { mutableStateOf(false) }
 
     val totalBalance = remember(accounts) { getTotalAccountBalance(accounts) }
@@ -145,7 +147,8 @@ fun AccountsScreen(nav: FinioNavigator) {
             )
         }
     }) {
-        NoteCard(Modifier.fillMaxWidth()) {
+        // A balance total, so there is none in transactions-only mode.
+        if (!trackerMode) NoteCard(Modifier.fillMaxWidth()) {
             Text("Net balance", style = FinioType.bodyMedium, color = colors.mutedForeground)
             val total = money(totalBalance)
             Text(total, Modifier.padding(top = 4.dp), style = noteFigureStyle(total), color = colors.foreground, maxLines = 1, softWrap = false)

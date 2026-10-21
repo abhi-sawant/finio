@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Target, ChevronRight, Repeat, CalendarIcon, CalendarX } from 'lucide-react';
 import { useFinanceStore } from '@/store/useFinanceStore';
+import { useTrackerMode } from '@/hooks/useTrackerMode';
 import { formatCurrency, formatShortDate, shouldCompactGroup } from '@/utils/formatters';
 import { getTotalIncome, getTotalExpenses } from '@/utils/calculations';
 import { isRulePaused } from '@/store/recurring';
@@ -43,6 +44,7 @@ export default function Analytics() {
   const recurring = useFinanceStore((s) => s.recurring);
   const monthStartDay = normalizeMonthStartDay(useFinanceStore((s) => s.settings.monthStartDay));
   const hideAmounts = useFinanceStore((s) => s.settings.hideAmounts);
+  const trackerMode = useTrackerMode();
 
   const [twoMonths, setTwoMonths] = useState(
     () => typeof window === 'undefined' || window.matchMedia('(min-width: 768px)').matches,
@@ -227,7 +229,7 @@ export default function Analytics() {
               <div className="space-y-4 lg:grid lg:grid-cols-2 lg:gap-4 lg:space-y-0 lg:[&>*:last-child:nth-child(odd)]:col-span-2">
                 <SpendingDonut transactions={filteredTransactions} />
                 <IncomeExpenseBar transactions={filteredTransactions} />
-                <BalanceTrend from={dateRange.from} to={dateRange.to} />
+                {!trackerMode && <BalanceTrend from={dateRange.from} to={dateRange.to} />}
                 <LabelSpendingBar transactions={filteredTransactions} />
                 <TopMerchants transactions={filteredTransactions} />
               </div>
@@ -238,9 +240,13 @@ export default function Analytics() {
               period-over-period view are all anchored to "now" rather than to whatever
               range the filter chips above are showing.
             */}
-            <CashFlowForecast />
-            <CashFlowCalendar />
-            <NetWorthTrend />
+            {!trackerMode && (
+              <>
+                <CashFlowForecast />
+                <CashFlowCalendar />
+                <NetWorthTrend />
+              </>
+            )}
             <PeriodComparison />
             <SpendingHeatmap />
           </>

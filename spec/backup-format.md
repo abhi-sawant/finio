@@ -157,6 +157,7 @@ These rules apply to every import, whether it comes from a file or the cloud.
 - **Settings:**
   - Only known keys are kept; an invalid value falls back to its default.
   - `amoledDark` (boolean, optional, default `false`) switches dark mode to true black; it only has an effect while the resolved theme is dark.
+  - `trackingMode` (`"full"` or `"transactions"`, optional, default `"full"`) — in `transactions` mode the app records transactions but maintains and shows no balances; any other value falls back to `"full"`.
   - `monthStartDay` is clamped to 1–28 and `notifyLeadDays` to 0–7.
   - `onboardedAt` is **dropped**, so restoring never re-runs or skips this device's onboarding.
 

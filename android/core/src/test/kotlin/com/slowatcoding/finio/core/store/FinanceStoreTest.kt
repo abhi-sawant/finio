@@ -23,6 +23,7 @@ import com.slowatcoding.finio.core.model.DebtEntry
 import com.slowatcoding.finio.core.model.RuleMatchType
 import com.slowatcoding.finio.core.model.RuleScope
 import com.slowatcoding.finio.core.model.Theme
+import com.slowatcoding.finio.core.model.TrackingMode
 import com.slowatcoding.finio.core.model.Transaction
 import com.slowatcoding.finio.core.model.TransactionSplit
 import com.slowatcoding.finio.core.model.TransactionType
@@ -1313,5 +1314,78 @@ class FinanceStoreTest {
         assertEquals("x", state.transactions[0].note)
         assertEquals(90.0, state.accounts[0].balance, 0.0)
         assertSame(store.state.value, state)
+    }
+
+    // ---- transactions-only mode ------------------------------------------------------------------
+
+    private fun trackerOn() = store.updateSettings { it.copy(trackingMode = TrackingMode.Transactions) }
+
+    private fun expense(amount: Double) =
+        NewTransaction(E, amount, "bank", categoryId = "cat-1", date = "2026-06-01T00:00:00.000Z")
+
+    @Test fun trackerModeRecordsTransactionsWithoutTouchingBalances() {
+        seed(listOf(account("bank", 1000.0)))
+        trackerOn()
+        val id = store.addTransaction(expense(200.0))
+        assertEquals(1, state.transactions.size)
+        assertEquals(1000.0, state.accounts[0].balance, 0.0)
+        store.deleteTransaction(id)
+        assertEquals(1000.0, state.accounts[0].balance, 0.0)
+    }
+
+    @Test fun trackerModeRebuildsBalancesOnReturningToFull() {
+        seed(listOf(account("bank", 1000.0)))
+        trackerOn()
+        store.addTransaction(expense(200.0))
+        store.updateSettings { it.copy(trackingMode = TrackingMode.Full) }
+        assertEquals(800.0, state.accounts[0].balance, 0.0)
+    }
+
+    @Test fun switchToFullModeSetsOpeningBalanceFromTheCurrentBalanceEntered() {
+        seed(listOf(account("bank", 0.0)))
+        trackerOn()
+        store.addTransaction(expense(4500.0))
+        // 4,500 logged and 2,000 really left: the account must have started on 6,500.
+        store.switchToFullMode(mapOf("bank" to 2000.0))
+        assertEquals(TrackingMode.Full, state.settings.trackingMode)
+        assertEquals(6500.0, state.accounts[0].openingBalance, 0.0)
+        assertEquals(2000.0, state.accounts[0].balance, 0.0)
+        // No adjustment transaction was posted to get there.
+        assertEquals(1, state.transactions.size)
+    }
+
+    @Test fun switchToFullModeLeavesAccountsWithoutAnEnteredBalanceAlone() {
+        seed(listOf(account("bank", 0.0), account("cash", 0.0)))
+        trackerOn()
+        store.switchToFullMode(mapOf("bank" to 100.0))
+        assertEquals(100.0, state.accounts.first { it.id == "bank" }.balance, 0.0)
+        assertEquals(0.0, state.accounts.first { it.id == "cash" }.openingBalance, 0.0)
+    }
+
+    @Test fun trackerModeDoesNotFreezeNetWorthSnapshots() {
+        seed(listOf(account("bank", 1000.0)))
+        trackerOn()
+        assertEquals(0, store.captureNetWorthSnapshots())
+        assertTrue(state.netWorthSnapshots.isEmpty())
+    }
+
+    @Test fun trackerModePaysOutAMaturedFdFromTermsNotABalance() {
+        now = iso("2026-10-01")
+        seed(listOf(account("bank", 100000.0)))
+        trackerOn()
+        val id = store.addDeposit(NewDeposit(AccountType.Fd, "FD", "#000", fd("2026-10-01", "2029-09-01")))
+        assertEquals(1, state.transactions.size)
+        assertEquals(listOf(100000.0, 0.0), state.accounts.map { it.balance })
+
+        now = iso("2029-09-02")
+        val posted = store.processMaturities()
+        assertEquals(listOf(I, T), posted.map { it.type })
+        assertEquals(10621.08, posted[0].amount, 0.0)
+        assertEquals(60621.08, posted[1].amount, 0.0)
+        assertNotNull(state.accounts.first { it.id == id }.archivedAt)
+
+        store.updateSettings { it.copy(trackingMode = TrackingMode.Full) }
+        assertEquals(110621.08, state.accounts.first { it.id == "bank" }.balance, 0.0)
+        assertEquals(0.0, state.accounts.first { it.id == id }.balance, 0.0)
     }
 }

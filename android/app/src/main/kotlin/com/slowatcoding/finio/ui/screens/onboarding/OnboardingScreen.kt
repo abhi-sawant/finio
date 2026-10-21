@@ -52,6 +52,7 @@ import com.slowatcoding.finio.core.data.loadSampleData
 import com.slowatcoding.finio.core.js.nowInstant
 import com.slowatcoding.finio.core.js.toIso
 import com.slowatcoding.finio.core.model.AccountType
+import com.slowatcoding.finio.core.model.TrackingMode
 import com.slowatcoding.finio.core.store.NewAccount
 import com.slowatcoding.finio.core.util.MAX_NAME_LENGTH
 import com.slowatcoding.finio.core.util.cleanText
@@ -81,11 +82,18 @@ private val ACCOUNT_TYPES = listOf(
     AccountTypeOption(AccountType.Wallet, "Wallet", "wallet", LucideIcons.Wallet),
 )
 
-private enum class Step { Name, Account, Balance }
+private enum class Step { Name, Mode, Account, Balance }
+
+private data class ModeOption(val value: TrackingMode, val title: String, val description: String)
+
+private val MODES = listOf(
+    ModeOption(TrackingMode.Full, "Track everything", "Accounts with balances, net worth, cash-flow forecast and card dues."),
+    ModeOption(TrackingMode.Transactions, "Just track transactions", "Record your income and spending and see where your money goes. No balances to maintain."),
+)
 
 /**
- * Port of web/src/components/onboarding/Onboarding.tsx — the first-run wizard: name → first
- * account → opening balance, rendered by the shell instead of the app while
+ * Port of web/src/components/onboarding/Onboarding.tsx — the first-run wizard: name → mode →
+ * first account → opening balance (full mode only), rendered by the shell instead of the app while
  * `settings.onboardedAt` is unset. Every step past the name is skippable (a reinstall can go
  * straight to Settings and restore), and the account step offers the deterministic sample data.
  * Finishing just stamps `onboardedAt`; the gate lifts by itself — nothing navigates.
@@ -97,12 +105,15 @@ fun OnboardingScreen() {
 
     var step by rememberSaveable { mutableStateOf(Step.Name) }
     var name by rememberSaveable { mutableStateOf("") }
+    var trackingMode by rememberSaveable { mutableStateOf(TrackingMode.Full) }
     var accountName by rememberSaveable { mutableStateOf("") }
     var accountType by rememberSaveable { mutableStateOf(AccountType.Savings) }
     var balance by rememberSaveable { mutableStateOf("") }
     // The account's tint comes from its type; the stored colour is just a default.
     val color = COLOR_PALETTE[0]
 
+    // Transactions-only mode keeps no balances, so it never asks for one.
+    val steps = if (trackingMode == TrackingMode.Transactions) Step.entries - Step.Balance else Step.entries.toList()
     val trimmedName = cleanText(name, MAX_NAME_LENGTH)
     val trimmedAccountName = cleanText(accountName, MAX_NAME_LENGTH)
 
@@ -113,16 +124,22 @@ fun OnboardingScreen() {
     val focusManager = LocalFocusManager.current
     BackHandler(enabled = step != Step.Name) {
         if (imeVisible) focusManager.clearFocus(force = true)
-        else step = if (step == Step.Balance) Step.Account else Step.Name
+        else step = when (step) {
+            Step.Balance -> Step.Account
+            Step.Account -> Step.Mode
+            else -> Step.Name
+        }
     }
 
     fun completeOnboarding() {
-        store.updateSettings { it.copy(userName = trimmedName.ifEmpty { "there" }, onboardedAt = nowInstant().toIso()) }
+        store.updateSettings {
+            it.copy(userName = trimmedName.ifEmpty { "there" }, trackingMode = trackingMode, onboardedAt = nowInstant().toIso())
+        }
     }
 
     fun finish(withAccount: Boolean) {
         if (withAccount && trimmedAccountName.isNotEmpty()) {
-            val opening = balance.toDoubleOrNull()?.takeIf { it.isFinite() } ?: 0.0
+            val opening = balance.toDoubleOrNull()?.takeIf { it.isFinite() && trackingMode == TrackingMode.Full } ?: 0.0
             store.addAccount(
                 NewAccount(
                     name = trimmedAccountName,
@@ -139,6 +156,8 @@ fun OnboardingScreen() {
 
     // A few months of realistic data, so a first look isn't an empty dashboard.
     fun loadSample() {
+        // The mode goes in first so the sample's transactions are posted under the right rules.
+        store.updateSettings { it.copy(trackingMode = trackingMode) }
         loadSampleData(store.sampleDataActions())
         completeOnboarding()
     }
@@ -153,14 +172,14 @@ fun OnboardingScreen() {
         ) {
             // Progress
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Step.entries.forEach { s ->
+                steps.forEach { s ->
                     Box(
                         Modifier
                             .weight(1f)
                             .height(4.dp)
                             .clip(FinioShapes.full)
                             .then(
-                                if (s.ordinal <= step.ordinal) Modifier.background(FinioTheme.brushes.gradPrimary)
+                                if (steps.indexOf(s) <= steps.indexOf(step)) Modifier.background(FinioTheme.brushes.gradPrimary)
                                 else Modifier.background(colors.muted),
                             ),
                     )
@@ -180,12 +199,12 @@ fun OnboardingScreen() {
                             modifier = Modifier.focusRequester(focus),
                             placeholder = "Your name",
                             keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words, imeAction = ImeAction.Next),
-                            keyboardActions = KeyboardActions(onNext = { if (trimmedName.isNotEmpty()) step = Step.Account }),
+                            keyboardActions = KeyboardActions(onNext = { if (trimmedName.isNotEmpty()) step = Step.Mode }),
                         )
                     }
                     FinioButton(
                         "Continue",
-                        onClick = { step = Step.Account },
+                        onClick = { step = Step.Mode },
                         modifier = Modifier.fillMaxWidth(),
                         size = ButtonSize.Lg,
                         enabled = trimmedName.isNotEmpty(),
@@ -193,8 +212,32 @@ fun OnboardingScreen() {
                     )
                 }
 
+                Step.Mode -> StepColumn {
+                    Heading("How will you use Finio?", "You can switch any time in Settings — nothing is lost either way.")
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        MODES.forEach { option ->
+                            ModeCard(option, selected = trackingMode == option.value, onClick = { trackingMode = option.value })
+                        }
+                    }
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        FinioButton(
+                            "Continue",
+                            onClick = { step = Step.Account },
+                            modifier = Modifier.fillMaxWidth(),
+                            size = ButtonSize.Lg,
+                            trailingIcon = LucideIcons.ArrowRight,
+                        )
+                        FinioButton("Back", onClick = { step = Step.Name }, variant = ButtonVariant.Ghost, size = ButtonSize.Sm, leadingIcon = LucideIcons.ArrowLeft)
+                    }
+                }
+
                 Step.Account -> StepColumn {
-                    Heading("Add your first account", "A bank account, a card, or just the cash in your wallet.")
+                    val tracker = trackingMode == TrackingMode.Transactions
+                    Heading(
+                        if (tracker) "Add a payment source" else "Add your first account",
+                        if (tracker) "Where your spending comes from — a bank, a card or cash. No balance needed."
+                        else "A bank account, a card, or just the cash in your wallet.",
+                    )
                     Column {
                         FieldCaption("Account name")
                         val focus = remember { FocusRequester() }
@@ -226,15 +269,15 @@ fun OnboardingScreen() {
                     }
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         FinioButton(
-                            "Continue",
-                            onClick = { step = Step.Balance },
+                            if (tracker) "Start tracking" else "Continue",
+                            onClick = { if (tracker) finish(withAccount = true) else step = Step.Balance },
                             modifier = Modifier.fillMaxWidth(),
                             size = ButtonSize.Lg,
                             enabled = trimmedAccountName.isNotEmpty(),
-                            trailingIcon = LucideIcons.ArrowRight,
+                            trailingIcon = if (tracker) null else LucideIcons.ArrowRight,
                         )
                         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                            FinioButton("Back", onClick = { step = Step.Name }, variant = ButtonVariant.Ghost, size = ButtonSize.Sm, leadingIcon = LucideIcons.ArrowLeft)
+                            FinioButton("Back", onClick = { step = Step.Mode }, variant = ButtonVariant.Ghost, size = ButtonSize.Sm, leadingIcon = LucideIcons.ArrowLeft)
                             FinioButton("Skip for now", onClick = { finish(withAccount = false) }, variant = ButtonVariant.Ghost, size = ButtonSize.Sm)
                         }
                         FinioButton(
@@ -285,6 +328,32 @@ private fun Heading(title: String, description: String) {
 @Composable
 private fun FieldCaption(text: String) {
     Text(text, Modifier.padding(bottom = 6.dp), style = FinioType.label, color = FinioTheme.colors.foreground)
+}
+
+@Composable
+private fun ModeCard(option: ModeOption, selected: Boolean, onClick: () -> Unit) {
+    val colors = FinioTheme.colors
+    val shape = FinioShapes.md
+    val title = if (selected) Color.White else colors.foreground
+    val body = if (selected) Color.White.copy(alpha = 0.9f) else colors.mutedForeground
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .clip(shape)
+            .then(if (selected) Modifier.background(FinioTheme.brushes.gradPrimary) else Modifier.background(colors.card))
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                role = Role.RadioButton,
+                onClick = onClick,
+            )
+            .semantics { this.selected = selected }
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(2.dp),
+    ) {
+        Text(option.title, style = FinioType.bodyMedium, color = title)
+        Text(option.description, style = FinioType.caption, color = body)
+    }
 }
 
 @Composable

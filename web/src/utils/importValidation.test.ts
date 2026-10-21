@@ -240,6 +240,7 @@ describe('validateBackup', () => {
     });
     expect(data.settings).toEqual({
       theme: 'dark',
+      trackingMode: 'full',
       amoledDark: false,
       userName: 'Abhishek',
       autoLocalBackup: true,
@@ -252,6 +253,15 @@ describe('validateBackup', () => {
       notifyLeadDays: 2,
       notifyDailyLog: true,
     });
+  });
+
+  it("keeps trackingMode 'transactions' and defaults anything else to full", () => {
+    const mode = (trackingMode: unknown) =>
+      validateBackup({ settings: { trackingMode } }).data.settings?.trackingMode;
+    expect(mode('transactions')).toBe('transactions');
+    expect(mode('full')).toBe('full');
+    expect(mode('balances')).toBe('full');
+    expect(mode(undefined)).toBe('full');
   });
 
   it('keeps a boolean amoledDark and defaults anything else to off', () => {

@@ -34,6 +34,7 @@ import com.slowatcoding.finio.core.model.RuleMatchType
 import com.slowatcoding.finio.core.model.RuleScope
 import com.slowatcoding.finio.core.model.Settings
 import com.slowatcoding.finio.core.model.Theme
+import com.slowatcoding.finio.core.model.TrackingMode
 import com.slowatcoding.finio.core.model.Transaction
 import com.slowatcoding.finio.core.model.TransactionSplit
 import com.slowatcoding.finio.core.model.TransactionTemplate
@@ -155,6 +156,7 @@ private val BUDGET_PERIODS = byWire<BudgetPeriod>()
 private val MATCH_TYPES = byWire<RuleMatchType>()
 private val RULE_SCOPES = byWire<RuleScope>()
 private val THEMES = byWire<Theme>()
+private val TRACKING_MODES = byWire<TrackingMode>()
 
 // ---- JS value checks on raw JSON -----------------------------------------------------------
 
@@ -565,6 +567,7 @@ private fun parseSettings(value: JsonElement?): Settings? {
     // drops `onboardedAt` so a restore never re-runs or skips this device's onboarding.
     return Settings(
         theme = member(value["theme"], THEMES) ?: d.theme,
+        trackingMode = if (member(value["trackingMode"], TRACKING_MODES) == TrackingMode.Transactions) TrackingMode.Transactions else d.trackingMode,
         amoledDark = flag("amoledDark", d.amoledDark),
         userName = asId(value["userName"]) ?: d.userName,
         autoLocalBackup = flag("autoLocalBackup", d.autoLocalBackup),

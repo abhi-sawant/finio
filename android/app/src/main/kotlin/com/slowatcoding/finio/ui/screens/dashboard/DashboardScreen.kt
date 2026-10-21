@@ -105,7 +105,7 @@ fun DashboardScreen(nav: FinioNavigator) {
 
     val data = rememberDerived(
         state.accounts, state.transactions, state.categories, state.budgets, state.labels, state.recurring,
-        state.goals, state.goalContributions, state.people, state.debtEntries, state.settings.monthStartDay,
+        state.goals, state.goalContributions, state.people, state.debtEntries, state.settings.monthStartDay, state.settings.trackingMode,
     ) { computeDashboardData(state) }
 
     var alertsOpen by rememberSaveable { mutableStateOf(false) }
@@ -343,13 +343,16 @@ private fun Hero(data: DashboardData, money: MoneyFormatter, hasAccounts: Boolea
                 )
             }
         } else {
-            Text("Total balance", style = FinioType.bodyMedium, color = colors.mutedForeground)
-            val figure = money(data.totalBalance)
+            Text(if (data.trackerMode) "Spent this month" else "Total balance", style = FinioType.bodyMedium, color = colors.mutedForeground)
+            val figure = money(if (data.trackerMode) data.monthExpenses else data.totalBalance)
             Text(figure, Modifier.padding(top = 4.dp), style = noteFigureStyle(figure), color = colors.foreground, maxLines = 1, softWrap = false)
-            if (data.creditOutstanding > 0) {
+            if (data.trackerMode && data.monthIncome > 0) {
+                Text("${money(data.monthIncome)} income this month", Modifier.padding(top = 6.dp), style = FinioType.caption, color = colors.mutedForeground)
+            }
+            if (!data.trackerMode && data.creditOutstanding > 0) {
                 Text("${money(data.afterDues)} after card dues", Modifier.padding(top = 6.dp), style = FinioType.caption, color = colors.mutedForeground)
             }
-            if (data.depositValue > 0) {
+            if (!data.trackerMode && data.depositValue > 0) {
                 Text("+ ${money(data.depositValue)} locked in deposits", Modifier.padding(top = 4.dp), style = FinioType.caption, color = colors.mutedForeground)
             }
             FinioButton(
@@ -374,7 +377,7 @@ private fun WhereItSits(data: DashboardData, money: MoneyFormatter, hasAccounts:
     val colors = FinioTheme.colors
     Column {
         SectionHeader("Where it sits", actionLabel = "See all", onAction = { nav.openTab(FinioTab.Accounts) })
-        if (data.overallBudget != null && hasAccounts) {
+        if (data.overallBudget != null && hasAccounts && !data.trackerMode) {
             Row(
                 Modifier.fillMaxWidth().padding(bottom = 12.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -421,7 +424,7 @@ private fun WhereItSits(data: DashboardData, money: MoneyFormatter, hasAccounts:
                         } else {
                             account.type.label
                         },
-                        amount = money(value, compact = true, forceCompact = data.accountsCompact),
+                        amount = if (!data.trackerMode || isDepositAccount(account)) money(value, compact = true, forceCompact = data.accountsCompact) else "",
                         onClick = { nav.navigate(Routes.EditAccount(account.id)) },
                         modifier = Modifier.width(160.dp),
                     )

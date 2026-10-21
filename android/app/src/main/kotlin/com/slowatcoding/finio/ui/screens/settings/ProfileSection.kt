@@ -1,5 +1,6 @@
 package com.slowatcoding.finio.ui.screens.settings
 
+import com.slowatcoding.finio.core.model.TrackingMode
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -82,6 +83,7 @@ fun ProfileSection() {
     var editingName by remember { mutableStateOf(false) }
     var nameValue by remember { mutableStateOf(settings.userName) }
     var showMonthStartPicker by remember { mutableStateOf(false) }
+    var showSwitchToFull by remember { mutableStateOf(false) }
 
     val monthStartDay = normalizeMonthStartDay(settings.monthStartDay)
     val currentCycleLabel = remember(monthStartDay) {
@@ -175,6 +177,20 @@ fun ProfileSection() {
             modifier = Modifier.padding(16.dp),
         )
         FinioDivider()
+        SwitchField(
+            title = "Transactions only",
+            description = "Record income and spending without tracking account balances. Turning it off asks for your current balances",
+            checked = settings.trackingMode == TrackingMode.Transactions,
+            onCheckedChange = { on ->
+                if (on) store.updateSettings { it.copy(trackingMode = TrackingMode.Transactions) }
+                // Going back needs a starting balance per account, so ask for them first.
+                else if (state.accounts.isNotEmpty()) showSwitchToFull = true
+                else store.switchToFullMode(emptyMap())
+            },
+            icon = { Icon(LucideIcons.Receipt, null, Modifier.size(18.dp), tint = colors.mutedForeground) },
+            modifier = Modifier.padding(16.dp),
+        )
+        FinioDivider()
         SettingsValueRow(LucideIcons.CalendarRange, "Month starts on", subtitle = "Current cycle: $currentCycleLabel") {
             // A grid beats a 28-item dropdown here — every day is one tap away.
             PillButton(
@@ -184,6 +200,8 @@ fun ProfileSection() {
             )
         }
     }
+
+    if (showSwitchToFull) SwitchToFullDialog(onDismissRequest = { showSwitchToFull = false })
 
     if (showMonthStartPicker) {
         FinioDialog(

@@ -52449,6 +52449,7 @@
           ],
           "settings": {
             "theme": "dark",
+            "trackingMode": "full",
             "amoledDark": false,
             "userName": "Asha",
             "autoLocalBackup": true,
@@ -52679,6 +52680,7 @@
         "data": {
           "settings": {
             "theme": "system",
+            "trackingMode": "full",
             "amoledDark": false,
             "userName": "",
             "autoLocalBackup": false,
@@ -52924,6 +52926,7 @@
         "data": {
           "settings": {
             "theme": "system",
+            "trackingMode": "full",
             "amoledDark": false,
             "userName": "",
             "autoLocalBackup": false,
@@ -53157,6 +53160,7 @@
         "data": {
           "settings": {
             "theme": "system",
+            "trackingMode": "full",
             "amoledDark": false,
             "userName": "",
             "autoLocalBackup": false,
@@ -53390,6 +53394,7 @@
         "data": {
           "settings": {
             "theme": "system",
+            "trackingMode": "full",
             "amoledDark": false,
             "userName": "",
             "autoLocalBackup": false,
@@ -53624,6 +53629,7 @@
         "data": {
           "settings": {
             "theme": "light",
+            "trackingMode": "full",
             "amoledDark": false,
             "userName": "",
             "autoLocalBackup": false,
@@ -53858,6 +53864,7 @@
         "data": {
           "settings": {
             "theme": "system",
+            "trackingMode": "full",
             "amoledDark": false,
             "userName": "",
             "autoLocalBackup": false,
@@ -54090,6 +54097,7 @@
         "data": {
           "settings": {
             "theme": "system",
+            "trackingMode": "full",
             "amoledDark": false,
             "userName": "  Asha ",
             "autoLocalBackup": false,
@@ -54348,6 +54356,7 @@
           ],
           "settings": {
             "theme": "dark",
+            "trackingMode": "full",
             "amoledDark": false,
             "userName": "",
             "autoLocalBackup": false,
@@ -62290,6 +62299,7 @@
           "loanPrepayments": [],
           "settings": {
             "theme": "dark",
+            "trackingMode": "full",
             "amoledDark": false,
             "userName": "",
             "autoLocalBackup": false,
@@ -63929,6 +63939,7 @@
           "loanPrepayments": [],
           "settings": {
             "theme": "system",
+            "trackingMode": "full",
             "amoledDark": false,
             "userName": "",
             "autoLocalBackup": false,
@@ -65101,6 +65112,7 @@
           "loanPrepayments": [],
           "settings": {
             "theme": "system",
+            "trackingMode": "full",
             "amoledDark": false,
             "userName": "",
             "autoLocalBackup": false,

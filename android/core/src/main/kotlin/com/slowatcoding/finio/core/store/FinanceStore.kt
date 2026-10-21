@@ -60,6 +60,7 @@ import com.slowatcoding.finio.core.model.RecurringTransaction
 import com.slowatcoding.finio.core.model.RuleMatchType
 import com.slowatcoding.finio.core.model.RuleScope
 import com.slowatcoding.finio.core.model.Settings
+import com.slowatcoding.finio.core.model.TrackingMode
 import com.slowatcoding.finio.core.model.Transaction
 import com.slowatcoding.finio.core.model.TransactionCategorization
 import com.slowatcoding.finio.core.model.TransactionSplit
@@ -158,9 +159,6 @@ internal fun dedupeSnapshotsByPeriod(snapshots: List<NetWorthSnapshot>): List<Ne
 }
 
 private fun List<Transaction>.balanceTxs(): List<BalanceTx> = map { it.balanceTx() }
-
-private fun applyBalanceDelta(accounts: List<Account>, tx: Transaction, direction: Int): List<Account> =
-    applyBalanceDelta(accounts, tx.balanceTx(), direction)
 
 // ---- Action inputs (the TS `Omit<T, 'id' | 'createdAt' …>` shapes) ---------------------------
 
@@ -374,6 +372,16 @@ class FinanceStore(
 
     /** The reverse: settled entries removed because their transaction was deleted, keyed by transaction id. */
     private val removedSettlementEntries = HashMap<String, DebtEntry>()
+
+    private val isTransactionsOnly: Boolean get() = _state.value.settings.trackingMode == TrackingMode.Transactions
+
+    /**
+     * `applyBalanceDelta` that stands down in transactions-only mode. Every balance write in the
+     * store goes through this, so the mode is one check rather than one per action. The balances
+     * left behind are stale, not wrong: [updateSettings] recomputes them on returning to full mode.
+     */
+    private fun applyBalanceDelta(accounts: List<Account>, tx: Transaction, direction: Int): List<Account> =
+        if (isTransactionsOnly) accounts else applyBalanceDelta(accounts, tx.balanceTx(), direction)
 
     private inline fun <R> atomically(block: (FinanceState) -> R): R = synchronized(lock) { block(_state.value) }
 
@@ -614,7 +622,12 @@ class FinanceStore(
                 )
             }
             // Pay out whatever the deposit holds once interest lands.
-            val payout = roundMoney(account.balance + max(0.0, interest))
+            // The book balance isn't maintained in transactions-only mode, so derive what the deposit
+            // holds from its opening balance and transactions — the same figure, by definition.
+            val held = if (isTransactionsOnly) {
+                roundMoney(account.openingBalance + (sumTransactionDeltas(s.transactions.balanceTxs())[account.id] ?: 0.0))
+            } else account.balance
+            val payout = roundMoney(held + max(0.0, interest))
             if (payout > 0) {
                 posted += Transaction(
                     id = idGen(), type = TransactionType.Transfer, amount = payout, accountId = account.id,
@@ -1216,6 +1229,8 @@ class FinanceStore(
 
     /** Freeze every completed financial month that has no snapshot yet. Returns how many were added. */
     fun captureNetWorthSnapshots(): Int = atomically { s ->
+        // No maintained balances means no net worth to freeze.
+        if (s.settings.trackingMode == TrackingMode.Transactions) return@atomically 0
         val now = clock()
         val planned: List<PlannedSnapshot> = planNetWorthSnapshots(
             SnapshotPlanInput(
@@ -1376,7 +1391,33 @@ class FinanceStore(
 
     // ---- Settings, reset, import ------------------------------------------------------------
 
-    fun updateSettings(updates: (Settings) -> Settings) = atomically { s -> publish(s.copy(settings = updates(s.settings))) }
+    fun updateSettings(updates: (Settings) -> Settings) = atomically { s ->
+        val settings = updates(s.settings)
+        val returningToFull = settings.trackingMode == TrackingMode.Full && s.settings.trackingMode == TrackingMode.Transactions
+        // Balances were left alone while tracking only expenses — rebuild them now.
+        val accounts = if (returningToFull) recomputeAccountBalances(s.accounts, s.transactions.balanceTxs()) else s.accounts
+        publish(s.copy(settings = settings, accounts = accounts))
+    }
+
+    /**
+     * Leave transactions-only mode. [currentBalances] maps an account id to what that account really
+     * holds today (a credit card's figure is negative, the amount owed). Each listed account's opening
+     * balance is set so `openingBalance + Σ transactions` equals it, which squares the books without
+     * posting an adjustment transaction; accounts not listed keep their opening balance.
+     */
+    fun switchToFullMode(currentBalances: Map<String, Double>) = atomically { s ->
+        val deltas = sumTransactionDeltas(s.transactions.balanceTxs())
+        val accounts = s.accounts.map { a ->
+            val entered = currentBalances[a.id] ?: return@map a
+            a.copy(openingBalance = roundMoney(entered - (deltas[a.id] ?: 0.0)))
+        }
+        publish(
+            s.copy(
+                settings = s.settings.copy(trackingMode = TrackingMode.Full),
+                accounts = recomputeAccountBalances(accounts, s.transactions.balanceTxs()),
+            ),
+        )
+    }
 
     /** Finance data only — settings (incl. `onboardedAt`) and `lastLocalBackupAt` survive. */
     fun resetToDefaults() = atomically { s ->
