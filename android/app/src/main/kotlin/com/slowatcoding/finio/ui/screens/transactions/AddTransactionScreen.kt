@@ -60,6 +60,7 @@ import com.slowatcoding.finio.core.js.finioZone
 import com.slowatcoding.finio.core.js.jsNumberToString
 import com.slowatcoding.finio.core.js.nowInstant
 import com.slowatcoding.finio.core.js.toIso
+import com.slowatcoding.finio.core.model.AccountType
 import com.slowatcoding.finio.core.model.CategoryRule
 import com.slowatcoding.finio.core.model.Transaction
 import com.slowatcoding.finio.core.model.TransactionSplit
@@ -149,7 +150,7 @@ fun AddTransactionScreen(nav: FinioNavigator, transactionId: String?, draft: Sha
     var type by remember { mutableStateOf(existing?.type ?: shared?.type ?: TransactionType.Expense) }
     var amount by remember { mutableStateOf(existing?.let { jsNumberToString(it.amount) } ?: shared?.amount ?: "") }
     var accountId by remember {
-        mutableStateOf(existing?.accountId ?: store.current.accounts.firstOrNull { it.archivedAt.isNullOrEmpty() }?.id ?: "")
+        mutableStateOf(existing?.accountId ?: store.current.accounts.firstOrNull { it.archivedAt.isNullOrEmpty() && !it.type.isDeposit() }?.id ?: "")
     }
     var toAccountId by remember { mutableStateOf(existing?.toAccountId ?: "") }
     var categoryId by remember { mutableStateOf(existing?.categoryId ?: sharedRule?.categoryId ?: "") }
@@ -254,10 +255,10 @@ fun AddTransactionScreen(nav: FinioNavigator, transactionId: String?, draft: Sha
     val noteSuggestions = remember(state.transactions) { distinctValues(state.transactions) { it.note } }
     val merchantSuggestions = remember(state.transactions) { distinctValues(state.transactions) { it.merchant } }
 
-    // Archived accounts are hidden, but keep one an existing transaction already sits on.
+    // Archived accounts and FD/RD deposits are hidden (deposits are funded by the deposit flow), but keep one an existing transaction already sits on.
     val selectableAccounts = remember(accounts, existing) {
         val inUse = setOfNotNull(existing?.accountId, existing?.toAccountId?.takeIf { it.isNotEmpty() })
-        accounts.filter { it.archivedAt.isNullOrEmpty() || it.id in inUse }
+        accounts.filter { it.id in inUse || (it.archivedAt.isNullOrEmpty() && !it.type.isDeposit()) }
     }
 
     val filteredCategories = remember(categories, type) { miscLast(categories.filter { isCategoryValidForType(it, type) }) }
@@ -704,3 +705,5 @@ private fun NoteSuggestions(matches: List<String>, onPick: (String) -> Unit) {
         }
     }
 }
+
+private fun AccountType.isDeposit() = this == AccountType.Fd || this == AccountType.Rd

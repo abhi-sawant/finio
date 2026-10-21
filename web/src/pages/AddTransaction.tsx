@@ -90,7 +90,9 @@ export default function AddTransaction() {
   const [type, setType] = useState<TransactionType>(existing?.type ?? shared?.type ?? 'expense');
   const [amount, setAmount] = useState(existing?.amount?.toString() ?? shared?.amount ?? '');
   const [accountId, setAccountId] = useState(
-    existing?.accountId ?? accounts.find((a) => !a.archivedAt)?.id ?? '',
+    existing?.accountId ??
+      accounts.find((a) => !a.archivedAt && a.type !== 'fd' && a.type !== 'rd')?.id ??
+      '',
   );
   const [toAccountId, setToAccountId] = useState(existing?.toAccountId ?? '');
   const [categoryId, setCategoryId] = useState(
@@ -236,11 +238,14 @@ export default function AddTransaction() {
     [transactions],
   );
 
-  // Archived accounts are hidden from the picker, but an existing transaction may already sit
+  // Archived accounts and FD/RD deposits are hidden from the picker, but an existing transaction may already sit
   // on one — keep that account selectable so editing the row cannot silently reassign it.
   const selectableAccounts = useMemo(() => {
     const inUse = new Set([existing?.accountId, existing?.toAccountId].filter(Boolean));
-    return accounts.filter((a) => !a.archivedAt || inUse.has(a.id));
+    // Fixed and recurring deposits are funded and paid out by the deposit flow, never by hand.
+    return accounts.filter(
+      (a) => inUse.has(a.id) || (!a.archivedAt && a.type !== 'fd' && a.type !== 'rd'),
+    );
   }, [accounts, existing?.accountId, existing?.toAccountId]);
 
   const filteredCategories = useMemo(
