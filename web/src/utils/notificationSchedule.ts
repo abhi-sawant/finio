@@ -34,7 +34,7 @@ export interface NotificationScheduleInput {
   labels: Label[];
   monthStartDay: number;
   prefs: NotificationPrefs;
-  /** Expense-tracker mode: no balances, so no card dues, and no balance talk in the nudge. */
+  /** Transactions-only mode: no balances, so no card dues, and no balance talk in the nudge. */
   trackerMode?: boolean;
 }
 

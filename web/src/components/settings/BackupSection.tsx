@@ -712,7 +712,7 @@ export function BackupSection() {
             </p>
           </div>
         </button>
-        {settings.trackingMode !== 'expenses' && (
+        {settings.trackingMode !== 'transactions' && (
           <button
             onClick={handleReconcile}
             className="hover:bg-muted/50 flex w-full items-center gap-3 p-4 transition-colors"

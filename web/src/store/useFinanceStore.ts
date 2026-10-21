@@ -137,13 +137,13 @@ function restoreSettlementEntries(entries: DebtEntry[], transactionIds: string[]
   return back.length > 0 ? [...back, ...entries] : entries;
 }
 
-/** Whether the app is in expense-tracker mode, where no account balance is maintained. */
+/** Whether the app is in transactions-only mode, where no account balance is maintained. */
 function isExpenseTracker(): boolean {
-  return useFinanceStore.getState().settings.trackingMode === 'expenses';
+  return useFinanceStore.getState().settings.trackingMode === 'transactions';
 }
 
 /**
- * `applyBalanceDelta` that stands down in expense-tracker mode. Every balance write in the store
+ * `applyBalanceDelta` that stands down in transactions-only mode. Every balance write in the store
  * goes through this, so the mode is one check rather than one per action. The balances left
  * behind are stale, not wrong: `updateSettings` recomputes them from the transactions when the
  * user returns to full mode.
@@ -496,7 +496,7 @@ export const useFinanceStore = create<FinanceStore>()(
           }
           // Pay out whatever the deposit holds once interest lands — the maturity amount when
           // every installment was made, and never leaving a stray balance behind if not.
-          // The book balance isn't maintained in expense-tracker mode, so derive what the deposit
+          // The book balance isn't maintained in transactions-only mode, so derive what the deposit
           // holds from its opening balance and transactions — the same figure, by definition.
           const held = isExpenseTracker()
             ? roundMoney(
@@ -1124,7 +1124,7 @@ export const useFinanceStore = create<FinanceStore>()(
       captureNetWorthSnapshots: () => {
         const state = get();
         // No maintained balances means no net worth to freeze.
-        if (state.settings.trackingMode === 'expenses') return 0;
+        if (state.settings.trackingMode === 'transactions') return 0;
         const planned = planNetWorthSnapshots({
           accounts: state.accounts,
           transactions: state.transactions,
@@ -1422,12 +1422,27 @@ export const useFinanceStore = create<FinanceStore>()(
 
       updateSettings: (updates) => {
         const returningToFull =
-          updates.trackingMode === 'full' && get().settings.trackingMode === 'expenses';
+          updates.trackingMode === 'full' && get().settings.trackingMode === 'transactions';
         set((state) => ({
           settings: { ...state.settings, ...updates },
         }));
         // Balances were left alone while tracking only expenses — rebuild them now.
         if (returningToFull) get().recomputeBalances();
+      },
+
+      switchToFullMode: (currentBalances) => {
+        set((state) => {
+          const deltas = sumTransactionDeltas(state.transactions);
+          const accounts = state.accounts.map((a) => {
+            const entered = currentBalances[a.id];
+            if (entered === undefined) return a;
+            return { ...a, openingBalance: roundMoney(entered - (deltas.get(a.id) ?? 0)) };
+          });
+          return {
+            settings: { ...state.settings, trackingMode: 'full' as const },
+            accounts: recomputeAccountBalances(accounts, state.transactions),
+          };
+        });
       },
 
       resetToDefaults: () => {
@@ -1736,7 +1751,7 @@ export const useFinanceStore = create<FinanceStore>()(
         }
 
         if (version < 18) {
-          // Expense-tracker mode is opt-in — an upgrade stays in full balance tracking.
+          // Transactions-only mode is opt-in — an upgrade stays in full balance tracking.
           const settings = (s.settings ?? {}) as Partial<Settings>;
           s = {
             ...s,

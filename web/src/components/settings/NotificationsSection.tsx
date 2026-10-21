@@ -146,7 +146,7 @@ export function NotificationsSection() {
               refreshNotificationSchedule();
             }}
           />
-          {settings.trackingMode !== 'expenses' && (
+          {settings.trackingMode !== 'transactions' && (
             <SwitchField
               className="p-4"
               icon={<CreditCard size={18} className="text-muted-foreground shrink-0" />}

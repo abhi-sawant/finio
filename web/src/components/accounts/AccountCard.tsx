@@ -48,7 +48,7 @@ export const AccountCard = memo(function AccountCard({
   const isCredit = account.type === 'credit';
   const isArchived = !!account.archivedAt;
   const utilization = getCreditUtilization(account);
-  // Card dues and the amount shown are derived from the balance, which expense-tracker mode
+  // Card dues and the amount shown are derived from the balance, which transactions-only mode
   // doesn't keep. An open deposit's accrued value comes from its terms, so it stays.
   const dueInfo = trackerMode ? null : getCreditCardDueInfo(account);
   const isDeposit = isDepositAccount(account);

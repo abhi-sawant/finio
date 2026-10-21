@@ -190,7 +190,7 @@ export default function Dashboard() {
     [people, debtEntries],
   );
   const creditDues = useMemo(() => {
-    // Card dues are worked out from the balance, which expense-tracker mode doesn't keep.
+    // Card dues are worked out from the balance, which transactions-only mode doesn't keep.
     if (trackerMode) return [];
     return openAccounts
       .filter((a) => a.type === 'credit')

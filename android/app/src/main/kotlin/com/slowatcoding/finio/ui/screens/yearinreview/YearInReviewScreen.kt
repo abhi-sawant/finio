@@ -193,7 +193,7 @@ fun YearInReviewScreen(nav: FinioNavigator) {
             }
         }
 
-        // Built from balances, so absent in expense-tracker mode.
+        // Built from balances, so absent in transactions-only mode.
         if (!rememberTrackerMode()) ChartCard("Net worth") {
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
                 Column {

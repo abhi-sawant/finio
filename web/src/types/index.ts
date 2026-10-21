@@ -189,11 +189,11 @@ export interface RecurringTransaction {
 }
 
 /**
- * `full` keeps every account's balance up to date. `expenses` is the expense-tracker mode:
+ * `full` keeps every account's balance up to date. `transactions` is the transactions-only mode:
  * transactions are recorded but no balance is maintained or shown, so anything built on a
  * balance (net worth, forecast, card dues) is unavailable.
  */
-export type TrackingMode = 'full' | 'expenses';
+export type TrackingMode = 'full' | 'transactions';
 
 export interface Settings {
   theme: Theme;
@@ -531,6 +531,14 @@ export interface FinanceStore {
    * Returns how many accounts moved and the net drift that was corrected.
    */
   recomputeBalances: () => { changed: number; totalDrift: number };
+  /**
+   * Leave transactions-only mode. `currentBalances` maps an account id to what that account
+   * really holds today (a credit card's figure is negative, the amount owed). Each listed
+   * account's opening balance is set so `openingBalance + Σ transactions` equals it, which
+   * squares the books without posting an adjustment transaction; accounts not listed keep
+   * their opening balance.
+   */
+  switchToFullMode: (currentBalances: Record<string, number>) => void;
 
   addTransaction: (transaction: Omit<Transaction, 'id' | 'createdAt'>) => string;
   updateTransaction: (id: string, updates: Partial<Omit<Transaction, 'id'>>) => void;

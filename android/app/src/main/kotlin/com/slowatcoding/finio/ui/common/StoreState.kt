@@ -28,9 +28,9 @@ fun financeStore(): FinanceStore = appContainer().financeStore
 @Composable
 fun collectFinanceState(): State<FinanceState> = appContainer().financeStore.state.collectAsStateWithLifecycle()
 
-/** True in expense-tracker mode, where no account balance is maintained or shown (web: `useTrackerMode`). */
+/** True in transactions-only mode, where no account balance is maintained or shown (web: `useTrackerMode`). */
 @Composable
 fun rememberTrackerMode(): Boolean {
     val settings = collectFinanceState().value.settings
-    return settings.trackingMode == com.slowatcoding.finio.core.model.TrackingMode.Expenses
+    return settings.trackingMode == com.slowatcoding.finio.core.model.TrackingMode.Transactions
 }

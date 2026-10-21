@@ -37,15 +37,16 @@ const MODES: { value: TrackingMode; title: string; description: string }[] = [
     description: 'Accounts with balances, net worth, cash-flow forecast and card dues.',
   },
   {
-    value: 'expenses',
-    title: 'Just track expenses',
-    description: 'Record transactions and see where your money goes. No balances to maintain.',
+    value: 'transactions',
+    title: 'Just track transactions',
+    description:
+      'Record your income and spending and see where your money goes. No balances to maintain.',
   },
 ];
 
 type Step = 'name' | 'mode' | 'account' | 'balance';
 
-// Expense-tracker mode keeps no balances, so it never asks for one.
+// Transactions-only mode keeps no balances, so it never asks for one.
 const STEPS: Step[] = ['name', 'mode', 'account', 'balance'];
 const TRACKER_STEPS: Step[] = ['name', 'mode', 'account'];
 
@@ -80,7 +81,7 @@ export function Onboarding() {
 
   const trimmedName = cleanText(name, MAX_NAME_LENGTH);
   const trimmedAccountName = cleanText(accountName, MAX_NAME_LENGTH);
-  const steps = trackingMode === 'expenses' ? TRACKER_STEPS : STEPS;
+  const steps = trackingMode === 'transactions' ? TRACKER_STEPS : STEPS;
   const stepIndex = steps.indexOf(step);
 
   const finish = (withAccount: boolean) => {
@@ -221,10 +222,12 @@ export function Onboarding() {
           <div className="space-y-5">
             <div className="space-y-1.5">
               <h1 className="text-2xl font-bold tracking-tight">
-                {trackingMode === 'expenses' ? 'Add a payment source' : 'Add your first account'}
+                {trackingMode === 'transactions'
+                  ? 'Add a payment source'
+                  : 'Add your first account'}
               </h1>
               <p className="text-muted-foreground text-sm">
-                {trackingMode === 'expenses'
+                {trackingMode === 'transactions'
                   ? 'Where your spending comes from — a bank, a card or cash. No balance needed.'
                   : 'A bank account, a card, or just the cash in your wallet.'}
               </p>
@@ -271,9 +274,11 @@ export function Onboarding() {
                 size="lg"
                 className="bg-grad-primary shadow-glow-primary w-full text-white"
                 disabled={!trimmedAccountName}
-                onClick={() => (trackingMode === 'expenses' ? finish(true) : setStep('balance'))}
+                onClick={() =>
+                  trackingMode === 'transactions' ? finish(true) : setStep('balance')
+                }
               >
-                {trackingMode === 'expenses' ? (
+                {trackingMode === 'transactions' ? (
                   'Start tracking'
                 ) : (
                   <>

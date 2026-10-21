@@ -83,6 +83,7 @@ fun ProfileSection() {
     var editingName by remember { mutableStateOf(false) }
     var nameValue by remember { mutableStateOf(settings.userName) }
     var showMonthStartPicker by remember { mutableStateOf(false) }
+    var showSwitchToFull by remember { mutableStateOf(false) }
 
     val monthStartDay = normalizeMonthStartDay(settings.monthStartDay)
     val currentCycleLabel = remember(monthStartDay) {
@@ -177,11 +178,14 @@ fun ProfileSection() {
         )
         FinioDivider()
         SwitchField(
-            title = "Expense tracker only",
-            description = "Record transactions without tracking account balances. Nothing is deleted — turning it off rebuilds balances",
-            checked = settings.trackingMode == TrackingMode.Expenses,
+            title = "Transactions only",
+            description = "Record income and spending without tracking account balances. Turning it off asks for your current balances",
+            checked = settings.trackingMode == TrackingMode.Transactions,
             onCheckedChange = { on ->
-                store.updateSettings { it.copy(trackingMode = if (on) TrackingMode.Expenses else TrackingMode.Full) }
+                if (on) store.updateSettings { it.copy(trackingMode = TrackingMode.Transactions) }
+                // Going back needs a starting balance per account, so ask for them first.
+                else if (state.accounts.isNotEmpty()) showSwitchToFull = true
+                else store.switchToFullMode(emptyMap())
             },
             icon = { Icon(LucideIcons.Receipt, null, Modifier.size(18.dp), tint = colors.mutedForeground) },
             modifier = Modifier.padding(16.dp),
@@ -196,6 +200,8 @@ fun ProfileSection() {
             )
         }
     }
+
+    if (showSwitchToFull) SwitchToFullDialog(onDismissRequest = { showSwitchToFull = false })
 
     if (showMonthStartPicker) {
         FinioDialog(

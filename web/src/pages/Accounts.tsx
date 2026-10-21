@@ -124,7 +124,7 @@ export default function Accounts() {
         </div>
       </Header>
       <Main>
-        {/* Summary — a balance total, so there is none in expense-tracker mode */}
+        {/* Summary — a balance total, so there is none in transactions-only mode */}
         {!trackerMode && (
           <NoteCard>
             <p className="text-muted-foreground text-sm font-medium">Net balance</p>

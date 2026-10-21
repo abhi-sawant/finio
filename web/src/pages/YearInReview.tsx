@@ -178,7 +178,7 @@ export default function YearInReview() {
               </div>
             </div>
 
-            {/* Net worth — built from balances, so absent in expense-tracker mode */}
+            {/* Net worth — built from balances, so absent in transactions-only mode */}
             {!trackerMode && (
               <div className="card-elevated rounded-md p-4">
                 <h3 className="mb-3 text-sm font-semibold">Net worth</h3>

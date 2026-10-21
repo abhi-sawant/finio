@@ -86,8 +86,8 @@ fun InsightsFeed(nav: FinioNavigator, modifier: Modifier = Modifier) {
                 labels = state.labels,
                 budgets = state.budgets,
                 recurring = state.recurring,
-                // Account balances aren't kept in expense-tracker mode, so there is nothing to flag.
-                accounts = if (state.settings.trackingMode == TrackingMode.Expenses) null else state.accounts,
+                // Account balances aren't kept in transactions-only mode, so there is nothing to flag.
+                accounts = if (state.settings.trackingMode == TrackingMode.Transactions) null else state.accounts,
                 monthStartDay = monthStartDay,
             ),
         ) { value -> formatCurrency(value, compact = true, hidden = hideAmounts, precise = false) }

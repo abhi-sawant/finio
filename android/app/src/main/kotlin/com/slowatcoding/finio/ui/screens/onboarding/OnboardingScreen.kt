@@ -88,7 +88,7 @@ private data class ModeOption(val value: TrackingMode, val title: String, val de
 
 private val MODES = listOf(
     ModeOption(TrackingMode.Full, "Track everything", "Accounts with balances, net worth, cash-flow forecast and card dues."),
-    ModeOption(TrackingMode.Expenses, "Just track expenses", "Record transactions and see where your money goes. No balances to maintain."),
+    ModeOption(TrackingMode.Transactions, "Just track transactions", "Record your income and spending and see where your money goes. No balances to maintain."),
 )
 
 /**
@@ -112,8 +112,8 @@ fun OnboardingScreen() {
     // The account's tint comes from its type; the stored colour is just a default.
     val color = COLOR_PALETTE[0]
 
-    // Expense-tracker mode keeps no balances, so it never asks for one.
-    val steps = if (trackingMode == TrackingMode.Expenses) Step.entries - Step.Balance else Step.entries.toList()
+    // Transactions-only mode keeps no balances, so it never asks for one.
+    val steps = if (trackingMode == TrackingMode.Transactions) Step.entries - Step.Balance else Step.entries.toList()
     val trimmedName = cleanText(name, MAX_NAME_LENGTH)
     val trimmedAccountName = cleanText(accountName, MAX_NAME_LENGTH)
 
@@ -232,7 +232,7 @@ fun OnboardingScreen() {
                 }
 
                 Step.Account -> StepColumn {
-                    val tracker = trackingMode == TrackingMode.Expenses
+                    val tracker = trackingMode == TrackingMode.Transactions
                     Heading(
                         if (tracker) "Add a payment source" else "Add your first account",
                         if (tracker) "Where your spending comes from — a bank, a card or cash. No balance needed."

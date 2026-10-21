@@ -561,7 +561,7 @@ fun BackupSection(nav: FinioNavigator) {
             subtitle = "Map columns from a bank or card statement export",
             onClick = { nav.navigate(Routes.ImportCsv) },
         )
-        if (settings.trackingMode != TrackingMode.Expenses) {
+        if (settings.trackingMode != TrackingMode.Transactions) {
             FinioDivider()
             SettingsRow(
                 LucideIcons.Scale,

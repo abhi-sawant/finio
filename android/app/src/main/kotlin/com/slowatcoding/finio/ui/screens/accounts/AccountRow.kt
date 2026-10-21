@@ -72,7 +72,7 @@ fun AccountRow(
     val isArchived = !account.archivedAt.isNullOrEmpty()
     val trackerMode = rememberTrackerMode()
     val utilization = getCreditUtilization(account)
-    // Card dues and the amount shown come from the balance, which expense-tracker mode doesn't
+    // Card dues and the amount shown come from the balance, which transactions-only mode doesn't
     // keep. An open deposit's accrued value comes from its terms, so it stays.
     val dueInfo = if (trackerMode) null else getCreditCardDueInfo(account)
     val isDeposit = isDepositAccount(account)

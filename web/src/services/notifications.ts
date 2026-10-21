@@ -164,7 +164,7 @@ export async function refreshNotificationSchedule(now = new Date()): Promise<voi
         labels: state.labels,
         monthStartDay: normalizeMonthStartDay(state.settings.monthStartDay),
         prefs: currentPrefs(),
-        trackerMode: state.settings.trackingMode === 'expenses',
+        trackerMode: state.settings.trackingMode === 'transactions',
       },
       now,
     );

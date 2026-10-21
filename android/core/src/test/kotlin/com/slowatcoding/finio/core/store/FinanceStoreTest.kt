@@ -1316,9 +1316,9 @@ class FinanceStoreTest {
         assertSame(store.state.value, state)
     }
 
-    // ---- expense-tracker mode ------------------------------------------------------------------
+    // ---- transactions-only mode ------------------------------------------------------------------
 
-    private fun trackerOn() = store.updateSettings { it.copy(trackingMode = TrackingMode.Expenses) }
+    private fun trackerOn() = store.updateSettings { it.copy(trackingMode = TrackingMode.Transactions) }
 
     private fun expense(amount: Double) =
         NewTransaction(E, amount, "bank", categoryId = "cat-1", date = "2026-06-01T00:00:00.000Z")
@@ -1339,6 +1339,27 @@ class FinanceStoreTest {
         store.addTransaction(expense(200.0))
         store.updateSettings { it.copy(trackingMode = TrackingMode.Full) }
         assertEquals(800.0, state.accounts[0].balance, 0.0)
+    }
+
+    @Test fun switchToFullModeSetsOpeningBalanceFromTheCurrentBalanceEntered() {
+        seed(listOf(account("bank", 0.0)))
+        trackerOn()
+        store.addTransaction(expense(4500.0))
+        // 4,500 logged and 2,000 really left: the account must have started on 6,500.
+        store.switchToFullMode(mapOf("bank" to 2000.0))
+        assertEquals(TrackingMode.Full, state.settings.trackingMode)
+        assertEquals(6500.0, state.accounts[0].openingBalance, 0.0)
+        assertEquals(2000.0, state.accounts[0].balance, 0.0)
+        // No adjustment transaction was posted to get there.
+        assertEquals(1, state.transactions.size)
+    }
+
+    @Test fun switchToFullModeLeavesAccountsWithoutAnEnteredBalanceAlone() {
+        seed(listOf(account("bank", 0.0), account("cash", 0.0)))
+        trackerOn()
+        store.switchToFullMode(mapOf("bank" to 100.0))
+        assertEquals(100.0, state.accounts.first { it.id == "bank" }.balance, 0.0)
+        assertEquals(0.0, state.accounts.first { it.id == "cash" }.openingBalance, 0.0)
     }
 
     @Test fun trackerModeDoesNotFreezeNetWorthSnapshots() {

@@ -19,6 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { SwitchToFullDialog } from './SwitchToFullDialog';
 import { formatOrdinal } from '@/utils/formatters';
 import {
   MAX_MONTH_START_DAY,
@@ -43,6 +44,9 @@ const monthStartDays = Array.from(
 
 export function ProfileSection() {
   const settings = useFinanceStore((s) => s.settings);
+  const accounts = useFinanceStore((s) => s.accounts);
+  const switchToFullMode = useFinanceStore((s) => s.switchToFullMode);
+  const [switchOpen, setSwitchOpen] = useState(false);
   const updateSettings = useFinanceStore((s) => s.updateSettings);
   const token = useAuthStore((s) => s.token);
   const setAuth = useAuthStore((s) => s.setAuth);
@@ -132,10 +136,15 @@ export function ProfileSection() {
         <SwitchField
           className="p-4"
           icon={<Receipt size={18} className="text-muted-foreground shrink-0" />}
-          title="Expense tracker only"
-          description="Record transactions without tracking account balances. Nothing is deleted — turning it off rebuilds balances"
-          checked={settings.trackingMode === 'expenses'}
-          onCheckedChange={(on) => updateSettings({ trackingMode: on ? 'expenses' : 'full' })}
+          title="Transactions only"
+          description="Record income and spending without tracking account balances. Turning it off asks for your current balances"
+          checked={settings.trackingMode === 'transactions'}
+          onCheckedChange={(on) => {
+            if (on) updateSettings({ trackingMode: 'transactions' });
+            // Going back needs a starting balance per account, so ask for them first.
+            else if (accounts.length > 0) setSwitchOpen(true);
+            else switchToFullMode({});
+          }}
         />
         <div className="flex items-center justify-between gap-3 p-4">
           <div className="flex min-w-0 flex-1 items-center gap-3">
@@ -191,6 +200,7 @@ export function ProfileSection() {
           </DialogContent>
         </Dialog>
       </div>
+      <SwitchToFullDialog open={switchOpen} onOpenChange={setSwitchOpen} />
     </>
   );
 }

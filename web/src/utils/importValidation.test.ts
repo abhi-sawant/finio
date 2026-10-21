@@ -255,10 +255,10 @@ describe('validateBackup', () => {
     });
   });
 
-  it("keeps trackingMode 'expenses' and defaults anything else to full", () => {
+  it("keeps trackingMode 'transactions' and defaults anything else to full", () => {
     const mode = (trackingMode: unknown) =>
       validateBackup({ settings: { trackingMode } }).data.settings?.trackingMode;
-    expect(mode('expenses')).toBe('expenses');
+    expect(mode('transactions')).toBe('transactions');
     expect(mode('full')).toBe('full');
     expect(mode('balances')).toBe('full');
     expect(mode(undefined)).toBe('full');

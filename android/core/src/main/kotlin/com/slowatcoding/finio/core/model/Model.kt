@@ -49,13 +49,13 @@ enum class Theme {
 }
 
 /**
- * `Full` keeps every account's balance up to date; `Expenses` is the expense-tracker mode, where
+ * `Full` keeps every account's balance up to date; `Transactions` is the transactions-only mode, where
  * transactions are recorded but no balance is maintained or shown.
  */
 @Serializable
 enum class TrackingMode {
     @SerialName("full") Full,
-    @SerialName("expenses") Expenses,
+    @SerialName("transactions") Transactions,
 }
 
 @Serializable

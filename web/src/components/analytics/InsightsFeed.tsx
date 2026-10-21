@@ -43,7 +43,7 @@ export function InsightsFeed() {
   const recurring = useFinanceStore((s) => s.recurring);
   const accounts = useFinanceStore((s) => s.accounts);
   const hideAmounts = useFinanceStore((s) => s.settings.hideAmounts);
-  const trackerMode = useFinanceStore((s) => s.settings.trackingMode === 'expenses');
+  const trackerMode = useFinanceStore((s) => s.settings.trackingMode === 'transactions');
   const monthStartDay = normalizeMonthStartDay(useFinanceStore((s) => s.settings.monthStartDay));
   const addRecurring = useFinanceStore((s) => s.addRecurring);
   const deleteRecurring = useFinanceStore((s) => s.deleteRecurring);
@@ -62,7 +62,7 @@ export function InsightsFeed() {
           labels,
           budgets,
           recurring,
-          // Account balances aren't kept in expense-tracker mode, so there is nothing to flag.
+          // Account balances aren't kept in transactions-only mode, so there is nothing to flag.
           accounts: trackerMode ? undefined : accounts,
           monthStartDay,
         },

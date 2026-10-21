@@ -136,7 +136,7 @@ fun NotificationsSection() {
         if (remindersOn) {
             Kind(LucideIcons.Repeat, "Upcoming bills", "Recurring transactions coming due", settings.notifyBills) { s, v -> s.copy(notifyBills = v) }
             Kind(LucideIcons.Target, "Budget alerts", "When a budget passes 85% or goes over", settings.notifyBudgets) { s, v -> s.copy(notifyBudgets = v) }
-            if (settings.trackingMode != TrackingMode.Expenses) {
+            if (settings.trackingMode != TrackingMode.Transactions) {
                 Kind(LucideIcons.CreditCard, "Credit card dues", "Before a statement payment is due", settings.notifyCreditDue) { s, v -> s.copy(notifyCreditDue = v) }
             }
             Kind(LucideIcons.NotebookPen, "Daily reminder", "An evening nudge to log today's transactions", settings.notifyDailyLog) { s, v -> s.copy(notifyDailyLog = v) }

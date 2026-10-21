@@ -147,7 +147,7 @@ fun AccountsScreen(nav: FinioNavigator) {
             )
         }
     }) {
-        // A balance total, so there is none in expense-tracker mode.
+        // A balance total, so there is none in transactions-only mode.
         if (!trackerMode) NoteCard(Modifier.fillMaxWidth()) {
             Text("Net balance", style = FinioType.bodyMedium, color = colors.mutedForeground)
             val total = money(totalBalance)

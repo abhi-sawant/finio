@@ -148,8 +148,8 @@ fun computeDashboardData(s: FinanceState): DashboardData {
         .filter { it.balance != 0.0 }
         .sortedByDescending { kotlin.math.abs(it.balance) }
         .take(3)
-    // Card dues are worked out from the balance, which expense-tracker mode doesn't keep.
-    val trackerMode = s.settings.trackingMode == TrackingMode.Expenses
+    // Card dues are worked out from the balance, which transactions-only mode doesn't keep.
+    val trackerMode = s.settings.trackingMode == TrackingMode.Transactions
     val creditDues = if (trackerMode) emptyList() else openAccounts
         .filter { it.type == AccountType.Credit }
         .mapNotNull { account -> getCreditCardDueInfo(account)?.takeIf { it.daysUntilDue <= 7 }?.let { account to it } }

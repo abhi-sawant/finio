@@ -2191,9 +2191,10 @@ describe('addLoanPrepayment', () => {
   });
 });
 
-describe('expense-tracker mode', () => {
+describe('transactions-only mode', () => {
   const day = (d: string) => new Date(`${d}T00:00:00`).toISOString();
-  const trackerOn = () => useFinanceStore.getState().updateSettings({ trackingMode: 'expenses' });
+  const trackerOn = () =>
+    useFinanceStore.getState().updateSettings({ trackingMode: 'transactions' });
 
   afterEach(() => {
     vi.useRealTimers();
@@ -2233,6 +2234,37 @@ describe('expense-tracker mode', () => {
     });
     useFinanceStore.getState().updateSettings({ trackingMode: 'full' });
     expect(useFinanceStore.getState().accounts[0].balance).toBe(800);
+  });
+
+  it('sets the opening balance from the current balance the user enters when switching back', () => {
+    seed([account('bank', 0)]);
+    trackerOn();
+    useFinanceStore.getState().addTransaction({
+      type: 'expense',
+      amount: 4500,
+      accountId: 'bank',
+      categoryId: 'cat-1',
+      date: '2026-06-01T00:00:00.000Z',
+      note: '',
+      labels: [],
+    });
+    // ₹4,500 logged and ₹2,000 really left: the account must have started on ₹6,500.
+    useFinanceStore.getState().switchToFullMode({ bank: 2000 });
+    const { accounts, settings, transactions } = useFinanceStore.getState();
+    expect(settings.trackingMode).toBe('full');
+    expect(accounts[0].openingBalance).toBe(6500);
+    expect(accounts[0].balance).toBe(2000);
+    // No adjustment transaction was posted to get there.
+    expect(transactions).toHaveLength(1);
+  });
+
+  it('leaves accounts the user did not enter a balance for as they were', () => {
+    seed([account('bank', 0), account('cash', 0)]);
+    trackerOn();
+    useFinanceStore.getState().switchToFullMode({ bank: 100 });
+    const { accounts } = useFinanceStore.getState();
+    expect(accounts.find((a) => a.id === 'bank')?.balance).toBe(100);
+    expect(accounts.find((a) => a.id === 'cash')?.openingBalance).toBe(0);
   });
 
   it('does not freeze net worth snapshots', () => {
