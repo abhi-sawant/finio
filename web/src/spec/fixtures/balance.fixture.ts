@@ -14,7 +14,7 @@ const acct = (id: string, balance: number, openingBalance?: number): Account =>
   ({
     id,
     name: id,
-    type: 'checking',
+    type: 'current',
     color: '#000000',
     icon: 'landmark',
     balance,

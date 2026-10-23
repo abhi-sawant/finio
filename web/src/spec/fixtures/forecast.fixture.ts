@@ -23,7 +23,7 @@ const T_NOW = new Date('2026-06-15T12:00:00.000Z');
 function account(partial: Partial<Account> & Pick<Account, 'id'>): Account {
   return {
     name: partial.id,
-    type: 'checking',
+    type: 'current',
     color: '#000',
     icon: 'landmark',
     balance: 0,
@@ -36,7 +36,7 @@ function account(partial: Partial<Account> & Pick<Account, 'id'>): Account {
 function tx(partial: Partial<Transaction> & Pick<Transaction, 'type' | 'amount' | 'date'>): Transaction {
   return {
     id: partial.id ?? `${partial.type}-${partial.amount}-${partial.date}`,
-    accountId: 'checking',
+    accountId: 'current',
     categoryId: 'cat-food',
     note: '',
     labels: [],
@@ -48,7 +48,7 @@ function tx(partial: Partial<Transaction> & Pick<Transaction, 'type' | 'amount' 
 function rule(partial: Partial<RecurringTransaction> & Pick<RecurringTransaction, 'id' | 'amount'>): RecurringTransaction {
   return {
     type: 'expense',
-    accountId: 'checking',
+    accountId: 'current',
     categoryId: 'cat-bills',
     note: 'Rent',
     labels: [],
@@ -62,7 +62,7 @@ function rule(partial: Partial<RecurringTransaction> & Pick<RecurringTransaction
 }
 
 const ACCOUNTS = [
-  account({ id: 'checking', balance: 10000 }),
+  account({ id: 'current', balance: 10000 }),
   account({ id: 'card', type: 'credit', balance: -3000, creditLimit: 50000 }),
   account({ id: 'closed', balance: 999, archivedAt: '2026-02-01T00:00:00.000Z' }),
 ];
@@ -181,21 +181,21 @@ export default function cases(): GoldenCase[] {
   const testInputs: ForecastInput[] = [
     { accounts: ACCOUNTS, transactions: [], recurring: [], now: T_NOW, days: 30 },
     {
-      accounts: [account({ id: 'checking', balance: 10000 })],
+      accounts: [account({ id: 'current', balance: 10000 })],
       transactions: [tx({ type: 'expense', amount: 100, date: '2026-06-15T00:00:00.000Z' })],
       recurring: [rule({ id: 'rule-rent', amount: 2000 })],
       now: T_NOW,
       days: 30,
     },
     {
-      accounts: [account({ id: 'checking', balance: 0 })],
+      accounts: [account({ id: 'current', balance: 0 })],
       transactions: [],
       recurring: [rule({ id: 'rule-salary', amount: 50000, type: 'income', note: 'Salary' })],
       now: T_NOW,
       days: 30,
     },
     {
-      accounts: [account({ id: 'checking', balance: 10000 })],
+      accounts: [account({ id: 'current', balance: 10000 })],
       transactions: [],
       recurring: [rule({ id: 'rule-rent', amount: 2000, pausedAt: '2026-06-01T00:00:00.000Z' })],
       now: T_NOW,
@@ -209,16 +209,16 @@ export default function cases(): GoldenCase[] {
       days: 60,
     },
     {
-      accounts: [account({ id: 'checking', balance: 1000 })],
+      accounts: [account({ id: 'current', balance: 1000 })],
       transactions: [tx({ type: 'expense', amount: 100, date: '2026-06-15T00:00:00.000Z' })],
       recurring: [],
       now: T_NOW,
       days: 30,
     },
     { accounts: [], transactions: [], recurring: [], now: T_NOW },
-    { accounts: [account({ id: 'checking', balance: 500 })], transactions: [], recurring: [], now: T_NOW },
+    { accounts: [account({ id: 'current', balance: 500 })], transactions: [], recurring: [], now: T_NOW },
     {
-      accounts: [account({ id: 'checking', balance: 10000 })],
+      accounts: [account({ id: 'current', balance: 10000 })],
       transactions: [],
       recurring: [
         rule({ id: 'rule-rent', amount: 2000, startDate: '2026-06-20T00:00:00.000Z' }),

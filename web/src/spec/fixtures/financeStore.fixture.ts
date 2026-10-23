@@ -645,7 +645,7 @@ export default async function cases(): Promise<GoldenCase[]> {
         {
           id: 'imp-acct',
           name: 'Imported',
-          type: 'checking',
+          type: 'current',
           color: '#000000',
           icon: 'landmark',
           balance: 750,
@@ -766,7 +766,7 @@ async function migrationCases(): Promise<GoldenCase[]> {
   const account = (id: string, balance: number, extra: object = {}) => ({
     id,
     name: id,
-    type: 'checking',
+    type: 'current',
     color: '#000',
     icon: 'landmark',
     balance,

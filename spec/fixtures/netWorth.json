@@ -10,7 +10,7 @@
           {
             "id": "acc-bank",
             "name": "HDFC Salary",
-            "type": "checking",
+            "type": "current",
             "color": "#4b36c7",
             "icon": "landmark",
             "balance": 349052,
@@ -113,7 +113,7 @@
           {
             "id": "acc-old",
             "name": "Old Axis",
-            "type": "checking",
+            "type": "current",
             "color": "#4b36c7",
             "icon": "landmark",
             "balance": 3800,
@@ -2487,7 +2487,7 @@
           {
             "id": "a",
             "name": "HDFC Salary",
-            "type": "checking",
+            "type": "current",
             "color": "#4b36c7",
             "icon": "landmark",
             "balance": 0.1,
@@ -2497,7 +2497,7 @@
           {
             "id": "b",
             "name": "HDFC Salary",
-            "type": "checking",
+            "type": "current",
             "color": "#4b36c7",
             "icon": "landmark",
             "balance": 0.2,
@@ -2520,7 +2520,7 @@
           {
             "id": "d",
             "name": "HDFC Salary",
-            "type": "checking",
+            "type": "current",
             "color": "#4b36c7",
             "icon": "landmark",
             "balance": 0,
@@ -2530,7 +2530,7 @@
           {
             "id": "e",
             "name": "HDFC Salary",
-            "type": "checking",
+            "type": "current",
             "color": "#4b36c7",
             "icon": "landmark",
             "balance": 999,

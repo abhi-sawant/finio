@@ -12,8 +12,8 @@
         "exportedAt": "2026-06-15T12:00:00.000Z",
         "accounts": [
           {
-            "name": "HDFC Checking",
-            "type": "checking",
+            "name": "HDFC Current",
+            "type": "current",
             "color": "#146b54",
             "icon": "landmark",
             "balance": 125075,

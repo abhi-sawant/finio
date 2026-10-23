@@ -108,7 +108,7 @@ export interface SampleData {
   debtEntries: SampleDebtEntrySpec[];
 }
 
-const CHECKING = 'checking';
+const CURRENT = 'current';
 const SAVINGS = 'savings';
 const CARD = 'card';
 const VACATION_GOAL = 'vacation';
@@ -127,9 +127,9 @@ function at(now: Date, monthsAgo: number, day: number, hour = 12): string {
 export function generateSampleData(now = new Date()): SampleData {
   const accounts: SampleAccountSpec[] = [
     {
-      key: CHECKING,
-      name: 'HDFC Checking',
-      type: 'checking',
+      key: CURRENT,
+      name: 'HDFC Current',
+      type: 'current',
       color: '#146b54',
       icon: 'landmark',
       balance: 15000,
@@ -162,7 +162,7 @@ export function generateSampleData(now = new Date()): SampleData {
     transactions.push({
       type: 'income',
       amount: 65000,
-      accountKey: CHECKING,
+      accountKey: CURRENT,
       categoryId: 'cat-9',
       date: at(now, m, 1),
       note: 'Monthly salary',
@@ -172,19 +172,19 @@ export function generateSampleData(now = new Date()): SampleData {
   transactions.push({
     type: 'income',
     amount: 12000,
-    accountKey: CHECKING,
+    accountKey: CURRENT,
     categoryId: 'cat-10',
     date: at(now, 2, 15),
     note: 'Freelance project',
     labels: [],
   });
 
-  // Rent, paid from Checking, every sample month.
+  // Rent, paid from Current, every sample month.
   for (let m = 3; m >= 1; m -= 1) {
     transactions.push({
       type: 'expense',
       amount: 15000,
-      accountKey: CHECKING,
+      accountKey: CURRENT,
       categoryId: 'cat-8',
       date: at(now, m, 2),
       note: 'Monthly rent',
@@ -192,7 +192,7 @@ export function generateSampleData(now = new Date()): SampleData {
     });
   }
 
-  // Groceries and everyday food, on Checking, spread across the month.
+  // Groceries and everyday food, on Current, spread across the month.
   const groceryAmounts = [1800, 2200, 1500, 2000];
   const foodAmounts = [350, 620, 480, 900, 275];
   for (let m = 3; m >= 1; m -= 1) {
@@ -200,7 +200,7 @@ export function generateSampleData(now = new Date()): SampleData {
       transactions.push({
         type: 'expense',
         amount: groceryAmounts[i],
-        accountKey: CHECKING,
+        accountKey: CURRENT,
         categoryId: 'cat-25',
         date: at(now, m, day),
         note: 'Groceries',
@@ -211,7 +211,7 @@ export function generateSampleData(now = new Date()): SampleData {
       transactions.push({
         type: 'expense',
         amount: foodAmounts[i],
-        accountKey: CHECKING,
+        accountKey: CURRENT,
         categoryId: 'cat-1',
         date: at(now, m, day),
         note: i % 2 === 0 ? 'Lunch with friends' : 'Zomato order',
@@ -220,12 +220,12 @@ export function generateSampleData(now = new Date()): SampleData {
     });
   }
 
-  // Transport, on Checking.
+  // Transport, on Current.
   for (let m = 3; m >= 1; m -= 1) {
     transactions.push({
       type: 'expense',
       amount: 1200,
-      accountKey: CHECKING,
+      accountKey: CURRENT,
       categoryId: 'cat-2',
       date: at(now, m, 8),
       note: 'Fuel',
@@ -234,7 +234,7 @@ export function generateSampleData(now = new Date()): SampleData {
     transactions.push({
       type: 'expense',
       amount: 450,
-      accountKey: CHECKING,
+      accountKey: CURRENT,
       categoryId: 'cat-2',
       date: at(now, m, 22),
       note: 'Cab rides',
@@ -275,12 +275,12 @@ export function generateSampleData(now = new Date()): SampleData {
     });
   }
 
-  // Utilities, paid from Checking.
+  // Utilities, paid from Current.
   for (let m = 3; m >= 1; m -= 1) {
     transactions.push({
       type: 'expense',
       amount: 2200,
-      accountKey: CHECKING,
+      accountKey: CURRENT,
       categoryId: 'cat-5',
       date: at(now, m, 12),
       note: 'Electricity bill',
@@ -288,12 +288,12 @@ export function generateSampleData(now = new Date()): SampleData {
     });
   }
 
-  // Paying down the card from Checking, each sample month.
+  // Paying down the card from Current, each sample month.
   for (let m = 2; m >= 1; m -= 1) {
     transactions.push({
       type: 'transfer',
       amount: 5000,
-      accountKey: CHECKING,
+      accountKey: CURRENT,
       toAccountKey: CARD,
       categoryId: 'cat-13',
       date: at(now, m, 20),
@@ -336,7 +336,7 @@ export function generateSampleData(now = new Date()): SampleData {
     {
       type: 'expense',
       amount: 15000,
-      accountKey: CHECKING,
+      accountKey: CURRENT,
       categoryId: 'cat-8',
       note: 'Monthly rent',
       labels: ['lbl-1'],
@@ -346,7 +346,7 @@ export function generateSampleData(now = new Date()): SampleData {
     {
       type: 'transfer',
       amount: 3000,
-      accountKey: CHECKING,
+      accountKey: CURRENT,
       toAccountKey: SAVINGS,
       categoryId: 'cat-13',
       note: 'Vacation savings',

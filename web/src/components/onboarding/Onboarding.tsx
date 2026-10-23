@@ -22,7 +22,7 @@ import type { AccountType, TrackingMode } from '@/types';
 import { MAX_NAME_LENGTH, cleanText, stripLeading } from '@/utils/validation';
 
 const ACCOUNT_TYPES: { value: AccountType; label: string; icon: string; Icon: LucideIcon }[] = [
-  { value: 'checking', label: 'Checking', icon: 'landmark', Icon: Landmark },
+  { value: 'current', label: 'Current', icon: 'landmark', Icon: Landmark },
   { value: 'savings', label: 'Savings', icon: 'piggy-bank', Icon: PiggyBank },
   { value: 'cash', label: 'Cash', icon: 'banknote', Icon: Banknote },
   { value: 'credit', label: 'Credit Card', icon: 'credit-card', Icon: CreditCard },

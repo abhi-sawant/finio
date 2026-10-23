@@ -13,7 +13,7 @@ const NOW = new Date('2026-06-15T12:00:00.000Z');
 function account(partial: Partial<Account> & Pick<Account, 'id'>): Account {
   return {
     name: partial.id,
-    type: 'checking',
+    type: 'current',
     color: '#000',
     icon: 'landmark',
     balance: 0,
@@ -28,7 +28,7 @@ function tx(
 ): Transaction {
   return {
     id: partial.id ?? `${partial.type}-${partial.amount}-${partial.date}`,
-    accountId: 'checking',
+    accountId: 'current',
     categoryId: 'cat-food',
     note: '',
     labels: [],
@@ -42,7 +42,7 @@ function rule(
 ): RecurringTransaction {
   return {
     type: 'expense',
-    accountId: 'checking',
+    accountId: 'current',
     categoryId: 'cat-bills',
     note: 'Rent',
     labels: [],
@@ -56,17 +56,17 @@ function rule(
 }
 
 const ACCOUNTS = [
-  account({ id: 'checking', balance: 10000 }),
+  account({ id: 'current', balance: 10000 }),
   account({ id: 'card', type: 'credit', balance: -3000, creditLimit: 50000 }),
   account({ id: 'closed', balance: 999, archivedAt: '2026-02-01T00:00:00.000Z' }),
 ];
 
 describe('liquidDelta', () => {
-  const liquid = new Set(['checking', 'savings']);
+  const liquid = new Set(['current', 'savings']);
 
   it('moves cash only when a liquid account is on the paying side', () => {
-    expect(liquidDelta({ type: 'expense', amount: 100, accountId: 'checking' }, liquid)).toBe(-100);
-    expect(liquidDelta({ type: 'income', amount: 100, accountId: 'checking' }, liquid)).toBe(100);
+    expect(liquidDelta({ type: 'expense', amount: 100, accountId: 'current' }, liquid)).toBe(-100);
+    expect(liquidDelta({ type: 'income', amount: 100, accountId: 'current' }, liquid)).toBe(100);
     // Card spending is a liability, not cash out — it lands when the card is paid.
     expect(liquidDelta({ type: 'expense', amount: 100, accountId: 'card' }, liquid)).toBe(0);
   });
@@ -74,20 +74,20 @@ describe('liquidDelta', () => {
   it('nets an internal transfer to zero and counts one that crosses the boundary', () => {
     expect(
       liquidDelta(
-        { type: 'transfer', amount: 500, accountId: 'checking', toAccountId: 'savings' },
+        { type: 'transfer', amount: 500, accountId: 'current', toAccountId: 'savings' },
         liquid,
       ),
     ).toBe(0);
     // Paying the card off does take cash out.
     expect(
       liquidDelta(
-        { type: 'transfer', amount: 500, accountId: 'checking', toAccountId: 'card' },
+        { type: 'transfer', amount: 500, accountId: 'current', toAccountId: 'card' },
         liquid,
       ),
     ).toBe(-500);
     expect(
       liquidDelta(
-        { type: 'transfer', amount: 500, accountId: 'card', toAccountId: 'checking' },
+        { type: 'transfer', amount: 500, accountId: 'card', toAccountId: 'current' },
         liquid,
       ),
     ).toBe(500);
@@ -207,7 +207,7 @@ describe('buildCashFlowForecast', () => {
 
   it('draws the balance down by the daily estimate and by scheduled bills', () => {
     const forecast = buildCashFlowForecast({
-      accounts: [account({ id: 'checking', balance: 10000 })],
+      accounts: [account({ id: 'current', balance: 10000 })],
       transactions: [tx({ type: 'expense', amount: 100, date: '2026-06-15T00:00:00.000Z' })],
       recurring: [rule({ id: 'rule-rent', amount: 2000 })],
       now: NOW,
@@ -224,7 +224,7 @@ describe('buildCashFlowForecast', () => {
 
   it('counts an income rule as money in', () => {
     const forecast = buildCashFlowForecast({
-      accounts: [account({ id: 'checking', balance: 0 })],
+      accounts: [account({ id: 'current', balance: 0 })],
       transactions: [],
       recurring: [rule({ id: 'rule-salary', amount: 50000, type: 'income', note: 'Salary' })],
       now: NOW,
@@ -237,7 +237,7 @@ describe('buildCashFlowForecast', () => {
 
   it('leaves out a paused rule — a forecast must not assume it resumes', () => {
     const forecast = buildCashFlowForecast({
-      accounts: [account({ id: 'checking', balance: 10000 })],
+      accounts: [account({ id: 'current', balance: 10000 })],
       transactions: [],
       recurring: [rule({ id: 'rule-rent', amount: 2000, pausedAt: '2026-06-01T00:00:00.000Z' })],
       now: NOW,
@@ -261,7 +261,7 @@ describe('buildCashFlowForecast', () => {
 
   it('reports the low point and the day the balance runs out', () => {
     const forecast = buildCashFlowForecast({
-      accounts: [account({ id: 'checking', balance: 1000 })],
+      accounts: [account({ id: 'current', balance: 1000 })],
       transactions: [tx({ type: 'expense', amount: 100, date: '2026-06-15T00:00:00.000Z' })],
       recurring: [],
       now: NOW,
@@ -282,7 +282,7 @@ describe('buildCashFlowForecast', () => {
     ).toBe(true);
     expect(
       buildCashFlowForecast({
-        accounts: [account({ id: 'checking', balance: 500 })],
+        accounts: [account({ id: 'current', balance: 500 })],
         transactions: [],
         recurring: [],
         now: NOW,
@@ -303,7 +303,7 @@ describe('buildCashFlowCalendarMonth', () => {
 
   it('nets same-day flows into one cell and leaves other days alone', () => {
     const forecast = buildCashFlowForecast({
-      accounts: [account({ id: 'checking', balance: 10000 })],
+      accounts: [account({ id: 'current', balance: 10000 })],
       transactions: [],
       recurring: [
         rule({ id: 'rule-rent', amount: 2000, startDate: '2026-06-20T00:00:00.000Z' }),
@@ -331,7 +331,7 @@ describe('buildCashFlowCalendarMonth', () => {
 
   it('marks today and excludes flows padded outside the month', () => {
     const forecast = buildCashFlowForecast({
-      accounts: [account({ id: 'checking', balance: 10000 })],
+      accounts: [account({ id: 'current', balance: 10000 })],
       transactions: [],
       recurring: [rule({ id: 'rule-rent', amount: 2000, startDate: '2026-07-03T00:00:00.000Z' })],
       now: NOW,

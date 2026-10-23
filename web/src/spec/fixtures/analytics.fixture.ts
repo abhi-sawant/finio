@@ -30,8 +30,8 @@ function tx(partial: Partial<Transaction> & Pick<Transaction, 'type' | 'amount' 
 
 const account: Account = {
   id: 'acc-1',
-  name: 'Checking',
-  type: 'checking',
+  name: 'Current',
+  type: 'current',
   color: '#000',
   icon: 'landmark',
   balance: 5000,

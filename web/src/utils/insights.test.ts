@@ -303,9 +303,9 @@ describe('buildInsights', () => {
   it('flags a non-credit account that has gone negative', () => {
     const accounts: Account[] = [
       {
-        id: 'acc-checking',
-        name: 'Checking',
-        type: 'checking',
+        id: 'acc-current',
+        name: 'Current',
+        type: 'current',
         color: '#000',
         icon: 'landmark',
         balance: -500,
@@ -328,7 +328,7 @@ describe('buildInsights', () => {
     const negative = insights.filter((i) => i.kind === 'negative-balance');
 
     expect(negative).toHaveLength(1);
-    expect(negative[0].title).toBe('Checking is negative');
+    expect(negative[0].title).toBe('Current is negative');
     expect(negative[0].severity).toBe('warn');
   });
 

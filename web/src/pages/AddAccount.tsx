@@ -52,7 +52,7 @@ const TYPE_ICONS: Record<string, LucideIcon> = {
 };
 
 const accountTypes: { value: AccountType; label: string; icon: string }[] = [
-  { value: 'checking', label: 'Checking', icon: 'landmark' },
+  { value: 'current', label: 'Current', icon: 'landmark' },
   { value: 'savings', label: 'Savings', icon: 'piggy-bank' },
   { value: 'cash', label: 'Cash', icon: 'banknote' },
   { value: 'credit', label: 'Credit card', icon: 'credit-card' },
@@ -82,7 +82,7 @@ export default function AddAccount() {
   const existing = id ? accounts.find((a) => a.id === id) : null;
 
   const [name, setName] = useState(existing?.name ?? '');
-  const [type, setType] = useState<AccountType>(existing?.type ?? 'checking');
+  const [type, setType] = useState<AccountType>(existing?.type ?? 'current');
   const [balance, setBalance] = useState(
     existing?.type === 'credit' ? '0' : (existing?.balance?.toString() ?? '0'),
   );

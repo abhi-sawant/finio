@@ -11,7 +11,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 enum class AccountType {
-    @SerialName("checking") Checking,
+    @SerialName("current") Current,
     @SerialName("savings") Savings,
     @SerialName("cash") Cash,
     @SerialName("credit") Credit,

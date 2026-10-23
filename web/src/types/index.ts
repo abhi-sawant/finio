@@ -1,5 +1,5 @@
 export type AccountType =
-  | 'checking'
+  | 'current'
   | 'savings'
   | 'cash'
   | 'credit'

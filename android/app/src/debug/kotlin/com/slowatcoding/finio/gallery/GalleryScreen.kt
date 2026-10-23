@@ -165,7 +165,7 @@ private fun GalleryContent() {
                 NoteTile(
                     type = type,
                     name = when (type) {
-                        AccountType.Checking -> "HDFC Salary"
+                        AccountType.Current -> "HDFC Salary"
                         AccountType.Credit -> "Amazon Pay ICICI card"
                         else -> type.label
                     },
@@ -478,7 +478,7 @@ private fun NoteTilesPreview() = Column {
     listOf(false, true).forEach { d ->
         PreviewFrame(d) {
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                NoteTile(AccountType.Checking, "HDFC Salary", "₹42,180", {}, Modifier.width(160.dp))
+                NoteTile(AccountType.Current, "HDFC Salary", "₹42,180", {}, Modifier.width(160.dp))
                 NoteTile(AccountType.Credit, "Amazon Pay", "-₹8,200", {}, Modifier.width(160.dp))
             }
         }

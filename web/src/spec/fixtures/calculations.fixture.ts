@@ -121,7 +121,7 @@ function txn(
 
 export function buildLedger(): Ledger {
   const accounts: Account[] = [
-    account('acc-bank', 'HDFC Salary', 'checking', 50000),
+    account('acc-bank', 'HDFC Salary', 'current', 50000),
     account('acc-savings', 'SBI Savings', 'savings', 200000),
     account('acc-cash', 'Cash', 'cash', 3000),
     account('acc-card', 'Amex Platinum', 'credit', 0, {
@@ -156,7 +156,7 @@ export function buildLedger(): Ledger {
         recurringId: 'rec-rd',
       },
     }),
-    account('acc-old', 'Old Axis', 'checking', 5000, { archivedAt: '2026-02-01T04:30:00.000Z' }),
+    account('acc-old', 'Old Axis', 'current', 5000, { archivedAt: '2026-02-01T04:30:00.000Z' }),
   ];
 
   const tx: Transaction[] = [];

@@ -10,7 +10,7 @@
           {
             "id": "acc-bank",
             "name": "HDFC Salary",
-            "type": "checking",
+            "type": "current",
             "color": "#4b36c7",
             "icon": "landmark",
             "balance": 349052,
@@ -113,7 +113,7 @@
           {
             "id": "acc-old",
             "name": "Old Axis",
-            "type": "checking",
+            "type": "current",
             "color": "#4b36c7",
             "icon": "landmark",
             "balance": 3800,
@@ -2493,14 +2493,14 @@
       "args": [
         [
           {
-            "name": "checking",
-            "type": "checking",
+            "name": "current",
+            "type": "current",
             "color": "#000",
             "icon": "landmark",
             "balance": 10000,
             "openingBalance": 0,
             "createdAt": "2026-01-01T00:00:00.000Z",
-            "id": "checking"
+            "id": "current"
           },
           {
             "name": "card",
@@ -2515,7 +2515,7 @@
           },
           {
             "name": "closed",
-            "type": "checking",
+            "type": "current",
             "color": "#000",
             "icon": "landmark",
             "balance": 999,
@@ -2527,7 +2527,7 @@
         ]
       ],
       "out": [
-        "checking"
+        "current"
       ]
     },
     {
@@ -2535,14 +2535,14 @@
       "args": [
         [
           {
-            "name": "checking",
-            "type": "checking",
+            "name": "current",
+            "type": "current",
             "color": "#000",
             "icon": "landmark",
             "balance": 10000,
             "openingBalance": 0,
             "createdAt": "2026-01-01T00:00:00.000Z",
-            "id": "checking"
+            "id": "current"
           },
           {
             "name": "card",
@@ -2557,7 +2557,7 @@
           },
           {
             "name": "closed",
-            "type": "checking",
+            "type": "current",
             "color": "#000",
             "icon": "landmark",
             "balance": 999,
@@ -13505,7 +13505,7 @@
         [
           {
             "id": "expense-100-2026-06-14T00:00:00.000Z",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-food",
             "note": "",
             "labels": [],
@@ -13516,7 +13516,7 @@
           },
           {
             "id": "expense-100-2026-06-15T00:00:00.000Z",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-food",
             "note": "",
             "labels": [],
@@ -13527,7 +13527,7 @@
           },
           {
             "id": "expense-5000-2026-06-10T00:00:00.000Z",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-bills",
             "note": "Rent",
             "labels": [],
@@ -13538,7 +13538,7 @@
           },
           {
             "id": "rent-close",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-bills",
             "note": "RENT 0601",
             "labels": [],
@@ -13549,7 +13549,7 @@
           },
           {
             "id": "gen",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-food",
             "note": "",
             "labels": [],
@@ -13583,7 +13583,7 @@
           },
           {
             "id": "split",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "",
             "note": "",
             "labels": [],
@@ -13604,7 +13604,7 @@
           },
           {
             "id": "bad",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-food",
             "note": "",
             "labels": [],
@@ -13615,7 +13615,7 @@
           },
           {
             "id": "future",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-food",
             "note": "",
             "labels": [],
@@ -13626,7 +13626,7 @@
           },
           {
             "id": "inc",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-food",
             "note": "",
             "labels": [],
@@ -13638,14 +13638,14 @@
         ],
         [
           {
-            "name": "checking",
-            "type": "checking",
+            "name": "current",
+            "type": "current",
             "color": "#000",
             "icon": "landmark",
             "balance": 10000,
             "openingBalance": 0,
             "createdAt": "2026-01-01T00:00:00.000Z",
-            "id": "checking"
+            "id": "current"
           },
           {
             "name": "card",
@@ -13660,7 +13660,7 @@
           },
           {
             "name": "closed",
-            "type": "checking",
+            "type": "current",
             "color": "#000",
             "icon": "landmark",
             "balance": 999,
@@ -13705,7 +13705,7 @@
         [
           {
             "id": "expense-100-2026-06-14T00:00:00.000Z",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-food",
             "note": "",
             "labels": [],
@@ -13716,7 +13716,7 @@
           },
           {
             "id": "expense-100-2026-06-15T00:00:00.000Z",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-food",
             "note": "",
             "labels": [],
@@ -13727,7 +13727,7 @@
           },
           {
             "id": "expense-5000-2026-06-10T00:00:00.000Z",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-bills",
             "note": "Rent",
             "labels": [],
@@ -13738,7 +13738,7 @@
           },
           {
             "id": "rent-close",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-bills",
             "note": "RENT 0601",
             "labels": [],
@@ -13749,7 +13749,7 @@
           },
           {
             "id": "gen",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-food",
             "note": "",
             "labels": [],
@@ -13783,7 +13783,7 @@
           },
           {
             "id": "split",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "",
             "note": "",
             "labels": [],
@@ -13804,7 +13804,7 @@
           },
           {
             "id": "bad",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-food",
             "note": "",
             "labels": [],
@@ -13815,7 +13815,7 @@
           },
           {
             "id": "future",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-food",
             "note": "",
             "labels": [],
@@ -13826,7 +13826,7 @@
           },
           {
             "id": "inc",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-food",
             "note": "",
             "labels": [],
@@ -13838,14 +13838,14 @@
         ],
         [
           {
-            "name": "checking",
-            "type": "checking",
+            "name": "current",
+            "type": "current",
             "color": "#000",
             "icon": "landmark",
             "balance": 10000,
             "openingBalance": 0,
             "createdAt": "2026-01-01T00:00:00.000Z",
-            "id": "checking"
+            "id": "current"
           },
           {
             "name": "card",
@@ -13860,7 +13860,7 @@
           },
           {
             "name": "closed",
-            "type": "checking",
+            "type": "current",
             "color": "#000",
             "icon": "landmark",
             "balance": 999,
@@ -13875,7 +13875,7 @@
           "recurring": [
             {
               "type": "expense",
-              "accountId": "checking",
+              "accountId": "current",
               "categoryId": "cat-bills",
               "note": "Rent",
               "labels": [],
@@ -13915,7 +13915,7 @@
         [
           {
             "id": "expense-100-2026-06-14T00:00:00.000Z",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-food",
             "note": "",
             "labels": [],
@@ -13926,7 +13926,7 @@
           },
           {
             "id": "expense-100-2026-06-15T00:00:00.000Z",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-food",
             "note": "",
             "labels": [],
@@ -13937,7 +13937,7 @@
           },
           {
             "id": "expense-5000-2026-06-10T00:00:00.000Z",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-bills",
             "note": "Rent",
             "labels": [],
@@ -13948,7 +13948,7 @@
           },
           {
             "id": "rent-close",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-bills",
             "note": "RENT 0601",
             "labels": [],
@@ -13959,7 +13959,7 @@
           },
           {
             "id": "gen",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-food",
             "note": "",
             "labels": [],
@@ -13993,7 +13993,7 @@
           },
           {
             "id": "split",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "",
             "note": "",
             "labels": [],
@@ -14014,7 +14014,7 @@
           },
           {
             "id": "bad",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-food",
             "note": "",
             "labels": [],
@@ -14025,7 +14025,7 @@
           },
           {
             "id": "future",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-food",
             "note": "",
             "labels": [],
@@ -14036,7 +14036,7 @@
           },
           {
             "id": "inc",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-food",
             "note": "",
             "labels": [],
@@ -14048,14 +14048,14 @@
         ],
         [
           {
-            "name": "checking",
-            "type": "checking",
+            "name": "current",
+            "type": "current",
             "color": "#000",
             "icon": "landmark",
             "balance": 10000,
             "openingBalance": 0,
             "createdAt": "2026-01-01T00:00:00.000Z",
-            "id": "checking"
+            "id": "current"
           },
           {
             "name": "card",
@@ -14070,7 +14070,7 @@
           },
           {
             "name": "closed",
-            "type": "checking",
+            "type": "current",
             "color": "#000",
             "icon": "landmark",
             "balance": 999,
@@ -14085,7 +14085,7 @@
           "recurring": [
             {
               "type": "expense",
-              "accountId": "checking",
+              "accountId": "current",
               "categoryId": "cat-bills",
               "note": "Rent",
               "labels": [],
@@ -14132,7 +14132,7 @@
         [
           {
             "id": "expense-100-2026-06-14T00:00:00.000Z",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-food",
             "note": "",
             "labels": [],
@@ -14143,7 +14143,7 @@
           },
           {
             "id": "expense-100-2026-06-15T00:00:00.000Z",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-food",
             "note": "",
             "labels": [],
@@ -14154,7 +14154,7 @@
           },
           {
             "id": "expense-5000-2026-06-10T00:00:00.000Z",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-bills",
             "note": "Rent",
             "labels": [],
@@ -14165,7 +14165,7 @@
           },
           {
             "id": "rent-close",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-bills",
             "note": "RENT 0601",
             "labels": [],
@@ -14176,7 +14176,7 @@
           },
           {
             "id": "gen",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-food",
             "note": "",
             "labels": [],
@@ -14210,7 +14210,7 @@
           },
           {
             "id": "split",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "",
             "note": "",
             "labels": [],
@@ -14231,7 +14231,7 @@
           },
           {
             "id": "bad",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-food",
             "note": "",
             "labels": [],
@@ -14242,7 +14242,7 @@
           },
           {
             "id": "future",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-food",
             "note": "",
             "labels": [],
@@ -14253,7 +14253,7 @@
           },
           {
             "id": "inc",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-food",
             "note": "",
             "labels": [],
@@ -14265,14 +14265,14 @@
         ],
         [
           {
-            "name": "checking",
-            "type": "checking",
+            "name": "current",
+            "type": "current",
             "color": "#000",
             "icon": "landmark",
             "balance": 10000,
             "openingBalance": 0,
             "createdAt": "2026-01-01T00:00:00.000Z",
-            "id": "checking"
+            "id": "current"
           },
           {
             "name": "card",
@@ -14287,7 +14287,7 @@
           },
           {
             "name": "closed",
-            "type": "checking",
+            "type": "current",
             "color": "#000",
             "icon": "landmark",
             "balance": 999,
@@ -14302,7 +14302,7 @@
           "recurring": [
             {
               "type": "expense",
-              "accountId": "checking",
+              "accountId": "current",
               "categoryId": "cat-bills",
               "note": "Rent",
               "labels": [],
@@ -14343,7 +14343,7 @@
         [
           {
             "id": "expense-100-2026-06-14T00:00:00.000Z",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-food",
             "note": "",
             "labels": [],
@@ -14354,7 +14354,7 @@
           },
           {
             "id": "expense-100-2026-06-15T00:00:00.000Z",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-food",
             "note": "",
             "labels": [],
@@ -14365,7 +14365,7 @@
           },
           {
             "id": "expense-5000-2026-06-10T00:00:00.000Z",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-bills",
             "note": "Rent",
             "labels": [],
@@ -14376,7 +14376,7 @@
           },
           {
             "id": "rent-close",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-bills",
             "note": "RENT 0601",
             "labels": [],
@@ -14387,7 +14387,7 @@
           },
           {
             "id": "gen",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-food",
             "note": "",
             "labels": [],
@@ -14421,7 +14421,7 @@
           },
           {
             "id": "split",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "",
             "note": "",
             "labels": [],
@@ -14442,7 +14442,7 @@
           },
           {
             "id": "bad",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-food",
             "note": "",
             "labels": [],
@@ -14453,7 +14453,7 @@
           },
           {
             "id": "future",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-food",
             "note": "",
             "labels": [],
@@ -14464,7 +14464,7 @@
           },
           {
             "id": "inc",
-            "accountId": "checking",
+            "accountId": "current",
             "categoryId": "cat-food",
             "note": "",
             "labels": [],
@@ -14476,14 +14476,14 @@
         ],
         [
           {
-            "name": "checking",
-            "type": "checking",
+            "name": "current",
+            "type": "current",
             "color": "#000",
             "icon": "landmark",
             "balance": 10000,
             "openingBalance": 0,
             "createdAt": "2026-01-01T00:00:00.000Z",
-            "id": "checking"
+            "id": "current"
           },
           {
             "name": "card",
@@ -14498,7 +14498,7 @@
           },
           {
             "name": "closed",
-            "type": "checking",
+            "type": "current",
             "color": "#000",
             "icon": "landmark",
             "balance": 999,
@@ -14513,7 +14513,7 @@
           "recurring": [
             {
               "type": "income",
-              "accountId": "checking",
+              "accountId": "current",
               "categoryId": "cat-bills",
               "note": "Rent",
               "labels": [],
@@ -14559,14 +14559,14 @@
         [],
         [
           {
-            "name": "checking",
-            "type": "checking",
+            "name": "current",
+            "type": "current",
             "color": "#000",
             "icon": "landmark",
             "balance": 10000,
             "openingBalance": 0,
             "createdAt": "2026-01-01T00:00:00.000Z",
-            "id": "checking"
+            "id": "current"
           },
           {
             "name": "card",
@@ -14581,7 +14581,7 @@
           },
           {
             "name": "closed",
-            "type": "checking",
+            "type": "current",
             "color": "#000",
             "icon": "landmark",
             "balance": 999,
@@ -38670,14 +38670,14 @@
         {
           "accounts": [
             {
-              "name": "checking",
-              "type": "checking",
+              "name": "current",
+              "type": "current",
               "color": "#000",
               "icon": "landmark",
               "balance": 10000,
               "openingBalance": 0,
               "createdAt": "2026-01-01T00:00:00.000Z",
-              "id": "checking"
+              "id": "current"
             },
             {
               "name": "card",
@@ -38692,7 +38692,7 @@
             },
             {
               "name": "closed",
-              "type": "checking",
+              "type": "current",
               "color": "#000",
               "icon": "landmark",
               "balance": 999,
@@ -38984,20 +38984,20 @@
         {
           "accounts": [
             {
-              "name": "checking",
-              "type": "checking",
+              "name": "current",
+              "type": "current",
               "color": "#000",
               "icon": "landmark",
               "balance": 10000,
               "openingBalance": 0,
               "createdAt": "2026-01-01T00:00:00.000Z",
-              "id": "checking"
+              "id": "current"
             }
           ],
           "transactions": [
             {
               "id": "expense-100-2026-06-15T00:00:00.000Z",
-              "accountId": "checking",
+              "accountId": "current",
               "categoryId": "cat-food",
               "note": "",
               "labels": [],
@@ -39010,7 +39010,7 @@
           "recurring": [
             {
               "type": "expense",
-              "accountId": "checking",
+              "accountId": "current",
               "categoryId": "cat-bills",
               "note": "Rent",
               "labels": [],
@@ -39320,21 +39320,21 @@
         {
           "accounts": [
             {
-              "name": "checking",
-              "type": "checking",
+              "name": "current",
+              "type": "current",
               "color": "#000",
               "icon": "landmark",
               "balance": 0,
               "openingBalance": 0,
               "createdAt": "2026-01-01T00:00:00.000Z",
-              "id": "checking"
+              "id": "current"
             }
           ],
           "transactions": [],
           "recurring": [
             {
               "type": "income",
-              "accountId": "checking",
+              "accountId": "current",
               "categoryId": "cat-bills",
               "note": "Salary",
               "labels": [],
@@ -39637,21 +39637,21 @@
         {
           "accounts": [
             {
-              "name": "checking",
-              "type": "checking",
+              "name": "current",
+              "type": "current",
               "color": "#000",
               "icon": "landmark",
               "balance": 10000,
               "openingBalance": 0,
               "createdAt": "2026-01-01T00:00:00.000Z",
-              "id": "checking"
+              "id": "current"
             }
           ],
           "transactions": [],
           "recurring": [
             {
               "type": "expense",
-              "accountId": "checking",
+              "accountId": "current",
               "categoryId": "cat-bills",
               "note": "Rent",
               "labels": [],
@@ -40185,14 +40185,14 @@
         {
           "accounts": [
             {
-              "name": "checking",
-              "type": "checking",
+              "name": "current",
+              "type": "current",
               "color": "#000",
               "icon": "landmark",
               "balance": 10000,
               "openingBalance": 0,
               "createdAt": "2026-01-01T00:00:00.000Z",
-              "id": "checking"
+              "id": "current"
             },
             {
               "name": "card",
@@ -40207,7 +40207,7 @@
             },
             {
               "name": "closed",
-              "type": "checking",
+              "type": "current",
               "color": "#000",
               "icon": "landmark",
               "balance": 999,
@@ -40754,20 +40754,20 @@
         {
           "accounts": [
             {
-              "name": "checking",
-              "type": "checking",
+              "name": "current",
+              "type": "current",
               "color": "#000",
               "icon": "landmark",
               "balance": 1000,
               "openingBalance": 0,
               "createdAt": "2026-01-01T00:00:00.000Z",
-              "id": "checking"
+              "id": "current"
             }
           ],
           "transactions": [
             {
               "id": "expense-100-2026-06-15T00:00:00.000Z",
-              "accountId": "checking",
+              "accountId": "current",
               "categoryId": "cat-food",
               "note": "",
               "labels": [],
@@ -41825,14 +41825,14 @@
         {
           "accounts": [
             {
-              "name": "checking",
-              "type": "checking",
+              "name": "current",
+              "type": "current",
               "color": "#000",
               "icon": "landmark",
               "balance": 500,
               "openingBalance": 0,
               "createdAt": "2026-01-01T00:00:00.000Z",
-              "id": "checking"
+              "id": "current"
             }
           ],
           "transactions": [],
@@ -42596,21 +42596,21 @@
         {
           "accounts": [
             {
-              "name": "checking",
-              "type": "checking",
+              "name": "current",
+              "type": "current",
               "color": "#000",
               "icon": "landmark",
               "balance": 10000,
               "openingBalance": 0,
               "createdAt": "2026-01-01T00:00:00.000Z",
-              "id": "checking"
+              "id": "current"
             }
           ],
           "transactions": [],
           "recurring": [
             {
               "type": "expense",
-              "accountId": "checking",
+              "accountId": "current",
               "categoryId": "cat-bills",
               "note": "Rent",
               "labels": [],
@@ -42624,7 +42624,7 @@
             },
             {
               "type": "income",
-              "accountId": "checking",
+              "accountId": "current",
               "categoryId": "cat-bills",
               "note": "Salary",
               "labels": [],
@@ -42638,7 +42638,7 @@
             },
             {
               "type": "expense",
-              "accountId": "checking",
+              "accountId": "current",
               "categoryId": "cat-bills",
               "note": "Rent",
               "labels": [],

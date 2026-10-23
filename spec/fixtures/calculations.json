@@ -10,7 +10,7 @@
           {
             "id": "acc-bank",
             "name": "HDFC Salary",
-            "type": "checking",
+            "type": "current",
             "color": "#4b36c7",
             "icon": "landmark",
             "balance": 349052,
@@ -113,7 +113,7 @@
           {
             "id": "acc-old",
             "name": "Old Axis",
-            "type": "checking",
+            "type": "current",
             "color": "#4b36c7",
             "icon": "landmark",
             "balance": 3800,
@@ -2959,7 +2959,7 @@
           {
             "id": "acc-empty-archived",
             "name": "HDFC Salary",
-            "type": "checking",
+            "type": "current",
             "color": "#4b36c7",
             "icon": "landmark",
             "balance": 349052,
@@ -2979,7 +2979,7 @@
         {
           "id": "acc-bank",
           "name": "HDFC Salary",
-          "type": "checking",
+          "type": "current",
           "color": "#4b36c7",
           "icon": "landmark",
           "balance": 349052,
@@ -2995,7 +2995,7 @@
         {
           "id": "acc-bank",
           "name": "HDFC Salary",
-          "type": "checking",
+          "type": "current",
           "color": "#4b36c7",
           "icon": "landmark",
           "balance": 349052,
@@ -3281,7 +3281,7 @@
         {
           "id": "acc-old",
           "name": "Old Axis",
-          "type": "checking",
+          "type": "current",
           "color": "#4b36c7",
           "icon": "landmark",
           "balance": 3800,
@@ -3298,7 +3298,7 @@
         {
           "id": "acc-old",
           "name": "Old Axis",
-          "type": "checking",
+          "type": "current",
           "color": "#4b36c7",
           "icon": "landmark",
           "balance": 3800,
@@ -14266,7 +14266,7 @@
           {
             "id": "acc-evil",
             "name": "=HYPERLINK(\"x\")",
-            "type": "checking",
+            "type": "current",
             "color": "#4b36c7",
             "icon": "landmark",
             "balance": 349052,

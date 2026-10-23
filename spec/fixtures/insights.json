@@ -10,7 +10,7 @@
           {
             "id": "acc-bank",
             "name": "HDFC Salary",
-            "type": "checking",
+            "type": "current",
             "color": "#4b36c7",
             "icon": "landmark",
             "balance": 349052,
@@ -113,7 +113,7 @@
           {
             "id": "acc-old",
             "name": "Old Axis",
-            "type": "checking",
+            "type": "current",
             "color": "#4b36c7",
             "icon": "landmark",
             "balance": 3800,
@@ -7111,9 +7111,9 @@
           "now": "2026-06-15T12:00:00.000Z",
           "accounts": [
             {
-              "id": "acc-checking",
-              "name": "Checking",
-              "type": "checking",
+              "id": "acc-current",
+              "name": "Current",
+              "type": "current",
               "color": "#000",
               "icon": "landmark",
               "balance": -500,
@@ -7167,14 +7167,14 @@
       ],
       "out": [
         {
-          "id": "negative-balance:acc-checking",
+          "id": "negative-balance:acc-current",
           "kind": "negative-balance",
           "severity": "warn",
-          "title": "Checking is negative",
+          "title": "Current is negative",
           "detail": "Rs500 in the red — check for a missing transaction or a data-entry error.",
           "action": {
             "type": "navigate",
-            "to": "/edit-account/acc-checking",
+            "to": "/edit-account/acc-current",
             "label": "Review account"
           }
         },
@@ -7219,9 +7219,9 @@
           "now": "2026-06-15T12:00:00.000Z",
           "accounts": [
             {
-              "id": "acc-checking",
-              "name": "Checking",
-              "type": "checking",
+              "id": "acc-current",
+              "name": "Current",
+              "type": "current",
               "color": "#000",
               "icon": "landmark",
               "balance": -500,
@@ -7275,14 +7275,14 @@
       ],
       "out": [
         {
-          "id": "negative-balance:acc-checking",
+          "id": "negative-balance:acc-current",
           "kind": "negative-balance",
           "severity": "warn",
-          "title": "Checking is negative",
+          "title": "Current is negative",
           "detail": "₹500 in the red — check for a missing transaction or a data-entry error.",
           "action": {
             "type": "navigate",
-            "to": "/edit-account/acc-checking",
+            "to": "/edit-account/acc-current",
             "label": "Review account"
           }
         },

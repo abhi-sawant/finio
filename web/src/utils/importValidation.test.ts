@@ -4,7 +4,7 @@ import { hasImportableData, validateBackup } from './importValidation';
 const validAccount = {
   id: 'acc-1',
   name: 'HDFC',
-  type: 'checking',
+  type: 'current',
   color: '#000',
   icon: 'landmark',
   balance: 1000,
@@ -602,8 +602,8 @@ describe('validateBackup', () => {
       accounts: [
         {
           id: 'acc-1',
-          name: 'Checking',
-          type: 'checking',
+          name: 'Current',
+          type: 'current',
           color: '#146b54',
           icon: 'landmark',
           balance: 1000,

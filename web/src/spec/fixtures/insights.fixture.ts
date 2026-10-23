@@ -251,7 +251,7 @@ export default function cases(): GoldenCase[] {
     base([]),
     base([], {
       accounts: [
-        acct('acc-checking', 'Checking', 'checking', -500),
+        acct('acc-current', 'Current', 'current', -500),
         acct('acc-credit', 'Credit Card', 'credit', -2000),
         acct('acc-fd', 'Broken FD', 'fd', -10.5),
         acct('acc-cash', 'Cash', 'cash', -0.01),

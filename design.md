@@ -220,7 +220,7 @@ sidecar.
 
 | Account type | Denomination | Light (from → to, ink) | Dark (from → to, ink) |
 | --- | --- | --- | --- |
-| Bank account (`checking`) | ₹100 lavender | `#ece6ff` → `#d9cffc`, `#3b2a86` | `#3a2f86` → `#251c5c`, `#dcd3ff` |
+| Bank account (`current`) | ₹100 lavender | `#ece6ff` → `#d9cffc`, `#3b2a86` | `#3a2f86` → `#251c5c`, `#dcd3ff` |
 | Savings | ₹500 stone | `#eef0e6` → `#d8dccb`, `#3d4630` | `#3a4030` → `#262a1f`, `#e2e6d2` |
 | Credit card | ₹2000 magenta | `#ffe3f1` → `#fbc6e0`, `#8a1550` | `#6a1846` → `#43102d`, `#ffd0e6` |
 | Fixed / recurring deposit | ₹200 yellow | `#fff4c4` → `#ffe48a`, `#6b4d00` | `#5e4a0c` → `#3c2f07`, `#ffe9a3` |

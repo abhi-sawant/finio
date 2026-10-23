@@ -45,7 +45,7 @@ class FinanceStoreTest {
     private val state get() = store.current
 
     private fun account(id: String, balance: Double, openingBalance: Double = balance) = Account(
-        id = id, name = id, type = AccountType.Checking, color = "#000", icon = "landmark",
+        id = id, name = id, type = AccountType.Current, color = "#000", icon = "landmark",
         balance = balance, openingBalance = openingBalance, createdAt = "2026-01-01T00:00:00.000Z",
     )
 
@@ -958,7 +958,7 @@ class FinanceStoreTest {
 
     // ---- migrations ---------------------------------------------------------------------------
 
-    private val accountJson = """{"id":"a","name":"a","type":"checking","color":"#000","icon":"landmark","balance":100,"openingBalance":100,"createdAt":"2026-01-01T00:00:00.000Z"}"""
+    private val accountJson = """{"id":"a","name":"a","type":"current","color":"#000","icon":"landmark","balance":100,"openingBalance":100,"createdAt":"2026-01-01T00:00:00.000Z"}"""
 
     private fun envelope(version: Int, state: String) = """{"version":$version,"state":$state}"""
 
@@ -985,8 +985,8 @@ class FinanceStoreTest {
             envelope(
                 4,
                 """{"accounts":[
-                  {"id":"a","name":"a","type":"checking","color":"#000","icon":"landmark","balance":750,"createdAt":"2026-01-01T00:00:00.000Z","currency":"INR"},
-                  {"id":"b","name":"b","type":"checking","color":"#000","icon":"landmark","balance":1200,"createdAt":"2026-01-01T00:00:00.000Z"}],
+                  {"id":"a","name":"a","type":"current","color":"#000","icon":"landmark","balance":750,"createdAt":"2026-01-01T00:00:00.000Z","currency":"INR"},
+                  {"id":"b","name":"b","type":"current","color":"#000","icon":"landmark","balance":1200,"createdAt":"2026-01-01T00:00:00.000Z"}],
                 "transactions":[
                   {"id":"t1","type":"expense","amount":250,"accountId":"a","categoryId":"cat-1","date":"2026-06-01T00:00:00.000Z","note":"","labels":[],"createdAt":"2026-06-01T00:00:00.000Z"},
                   {"id":"t2","type":"transfer","amount":200,"accountId":"a","toAccountId":"b","categoryId":"cat-1","date":"2026-06-01T00:00:00.000Z","note":"","labels":[],"createdAt":"2026-06-01T00:00:00.000Z"}]}""",

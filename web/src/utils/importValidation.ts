@@ -117,7 +117,7 @@ export interface ValidatedBackup {
 const MAX_REPORTED_ISSUES = 8;
 
 const ACCOUNT_TYPES = new Set([
-  'checking',
+  'current',
   'savings',
   'cash',
   'credit',

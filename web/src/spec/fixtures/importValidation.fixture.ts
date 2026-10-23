@@ -25,7 +25,7 @@ const without = (row: Row, ...keys: string[]): Row => {
 const account: Row = {
   id: 'a1',
   name: 'Bank',
-  type: 'checking',
+  type: 'current',
   color: '#111111',
   icon: 'landmark',
   balance: 1200.5,

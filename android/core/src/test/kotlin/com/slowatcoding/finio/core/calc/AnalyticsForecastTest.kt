@@ -20,18 +20,18 @@ import org.junit.Test
 class AnalyticsForecastTest {
     private val now = iso("2026-06-15T12:00:00.000Z")
 
-    private fun tx(type: TransactionType, amount: Double, date: String, categoryId: String = "cat-food", accountId: String = "checking") =
+    private fun tx(type: TransactionType, amount: Double, date: String, categoryId: String = "cat-food", accountId: String = "current") =
         Transaction(
             id = "$type-$amount-$date", type = type, amount = amount, accountId = accountId,
             categoryId = categoryId, date = date, note = "", createdAt = date,
         )
 
-    private fun checking(balance: Double) = Account(
-        "checking", "checking", AccountType.Checking, "#000", "landmark", balance, 0.0, "2026-01-01T00:00:00.000Z",
+    private fun current(balance: Double) = Account(
+        "current", "current", AccountType.Current, "#000", "landmark", balance, 0.0, "2026-01-01T00:00:00.000Z",
     )
 
     private fun rule(id: String, amount: Double, type: TransactionType = TransactionType.Expense) = RecurringTransaction(
-        id = id, type = type, amount = amount, accountId = "checking", categoryId = "cat-bills", note = "Rent",
+        id = id, type = type, amount = amount, accountId = "current", categoryId = "cat-bills", note = "Rent",
         frequency = RecurrenceFrequency.Monthly, startDate = "2026-06-20T00:00:00.000Z", createdAt = "2026-01-01T00:00:00.000Z",
     )
 
@@ -68,7 +68,7 @@ class AnalyticsForecastTest {
 
     @Test
     fun emptyYearHasNoBusiestMonth() {
-        val review = buildYearInReview(YearInReviewInput(emptyList(), listOf(checking(5000.0)), now = now))
+        val review = buildYearInReview(YearInReviewInput(emptyList(), listOf(current(5000.0)), now = now))
         assertNull(review.busiestMonth)
         assertNull(review.biggestExpense)
         assertEquals(12, review.monthlyBreakdown.size)
@@ -78,7 +78,7 @@ class AnalyticsForecastTest {
     fun forecastDrawsDownAndReportsShortfall() {
         val forecast = buildCashFlowForecast(
             ForecastInput(
-                accounts = listOf(checking(1000.0)),
+                accounts = listOf(current(1000.0)),
                 transactions = listOf(tx(TransactionType.Expense, 100.0, "2026-06-15T00:00:00.000Z")),
                 recurring = emptyList(),
                 now = now,
@@ -92,9 +92,9 @@ class AnalyticsForecastTest {
 
     @Test
     fun cardPaymentLeavesCashButInternalTransferNets() {
-        val liquid = setOf("checking", "savings")
-        assertEquals(0.0, liquidDelta(TransactionType.Transfer, 500.0, "checking", "savings", liquid), 0.0)
-        assertEquals(-500.0, liquidDelta(TransactionType.Transfer, 500.0, "checking", "card", liquid), 0.0)
+        val liquid = setOf("current", "savings")
+        assertEquals(0.0, liquidDelta(TransactionType.Transfer, 500.0, "current", "savings", liquid), 0.0)
+        assertEquals(-500.0, liquidDelta(TransactionType.Transfer, 500.0, "current", "card", liquid), 0.0)
         assertEquals(0.0, liquidDelta(TransactionType.Expense, 100.0, "card", null, liquid), 0.0)
     }
 
@@ -102,7 +102,7 @@ class AnalyticsForecastTest {
     fun calendarNetsSameDayFlows() {
         val forecast = buildCashFlowForecast(
             ForecastInput(
-                accounts = listOf(checking(10000.0)),
+                accounts = listOf(current(10000.0)),
                 transactions = emptyList(),
                 recurring = listOf(rule("rent", 2000.0), rule("salary", 50000.0, TransactionType.Income)),
                 now = now,

@@ -94,7 +94,7 @@ Below that:
 
 ### Accounts
 
-Six account types — Checking, Savings, Cash, Credit, Investment, Wallet — each with its own name,
+Six account types — Current, Savings, Cash, Credit, Investment, Wallet — each with its own name,
 icon, and colour.
 
 Credit cards get a full lifecycle: a credit limit with a utilization reading, plus an optional
