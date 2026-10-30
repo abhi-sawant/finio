@@ -143,7 +143,7 @@ fun generateSampleData(now: Instant = nowInstant()): SampleData {
     val foodAmounts = listOf(350.0, 620.0, 480.0, 900.0, 275.0)
     for (m in 3 downTo 1) {
         GROCERY_DAYS.forEachIndexed { i, day ->
-            expense(groceryAmounts[i], PRIMARY, "cat-25", at(now, m, day), "Groceries", listOf("lbl-1"))
+            expense(groceryAmounts[i], PRIMARY, "cat-1", at(now, m, day), "Groceries", listOf("lbl-1"))
         }
         FOOD_DAYS.forEachIndexed { i, day ->
             expense(foodAmounts[i], PRIMARY, "cat-1", at(now, m, day), if (i % 2 == 0) "Lunch with friends" else "Zomato order", listOf("lbl-2"))

@@ -2012,13 +2012,6 @@
             "type": "expense"
           },
           {
-            "id": "cat-7",
-            "name": "Education",
-            "icon": "book-open",
-            "color": "#3b82f6",
-            "type": "expense"
-          },
-          {
             "id": "cat-8",
             "name": "Housing",
             "icon": "home",
@@ -2068,13 +2061,6 @@
             "type": "expense"
           },
           {
-            "id": "cat-11",
-            "name": "Investments",
-            "icon": "trending-up",
-            "color": "#f59e0b",
-            "type": "expense"
-          },
-          {
             "id": "cat-9",
             "name": "Salary",
             "icon": "briefcase",
@@ -2083,30 +2069,9 @@
           },
           {
             "id": "cat-10",
-            "name": "Freelance",
+            "name": "Side income",
             "icon": "laptop",
             "color": "#146b54",
-            "type": "income"
-          },
-          {
-            "id": "cat-12",
-            "name": "Business",
-            "icon": "building-2",
-            "color": "#a855f7",
-            "type": "income"
-          },
-          {
-            "id": "cat-21",
-            "name": "Gifts",
-            "icon": "gift",
-            "color": "#f97316",
-            "type": "income"
-          },
-          {
-            "id": "cat-22",
-            "name": "Rent",
-            "icon": "home",
-            "color": "#3b82f6",
             "type": "income"
           },
           {
@@ -2131,13 +2096,6 @@
             "type": "both"
           },
           {
-            "id": "cat-25",
-            "name": "Groceries",
-            "icon": "shopping-cart",
-            "color": "#22c55e",
-            "type": "expense"
-          },
-          {
             "id": "cat-26",
             "name": "Insurance",
             "icon": "umbrella",
@@ -2152,13 +2110,6 @@
             "type": "expense"
           },
           {
-            "id": "cat-28",
-            "name": "Rent",
-            "icon": "building-2",
-            "color": "#78716c",
-            "type": "expense"
-          },
-          {
             "id": "cat-29",
             "name": "Fitness & Wellness",
             "icon": "dumbbell",
@@ -2166,52 +2117,10 @@
             "type": "expense"
           },
           {
-            "id": "cat-30",
-            "name": "Pets",
-            "icon": "paw-print",
-            "color": "#f59e0b",
-            "type": "expense"
-          },
-          {
-            "id": "cat-31",
-            "name": "Childcare",
-            "icon": "baby",
-            "color": "#fb923c",
-            "type": "expense"
-          },
-          {
-            "id": "cat-32",
-            "name": "Home Maintenance",
-            "icon": "wrench",
-            "color": "#6b7280",
-            "type": "expense"
-          },
-          {
             "id": "cat-33",
             "name": "Bonus",
             "icon": "sparkles",
             "color": "#fbbf24",
-            "type": "income"
-          },
-          {
-            "id": "cat-34",
-            "name": "Dividends",
-            "icon": "piggy-bank",
-            "color": "#10b981",
-            "type": "income"
-          },
-          {
-            "id": "cat-35",
-            "name": "Lending",
-            "icon": "hand-coins",
-            "color": "#ec4899",
-            "type": "expense"
-          },
-          {
-            "id": "cat-36",
-            "name": "Lending",
-            "icon": "hand-coins",
-            "color": "#ec4899",
             "type": "income"
           },
           {
@@ -3716,14 +3625,14 @@
           "id": "spike:cat-28:2026-06",
           "kind": "category-spike",
           "severity": "warn",
-          "title": "Rent is 3.3× your 3-month average",
+          "title": "Uncategorized is 3.3× your 3-month average",
           "detail": "On pace for ₹73,333.33 this month, against ₹22,000 on average."
         },
         {
           "id": "budget-over:category:cat-28:2026-06",
           "kind": "budget-over",
           "severity": "warn",
-          "title": "Rent is over budget",
+          "title": "Uncategorized is over budget",
           "detail": "₹44,000 spent against a ₹21,000 limit.",
           "action": {
             "type": "navigate",
@@ -3735,7 +3644,7 @@
           "id": "budget-over:category:cat-32:2026-06",
           "kind": "budget-over",
           "severity": "warn",
-          "title": "Home Maintenance is over budget",
+          "title": "Uncategorized is over budget",
           "detail": "₹1,000.25 spent against a ₹900 limit.",
           "action": {
             "type": "navigate",
@@ -3803,7 +3712,7 @@
           "id": "budget-over:category:cat-32:2026-05",
           "kind": "budget-over",
           "severity": "warn",
-          "title": "Home Maintenance is over budget",
+          "title": "Uncategorized is over budget",
           "detail": "₹1,000.25 spent against a ₹900 limit.",
           "action": {
             "type": "navigate",
@@ -3815,7 +3724,7 @@
           "id": "budget-over:category:cat-28:2026-05",
           "kind": "budget-over",
           "severity": "warn",
-          "title": "Rent is over budget",
+          "title": "Uncategorized is over budget",
           "detail": "₹22,000 spent against a ₹21,000 limit.",
           "action": {
             "type": "navigate",
@@ -3876,14 +3785,14 @@
           "id": "spike:cat-28:2026-06",
           "kind": "category-spike",
           "severity": "warn",
-          "title": "Rent is 3.3× your 3-month average",
+          "title": "Uncategorized is 3.3× your 3-month average",
           "detail": "On pace for ₹•••• this month, against ₹•••• on average."
         },
         {
           "id": "budget-over:category:cat-28:2026-06",
           "kind": "budget-over",
           "severity": "warn",
-          "title": "Rent is over budget",
+          "title": "Uncategorized is over budget",
           "detail": "₹•••• spent against a ₹•••• limit.",
           "action": {
             "type": "navigate",
@@ -3895,7 +3804,7 @@
           "id": "budget-over:category:cat-32:2026-06",
           "kind": "budget-over",
           "severity": "warn",
-          "title": "Home Maintenance is over budget",
+          "title": "Uncategorized is over budget",
           "detail": "₹•••• spent against a ₹•••• limit.",
           "action": {
             "type": "navigate",
@@ -3973,7 +3882,7 @@
           "id": "share:cat-28:2026-06",
           "kind": "category-share",
           "severity": "info",
-          "title": "Rent is 71% of this month's spending",
+          "title": "Uncategorized is 71% of this month's spending",
           "detail": "₹•••• of ₹•••• total."
         },
         {
@@ -4078,14 +3987,14 @@
           "id": "spike:cat-28:2026-06",
           "kind": "category-spike",
           "severity": "warn",
-          "title": "Rent is 3.3× your 3-month average",
+          "title": "Uncategorized is 3.3× your 3-month average",
           "detail": "On pace for Rs73333.33 this month, against Rs22000 on average."
         },
         {
           "id": "budget-over:category:cat-28:2026-06",
           "kind": "budget-over",
           "severity": "warn",
-          "title": "Rent is over budget",
+          "title": "Uncategorized is over budget",
           "detail": "Rs44000 spent against a Rs21000 limit.",
           "action": {
             "type": "navigate",
@@ -4097,7 +4006,7 @@
           "id": "budget-over:category:cat-32:2026-06",
           "kind": "budget-over",
           "severity": "warn",
-          "title": "Home Maintenance is over budget",
+          "title": "Uncategorized is over budget",
           "detail": "Rs1000.25 spent against a Rs900 limit.",
           "action": {
             "type": "navigate",
@@ -4175,7 +4084,7 @@
           "id": "share:cat-28:2026-06",
           "kind": "category-share",
           "severity": "info",
-          "title": "Rent is 71% of this month's spending",
+          "title": "Uncategorized is 71% of this month's spending",
           "detail": "Rs44000 of Rs61714.05 total."
         }
       ]
@@ -4211,7 +4120,7 @@
           "id": "budget-over:category:cat-28:2026-06",
           "kind": "budget-over",
           "severity": "warn",
-          "title": "Rent is over budget",
+          "title": "Uncategorized is over budget",
           "detail": "₹44,000 spent against a ₹21,000 limit.",
           "action": {
             "type": "navigate",
@@ -4223,7 +4132,7 @@
           "id": "budget-over:category:cat-32:2026-06",
           "kind": "budget-over",
           "severity": "warn",
-          "title": "Home Maintenance is over budget",
+          "title": "Uncategorized is over budget",
           "detail": "₹1,000.25 spent against a ₹900 limit.",
           "action": {
             "type": "navigate",
@@ -4325,14 +4234,14 @@
           "id": "spike:cat-28:2026-06",
           "kind": "category-spike",
           "severity": "warn",
-          "title": "Rent is 100% above your 3-month average",
+          "title": "Uncategorized is 100% above your 3-month average",
           "detail": "On pace for ₹44,000 this month, against ₹22,000 on average."
         },
         {
           "id": "budget-over:category:cat-28:2026-06",
           "kind": "budget-over",
           "severity": "warn",
-          "title": "Rent is over budget",
+          "title": "Uncategorized is over budget",
           "detail": "₹44,000 spent against a ₹21,000 limit.",
           "action": {
             "type": "navigate",
@@ -4344,7 +4253,7 @@
           "id": "budget-over:category:cat-32:2026-06",
           "kind": "budget-over",
           "severity": "warn",
-          "title": "Home Maintenance is over budget",
+          "title": "Uncategorized is over budget",
           "detail": "₹1,000.25 spent against a ₹900 limit.",
           "action": {
             "type": "navigate",
@@ -4400,7 +4309,7 @@
           "id": "spike:cat-25:2026-03",
           "kind": "category-spike",
           "severity": "warn",
-          "title": "Groceries is 71% above your 3-month average",
+          "title": "Uncategorized is 71% above your 3-month average",
           "detail": "On pace for Rs4865.06 this month, against Rs2837.75 on average."
         },
         {
@@ -4492,7 +4401,7 @@
           "id": "share:cat-28:2026-03",
           "kind": "category-share",
           "severity": "info",
-          "title": "Rent is 44% of this month's spending",
+          "title": "Uncategorized is 44% of this month's spending",
           "detail": "Rs22000 of Rs50073.25 total."
         },
         {
@@ -4537,7 +4446,7 @@
           "id": "budget-over:category:cat-32:2026-05",
           "kind": "budget-over",
           "severity": "warn",
-          "title": "Home Maintenance is over budget",
+          "title": "Uncategorized is over budget",
           "detail": "Rs1000.25 spent against a Rs900 limit.",
           "action": {
             "type": "navigate",
@@ -4549,7 +4458,7 @@
           "id": "budget-over:category:cat-28:2026-05",
           "kind": "budget-over",
           "severity": "warn",
-          "title": "Rent is over budget",
+          "title": "Uncategorized is over budget",
           "detail": "Rs22000 spent against a Rs21000 limit.",
           "action": {
             "type": "navigate",
@@ -4639,14 +4548,14 @@
           "id": "spike:cat-28:2026-06",
           "kind": "category-spike",
           "severity": "warn",
-          "title": "Rent is 3.3× your 3-month average",
+          "title": "Uncategorized is 3.3× your 3-month average",
           "detail": "On pace for Rs73333.33 this month, against Rs22000 on average."
         },
         {
           "id": "budget-over:category:cat-28:2026-06",
           "kind": "budget-over",
           "severity": "warn",
-          "title": "Rent is over budget",
+          "title": "Uncategorized is over budget",
           "detail": "Rs44000 spent against a Rs21000 limit.",
           "action": {
             "type": "navigate",
@@ -4658,7 +4567,7 @@
           "id": "budget-over:category:cat-32:2026-06",
           "kind": "budget-over",
           "severity": "warn",
-          "title": "Home Maintenance is over budget",
+          "title": "Uncategorized is over budget",
           "detail": "Rs1000.25 spent against a Rs900 limit.",
           "action": {
             "type": "navigate",
@@ -4736,7 +4645,7 @@
           "id": "share:cat-28:2026-06",
           "kind": "category-share",
           "severity": "info",
-          "title": "Rent is 71% of this month's spending",
+          "title": "Uncategorized is 71% of this month's spending",
           "detail": "Rs44000 of Rs61714.05 total."
         },
         {

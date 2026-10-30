@@ -201,7 +201,7 @@ export function generateSampleData(now = new Date()): SampleData {
         type: 'expense',
         amount: groceryAmounts[i],
         accountKey: PRIMARY,
-        categoryId: 'cat-25',
+        categoryId: 'cat-1',
         date: at(now, m, day),
         note: 'Groceries',
         labels: ['lbl-1'],
