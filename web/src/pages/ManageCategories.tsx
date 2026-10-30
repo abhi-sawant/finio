@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { ArrowLeft, Lock, Plus, Trash2, Pencil } from 'lucide-react';
 import { toast } from 'sonner';
@@ -14,7 +14,12 @@ import type { CategoryType } from '@/types';
 import Header from '@/components/ui/header';
 import { HeaderIconButton } from '@/components/ui/header-icon-button';
 import Main from '@/components/ui/main';
-import { TRANSFER_CATEGORY_ID, miscLast } from '@/utils/calculations';
+import {
+  TRANSFER_CATEGORY_ID,
+  categoryUsageCounts,
+  formatTransactionCount,
+  miscLast,
+} from '@/utils/calculations';
 import { MAX_NAME_LENGTH, cleanText, stripLeading } from '@/utils/validation';
 
 const categoryColors = COLOR_PALETTE;
@@ -23,6 +28,8 @@ export default function ManageCategories() {
   const navigate = useNavigate();
   const confirm = useConfirm();
   const categories = useFinanceStore((s) => s.categories);
+  const transactions = useFinanceStore((s) => s.transactions);
+  const usage = useMemo(() => categoryUsageCounts(transactions), [transactions]);
   const addCategory = useFinanceStore((s) => s.addCategory);
   const updateCategory = useFinanceStore((s) => s.updateCategory);
   const deleteCategory = useFinanceStore((s) => s.deleteCategory);
@@ -223,6 +230,8 @@ export default function ManageCategories() {
                     <p className="truncate text-sm font-medium">{cat.name}</p>
                     <p className="text-muted-foreground text-xs">
                       <span className="capitalize">{cat.type}</span>
+                      {' · '}
+                      {formatTransactionCount(usage.get(cat.id) ?? 0)}
                       {isProtected &&
                         (cat.id === TRANSFER_CATEGORY_ID
                           ? ' · Built in, used by every transfer'

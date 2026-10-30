@@ -6,7 +6,6 @@ import {
   Bell,
   ShieldCheck,
   SlidersHorizontal,
-  FolderOpen,
   type LucideIcon,
 } from 'lucide-react';
 import { useAuthStore } from '@/store/useAuthStore';
@@ -63,12 +62,6 @@ export default function Settings() {
       icon: Bell,
       title: 'Notifications',
       status: settings.notificationsEnabled ? 'Reminders on' : 'Reminders off',
-    },
-    {
-      to: '/settings/organise',
-      icon: FolderOpen,
-      title: 'Categories, labels & rules',
-      status: 'Organise how transactions are filed',
     },
   ];
 

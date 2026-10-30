@@ -142,9 +142,6 @@ fun MerchantsScreen(nav: FinioNavigator) {
                     categories = state.categories,
                     accounts = state.accounts,
                     onOpen = { nav.navigate(Routes.EditTransaction(it)) },
-                    onCreateRule = {
-                        nav.navigate(Routes.CategoryRules(pattern = merchant.displayName, scope = merchant.type.wire))
-                    },
                 )
             }
         }
@@ -161,7 +158,6 @@ private fun MerchantRow(
     categories: List<Category>,
     accounts: List<Account>,
     onOpen: (String) -> Unit,
-    onCreateRule: () -> Unit,
 ) {
     val colors = FinioTheme.colors
     Column {
@@ -198,18 +194,6 @@ private fun MerchantRow(
                 Column(Modifier.padding(start = 4.dp, end = 4.dp, bottom = 4.dp)) {
                     merchant.transactions.forEach { t ->
                         MerchantTransaction(t, categories, accounts, money) { onOpen(t.id) }
-                    }
-                    Row(
-                        Modifier
-                            .fillMaxWidth()
-                            .clip(FinioShapes.full)
-                            .clickable(role = Role.Button, onClick = onCreateRule)
-                            .padding(10.dp),
-                        horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterHorizontally),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Icon(LucideIcons.Wand2, null, Modifier.size(13.dp), tint = colors.primary)
-                        Text("Create a rule for \"${merchant.displayName}\"", style = FinioType.label, color = colors.primary)
                     }
                 }
             }

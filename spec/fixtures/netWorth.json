@@ -10,7 +10,7 @@
           {
             "id": "acc-bank",
             "name": "HDFC Salary",
-            "type": "checking",
+            "type": "savings",
             "color": "#4b36c7",
             "icon": "landmark",
             "balance": 349052,
@@ -67,7 +67,7 @@
           {
             "id": "acc-wallet",
             "name": "Paytm Wallet",
-            "type": "wallet",
+            "type": "cash",
             "color": "#4b36c7",
             "icon": "landmark",
             "balance": -250,
@@ -113,7 +113,7 @@
           {
             "id": "acc-old",
             "name": "Old Axis",
-            "type": "checking",
+            "type": "savings",
             "color": "#4b36c7",
             "icon": "landmark",
             "balance": 3800,
@@ -2012,13 +2012,6 @@
             "type": "expense"
           },
           {
-            "id": "cat-7",
-            "name": "Education",
-            "icon": "book-open",
-            "color": "#3b82f6",
-            "type": "expense"
-          },
-          {
             "id": "cat-8",
             "name": "Housing",
             "icon": "home",
@@ -2068,13 +2061,6 @@
             "type": "expense"
           },
           {
-            "id": "cat-11",
-            "name": "Investments",
-            "icon": "trending-up",
-            "color": "#f59e0b",
-            "type": "expense"
-          },
-          {
             "id": "cat-9",
             "name": "Salary",
             "icon": "briefcase",
@@ -2083,30 +2069,9 @@
           },
           {
             "id": "cat-10",
-            "name": "Freelance",
+            "name": "Side income",
             "icon": "laptop",
             "color": "#146b54",
-            "type": "income"
-          },
-          {
-            "id": "cat-12",
-            "name": "Business",
-            "icon": "building-2",
-            "color": "#a855f7",
-            "type": "income"
-          },
-          {
-            "id": "cat-21",
-            "name": "Gifts",
-            "icon": "gift",
-            "color": "#f97316",
-            "type": "income"
-          },
-          {
-            "id": "cat-22",
-            "name": "Rent",
-            "icon": "home",
-            "color": "#3b82f6",
             "type": "income"
           },
           {
@@ -2131,13 +2096,6 @@
             "type": "both"
           },
           {
-            "id": "cat-25",
-            "name": "Groceries",
-            "icon": "shopping-cart",
-            "color": "#22c55e",
-            "type": "expense"
-          },
-          {
             "id": "cat-26",
             "name": "Insurance",
             "icon": "umbrella",
@@ -2152,13 +2110,6 @@
             "type": "expense"
           },
           {
-            "id": "cat-28",
-            "name": "Rent",
-            "icon": "building-2",
-            "color": "#78716c",
-            "type": "expense"
-          },
-          {
             "id": "cat-29",
             "name": "Fitness & Wellness",
             "icon": "dumbbell",
@@ -2166,52 +2117,10 @@
             "type": "expense"
           },
           {
-            "id": "cat-30",
-            "name": "Pets",
-            "icon": "paw-print",
-            "color": "#f59e0b",
-            "type": "expense"
-          },
-          {
-            "id": "cat-31",
-            "name": "Childcare",
-            "icon": "baby",
-            "color": "#fb923c",
-            "type": "expense"
-          },
-          {
-            "id": "cat-32",
-            "name": "Home Maintenance",
-            "icon": "wrench",
-            "color": "#6b7280",
-            "type": "expense"
-          },
-          {
             "id": "cat-33",
             "name": "Bonus",
             "icon": "sparkles",
             "color": "#fbbf24",
-            "type": "income"
-          },
-          {
-            "id": "cat-34",
-            "name": "Dividends",
-            "icon": "piggy-bank",
-            "color": "#10b981",
-            "type": "income"
-          },
-          {
-            "id": "cat-35",
-            "name": "Lending",
-            "icon": "hand-coins",
-            "color": "#ec4899",
-            "type": "expense"
-          },
-          {
-            "id": "cat-36",
-            "name": "Lending",
-            "icon": "hand-coins",
-            "color": "#ec4899",
             "type": "income"
           },
           {
@@ -2487,7 +2396,7 @@
           {
             "id": "a",
             "name": "HDFC Salary",
-            "type": "checking",
+            "type": "savings",
             "color": "#4b36c7",
             "icon": "landmark",
             "balance": 0.1,
@@ -2497,7 +2406,7 @@
           {
             "id": "b",
             "name": "HDFC Salary",
-            "type": "checking",
+            "type": "savings",
             "color": "#4b36c7",
             "icon": "landmark",
             "balance": 0.2,
@@ -2520,7 +2429,7 @@
           {
             "id": "d",
             "name": "HDFC Salary",
-            "type": "checking",
+            "type": "savings",
             "color": "#4b36c7",
             "icon": "landmark",
             "balance": 0,
@@ -2530,7 +2439,7 @@
           {
             "id": "e",
             "name": "HDFC Salary",
-            "type": "checking",
+            "type": "savings",
             "color": "#4b36c7",
             "icon": "landmark",
             "balance": 999,

@@ -34,7 +34,6 @@ fun collectBackupPayload(state: FinanceState): JsonObject {
         },
     )
     out["templates"] = FinioJson.encodeToJsonElement(state.templates)
-    out["rules"] = FinioJson.encodeToJsonElement(state.rules)
     out["goals"] = FinioJson.encodeToJsonElement(state.goals)
     out["goalContributions"] = FinioJson.encodeToJsonElement(state.goalContributions)
     out["people"] = FinioJson.encodeToJsonElement(state.people)

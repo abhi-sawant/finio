@@ -14,7 +14,7 @@ const acct = (id: string, balance: number, openingBalance?: number): Account =>
   ({
     id,
     name: id,
-    type: 'checking',
+    type: 'savings',
     color: '#000000',
     icon: 'landmark',
     balance,
@@ -47,7 +47,9 @@ export default function cases(): GoldenCase[] {
   const legacy = [acct('a', 49879.55), acct('b', 0.1, 0), acct('c', 99.7)];
   out.push(gc('backfillOpeningBalances', [legacy, txs], backfillOpeningBalances(legacy, txs)));
   out.push(gc('recomputeAccountBalances', [legacy, txs], recomputeAccountBalances(legacy, txs)));
-  out.push(gc('recomputeAccountBalances', [accounts, txs], recomputeAccountBalances(accounts, txs)));
+  out.push(
+    gc('recomputeAccountBalances', [accounts, txs], recomputeAccountBalances(accounts, txs)),
+  );
   for (const [cur, stmt] of [
     [100, 100],
     [100, 150.25],

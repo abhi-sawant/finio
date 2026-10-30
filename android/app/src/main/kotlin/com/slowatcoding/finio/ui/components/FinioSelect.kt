@@ -53,7 +53,7 @@ import com.slowatcoding.finio.ui.theme.FinioRadius
  * One choice in a [FinioSelect]. [leading] is drawn before the label in both the list and the
  * trigger. The closed trigger shows [selectedLabel] (defaults to [label]) — the web's
  * `<SelectValue>` children, for when the field reads differently from the list row — followed by
- * [selectedTrailing] as muted inline text ("HDFC Checking · Bank account").
+ * [selectedTrailing] as muted inline text ("HDFC Current · Bank account").
  */
 @Immutable
 data class SelectOption<T>(

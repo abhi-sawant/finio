@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
 import {
   ChevronRight,
   Cloud,
@@ -12,7 +11,6 @@ import {
   Folder,
   Download,
   Upload,
-  FileSpreadsheet,
   Scale,
   RotateCcw,
   Trash2,
@@ -81,7 +79,6 @@ type CryptoPhase = 'current' | 'enter' | 'confirm';
 type BackupListEntry = { backup_date: string; file_size: number; created_at: string };
 
 export function BackupSection() {
-  const navigate = useNavigate();
   const confirm = useConfirm();
   const settings = useFinanceStore((s) => s.settings);
   const updateSettings = useFinanceStore((s) => s.updateSettings);
@@ -211,7 +208,7 @@ export function BackupSection() {
     const confirmed = await confirm({
       title: 'Reset all data?',
       description:
-        'Accounts, transactions, budgets, recurring rules, loans, savings goals, people/debts, categorization rules, templates and net-worth history will be erased, and categories and labels restored to defaults. Your name and settings are kept. This cannot be undone.',
+        'Accounts, transactions, budgets, recurring rules, loans, savings goals, people/debts, templates and net-worth history will be erased, and categories and labels restored to defaults. Your name and settings are kept. This cannot be undone.',
       confirmLabel: 'Reset everything',
     });
     if (confirmed) {
@@ -699,18 +696,6 @@ export function BackupSection() {
         >
           <Upload size={18} className="text-muted-foreground" />
           <span className="text-sm font-medium">Import data</span>
-        </button>
-        <button
-          onClick={() => navigate('/import-csv')}
-          className="hover:bg-muted/50 flex w-full items-center gap-3 p-4 transition-colors"
-        >
-          <FileSpreadsheet size={18} className="text-muted-foreground" />
-          <div className="flex-1 text-left">
-            <p className="text-sm font-medium">Import bank CSV</p>
-            <p className="text-muted-foreground text-xs">
-              Map columns from a bank or card statement export
-            </p>
-          </div>
         </button>
         {settings.trackingMode !== 'transactions' && (
           <button

@@ -26,8 +26,8 @@ npm run test:watch   # Vitest watch mode
 
 Tests live next to their subject as `*.test.ts` — 637 of them across 29 files — and cover the
 pure money logic (`src/store/balance.ts`, `src/store/recurring.ts`, `src/utils/calculations.ts`,
-`src/utils/period.ts`, `src/utils/importValidation.ts`, `src/utils/csvImport.ts`,
-`src/utils/autoCategorize.ts`, `src/utils/analytics.ts`, `src/utils/forecast.ts`,
+`src/utils/period.ts`, `src/utils/importValidation.ts`,
+`src/utils/analytics.ts`, `src/utils/forecast.ts`,
 `src/utils/netWorth.ts`, `src/utils/insights.ts`, `src/utils/loan.ts`, `src/utils/deposit.ts`, `src/utils/merchants.ts`,
 `src/utils/notifications.ts`, `src/utils/notificationSchedule.ts`, `src/utils/shareTarget.ts`,
 `src/utils/pinCrypto.ts`, `src/utils/appLock.ts`, `src/utils/backupCrypto.ts`,
@@ -110,8 +110,6 @@ src/
 │   ├── calculations.ts       # Financial aggregations, budget status/history, CSV export
 │   ├── period.ts             # Weekly/monthly/yearly period math (honours monthStartDay)
 │   ├── importValidation.ts   # Backup shape validation + dry-run report
-│   ├── csvImport.ts          # Bank-statement CSV parsing + column mapping
-│   ├── autoCategorize.ts     # Pure rule engine: note pattern → category + labels
 │   ├── analytics.ts          # Period-over-period comparison, spending calendar grid, Year in Review
 │   ├── forecast.ts           # Liquid cash-flow projection (recurring + category averages)
 │   ├── netWorth.ts           # Net worth series, reconstruction, and monthly snapshots
@@ -151,7 +149,7 @@ public/guilloche.svg          # Procedural rosette, masked behind every screen (
 
 Four Zustand stores, all persisted to localStorage:
 
-- **`useFinanceStore`** (`finio-storage`) — accounts, transactions, categories, labels, budgets, recurring rules, templates, category rules, goals + contributions, people + debt entries, net-worth snapshots, loans + prepayments, settings. Exposes granular selector hooks (`useAccounts()`, `useTransactions()`, etc.) to avoid re-renders. Includes `processRecurring()` for generating due recurring transactions, `importData(payload, { mode })` for merge/replace restore, `captureNetWorthSnapshots()` for the monthly net-worth ledger, `applyRulesToExisting()` to replay categorization rules, `recomputeBalances()` to reconcile drift globally, and the loan lifecycle (`addLoan`/`updateLoan`/`setLoanClosed`/`deleteLoan`/`addLoanPrepayment`) which keeps a linked `RecurringTransaction` in sync with the recalculated EMI. Has migration support (currently v17).
+- **`useFinanceStore`** (`finio-storage`) — accounts, transactions, categories, labels, budgets, recurring rules, templates, goals + contributions, people + debt entries, net-worth snapshots, loans + prepayments, settings. Exposes granular selector hooks (`useAccounts()`, `useTransactions()`, etc.) to avoid re-renders. Includes `processRecurring()` for generating due recurring transactions, `importData(payload, { mode })` for merge/replace restore, `captureNetWorthSnapshots()` for the monthly net-worth ledger, `recomputeBalances()` to reconcile drift globally, and the loan lifecycle (`addLoan`/`updateLoan`/`setLoanClosed`/`deleteLoan`/`addLoanPrepayment`) which keeps a linked `RecurringTransaction` in sync with the recalculated EMI. Has migration support (currently v19).
 - **`useAuthStore`** (`finio-auth`) — JWT token, user object, `lastBackupAt`. Use `loadAuth()` on app start to hydrate from storage.
 - **`useAppLockStore`** (`finio-lock`) — PIN hash + salt, auto-lock delay, WebAuthn credential id, failed-attempt count, and the transient `isLocked`/`isReady` flags. **Separate from the finance store on purpose** — see the app-lock gotcha below. Uses `partialize` so the transient flags are never written, and decides the cold-start lock in `onRehydrateStorage` rather than an effect.
 - **`useBackupCryptoStore`** (`finio-backup-crypto`) — `BackupCryptoConfig` (salt, iterations, passphrase verifier) plus the derived `CryptoKey`, which is **in-memory only** and never persisted. Separate from `Settings` for the same reason as the lock store — see the encrypted-backup gotcha below.
@@ -166,8 +164,8 @@ app is rendered above `<Routes>` in `App.tsx` — hydration → app lock → onb
 - `/` — Dashboard (index)
 - `/accounts`, `/transactions`, `/analytics`, `/settings`, `/budgets`, `/recurring`
 - `/add-transaction`, `/edit-transaction/:id`, `/add-account`, `/edit-account/:id`
-- `/manage-categories`, `/manage-labels`, `/category-rules`
-- `/goals`, `/debts`, `/import-csv`
+- `/manage-categories`, `/manage-labels`
+- `/goals`, `/debts`
 - `/loans`, `/add-loan`, `/edit-loan/:id`
 - `/merchants` — grouped view of who transactions went to/came from
 - `/year-in-review` — annual look-back, year-offset navigable
@@ -229,7 +227,6 @@ page.
 - **Sonner** for toast notifications (mounted in `App.tsx`).
 - **Recharts** for all charts in the Analytics page. Every chart whose data lived only in the SVG is paired with [`ChartDataTable`](src/components/charts/ChartDataTable.tsx) — a real `<table>` behind a "View data table" disclosure.
 - **@tanstack/react-virtual** for the virtualized transactions list.
-- **papaparse** for bank-statement CSV parsing.
 - Confirmations go through `useConfirm()` ([`src/components/ui/confirm.tsx`](src/components/ui/confirm.tsx)), never native `confirm()`. Toggles use `Switch`/`SwitchField` ([`src/components/ui/switch.tsx`](src/components/ui/switch.tsx)), never a hand-rolled `<span role="switch">`.
 
 ---

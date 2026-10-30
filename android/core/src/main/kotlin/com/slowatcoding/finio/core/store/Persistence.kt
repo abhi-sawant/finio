@@ -26,12 +26,12 @@ import kotlinx.serialization.serializer
 import java.time.Instant
 
 // The persisted envelope of the finance store and the port of the Zustand `persist` options in
-// web/src/store/useFinanceStore.ts (name `finio-storage`, version 18, the cumulative `migrate`).
+// web/src/store/useFinanceStore.ts (name `finio-storage`, version 19, the cumulative `migrate`).
 // Zustand stores `{ state, version }`; an older version runs through every migration step in
 // order, then the result is shallow-merged over the initial state (`{...initial, ...migrated}`).
 
 /** The store's persisted schema version — bump together with a new step in [migrateFinance]. */
-const val FINANCE_STORE_VERSION = 18
+const val FINANCE_STORE_VERSION = 19
 
 @Serializable
 data class PersistedFinance(val state: FinanceState, val version: Int = FINANCE_STORE_VERSION)
@@ -163,8 +163,6 @@ fun migrateFinance(persisted: JsonObject, version: Int, now: Instant = nowInstan
         arrayOrEmpty("debtEntries")
     }
 
-    if (version < 11) arrayOrEmpty("rules")
-
     if (version < 12) arrayOrEmpty("netWorthSnapshots")
 
     if (version < 13) {
@@ -206,6 +204,11 @@ fun migrateFinance(persisted: JsonObject, version: Int, now: Instant = nowInstan
         // Expense-tracker mode is opt-in — an upgrade stays in full balance tracking.
         val st = settings()
         s["settings"] = JsonObject(spread(defaultSettingsJson, st, mapOf("trackingMode" to JsonPrimitive("full"))))
+    }
+
+    if (version < 19) {
+        // Categorization rules were removed. Drop whatever a device still carries.
+        s.remove("rules")
     }
 
     return JsonObject(s)
@@ -259,7 +262,6 @@ fun financeStateFromJson(raw: JsonObject): FinanceState {
         budgets = list("budgets", serializer(), initial.budgets),
         recurring = list("recurring", serializer(), initial.recurring),
         templates = list("templates", serializer(), initial.templates),
-        rules = list("rules", serializer(), initial.rules),
         goals = list("goals", serializer(), initial.goals),
         goalContributions = list("goalContributions", serializer(), initial.goalContributions),
         people = list("people", serializer(), initial.people),

@@ -6,9 +6,18 @@ import { L, buildLedger } from './calculations.fixture';
 // Merchant grouping over the shared fixture ledger plus merchants.test.ts shapes. Transactions
 // in the output are reduced to ids.
 
-const summaryOut = (s: MerchantSummary) => ({ ...s, transactions: s.transactions.map((t) => t.id) });
+const summaryOut = (s: MerchantSummary) => ({
+  ...s,
+  transactions: s.transactions.map((t) => t.id),
+});
 
-function tx(id: string, note: string, amount: number, date: string, type: Transaction['type'] = 'expense'): Transaction {
+function tx(
+  id: string,
+  note: string,
+  amount: number,
+  date: string,
+  type: Transaction['type'] = 'expense',
+): Transaction {
   return {
     id,
     type,
@@ -28,10 +37,18 @@ export default function cases(): GoldenCase[] {
   const out: GoldenCase[] = [gc('ledger', [], ledger)];
 
   for (const type of ['expense', 'income'] as const) {
-    out.push(gc('summarizeMerchants', [L('transactions'), type], summarizeMerchants(txns, type).map(summaryOut)));
+    out.push(
+      gc(
+        'summarizeMerchants',
+        [L('transactions'), type],
+        summarizeMerchants(txns, type).map(summaryOut),
+      ),
+    );
   }
   for (const n of [0, 3, 100, -2]) {
-    out.push(gc('topMerchants', [L('transactions'), n, 'expense'], topMerchants(txns, n).map(summaryOut)));
+    out.push(
+      gc('topMerchants', [L('transactions'), n, 'expense'], topMerchants(txns, n).map(summaryOut)),
+    );
   }
 
   const small = [
@@ -50,9 +67,13 @@ export default function cases(): GoldenCase[] {
     tx('m', 'Tie-A', 100, '2026-06-01T10:00:00.000Z'),
   ];
   for (const type of ['expense', 'income'] as const) {
-    out.push(gc('summarizeMerchants', [small, type], summarizeMerchants(small, type).map(summaryOut)));
+    out.push(
+      gc('summarizeMerchants', [small, type], summarizeMerchants(small, type).map(summaryOut)),
+    );
   }
-  out.push(gc('summarizeMerchants', [[], 'expense'], summarizeMerchants([], 'expense').map(summaryOut)));
+  out.push(
+    gc('summarizeMerchants', [[], 'expense'], summarizeMerchants([], 'expense').map(summaryOut)),
+  );
   out.push(gc('topMerchants', [small, 2, 'expense'], topMerchants(small, 2).map(summaryOut)));
   return out;
 }

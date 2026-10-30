@@ -94,7 +94,7 @@ Below that:
 
 ### Accounts
 
-Six account types — Checking, Savings, Cash, Credit, Investment, Wallet — each with its own name,
+Five account types — Savings, Cash, Credit, Fixed deposit, Recurring deposit — each with its own name,
 icon, and colour.
 
 Credit cards get a full lifecycle: a credit limit with a utilization reading, plus an optional
@@ -205,24 +205,11 @@ An annual look back, one financial year at a time: total income and expenses, th
 moved the most versus last year, and the headline numbers you'd want at year-end. Step backwards
 through past years or stay on the one in progress, which is labelled and paced accordingly.
 
-### Categories, Labels, and Rules
+### Categories and Labels
 
 **32 built-in categories** and **9 built-in labels** ship with the app, and you can add, edit, or
 delete any of them. Categories have an icon, a colour, and a type (expense, income, or both);
 labels are free-form tags you can stack on any transaction.
-
-**Categorization rules** file transactions for you. "If the note contains _Uber_, make it Transport
-and tag it Essential." Rules run as you type a note (with an Undo right there in the banner),
-during CSV import, and on demand over your existing history — with a live count of what would
-change before you commit, and a single-tap undo after.
-
-### Import from Your Bank
-
-Settings → **Import from CSV** walks a bank statement through three steps: upload, map the columns,
-review. Finio auto-detects the date, amount, and note columns and the date format; handles either a
-single signed amount column or separate debit/credit columns; understands currency symbols,
-thousand separators, and accounting-style parentheses; and flags likely duplicates against what's
-already in your ledger before anything is added.
 
 ### Reminders
 
@@ -264,8 +251,8 @@ Finio gives you four ways to not lose your data, and you can use any combination
 Everything above is configured from one screen: display name, theme (light / dark / follow
 system — both built on the same warm, paper-toned palette), **hide amounts** (masks every figure app-wide behind dots when you're in public), the day
 your financial month starts (1–28, so a 25th-of-the-month salary cycle really runs 25 Jun – 24
-Jul), reminders, app lock, cloud account and password, encryption, backups, CSV import, category /
-label / rule management, and quick links out to Loans, Merchants, and Year in Review.
+Jul), reminders, app lock, cloud account and password, encryption, backups, category /
+label management, and quick links out to Loans, Merchants, and Year in Review.
 
 There's also a global **Reconcile Balances**, which rebuilds every account balance from its
 opening balance and its transactions and reports what it corrected — a safety net you'll probably
@@ -286,7 +273,7 @@ for the site deletes it — which is why the backup options above are worth sett
 **Can I use it on two devices?** Yes, via cloud backup: back up on one, restore on the other. Finio
 doesn't do live sync between devices.
 
-**Does it connect to my bank?** No. You add transactions manually, or import a CSV statement.
+**Does it connect to my bank?** No. You add transactions manually.
 
 **Is it free?** Yes, and the source is here.
 
@@ -317,7 +304,6 @@ only adds user accounts and cloud backup storage.
 | Charts            | Recharts 3                                                                                         |
 | Dates             | date-fns 4                                                                                         |
 | Virtual scrolling | @tanstack/react-virtual                                                                            |
-| CSV               | papaparse                                                                                          |
 | Icons             | Lucide React                                                                                       |
 | Tests             | Vitest (node environment)                                                                          |
 | PWA               | vite-plugin-pwa with `injectManifest` + a hand-written Workbox service worker                      |
@@ -380,7 +366,7 @@ npm run format:check # Check formatting without writing
 
 637 tests across 29 files (in `web/`), living next to their subjects as `*.test.ts`. They cover the pure money
 logic — balance deltas and reconciliation, the recurring planner, budget status and rollover,
-period math, backup validation, CSV parsing, the categorization engine, forecasting, net worth,
+period math, backup validation, forecasting, net worth,
 insights, loan amortization, merchant grouping, the notification schedule, PIN and backup crypto —
 plus the finance, app-lock, and backup-crypto stores, and the deterministic onboarding sample
 dataset.

@@ -116,12 +116,23 @@ function txn(
   note: string,
   extra: Partial<Transaction> = {},
 ): Transaction {
-  return { id, type, amount, accountId, categoryId, date, note, labels: [], createdAt: date, ...extra };
+  return {
+    id,
+    type,
+    amount,
+    accountId,
+    categoryId,
+    date,
+    note,
+    labels: [],
+    createdAt: date,
+    ...extra,
+  };
 }
 
 export function buildLedger(): Ledger {
   const accounts: Account[] = [
-    account('acc-bank', 'HDFC Salary', 'checking', 50000),
+    account('acc-bank', 'HDFC Salary', 'savings', 50000),
     account('acc-savings', 'SBI Savings', 'savings', 200000),
     account('acc-cash', 'Cash', 'cash', 3000),
     account('acc-card', 'Amex Platinum', 'credit', 0, {
@@ -135,7 +146,7 @@ export function buildLedger(): Ledger {
       paymentDueDays: 20,
       minimumDuePercent: 3.5,
     }),
-    account('acc-wallet', 'Paytm Wallet', 'wallet', 100),
+    account('acc-wallet', 'Paytm Wallet', 'cash', 100),
     account('acc-fd', 'HDFC FD', 'fd', 100000, {
       deposit: {
         amount: 100000,
@@ -156,7 +167,7 @@ export function buildLedger(): Ledger {
         recurringId: 'rec-rd',
       },
     }),
-    account('acc-old', 'Old Axis', 'checking', 5000, { archivedAt: '2026-02-01T04:30:00.000Z' }),
+    account('acc-old', 'Old Axis', 'savings', 5000, { archivedAt: '2026-02-01T04:30:00.000Z' }),
   ];
 
   const tx: Transaction[] = [];
@@ -177,7 +188,15 @@ export function buildLedger(): Ledger {
     // Salary lands on the 25th of the *previous* month — the salary cycle.
     const [py, pm] = m === 1 ? [y - 1, 12] : [y, m - 1];
     tx.push(
-      txn(`sal-${mm}`, 'income', 85000, 'acc-bank', 'cat-9', iso(py, pm, 25, 9), 'Salary ACME Corp'),
+      txn(
+        `sal-${mm}`,
+        'income',
+        85000,
+        'acc-bank',
+        'cat-9',
+        iso(py, pm, 25, 9),
+        'Salary ACME Corp',
+      ),
     );
     tx.push(
       txn(`rent-${mm}`, 'expense', 22000, 'acc-bank', 'cat-28', iso(y, m, 1, 9), `Rent ${mm}`, {
@@ -206,9 +225,18 @@ export function buildLedger(): Ledger {
       );
     });
     tx.push(
-      txn(`netflix-${mm}`, 'expense', 649, 'acc-card', 'cat-18', iso(y, m, 7, 6), 'NETFLIX.COM 8812', {
-        labels: ['lbl-3'],
-      }),
+      txn(
+        `netflix-${mm}`,
+        'expense',
+        649,
+        'acc-card',
+        'cat-18',
+        iso(y, m, 7, 6),
+        'NETFLIX.COM 8812',
+        {
+          labels: ['lbl-3'],
+        },
+      ),
     );
     tx.push(
       txn(
@@ -271,7 +299,15 @@ export function buildLedger(): Ledger {
     }
     if (k % 2 === 1) {
       tx.push(
-        txn(`int-${mm}`, 'income', 412.37, 'acc-savings', 'cat-23', iso(y, m, 28, 23, 59), 'Interest'),
+        txn(
+          `int-${mm}`,
+          'income',
+          412.37,
+          'acc-savings',
+          'cat-23',
+          iso(y, m, 28, 23, 59),
+          'Interest',
+        ),
       );
     }
   });
@@ -302,7 +338,15 @@ export function buildLedger(): Ledger {
     txn('wallet-1', 'expense', 350, 'acc-wallet', 'cat-1', iso(2026, 5, 6, 13), 'Chai Point'),
     txn('old-1', 'expense', 1200, 'acc-old', 'cat-3', iso(2025, 12, 4, 12), 'Myntra'),
     txn('chai-dateonly', 'expense', 99, 'acc-cash', 'cat-1', '2026-05-31', 'Chai'),
-    txn('midnight-jun', 'expense', 180, 'acc-cash', 'cat-1', iso(2026, 6, 1, 0, 0), 'Midnight snack'),
+    txn(
+      'midnight-jun',
+      'expense',
+      180,
+      'acc-cash',
+      'cat-1',
+      iso(2026, 6, 1, 0, 0),
+      'Midnight snack',
+    ),
     txn(
       'lastms-may',
       'expense',
@@ -461,7 +505,13 @@ export default function cases(): GoldenCase[] {
   );
 
   // ── Categories ────────────────────────────────────────────────────────────
-  out.push(gc('miscLast', [L('categories')], miscLast(categories).map((c) => c.id)));
+  out.push(
+    gc(
+      'miscLast',
+      [L('categories')],
+      miscLast(categories).map((c) => c.id),
+    ),
+  );
   const pick = ['cat-1', 'cat-9', 'cat-13', 'cat-24', 'cat-x'].map(
     (id) => categories.find((c) => c.id === id)!,
   );
@@ -472,9 +522,15 @@ export default function cases(): GoldenCase[] {
   }
   out.push(gc('findTransferCategory', [L('categories')], findTransferCategory(categories)));
   out.push(
-    gc('findTransferCategory', [[pick[0], pick[4], pick[3]]], findTransferCategory([pick[0], pick[4], pick[3]])),
+    gc(
+      'findTransferCategory',
+      [[pick[0], pick[4], pick[3]]],
+      findTransferCategory([pick[0], pick[4], pick[3]]),
+    ),
   );
-  out.push(gc('findTransferCategory', [[pick[0], pick[1]]], findTransferCategory([pick[0], pick[1]])));
+  out.push(
+    gc('findTransferCategory', [[pick[0], pick[1]]], findTransferCategory([pick[0], pick[1]])),
+  );
   for (const t of byId(txns, 'split-202606', 'empty-splits', 'rent-202606', 'unknown-cat')) {
     out.push(gc('transactionCategoryAmounts', [t], transactionCategoryAmounts(t)));
   }
@@ -486,9 +542,21 @@ export default function cases(): GoldenCase[] {
   out.push(gc('getTotalIncome', [TX(june)], getTotalIncome(june)));
   out.push(gc('getTotalExpenses', [TX(june)], getTotalExpenses(june)));
   out.push(gc('getTotalIncome', [[]], getTotalIncome([])));
-  out.push(gc('activeAccounts', [L('accounts')], activeAccounts(accounts).map((a) => a.id)));
+  out.push(
+    gc(
+      'activeAccounts',
+      [L('accounts')],
+      activeAccounts(accounts).map((a) => a.id),
+    ),
+  );
   const emptyArchived = { ...accounts[0], id: 'acc-empty-archived', archivedAt: '' } as Account;
-  out.push(gc('activeAccounts', [[emptyArchived]], activeAccounts([emptyArchived]).map((a) => a.id)));
+  out.push(
+    gc(
+      'activeAccounts',
+      [[emptyArchived]],
+      activeAccounts([emptyArchived]).map((a) => a.id),
+    ),
+  );
   for (const a of accounts) {
     out.push(gc('isLiquidAccount', [a], isLiquidAccount(a)));
     out.push(gc('getCreditUtilization', [a], getCreditUtilization(a)));
@@ -558,9 +626,17 @@ export default function cases(): GoldenCase[] {
     periodRange('monthly', at(2026, 2, 10), 28),
   ];
   for (const range of ranges) {
-    out.push(gc('transactionsInPeriod', [L('transactions'), range], ids(transactionsInPeriod(txns, range))));
+    out.push(
+      gc(
+        'transactionsInPeriod',
+        [L('transactions'), range],
+        ids(transactionsInPeriod(txns, range)),
+      ),
+    );
   }
-  out.push(gc('transactionsInPeriod', [junk, ranges[1]], ids(transactionsInPeriod(junk, ranges[1]))));
+  out.push(
+    gc('transactionsInPeriod', [junk, ranges[1]], ids(transactionsInPeriod(junk, ranges[1]))),
+  );
   for (const [d, msd] of [
     [NOW, 1],
     [NOW, 25],
@@ -570,16 +646,30 @@ export default function cases(): GoldenCase[] {
     [at(2026, 5, 25, 0, 0), 25],
     [at(2026, 1, 3), 15],
   ] as Array<[Date, number]>) {
-    out.push(gc('getMonthTransactions', [L('transactions'), d, msd], ids(getMonthTransactions(txns, d, msd))));
+    out.push(
+      gc(
+        'getMonthTransactions',
+        [L('transactions'), d, msd],
+        ids(getMonthTransactions(txns, d, msd)),
+      ),
+    );
   }
   vi.useFakeTimers({ now: NOW });
   try {
     for (const msd of [1, 25]) {
       out.push(
-        gc('getCurrentMonthTransactions', [L('transactions'), msd, NOW], ids(getCurrentMonthTransactions(txns, msd))),
+        gc(
+          'getCurrentMonthTransactions',
+          [L('transactions'), msd, NOW],
+          ids(getCurrentMonthTransactions(txns, msd)),
+        ),
       );
       out.push(
-        gc('getPreviousMonthTransactions', [L('transactions'), msd, NOW], ids(getPreviousMonthTransactions(txns, msd))),
+        gc(
+          'getPreviousMonthTransactions',
+          [L('transactions'), msd, NOW],
+          ids(getPreviousMonthTransactions(txns, msd)),
+        ),
       );
     }
   } finally {
@@ -599,7 +689,9 @@ export default function cases(): GoldenCase[] {
   ];
   out.push(gc('groupTransactionsByDate', [midnight], grouped(midnight)));
   out.push(gc('groupTransactionsByDate', [[]], grouped([])));
-  out.push(gc('sortTransactionsDateDesc', [L('transactions')], ids(sortTransactionsDateDesc(validTxns))));
+  out.push(
+    gc('sortTransactionsDateDesc', [L('transactions')], ids(sortTransactionsDateDesc(validTxns))),
+  );
   out.push(gc('sortTransactionsDateDesc', [midnight], ids(sortTransactionsDateDesc(midnight))));
 
   // ── Search ────────────────────────────────────────────────────────────────
@@ -674,7 +766,13 @@ export default function cases(): GoldenCase[] {
     'empty-splits',
   );
   for (const b of budgets) {
-    out.push(gc('budgetMatchedAmount', [b, TX(matchRows)], matchRows.map((t) => budgetMatchedAmount(b, t))));
+    out.push(
+      gc(
+        'budgetMatchedAmount',
+        [b, TX(matchRows)],
+        matchRows.map((t) => budgetMatchedAmount(b, t)),
+      ),
+    );
   }
   const statusNows = [
     NOW,
@@ -752,7 +850,10 @@ export default function cases(): GoldenCase[] {
     [at(2026, 5, 26, 9), 25],
   ] as Array<[Date, number]>) {
     const cur = getMonthTransactions(txns, now, monthStartDay);
-    const prev = transactionsInPeriod(txns, shiftPeriod(periodRange('monthly', now, monthStartDay), -1));
+    const prev = transactionsInPeriod(
+      txns,
+      shiftPeriod(periodRange('monthly', now, monthStartDay), -1),
+    );
     out.push(
       gc(
         'getDashboardStats',
@@ -771,7 +872,11 @@ export default function cases(): GoldenCase[] {
     ),
   );
   out.push(
-    gc('getDashboardStats', [[], [], L('categories'), { now: NOW }], getDashboardStats([], [], categories, { now: NOW })),
+    gc(
+      'getDashboardStats',
+      [[], [], L('categories'), { now: NOW }],
+      getDashboardStats([], [], categories, { now: NOW }),
+    ),
   );
   const onlyUnknown = byId(txns, 'unknown-cat');
   out.push(
@@ -792,7 +897,10 @@ export default function cases(): GoldenCase[] {
     createdAt: '2026-01-01T00:00:00.000Z',
     ...extra,
   });
-  const contribution = (amount: number, extra: Partial<GoalContribution> = {}): GoalContribution => ({
+  const contribution = (
+    amount: number,
+    extra: Partial<GoalContribution> = {},
+  ): GoalContribution => ({
     id: `contrib-${amount}-${extra.date ?? ''}`,
     goalId: 'goal-1',
     amount,
@@ -803,7 +911,11 @@ export default function cases(): GoldenCase[] {
   });
   const goalCases: Array<[Goal, GoalContribution[], Date]> = [
     [goal(), [contribution(2500, { date: '2026-01-11T00:00:00.000Z' })], at(2026, 1, 21)],
-    [goal({ createdAt: '2026-06-01T00:00:00.000Z' }), [contribution(3000, { date: '2026-03-01T00:00:00.000Z' })], NOW],
+    [
+      goal({ createdAt: '2026-06-01T00:00:00.000Z' }),
+      [contribution(3000, { date: '2026-03-01T00:00:00.000Z' })],
+      NOW,
+    ],
     [goal(), [contribution(4000), contribution(9999, { goalId: 'goal-2' })], NOW],
     [goal(), [contribution(6000), contribution(-1500, { date: '2026-02-01T00:00:00.000Z' })], NOW],
     [goal(), [contribution(7000), contribution(5000)], NOW],
@@ -816,7 +928,9 @@ export default function cases(): GoldenCase[] {
     [goal(), [contribution(3333.33, { date: '2026-01-05' })], at(2026, 1, 5, 23)],
   ];
   for (const [g, cs, now] of goalCases) {
-    out.push(gc('computeGoalStatus', [g, cs, now], { ...computeGoalStatus(g, cs, now), goal: g.id }));
+    out.push(
+      gc('computeGoalStatus', [g, cs, now], { ...computeGoalStatus(g, cs, now), goal: g.id }),
+    );
   }
 
   const person = (id: string, name: string): Person => ({
@@ -834,7 +948,12 @@ export default function cases(): GoldenCase[] {
     note: '',
     createdAt: date,
   });
-  const people = [person('p1', 'Rahul'), person('p2', 'Priya'), person('p3', 'Arjun'), person('p4', 'Meera')];
+  const people = [
+    person('p1', 'Rahul'),
+    person('p2', 'Priya'),
+    person('p3', 'Arjun'),
+    person('p4', 'Meera'),
+  ];
   const entries = [
     entry('e1', 'p1', 500, '2026-01-05T00:00:00.000Z'),
     entry('e2', 'p1', -200, '2026-03-05T00:00:00.000Z'),
@@ -845,7 +964,12 @@ export default function cases(): GoldenCase[] {
     entry('e7', 'ghost', 9999, '2026-05-01T00:00:00.000Z'),
   ];
   for (const p of people) {
-    out.push(gc('computePersonBalance', [p, entries], { ...computePersonBalance(p, entries), person: p.id }));
+    out.push(
+      gc('computePersonBalance', [p, entries], {
+        ...computePersonBalance(p, entries),
+        person: p.id,
+      }),
+    );
   }
   out.push(gc('getTotalOwedToYou', [people, entries], getTotalOwedToYou(people, entries)));
   out.push(gc('getTotalYouOwe', [people, entries], getTotalYouOwe(people, entries)));

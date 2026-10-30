@@ -11,6 +11,8 @@ import {
   Landmark,
   Store,
   PartyPopper,
+  FolderOpen,
+  Tag,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -25,6 +27,13 @@ export const navTabs: { path: string; icon: LucideIcon; label: string; desktopOn
 
 /** Secondary destinations — the Sidebar's "Tools" group and the mobile `/tools` page. */
 export const moreNavItems = [
+  {
+    path: '/manage-categories',
+    icon: FolderOpen,
+    label: 'Categories',
+    description: 'Add, edit and remove categories',
+  },
+  { path: '/manage-labels', icon: Tag, label: 'Labels', description: 'Tag transactions your way' },
   {
     path: '/budgets',
     icon: Target,

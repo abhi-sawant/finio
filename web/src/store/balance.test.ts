@@ -13,7 +13,7 @@ function account(id: string, balance: number, openingBalance = balance): Account
   return {
     id,
     name: id,
-    type: 'checking',
+    type: 'savings',
     color: '#000',
     icon: 'landmark',
     balance,

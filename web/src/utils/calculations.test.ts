@@ -714,7 +714,7 @@ describe('getCreditUtilization', () => {
 
 describe('getCreditCardDueInfo', () => {
   it('is null for a non-credit account', () => {
-    expect(getCreditCardDueInfo(creditAccount({ type: 'checking' }))).toBeNull();
+    expect(getCreditCardDueInfo(creditAccount({ type: 'savings' }))).toBeNull();
   });
 
   it('is null without a statement cycle configured', () => {

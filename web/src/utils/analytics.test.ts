@@ -196,8 +196,8 @@ describe('buildSpendingCalendar', () => {
 describe('buildYearInReview', () => {
   const account: Account = {
     id: 'acc-1',
-    name: 'Checking',
-    type: 'checking',
+    name: 'Current',
+    type: 'savings',
     color: '#000',
     icon: 'landmark',
     balance: 5000,

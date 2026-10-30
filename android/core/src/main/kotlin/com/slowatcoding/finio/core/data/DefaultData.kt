@@ -21,7 +21,6 @@ val defaultCategories: List<Category> = listOf(
     Category("cat-4", "Entertainment", "film", "#ec4899", CategoryType.Expense),
     Category("cat-5", "Utilities", "zap", "#06b6d4", CategoryType.Expense),
     Category("cat-6", "Healthcare", "heart-pulse", "#10b981", CategoryType.Expense),
-    Category("cat-7", "Education", "book-open", "#3b82f6", CategoryType.Expense),
     Category("cat-8", "Housing", "home", "#64748b", CategoryType.Expense),
     Category("cat-15", "Travel", "plane", "#ef4444", CategoryType.Expense),
     Category("cat-16", "Gifts", "gift", "#f97316", CategoryType.Expense),
@@ -29,27 +28,15 @@ val defaultCategories: List<Category> = listOf(
     Category("cat-18", "Subscriptions", "repeat", "#ec4899", CategoryType.Expense),
     Category("cat-19", "Vehicles", "truck", "#06b6d4", CategoryType.Expense),
     Category("cat-20", "Financial", "dollar-sign", "#10b981", CategoryType.Expense),
-    Category("cat-11", "Investments", "trending-up", "#f59e0b", CategoryType.Expense),
     Category("cat-9", "Salary", "briefcase", "#22c55e", CategoryType.Income),
-    Category("cat-10", "Freelance", "laptop", "#146b54", CategoryType.Income),
-    Category("cat-12", "Business", "building-2", "#a855f7", CategoryType.Income),
-    Category("cat-21", "Gifts", "gift", "#f97316", CategoryType.Income),
-    Category("cat-22", "Rent", "home", "#3b82f6", CategoryType.Income),
+    Category("cat-10", "Side income", "laptop", "#146b54", CategoryType.Income),
     Category("cat-23", "Interest", "dollar-sign", "#10b981", CategoryType.Income),
     Category("cat-13", "Transfer", "repeat", "#3b82f6", CategoryType.Both),
     Category("cat-24", "Miscellaneous", "circle-ellipsis", "#94a3b8", CategoryType.Both),
-    Category("cat-25", "Groceries", "shopping-cart", "#22c55e", CategoryType.Expense),
     Category("cat-26", "Insurance", "umbrella", "#0ea5e9", CategoryType.Expense),
     Category("cat-27", "Loan / EMI", "banknote", "#f43f5e", CategoryType.Expense),
-    Category("cat-28", "Rent", "building-2", "#78716c", CategoryType.Expense),
     Category("cat-29", "Fitness & Wellness", "dumbbell", "#14b8a6", CategoryType.Expense),
-    Category("cat-30", "Pets", "paw-print", "#f59e0b", CategoryType.Expense),
-    Category("cat-31", "Childcare", "baby", "#fb923c", CategoryType.Expense),
-    Category("cat-32", "Home Maintenance", "wrench", "#6b7280", CategoryType.Expense),
     Category("cat-33", "Bonus", "sparkles", "#fbbf24", CategoryType.Income),
-    Category("cat-34", "Dividends", "piggy-bank", "#10b981", CategoryType.Income),
-    Category("cat-35", "Lending", "hand-coins", "#ec4899", CategoryType.Expense),
-    Category("cat-36", "Lending", "hand-coins", "#ec4899", CategoryType.Income),
 )
 
 /**
@@ -57,8 +44,7 @@ val defaultCategories: List<Category> = listOf(
  * rather than shipped only to fresh ones.
  */
 val NEW_DEFAULT_CATEGORY_IDS: List<String> = listOf(
-    "cat-25", "cat-26", "cat-27", "cat-28", "cat-29", "cat-30",
-    "cat-31", "cat-32", "cat-33", "cat-34", "cat-35", "cat-36",
+    "cat-26", "cat-27", "cat-29", "cat-33",
 )
 
 val defaultLabels: List<Label> = listOf(

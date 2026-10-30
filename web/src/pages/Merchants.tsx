@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { ArrowLeft, ChevronDown, ChevronUp, Store, Wand2 } from 'lucide-react';
+import { ArrowLeft, ChevronDown, ChevronUp, Store } from 'lucide-react';
 import { useFinanceStore } from '@/store/useFinanceStore';
 import {
   summarizeMerchants,
@@ -77,17 +77,6 @@ function MerchantRow({
               onClick={() => navigate(`/edit-transaction/${t.id}`)}
             />
           ))}
-          <button
-            onClick={() =>
-              navigate('/category-rules', {
-                state: { pattern: merchant.displayName, scope: merchant.type },
-              })
-            }
-            className="text-primary hover:bg-accent flex w-full items-center justify-center gap-1.5 rounded-full p-2.5 text-xs font-medium"
-          >
-            <Wand2 size={13} />
-            Create a rule for "{merchant.displayName}"
-          </button>
         </div>
       )}
     </div>

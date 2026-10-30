@@ -13,7 +13,7 @@ const NOW = new Date('2026-06-15T12:00:00.000Z');
 function account(partial: Partial<Account> & Pick<Account, 'id'>): Account {
   return {
     name: partial.id,
-    type: 'checking',
+    type: 'savings',
     color: '#000',
     icon: 'landmark',
     balance: 0,
@@ -28,7 +28,7 @@ function tx(
 ): Transaction {
   return {
     id: partial.id ?? `${partial.type}-${partial.amount}-${partial.date}`,
-    accountId: 'checking',
+    accountId: 'current',
     categoryId: 'cat-1',
     note: '',
     labels: [],
@@ -54,7 +54,7 @@ describe('netWorthComponents', () => {
   it('splits balances into assets and liabilities, ignoring archived accounts', () => {
     expect(
       netWorthComponents([
-        account({ id: 'checking', balance: 10000 }),
+        account({ id: 'current', balance: 10000 }),
         account({ id: 'card', type: 'credit', balance: -2500 }),
         account({ id: 'closed', balance: 9999, archivedAt: '2026-01-01T00:00:00.000Z' }),
       ]),
@@ -72,7 +72,7 @@ describe('snapshotPeriodKey', () => {
 
 describe('netWorthAt', () => {
   const accounts = [
-    account({ id: 'checking', balance: 12000 }),
+    account({ id: 'current', balance: 12000 }),
     account({ id: 'card', type: 'credit', balance: -1000 }),
   ];
   const transactions = [
@@ -98,7 +98,7 @@ describe('netWorthAt', () => {
 
   it('nets an internal transfer out, since it moves nothing overall', () => {
     const withTransfer = [
-      account({ id: 'checking', balance: 8000 }),
+      account({ id: 'current', balance: 8000 }),
       account({ id: 'savings', type: 'savings', balance: 2000 }),
     ];
     expect(
@@ -109,7 +109,7 @@ describe('netWorthAt', () => {
             type: 'transfer',
             amount: 2000,
             date: '2026-06-10T00:00:00.000Z',
-            accountId: 'checking',
+            accountId: 'current',
             toAccountId: 'savings',
           }),
         ],
@@ -120,7 +120,7 @@ describe('netWorthAt', () => {
 });
 
 describe('planNetWorthSnapshots', () => {
-  const accounts = [account({ id: 'checking', balance: 10000 })];
+  const accounts = [account({ id: 'current', balance: 10000 })];
   const transactions = [
     tx({ type: 'income', amount: 4000, date: '2026-04-10T00:00:00.000Z' }),
     tx({ type: 'income', amount: 3000, date: '2026-05-10T00:00:00.000Z' }),
@@ -187,7 +187,7 @@ describe('planNetWorthSnapshots', () => {
 });
 
 describe('buildNetWorthSeries', () => {
-  const accounts = [account({ id: 'checking', balance: 10000 })];
+  const accounts = [account({ id: 'current', balance: 10000 })];
   const transactions = [tx({ type: 'income', amount: 4000, date: '2026-05-10T00:00:00.000Z' })];
 
   it('returns one point per month, oldest first, ending with the live one', () => {

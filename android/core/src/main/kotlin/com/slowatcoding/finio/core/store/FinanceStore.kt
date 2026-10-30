@@ -40,7 +40,6 @@ import com.slowatcoding.finio.core.model.AccountType
 import com.slowatcoding.finio.core.model.Budget
 import com.slowatcoding.finio.core.model.BudgetPeriod
 import com.slowatcoding.finio.core.model.Category
-import com.slowatcoding.finio.core.model.CategoryRule
 import com.slowatcoding.finio.core.model.CategoryType
 import com.slowatcoding.finio.core.model.DebtEntry
 import com.slowatcoding.finio.core.model.DepositCompounding
@@ -57,19 +56,14 @@ import com.slowatcoding.finio.core.model.NetWorthSnapshot
 import com.slowatcoding.finio.core.model.Person
 import com.slowatcoding.finio.core.model.RecurrenceFrequency
 import com.slowatcoding.finio.core.model.RecurringTransaction
-import com.slowatcoding.finio.core.model.RuleMatchType
-import com.slowatcoding.finio.core.model.RuleScope
 import com.slowatcoding.finio.core.model.Settings
 import com.slowatcoding.finio.core.model.TrackingMode
 import com.slowatcoding.finio.core.model.Transaction
-import com.slowatcoding.finio.core.model.TransactionCategorization
 import com.slowatcoding.finio.core.model.TransactionSplit
 import com.slowatcoding.finio.core.model.TransactionTemplate
 import com.slowatcoding.finio.core.model.TransactionType
 import com.slowatcoding.finio.core.money.roundMoney
 import com.slowatcoding.finio.core.period.normalizeMonthStartDay
-import com.slowatcoding.finio.core.rules.ReplayOptions
-import com.slowatcoding.finio.core.rules.planRuleApplication
 import com.slowatcoding.finio.core.util.MAX_NAME_LENGTH
 import com.slowatcoding.finio.core.util.MAX_NOTE_LENGTH
 import com.slowatcoding.finio.core.util.cleanText
@@ -252,17 +246,6 @@ data class NewRecurring(
     val goalId: String? = null,
 )
 
-/** `Omit<CategoryRule, 'id' | 'createdAt'>`. */
-@Serializable
-data class NewRule(
-    val pattern: String,
-    val matchType: RuleMatchType,
-    val scope: RuleScope,
-    val categoryId: String,
-    val labelIds: List<String> = emptyList(),
-    val enabled: Boolean,
-)
-
 /** `Omit<Goal, 'id' | 'createdAt'>`. */
 @Serializable
 data class NewGoal(
@@ -334,10 +317,6 @@ data class DepositUpdate(
 /** `updateDebtEntry` updates — null = leave unchanged. */
 @Serializable
 data class DebtEntryUpdate(val amount: Double? = null, val date: String? = null, val note: String? = null)
-
-enum class MoveDirection { Up, Down }
-
-data class ApplyRulesResult(val changed: Int, val previous: List<TransactionCategorization>)
 
 /** What [FinanceStore.settleUp] created. Undo is `deleteTransaction(transactionId)` — it removes both. */
 data class SettleUpResult(val transactionId: String, val entryId: String)
@@ -852,7 +831,6 @@ class FinanceStore(
                 transactions = s.transactions.map { reassignTransactionCategory(it, id, fallbackId) },
                 recurring = s.recurring.map { if (it.categoryId == id) it.copy(categoryId = fallbackId) else it },
                 loans = s.loans.map { if (it.categoryId == id) it.copy(categoryId = fallbackId) else it },
-                rules = s.rules.map { if (it.categoryId == id) it.copy(categoryId = fallbackId) else it },
             ),
         )
     }
@@ -865,7 +843,7 @@ class FinanceStore(
         publish(s.copy(labels = s.labels.map { if (it.id == id) updates(it).copy(id = id) else it }))
     }
 
-    /** Strips the label from transactions and rules, and drops budgets scoped to it. */
+    /** Strips the label from transactions, and drops budgets scoped to it. */
     fun deleteLabel(id: String) = atomically { s ->
         val anyHasLabel = s.transactions.any { id in it.labels }
         publish(
@@ -874,7 +852,6 @@ class FinanceStore(
                 transactions = if (anyHasLabel) {
                     s.transactions.map { t -> if (id in t.labels) t.copy(labels = t.labels.filter { it != id }) else t }
                 } else s.transactions,
-                rules = s.rules.map { r -> if (id in r.labelIds) r.copy(labelIds = r.labelIds.filter { it != id }) else r },
                 budgets = s.budgets.filter { it.labelId != id },
             ),
         )
@@ -978,66 +955,6 @@ class FinanceStore(
     }
 
     fun deleteTemplate(id: String) = atomically { s -> publish(s.copy(templates = s.templates.filter { it.id != id })) }
-
-    // ---- Categorization rules ---------------------------------------------------------------
-
-    /** Appended, not prepended: a new rule must not silently outrank every existing one. */
-    fun addRule(rule: NewRule): String = atomically { s ->
-        val created = CategoryRule(
-            id = idGen(), pattern = rule.pattern, matchType = rule.matchType, scope = rule.scope,
-            categoryId = rule.categoryId, labelIds = rule.labelIds, enabled = rule.enabled, createdAt = clock().toIso(),
-        )
-        publish(s.copy(rules = s.rules + created))
-        created.id
-    }
-
-    fun updateRule(id: String, updates: (CategoryRule) -> CategoryRule) = atomically { s ->
-        publish(s.copy(rules = s.rules.map { if (it.id == id) updates(it).copy(id = id) else it }))
-    }
-
-    fun deleteRule(id: String) = atomically { s -> publish(s.copy(rules = s.rules.filter { it.id != id })) }
-
-    /** Swap a rule with its neighbour; a no-op at either end. */
-    fun moveRule(id: String, direction: MoveDirection) = atomically { s ->
-        val index = s.rules.indexOfFirst { it.id == id }
-        if (index == -1) return@atomically
-        val target = if (direction == MoveDirection.Up) index - 1 else index + 1
-        if (target < 0 || target >= s.rules.size) return@atomically
-        val rules = s.rules.toMutableList()
-        rules[index] = s.rules[target]
-        rules[target] = s.rules[index]
-        publish(s.copy(rules = rules))
-    }
-
-    /** Replay the rules over existing transactions. Returns the count and the prior rows for undo. */
-    fun applyRulesToExisting(restrictToCategoryId: String? = null): ApplyRulesResult = atomically { s ->
-        val applications = planRuleApplication(s.transactions, s.rules, ReplayOptions(restrictToCategoryId))
-        if (applications.isEmpty()) return@atomically ApplyRulesResult(0, emptyList())
-        val byId = applications.associate { it.transactionId to it.after }
-        publish(
-            s.copy(
-                transactions = s.transactions.map { t ->
-                    val after = byId[t.id] ?: return@map t
-                    t.copy(categoryId = after.categoryId, labels = after.labels)
-                },
-            ),
-        )
-        ApplyRulesResult(applications.size, applications.map { it.before })
-    }
-
-    /** Undo for a bulk categorization change: restores category, labels and splits by id. */
-    fun restoreCategorization(rows: List<TransactionCategorization>) = atomically { s ->
-        if (rows.isEmpty()) return@atomically
-        val byId = rows.associateBy { it.id }
-        publish(
-            s.copy(
-                transactions = s.transactions.map { t ->
-                    val row = byId[t.id] ?: return@map t
-                    t.copy(categoryId = row.categoryId, labels = row.labels, splits = row.splits)
-                },
-            ),
-        )
-    }
 
     // ---- Goals ------------------------------------------------------------------------------
 
@@ -1443,7 +1360,6 @@ class FinanceStore(
                 budgets = mergeById(s.budgets, data.budgets) { it.id },
                 recurring = mergeById(s.recurring, data.recurring) { it.id },
                 templates = mergeById(s.templates, data.templates) { it.id },
-                rules = mergeById(s.rules, data.rules) { it.id },
                 goals = mergeById(s.goals, data.goals) { it.id },
                 goalContributions = mergeById(s.goalContributions, data.goalContributions) { it.id },
                 people = mergeById(s.people, data.people) { it.id },
@@ -1461,7 +1377,6 @@ class FinanceStore(
                 budgets = data.budgets ?: emptyList(),
                 recurring = data.recurring ?: emptyList(),
                 templates = data.templates ?: emptyList(),
-                rules = data.rules ?: emptyList(),
                 goals = data.goals ?: emptyList(),
                 goalContributions = data.goalContributions ?: emptyList(),
                 people = data.people ?: emptyList(),

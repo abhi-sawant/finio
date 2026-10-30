@@ -4,11 +4,8 @@ import {
   ArrowRight,
   Banknote,
   CreditCard,
-  Landmark,
   PiggyBank,
   Sparkles,
-  TrendingUp,
-  Wallet,
   type LucideIcon,
 } from 'lucide-react';
 import { useFinanceStore } from '@/store/useFinanceStore';
@@ -22,12 +19,9 @@ import type { AccountType, TrackingMode } from '@/types';
 import { MAX_NAME_LENGTH, cleanText, stripLeading } from '@/utils/validation';
 
 const ACCOUNT_TYPES: { value: AccountType; label: string; icon: string; Icon: LucideIcon }[] = [
-  { value: 'checking', label: 'Checking', icon: 'landmark', Icon: Landmark },
   { value: 'savings', label: 'Savings', icon: 'piggy-bank', Icon: PiggyBank },
   { value: 'cash', label: 'Cash', icon: 'banknote', Icon: Banknote },
   { value: 'credit', label: 'Credit Card', icon: 'credit-card', Icon: CreditCard },
-  { value: 'investment', label: 'Investment', icon: 'trending-up', Icon: TrendingUp },
-  { value: 'wallet', label: 'Wallet', icon: 'wallet', Icon: Wallet },
 ];
 
 const MODES: { value: TrackingMode; title: string; description: string }[] = [

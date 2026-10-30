@@ -15,7 +15,6 @@ import com.slowatcoding.finio.core.model.AccountType
 import com.slowatcoding.finio.core.model.Budget
 import com.slowatcoding.finio.core.model.BudgetPeriod
 import com.slowatcoding.finio.core.model.Category
-import com.slowatcoding.finio.core.model.CategoryRule
 import com.slowatcoding.finio.core.model.CategoryType
 import com.slowatcoding.finio.core.model.DebtEntry
 import com.slowatcoding.finio.core.model.DepositCompounding
@@ -30,8 +29,6 @@ import com.slowatcoding.finio.core.model.NetWorthSnapshot
 import com.slowatcoding.finio.core.model.Person
 import com.slowatcoding.finio.core.model.RecurrenceFrequency
 import com.slowatcoding.finio.core.model.RecurringTransaction
-import com.slowatcoding.finio.core.model.RuleMatchType
-import com.slowatcoding.finio.core.model.RuleScope
 import com.slowatcoding.finio.core.model.Settings
 import com.slowatcoding.finio.core.model.Theme
 import com.slowatcoding.finio.core.model.TrackingMode
@@ -42,7 +39,6 @@ import com.slowatcoding.finio.core.model.TransactionType
 import com.slowatcoding.finio.core.model.wireName
 import com.slowatcoding.finio.core.notify.MAX_NOTIFY_LEAD_DAYS
 import com.slowatcoding.finio.core.period.normalizeMonthStartDay
-import com.slowatcoding.finio.core.rules.isValidPattern
 import com.slowatcoding.finio.core.store.ImportedAccount
 import com.slowatcoding.finio.core.util.jsTrim
 import kotlinx.serialization.json.JsonArray
@@ -77,7 +73,6 @@ enum class ImportEntity(val key: String) {
     Budgets("budgets"),
     Recurring("recurring"),
     Templates("templates"),
-    Rules("rules"),
     Goals("goals"),
     GoalContributions("goalContributions"),
     People("people"),
@@ -97,7 +92,6 @@ val ENTITY_LABELS: Map<ImportEntity, String> = linkedMapOf(
     ImportEntity.Budgets to "Budgets",
     ImportEntity.Recurring to "Recurring rules",
     ImportEntity.Templates to "Templates",
-    ImportEntity.Rules to "Categorization rules",
     ImportEntity.Goals to "Savings goals",
     ImportEntity.GoalContributions to "Goal contributions",
     ImportEntity.People to "People",
@@ -153,8 +147,6 @@ private val TRANSACTION_TYPES = byWire<TransactionType>()
 private val CATEGORY_TYPES = byWire<CategoryType>()
 private val FREQUENCIES = byWire<RecurrenceFrequency>()
 private val BUDGET_PERIODS = byWire<BudgetPeriod>()
-private val MATCH_TYPES = byWire<RuleMatchType>()
-private val RULE_SCOPES = byWire<RuleScope>()
 private val THEMES = byWire<Theme>()
 private val TRACKING_MODES = byWire<TrackingMode>()
 
@@ -419,29 +411,6 @@ private fun parseTemplate(row: JsonObject, nowIso: String): TransactionTemplate 
     )
 }
 
-private fun parseRule(row: JsonObject, nowIso: String): CategoryRule {
-    val id = asId(row["id"]) ?: reject("missing id")
-    val pattern = asId(row["pattern"]) ?: reject("missing pattern")
-    val matchType = member(row["matchType"], MATCH_TYPES) ?: reject("unknown match type \"${jsString(row["matchType"])}\"")
-    // A rule that files nowhere is not recoverable the way a stray label is — drop it.
-    val categoryId = asId(row["categoryId"]) ?: reject("missing categoryId")
-    // An unparseable regex would silently match nothing on every transaction forever.
-    if (matchType == RuleMatchType.Regex && !isValidPattern(pattern, RuleMatchType.Regex)) {
-        reject("invalid regex \"$pattern\"")
-    }
-    return CategoryRule(
-        id = id,
-        pattern = pattern,
-        matchType = matchType,
-        scope = member(row["scope"], RULE_SCOPES) ?: RuleScope.Any,
-        categoryId = categoryId,
-        labelIds = asStringArray(row["labelIds"]),
-        // Anything but an explicit `false` stays on — a rule in a backup was presumably wanted.
-        enabled = bool(row["enabled"]) != false,
-        createdAt = asIsoDate(row["createdAt"]) ?: nowIso,
-    )
-}
-
 private fun parseGoal(row: JsonObject, nowIso: String): Goal {
     val id = asId(row["id"]) ?: reject("missing id")
     val name = asId(row["name"]) ?: reject("missing name")
@@ -640,7 +609,6 @@ fun validateBackup(raw: JsonElement?, now: Instant = nowInstant()): ValidatedBac
     val budgets = collect(raw["budgets"], ImportEntity.Budgets, Budget::id) { parseBudget(it, nowIso) }
     val recurring = collect(raw["recurring"], ImportEntity.Recurring, RecurringTransaction::id, ::parseRecurring)
     val templates = collect(raw["templates"], ImportEntity.Templates, TransactionTemplate::id) { parseTemplate(it, nowIso) }
-    val rules = collect(raw["rules"], ImportEntity.Rules, CategoryRule::id) { parseRule(it, nowIso) }
     val goals = collect(raw["goals"], ImportEntity.Goals, Goal::id) { parseGoal(it, nowIso) }
     val goalContributions = collect(raw["goalContributions"], ImportEntity.GoalContributions, GoalContribution::id, ::parseGoalContribution)
     val people = collect(raw["people"], ImportEntity.People, Person::id) { parsePerson(it, nowIso) }
@@ -658,7 +626,6 @@ fun validateBackup(raw: JsonElement?, now: Instant = nowInstant()): ValidatedBac
         ImportEntity.Budgets to budgets,
         ImportEntity.Recurring to recurring,
         ImportEntity.Templates to templates,
-        ImportEntity.Rules to rules,
         ImportEntity.Goals to goals,
         ImportEntity.GoalContributions to goalContributions,
         ImportEntity.People to people,
@@ -703,14 +670,6 @@ fun validateBackup(raw: JsonElement?, now: Instant = nowInstant()): ValidatedBac
         val orphans = budgets.rows.count { b -> b.categoryId != "" && b.categoryId !in ids }
         if (orphans > 0) {
             warnings += "$orphans budget${plural(orphans, "", "s")} reference a category that is not in this file"
-        }
-    }
-
-    if (categories.rows != null && rules.rows != null) {
-        val ids = categories.rows.mapTo(HashSet()) { it.id }
-        val orphans = rules.rows.count { r -> r.categoryId !in ids }
-        if (orphans > 0) {
-            warnings += "$orphans categorization rule${plural(orphans, "", "s")} reference a category that is not in this file"
         }
     }
 
@@ -799,7 +758,6 @@ fun validateBackup(raw: JsonElement?, now: Instant = nowInstant()): ValidatedBac
             budgets = budgets.rows,
             recurring = recurring.rows,
             templates = templates.rows,
-            rules = rules.rows,
             goals = goals.rows,
             goalContributions = goalContributions.rows,
             people = people.rows,

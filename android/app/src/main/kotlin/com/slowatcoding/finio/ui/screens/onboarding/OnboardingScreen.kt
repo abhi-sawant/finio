@@ -74,12 +74,9 @@ import kotlin.math.abs
 private data class AccountTypeOption(val value: AccountType, val label: String, val icon: String, val vector: ImageVector)
 
 private val ACCOUNT_TYPES = listOf(
-    AccountTypeOption(AccountType.Checking, "Checking", "landmark", LucideIcons.Landmark),
     AccountTypeOption(AccountType.Savings, "Savings", "piggy-bank", LucideIcons.PiggyBank),
     AccountTypeOption(AccountType.Cash, "Cash", "banknote", LucideIcons.Banknote),
     AccountTypeOption(AccountType.Credit, "Credit Card", "credit-card", LucideIcons.CreditCard),
-    AccountTypeOption(AccountType.Investment, "Investment", "trending-up", LucideIcons.TrendingUp),
-    AccountTypeOption(AccountType.Wallet, "Wallet", "wallet", LucideIcons.Wallet),
 )
 
 private enum class Step { Name, Mode, Account, Balance }

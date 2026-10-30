@@ -231,7 +231,6 @@ fun AnalyticsScreen(nav: FinioNavigator) {
                 // These carry their own window, anchored to "now" rather than to the chips above.
                 if (!trackerMode) {
                     CashFlowForecastCard()
-                    CashFlowCalendarCard()
                     NetWorthTrendCard()
                 }
                 PeriodComparisonCard()

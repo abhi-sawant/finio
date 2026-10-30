@@ -10,7 +10,7 @@
           {
             "id": "acc-bank",
             "name": "HDFC Salary",
-            "type": "checking",
+            "type": "savings",
             "color": "#4b36c7",
             "icon": "landmark",
             "balance": 349052,
@@ -67,7 +67,7 @@
           {
             "id": "acc-wallet",
             "name": "Paytm Wallet",
-            "type": "wallet",
+            "type": "cash",
             "color": "#4b36c7",
             "icon": "landmark",
             "balance": -250,
@@ -113,7 +113,7 @@
           {
             "id": "acc-old",
             "name": "Old Axis",
-            "type": "checking",
+            "type": "savings",
             "color": "#4b36c7",
             "icon": "landmark",
             "balance": 3800,
@@ -2012,13 +2012,6 @@
             "type": "expense"
           },
           {
-            "id": "cat-7",
-            "name": "Education",
-            "icon": "book-open",
-            "color": "#3b82f6",
-            "type": "expense"
-          },
-          {
             "id": "cat-8",
             "name": "Housing",
             "icon": "home",
@@ -2068,13 +2061,6 @@
             "type": "expense"
           },
           {
-            "id": "cat-11",
-            "name": "Investments",
-            "icon": "trending-up",
-            "color": "#f59e0b",
-            "type": "expense"
-          },
-          {
             "id": "cat-9",
             "name": "Salary",
             "icon": "briefcase",
@@ -2083,30 +2069,9 @@
           },
           {
             "id": "cat-10",
-            "name": "Freelance",
+            "name": "Side income",
             "icon": "laptop",
             "color": "#146b54",
-            "type": "income"
-          },
-          {
-            "id": "cat-12",
-            "name": "Business",
-            "icon": "building-2",
-            "color": "#a855f7",
-            "type": "income"
-          },
-          {
-            "id": "cat-21",
-            "name": "Gifts",
-            "icon": "gift",
-            "color": "#f97316",
-            "type": "income"
-          },
-          {
-            "id": "cat-22",
-            "name": "Rent",
-            "icon": "home",
-            "color": "#3b82f6",
             "type": "income"
           },
           {
@@ -2131,13 +2096,6 @@
             "type": "both"
           },
           {
-            "id": "cat-25",
-            "name": "Groceries",
-            "icon": "shopping-cart",
-            "color": "#22c55e",
-            "type": "expense"
-          },
-          {
             "id": "cat-26",
             "name": "Insurance",
             "icon": "umbrella",
@@ -2152,13 +2110,6 @@
             "type": "expense"
           },
           {
-            "id": "cat-28",
-            "name": "Rent",
-            "icon": "building-2",
-            "color": "#78716c",
-            "type": "expense"
-          },
-          {
             "id": "cat-29",
             "name": "Fitness & Wellness",
             "icon": "dumbbell",
@@ -2166,52 +2117,10 @@
             "type": "expense"
           },
           {
-            "id": "cat-30",
-            "name": "Pets",
-            "icon": "paw-print",
-            "color": "#f59e0b",
-            "type": "expense"
-          },
-          {
-            "id": "cat-31",
-            "name": "Childcare",
-            "icon": "baby",
-            "color": "#fb923c",
-            "type": "expense"
-          },
-          {
-            "id": "cat-32",
-            "name": "Home Maintenance",
-            "icon": "wrench",
-            "color": "#6b7280",
-            "type": "expense"
-          },
-          {
             "id": "cat-33",
             "name": "Bonus",
             "icon": "sparkles",
             "color": "#fbbf24",
-            "type": "income"
-          },
-          {
-            "id": "cat-34",
-            "name": "Dividends",
-            "icon": "piggy-bank",
-            "color": "#10b981",
-            "type": "income"
-          },
-          {
-            "id": "cat-35",
-            "name": "Lending",
-            "icon": "hand-coins",
-            "color": "#ec4899",
-            "type": "expense"
-          },
-          {
-            "id": "cat-36",
-            "name": "Lending",
-            "icon": "hand-coins",
-            "color": "#ec4899",
             "type": "income"
           },
           {
@@ -2482,7 +2391,6 @@
         "cat-4",
         "cat-5",
         "cat-6",
-        "cat-7",
         "cat-8",
         "cat-15",
         "cat-16",
@@ -2490,26 +2398,14 @@
         "cat-18",
         "cat-19",
         "cat-20",
-        "cat-11",
         "cat-9",
         "cat-10",
-        "cat-12",
-        "cat-21",
-        "cat-22",
         "cat-23",
         "cat-13",
-        "cat-25",
         "cat-26",
         "cat-27",
-        "cat-28",
         "cat-29",
-        "cat-30",
-        "cat-31",
-        "cat-32",
         "cat-33",
-        "cat-34",
-        "cat-35",
-        "cat-36",
         "cat-x",
         "cat-24"
       ]
@@ -2959,7 +2855,7 @@
           {
             "id": "acc-empty-archived",
             "name": "HDFC Salary",
-            "type": "checking",
+            "type": "savings",
             "color": "#4b36c7",
             "icon": "landmark",
             "balance": 349052,
@@ -2979,7 +2875,7 @@
         {
           "id": "acc-bank",
           "name": "HDFC Salary",
-          "type": "checking",
+          "type": "savings",
           "color": "#4b36c7",
           "icon": "landmark",
           "balance": 349052,
@@ -2995,7 +2891,7 @@
         {
           "id": "acc-bank",
           "name": "HDFC Salary",
-          "type": "checking",
+          "type": "savings",
           "color": "#4b36c7",
           "icon": "landmark",
           "balance": 349052,
@@ -3153,7 +3049,7 @@
         {
           "id": "acc-wallet",
           "name": "Paytm Wallet",
-          "type": "wallet",
+          "type": "cash",
           "color": "#4b36c7",
           "icon": "landmark",
           "balance": -250,
@@ -3169,7 +3065,7 @@
         {
           "id": "acc-wallet",
           "name": "Paytm Wallet",
-          "type": "wallet",
+          "type": "cash",
           "color": "#4b36c7",
           "icon": "landmark",
           "balance": -250,
@@ -3281,7 +3177,7 @@
         {
           "id": "acc-old",
           "name": "Old Axis",
-          "type": "checking",
+          "type": "savings",
           "color": "#4b36c7",
           "icon": "landmark",
           "balance": 3800,
@@ -3298,7 +3194,7 @@
         {
           "id": "acc-old",
           "name": "Old Axis",
-          "type": "checking",
+          "type": "savings",
           "color": "#4b36c7",
           "icon": "landmark",
           "balance": 3800,
@@ -7706,7 +7602,6 @@
           "cat-4": "entertainment",
           "cat-5": "utilities",
           "cat-6": "healthcare",
-          "cat-7": "education",
           "cat-8": "housing",
           "cat-15": "travel",
           "cat-16": "gifts",
@@ -7714,27 +7609,15 @@
           "cat-18": "subscriptions",
           "cat-19": "vehicles",
           "cat-20": "financial",
-          "cat-11": "investments",
           "cat-9": "salary",
-          "cat-10": "freelance",
-          "cat-12": "business",
-          "cat-21": "gifts",
-          "cat-22": "rent",
+          "cat-10": "side income",
           "cat-23": "interest",
           "cat-13": "transfer",
           "cat-24": "miscellaneous",
-          "cat-25": "groceries",
           "cat-26": "insurance",
           "cat-27": "loan / emi",
-          "cat-28": "rent",
           "cat-29": "fitness & wellness",
-          "cat-30": "pets",
-          "cat-31": "childcare",
-          "cat-32": "home maintenance",
           "cat-33": "bonus",
-          "cat-34": "dividends",
-          "cat-35": "lending",
-          "cat-36": "lending",
           "cat-x": "side hustle"
         },
         "accountNames": {
@@ -7881,8 +7764,8 @@
         "@ledger.labels"
       ],
       "out": [
-        true,
-        true,
+        false,
+        false,
         false,
         false,
         false,
@@ -7903,7 +7786,7 @@
       ],
       "out": [
         false,
-        true,
+        false,
         false,
         false,
         false,
@@ -12904,13 +12787,13 @@
         },
         "topCategory": {
           "category": {
-            "id": "cat-28",
-            "name": "Rent",
-            "icon": "building-2",
-            "color": "#78716c",
+            "id": "cat-1",
+            "name": "Food",
+            "icon": "utensils",
+            "color": "#ef4444",
             "type": "expense"
           },
-          "amount": 44000
+          "amount": 8838.5
         },
         "monthOverMonthChange": 0.8250360414310113,
         "savingsRate": -0.7933942561098833,
@@ -12947,13 +12830,13 @@
         },
         "topCategory": {
           "category": {
-            "id": "cat-28",
-            "name": "Rent",
-            "icon": "building-2",
-            "color": "#78716c",
+            "id": "cat-1",
+            "name": "Food",
+            "icon": "utensils",
+            "color": "#ef4444",
             "type": "expense"
           },
-          "amount": 22000
+          "amount": 9157.5
         },
         "monthOverMonthChange": 0.209022702621835,
         "savingsRate": 0.6604435312753415,
@@ -12990,13 +12873,13 @@
         },
         "topCategory": {
           "category": {
-            "id": "cat-28",
-            "name": "Rent",
-            "icon": "building-2",
-            "color": "#78716c",
+            "id": "cat-1",
+            "name": "Food",
+            "icon": "utensils",
+            "color": "#ef4444",
             "type": "expense"
           },
-          "amount": 44000
+          "amount": 8838.5
         },
         "monthOverMonthChange": 0.8250360414310113,
         "savingsRate": -0.7933942561098833,
@@ -13033,13 +12916,13 @@
         },
         "topCategory": {
           "category": {
-            "id": "cat-28",
-            "name": "Rent",
-            "icon": "building-2",
-            "color": "#78716c",
+            "id": "cat-15",
+            "name": "Travel",
+            "icon": "plane",
+            "color": "#ef4444",
             "type": "expense"
           },
-          "amount": 22000
+          "amount": 18000
         },
         "monthOverMonthChange": 0.5769984804226472,
         "savingsRate": 0.4109029411764706,
@@ -13076,13 +12959,13 @@
         },
         "topCategory": {
           "category": {
-            "id": "cat-28",
-            "name": "Rent",
-            "icon": "building-2",
-            "color": "#78716c",
+            "id": "cat-1",
+            "name": "Food",
+            "icon": "utensils",
+            "color": "#ef4444",
             "type": "expense"
           },
-          "amount": 22000
+          "amount": 9157.5
         },
         "monthOverMonthChange": 0.209022702621835,
         "savingsRate": 0.6604435312753415,
@@ -13127,13 +13010,13 @@
         },
         "topCategory": {
           "category": {
-            "id": "cat-25",
-            "name": "Groceries",
-            "icon": "shopping-cart",
-            "color": "#22c55e",
-            "type": "expense"
+            "id": "cat-24",
+            "name": "Miscellaneous",
+            "icon": "circle-ellipsis",
+            "color": "#94a3b8",
+            "type": "both"
           },
-          "amount": 2000.25
+          "amount": 0.30000000000000004
         },
         "monthOverMonthChange": -0.8491255683805526,
         "savingsRate": 0.8921641849346105,
@@ -14099,7 +13982,7 @@
         "@ledger.categories",
         "@ledger.accounts"
       ],
-      "out": "Date,Type,Amount,Account,To Account,Category,Note,Split Detail\n2025-10-25T03:30:00.000Z,income,85000,\"HDFC Salary\",\"\",\"Salary\",\"Salary ACME Corp\",\"\"\n2025-11-01T03:30:00.000Z,expense,22000,\"HDFC Salary\",\"\",\"Rent\",\"Rent 202511\",\"\"\n2025-11-02T02:30:00.000Z,transfer,10000,\"HDFC Salary\",\"SBI Savings\",\"Transfer\",\"To savings\",\"\"\n2025-11-03T14:45:00.000Z,expense,650,\"Amex Platinum\",\"\",\"Food\",\"Swiggy/9921\",\"\"\n2025-11-09T14:45:00.000Z,expense,763.5,\"HDFC Salary\",\"\",\"Food\",\"Swiggy 449\",\"\"\n2025-11-14T14:45:00.000Z,expense,877,\"Amex Platinum\",\"\",\"Food\",\"Zomato order #4471\",\"\"\n2025-11-20T14:45:00.000Z,expense,990.5,\"HDFC Salary\",\"\",\"Groceries\",\"BigBasket\",\"\"\n2025-11-07T00:30:00.000Z,expense,649,\"Amex Platinum\",\"\",\"Subscriptions\",\"NETFLIX.COM 8812\",\"\"\n2025-11-15T00:30:00.000Z,expense,119,\"Amex Platinum\",\"\",\"Subscriptions\",\"Spotify\",\"\"\n2025-11-16T00:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Subscriptions\",\"Hotstar 299\",\"\"\n2025-11-12T05:30:00.000Z,expense,1100,\"HDFC Salary\",\"\",\"Utilities\",\"BESCOM electricity\",\"\"\n2025-11-11T13:30:00.000Z,expense,340.75,\"Cash\",\"\",\"Transport\",\"Uber trip\",\"\"\n2025-11-09T18:30:00.000Z,transfer,5000,\"HDFC Salary\",\"SBI RD\",\"Transfer\",\"RD installment\",\"\"\n2025-11-17T12:30:00.000Z,expense,3000.5,\"Amex Platinum\",\"\",\"Split (2)\",\"DMart Ready\",\"Groceries: 2000.25 | Home Maintenance: 1000.25\"\n2025-11-22T04:30:00.000Z,transfer,9000,\"HDFC Salary\",\"Amex Platinum\",\"Transfer\",\"Amex bill payment\",\"\"\n2025-11-25T03:30:00.000Z,income,85000,\"HDFC Salary\",\"\",\"Salary\",\"Salary ACME Corp\",\"\"\n2025-12-01T03:30:00.000Z,expense,22000,\"HDFC Salary\",\"\",\"Rent\",\"Rent 202512\",\"\"\n2025-12-02T02:30:00.000Z,transfer,10000,\"HDFC Salary\",\"SBI Savings\",\"Transfer\",\"To savings\",\"\"\n2025-12-03T14:45:00.000Z,expense,687,\"Amex Platinum\",\"\",\"Food\",\"Swiggy 449\",\"\"\n2025-12-09T14:45:00.000Z,expense,800.5,\"HDFC Salary\",\"\",\"Food\",\"Zomato order #4471\",\"\"\n2025-12-14T14:45:00.000Z,expense,914,\"Amex Platinum\",\"\",\"Groceries\",\"BigBasket\",\"\"\n2025-12-20T14:45:00.000Z,expense,1027.5,\"HDFC Salary\",\"\",\"Food\",\"Swiggy/9921\",\"\"\n2025-12-07T00:30:00.000Z,expense,649,\"Amex Platinum\",\"\",\"Subscriptions\",\"NETFLIX.COM 8812\",\"\"\n2025-12-15T00:30:00.000Z,expense,119,\"Amex Platinum\",\"\",\"Subscriptions\",\"Spotify\",\"\"\n2025-12-16T00:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Subscriptions\",\"Hotstar 299\",\"\"\n2025-12-12T05:30:00.000Z,expense,1273,\"HDFC Salary\",\"\",\"Utilities\",\"BESCOM electricity\",\"\"\n2025-12-11T13:30:00.000Z,expense,340.75,\"Cash\",\"\",\"Transport\",\"Uber trip\",\"\"\n2025-12-09T18:30:00.000Z,transfer,5000,\"HDFC Salary\",\"SBI RD\",\"Transfer\",\"RD installment\",\"\"\n2025-12-17T12:30:00.000Z,expense,3000.5,\"Amex Platinum\",\"\",\"Split (2)\",\"DMart Ready\",\"Groceries: 2000.25 | Home Maintenance: 1000.25\"\n2025-12-22T04:30:00.000Z,transfer,9250,\"HDFC Salary\",\"Amex Platinum\",\"Transfer\",\"Amex bill payment\",\"\"\n2025-12-28T18:29:00.000Z,income,412.37,\"SBI Savings\",\"\",\"Interest\",\"Interest\",\"\"\n2025-12-25T03:30:00.000Z,income,85000,\"HDFC Salary\",\"\",\"Salary\",\"Salary ACME Corp\",\"\"\n2026-01-01T03:30:00.000Z,expense,22000,\"HDFC Salary\",\"\",\"Rent\",\"Rent 202601\",\"\"\n2026-01-02T02:30:00.000Z,transfer,10000,\"HDFC Salary\",\"SBI Savings\",\"Transfer\",\"To savings\",\"\"\n2026-01-03T14:45:00.000Z,expense,724,\"Amex Platinum\",\"\",\"Food\",\"Zomato order #4471\",\"\"\n2026-01-09T14:45:00.000Z,expense,837.5,\"HDFC Salary\",\"\",\"Groceries\",\"BigBasket\",\"\"\n2026-01-14T14:45:00.000Z,expense,951,\"Amex Platinum\",\"\",\"Food\",\"Swiggy/9921\",\"\"\n2026-01-20T14:45:00.000Z,expense,1064.5,\"HDFC Salary\",\"\",\"Food\",\"Swiggy 449\",\"\"\n2026-01-07T00:30:00.000Z,expense,649,\"Amex Platinum\",\"\",\"Subscriptions\",\"NETFLIX.COM 8812\",\"\"\n2026-01-15T00:30:00.000Z,expense,119,\"Amex Platinum\",\"\",\"Subscriptions\",\"Spotify\",\"\"\n2026-01-16T00:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Subscriptions\",\"Hotstar 299\",\"\"\n2026-01-12T05:30:00.000Z,expense,1446,\"HDFC Salary\",\"\",\"Utilities\",\"BESCOM electricity\",\"\"\n2026-01-11T13:30:00.000Z,expense,340.75,\"Cash\",\"\",\"Transport\",\"Uber trip\",\"\"\n2026-01-09T18:30:00.000Z,transfer,5000,\"HDFC Salary\",\"SBI RD\",\"Transfer\",\"RD installment\",\"\"\n2026-01-17T12:30:00.000Z,expense,3000.5,\"Amex Platinum\",\"\",\"Split (2)\",\"DMart Ready\",\"Groceries: 2000.25 | Home Maintenance: 1000.25\"\n2026-01-22T04:30:00.000Z,transfer,9500,\"HDFC Salary\",\"Amex Platinum\",\"Transfer\",\"Amex bill payment\",\"\"\n2026-01-25T03:30:00.000Z,income,85000,\"HDFC Salary\",\"\",\"Salary\",\"Salary ACME Corp\",\"\"\n2026-02-01T03:30:00.000Z,expense,22000,\"HDFC Salary\",\"\",\"Rent\",\"Rent 202602\",\"\"\n2026-02-02T02:30:00.000Z,transfer,10000,\"HDFC Salary\",\"SBI Savings\",\"Transfer\",\"To savings\",\"\"\n2026-02-03T14:45:00.000Z,expense,761,\"Amex Platinum\",\"\",\"Groceries\",\"BigBasket\",\"\"\n2026-02-09T14:45:00.000Z,expense,874.5,\"HDFC Salary\",\"\",\"Food\",\"Swiggy/9921\",\"\"\n2026-02-14T14:45:00.000Z,expense,988,\"Amex Platinum\",\"\",\"Food\",\"Swiggy 449\",\"\"\n2026-02-20T14:45:00.000Z,expense,1101.5,\"HDFC Salary\",\"\",\"Food\",\"Zomato order #4471\",\"\"\n2026-02-07T00:30:00.000Z,expense,649,\"Amex Platinum\",\"\",\"Subscriptions\",\"NETFLIX.COM 8812\",\"\"\n2026-02-15T00:30:00.000Z,expense,119,\"Amex Platinum\",\"\",\"Subscriptions\",\"Spotify\",\"\"\n2026-02-16T00:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Subscriptions\",\"Hotstar 299\",\"\"\n2026-02-12T05:30:00.000Z,expense,1619,\"HDFC Salary\",\"\",\"Utilities\",\"BESCOM electricity\",\"\"\n2026-02-11T13:30:00.000Z,expense,340.75,\"Cash\",\"\",\"Transport\",\"Uber trip\",\"\"\n2026-02-09T18:30:00.000Z,transfer,5000,\"HDFC Salary\",\"SBI RD\",\"Transfer\",\"RD installment\",\"\"\n2026-02-17T12:30:00.000Z,expense,3000.5,\"Amex Platinum\",\"\",\"Split (2)\",\"DMart Ready\",\"Groceries: 2000.25 | Home Maintenance: 1000.25\"\n2026-02-22T04:30:00.000Z,transfer,9750,\"HDFC Salary\",\"Amex Platinum\",\"Transfer\",\"Amex bill payment\",\"\"\n2026-02-28T18:29:00.000Z,income,412.37,\"SBI Savings\",\"\",\"Interest\",\"Interest\",\"\"\n2026-02-25T03:30:00.000Z,income,85000,\"HDFC Salary\",\"\",\"Salary\",\"Salary ACME Corp\",\"\"\n2026-03-01T03:30:00.000Z,expense,22000,\"HDFC Salary\",\"\",\"Rent\",\"Rent 202603\",\"\"\n2026-03-02T02:30:00.000Z,transfer,10000,\"HDFC Salary\",\"SBI Savings\",\"Transfer\",\"To savings\",\"\"\n2026-03-03T14:45:00.000Z,expense,798,\"Amex Platinum\",\"\",\"Food\",\"Swiggy/9921\",\"\"\n2026-03-09T14:45:00.000Z,expense,911.5,\"HDFC Salary\",\"\",\"Food\",\"Swiggy 449\",\"\"\n2026-03-14T14:45:00.000Z,expense,1025,\"Amex Platinum\",\"\",\"Food\",\"Zomato order #4471\",\"\"\n2026-03-20T14:45:00.000Z,expense,1138.5,\"HDFC Salary\",\"\",\"Groceries\",\"BigBasket\",\"\"\n2026-03-07T00:30:00.000Z,expense,649,\"Amex Platinum\",\"\",\"Subscriptions\",\"NETFLIX.COM 8812\",\"\"\n2026-03-15T00:30:00.000Z,expense,119,\"Amex Platinum\",\"\",\"Subscriptions\",\"Spotify\",\"\"\n2026-03-16T00:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Subscriptions\",\"Hotstar 299\",\"\"\n2026-03-12T05:30:00.000Z,expense,1792,\"HDFC Salary\",\"\",\"Utilities\",\"BESCOM electricity\",\"\"\n2026-03-11T13:30:00.000Z,expense,340.75,\"Cash\",\"\",\"Transport\",\"Uber trip\",\"\"\n2026-03-09T18:30:00.000Z,transfer,5000,\"HDFC Salary\",\"SBI RD\",\"Transfer\",\"RD installment\",\"\"\n2026-03-17T12:30:00.000Z,expense,3000.5,\"Amex Platinum\",\"\",\"Split (2)\",\"DMart Ready\",\"Groceries: 2000.25 | Home Maintenance: 1000.25\"\n2026-03-22T04:30:00.000Z,transfer,10000,\"HDFC Salary\",\"Amex Platinum\",\"Transfer\",\"Amex bill payment\",\"\"\n2026-03-25T03:30:00.000Z,income,85000,\"HDFC Salary\",\"\",\"Salary\",\"Salary ACME Corp\",\"\"\n2026-04-01T03:30:00.000Z,expense,22000,\"HDFC Salary\",\"\",\"Rent\",\"Rent 202604\",\"\"\n2026-04-02T02:30:00.000Z,transfer,10000,\"HDFC Salary\",\"SBI Savings\",\"Transfer\",\"To savings\",\"\"\n2026-04-03T14:45:00.000Z,expense,835,\"Amex Platinum\",\"\",\"Food\",\"Swiggy 449\",\"\"\n2026-04-09T14:45:00.000Z,expense,948.5,\"HDFC Salary\",\"\",\"Food\",\"Zomato order #4471\",\"\"\n2026-04-14T14:45:00.000Z,expense,1062,\"Amex Platinum\",\"\",\"Groceries\",\"BigBasket\",\"\"\n2026-04-20T14:45:00.000Z,expense,1175.5,\"HDFC Salary\",\"\",\"Food\",\"Swiggy/9921\",\"\"\n2026-04-07T00:30:00.000Z,expense,649,\"Amex Platinum\",\"\",\"Subscriptions\",\"NETFLIX.COM 8812\",\"\"\n2026-04-15T00:30:00.000Z,expense,121,\"Amex Platinum\",\"\",\"Subscriptions\",\"Spotify\",\"\"\n2026-04-16T00:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Subscriptions\",\"Hotstar 299\",\"\"\n2026-04-12T05:30:00.000Z,expense,1965,\"HDFC Salary\",\"\",\"Utilities\",\"BESCOM electricity\",\"\"\n2026-04-11T13:30:00.000Z,expense,340.75,\"Cash\",\"\",\"Transport\",\"Uber trip\",\"\"\n2026-04-09T18:30:00.000Z,transfer,5000,\"HDFC Salary\",\"SBI RD\",\"Transfer\",\"RD installment\",\"\"\n2026-04-17T12:30:00.000Z,expense,3000.5,\"Amex Platinum\",\"\",\"Split (2)\",\"DMart Ready\",\"Groceries: 2000.25 | Home Maintenance: 1000.25\"\n2026-04-22T04:30:00.000Z,transfer,10250,\"HDFC Salary\",\"Amex Platinum\",\"Transfer\",\"Amex bill payment\",\"\"\n2026-04-28T18:29:00.000Z,income,412.37,\"SBI Savings\",\"\",\"Interest\",\"Interest\",\"\"\n2026-04-25T03:30:00.000Z,income,85000,\"HDFC Salary\",\"\",\"Salary\",\"Salary ACME Corp\",\"\"\n2026-05-01T03:30:00.000Z,expense,22000,\"HDFC Salary\",\"\",\"Rent\",\"Rent 202605\",\"\"\n2026-05-02T02:30:00.000Z,transfer,10000,\"HDFC Salary\",\"SBI Savings\",\"Transfer\",\"To savings\",\"\"\n2026-05-03T14:45:00.000Z,expense,872,\"Amex Platinum\",\"\",\"Food\",\"Zomato order #4471\",\"\"\n2026-05-09T14:45:00.000Z,expense,985.5,\"HDFC Salary\",\"\",\"Groceries\",\"BigBasket\",\"\"\n2026-05-14T14:45:00.000Z,expense,1099,\"Amex Platinum\",\"\",\"Food\",\"Swiggy/9921\",\"\"\n2026-05-20T14:45:00.000Z,expense,1212.5,\"HDFC Salary\",\"\",\"Food\",\"Swiggy 449\",\"\"\n2026-05-07T00:30:00.000Z,expense,649,\"Amex Platinum\",\"\",\"Subscriptions\",\"NETFLIX.COM 8812\",\"\"\n2026-05-15T00:30:00.000Z,expense,119,\"Amex Platinum\",\"\",\"Subscriptions\",\"Spotify\",\"\"\n2026-05-16T00:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Subscriptions\",\"Hotstar 299\",\"\"\n2026-05-12T05:30:00.000Z,expense,1238,\"HDFC Salary\",\"\",\"Utilities\",\"BESCOM electricity\",\"\"\n2026-05-11T13:30:00.000Z,expense,340.75,\"Cash\",\"\",\"Transport\",\"Uber trip\",\"\"\n2026-05-09T18:30:00.000Z,transfer,5000,\"HDFC Salary\",\"SBI RD\",\"Transfer\",\"RD installment\",\"\"\n2026-05-17T12:30:00.000Z,expense,3000.5,\"Amex Platinum\",\"\",\"Split (2)\",\"DMart Ready\",\"Groceries: 2000.25 | Home Maintenance: 1000.25\"\n2026-05-22T04:30:00.000Z,transfer,10500,\"HDFC Salary\",\"Amex Platinum\",\"Transfer\",\"Amex bill payment\",\"\"\n2026-05-25T03:30:00.000Z,income,85000,\"HDFC Salary\",\"\",\"Salary\",\"Salary ACME Corp\",\"\"\n2026-06-01T03:30:00.000Z,expense,22000,\"HDFC Salary\",\"\",\"Rent\",\"Rent 202606\",\"\"\n2026-06-02T02:30:00.000Z,transfer,10000,\"HDFC Salary\",\"SBI Savings\",\"Transfer\",\"To savings\",\"\"\n2026-06-03T14:45:00.000Z,expense,909,\"Amex Platinum\",\"\",\"Groceries\",\"BigBasket\",\"\"\n2026-06-09T14:45:00.000Z,expense,1022.5,\"HDFC Salary\",\"\",\"Food\",\"Swiggy/9921\",\"\"\n2026-06-14T14:45:00.000Z,expense,1136,\"Amex Platinum\",\"\",\"Food\",\"Swiggy 449\",\"\"\n2026-06-07T00:30:00.000Z,expense,649,\"Amex Platinum\",\"\",\"Subscriptions\",\"NETFLIX.COM 8812\",\"\"\n2026-06-15T00:30:00.000Z,expense,119,\"Amex Platinum\",\"\",\"Subscriptions\",\"Spotify\",\"\"\n2026-06-16T00:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Subscriptions\",\"Hotstar 299\",\"\"\n2026-06-12T05:30:00.000Z,expense,1411,\"HDFC Salary\",\"\",\"Utilities\",\"BESCOM electricity\",\"\"\n2026-06-11T13:30:00.000Z,expense,340.75,\"Cash\",\"\",\"Transport\",\"Uber trip\",\"\"\n2026-06-09T18:30:00.000Z,transfer,5000,\"HDFC Salary\",\"SBI RD\",\"Transfer\",\"RD installment\",\"\"\n2026-06-17T12:30:00.000Z,expense,3000.5,\"Amex Platinum\",\"\",\"Split (2)\",\"DMart Ready\",\"Groceries: 2000.25 | Home Maintenance: 1000.25\"\n2026-06-28T18:29:00.000Z,income,412.37,\"SBI Savings\",\"\",\"Interest\",\"Interest\",\"\"\n2026-04-06T01:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Fitness & Wellness\",\"Cult.fit class\",\"\"\n2026-04-13T01:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Fitness & Wellness\",\"Cult.fit class\",\"\"\n2026-04-20T01:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Fitness & Wellness\",\"Cult.fit class\",\"\"\n2026-04-27T01:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Fitness & Wellness\",\"Cult.fit class\",\"\"\n2026-05-04T01:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Fitness & Wellness\",\"Cult.fit class\",\"\"\n2026-05-11T01:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Fitness & Wellness\",\"Cult.fit class\",\"\"\n2026-05-18T01:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Fitness & Wellness\",\"Cult.fit class\",\"\"\n2026-05-25T01:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Fitness & Wellness\",\"Cult.fit class\",\"\"\n2026-06-01T01:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Fitness & Wellness\",\"Cult.fit class\",\"\"\n2026-06-08T01:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Fitness & Wellness\",\"Cult.fit class\",\"\"\n2026-06-15T01:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Fitness & Wellness\",\"Cult.fit class\",\"\"\n2026-03-05T08:30:00.000Z,expense,18000,\"Amex Platinum\",\"\",\"Travel\",\"IndiGo 6E-221\",\"\"\n2026-06-13T16:30:00.000Z,expense,6500,\"Amex Platinum\",\"\",\"Food\",\"Swiggy party\",\"\"\n2026-06-10T06:30:00.000Z,income,32000.5,\"HDFC Salary\",\"\",\"Freelance\",\"Upwork payout\",\"\"\n2025-12-25T06:30:00.000Z,income,2500,\"Cash\",\"\",\"Gifts\",\"Gift from Mom\",\"\"\n2026-05-06T07:30:00.000Z,expense,350,\"Paytm Wallet\",\"\",\"Food\",\"Chai Point\",\"\"\n2025-12-04T06:30:00.000Z,expense,1200,\"Old Axis\",\"\",\"Shopping\",\"Myntra\",\"\"\n2026-05-31,expense,99,\"Cash\",\"\",\"Food\",\"Chai\",\"\"\n2026-05-31T18:30:00.000Z,expense,180,\"Cash\",\"\",\"Food\",\"Midnight snack\",\"\"\n2026-05-31T18:29:59.999Z,expense,220,\"Cash\",\"\",\"Food\",\"Late dinner\",\"\"\n2026-05-24T18:30:00.000Z,expense,75,\"Cash\",\"\",\"Transport\",\"Auto 25th\",\"\"\n2026-05-24T18:29:00.000Z,expense,60,\"Cash\",\"\",\"Transport\",\"Auto 24th\",\"\"\n2026-06-25T03:30:00.000Z,expense,22000,\"HDFC Salary\",\"\",\"Rent\",\"Rent advance\",\"\"\n2026-06-04T03:30:00.000Z,expense,0.30000000000000004,\"Cash\",\"\",\"Miscellaneous\",\"'+91 tip\",\"\"\n2026-06-05T03:30:00.000Z,expense,450,\"Cash\",\"\",\"\",\"'=cmd|calc\",\"\"\n2026-06-06T03:30:00.000Z,expense,800,\"Amex Platinum\",\"\",\"Shopping\",\"Amazon order\",\"\"\n2026-06-08T03:30:00.000Z,income,1999,\"Amex Platinum\",\"\",\"Shopping\",\"Amazon refund\",\"\""
+      "out": "Date,Type,Amount,Account,To Account,Category,Note,Split Detail\n2025-10-25T03:30:00.000Z,income,85000,\"HDFC Salary\",\"\",\"Salary\",\"Salary ACME Corp\",\"\"\n2025-11-01T03:30:00.000Z,expense,22000,\"HDFC Salary\",\"\",\"\",\"Rent 202511\",\"\"\n2025-11-02T02:30:00.000Z,transfer,10000,\"HDFC Salary\",\"SBI Savings\",\"Transfer\",\"To savings\",\"\"\n2025-11-03T14:45:00.000Z,expense,650,\"Amex Platinum\",\"\",\"Food\",\"Swiggy/9921\",\"\"\n2025-11-09T14:45:00.000Z,expense,763.5,\"HDFC Salary\",\"\",\"Food\",\"Swiggy 449\",\"\"\n2025-11-14T14:45:00.000Z,expense,877,\"Amex Platinum\",\"\",\"Food\",\"Zomato order #4471\",\"\"\n2025-11-20T14:45:00.000Z,expense,990.5,\"HDFC Salary\",\"\",\"\",\"BigBasket\",\"\"\n2025-11-07T00:30:00.000Z,expense,649,\"Amex Platinum\",\"\",\"Subscriptions\",\"NETFLIX.COM 8812\",\"\"\n2025-11-15T00:30:00.000Z,expense,119,\"Amex Platinum\",\"\",\"Subscriptions\",\"Spotify\",\"\"\n2025-11-16T00:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Subscriptions\",\"Hotstar 299\",\"\"\n2025-11-12T05:30:00.000Z,expense,1100,\"HDFC Salary\",\"\",\"Utilities\",\"BESCOM electricity\",\"\"\n2025-11-11T13:30:00.000Z,expense,340.75,\"Cash\",\"\",\"Transport\",\"Uber trip\",\"\"\n2025-11-09T18:30:00.000Z,transfer,5000,\"HDFC Salary\",\"SBI RD\",\"Transfer\",\"RD installment\",\"\"\n2025-11-17T12:30:00.000Z,expense,3000.5,\"Amex Platinum\",\"\",\"Split (2)\",\"DMart Ready\",\"Unknown: 2000.25 | Unknown: 1000.25\"\n2025-11-22T04:30:00.000Z,transfer,9000,\"HDFC Salary\",\"Amex Platinum\",\"Transfer\",\"Amex bill payment\",\"\"\n2025-11-25T03:30:00.000Z,income,85000,\"HDFC Salary\",\"\",\"Salary\",\"Salary ACME Corp\",\"\"\n2025-12-01T03:30:00.000Z,expense,22000,\"HDFC Salary\",\"\",\"\",\"Rent 202512\",\"\"\n2025-12-02T02:30:00.000Z,transfer,10000,\"HDFC Salary\",\"SBI Savings\",\"Transfer\",\"To savings\",\"\"\n2025-12-03T14:45:00.000Z,expense,687,\"Amex Platinum\",\"\",\"Food\",\"Swiggy 449\",\"\"\n2025-12-09T14:45:00.000Z,expense,800.5,\"HDFC Salary\",\"\",\"Food\",\"Zomato order #4471\",\"\"\n2025-12-14T14:45:00.000Z,expense,914,\"Amex Platinum\",\"\",\"\",\"BigBasket\",\"\"\n2025-12-20T14:45:00.000Z,expense,1027.5,\"HDFC Salary\",\"\",\"Food\",\"Swiggy/9921\",\"\"\n2025-12-07T00:30:00.000Z,expense,649,\"Amex Platinum\",\"\",\"Subscriptions\",\"NETFLIX.COM 8812\",\"\"\n2025-12-15T00:30:00.000Z,expense,119,\"Amex Platinum\",\"\",\"Subscriptions\",\"Spotify\",\"\"\n2025-12-16T00:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Subscriptions\",\"Hotstar 299\",\"\"\n2025-12-12T05:30:00.000Z,expense,1273,\"HDFC Salary\",\"\",\"Utilities\",\"BESCOM electricity\",\"\"\n2025-12-11T13:30:00.000Z,expense,340.75,\"Cash\",\"\",\"Transport\",\"Uber trip\",\"\"\n2025-12-09T18:30:00.000Z,transfer,5000,\"HDFC Salary\",\"SBI RD\",\"Transfer\",\"RD installment\",\"\"\n2025-12-17T12:30:00.000Z,expense,3000.5,\"Amex Platinum\",\"\",\"Split (2)\",\"DMart Ready\",\"Unknown: 2000.25 | Unknown: 1000.25\"\n2025-12-22T04:30:00.000Z,transfer,9250,\"HDFC Salary\",\"Amex Platinum\",\"Transfer\",\"Amex bill payment\",\"\"\n2025-12-28T18:29:00.000Z,income,412.37,\"SBI Savings\",\"\",\"Interest\",\"Interest\",\"\"\n2025-12-25T03:30:00.000Z,income,85000,\"HDFC Salary\",\"\",\"Salary\",\"Salary ACME Corp\",\"\"\n2026-01-01T03:30:00.000Z,expense,22000,\"HDFC Salary\",\"\",\"\",\"Rent 202601\",\"\"\n2026-01-02T02:30:00.000Z,transfer,10000,\"HDFC Salary\",\"SBI Savings\",\"Transfer\",\"To savings\",\"\"\n2026-01-03T14:45:00.000Z,expense,724,\"Amex Platinum\",\"\",\"Food\",\"Zomato order #4471\",\"\"\n2026-01-09T14:45:00.000Z,expense,837.5,\"HDFC Salary\",\"\",\"\",\"BigBasket\",\"\"\n2026-01-14T14:45:00.000Z,expense,951,\"Amex Platinum\",\"\",\"Food\",\"Swiggy/9921\",\"\"\n2026-01-20T14:45:00.000Z,expense,1064.5,\"HDFC Salary\",\"\",\"Food\",\"Swiggy 449\",\"\"\n2026-01-07T00:30:00.000Z,expense,649,\"Amex Platinum\",\"\",\"Subscriptions\",\"NETFLIX.COM 8812\",\"\"\n2026-01-15T00:30:00.000Z,expense,119,\"Amex Platinum\",\"\",\"Subscriptions\",\"Spotify\",\"\"\n2026-01-16T00:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Subscriptions\",\"Hotstar 299\",\"\"\n2026-01-12T05:30:00.000Z,expense,1446,\"HDFC Salary\",\"\",\"Utilities\",\"BESCOM electricity\",\"\"\n2026-01-11T13:30:00.000Z,expense,340.75,\"Cash\",\"\",\"Transport\",\"Uber trip\",\"\"\n2026-01-09T18:30:00.000Z,transfer,5000,\"HDFC Salary\",\"SBI RD\",\"Transfer\",\"RD installment\",\"\"\n2026-01-17T12:30:00.000Z,expense,3000.5,\"Amex Platinum\",\"\",\"Split (2)\",\"DMart Ready\",\"Unknown: 2000.25 | Unknown: 1000.25\"\n2026-01-22T04:30:00.000Z,transfer,9500,\"HDFC Salary\",\"Amex Platinum\",\"Transfer\",\"Amex bill payment\",\"\"\n2026-01-25T03:30:00.000Z,income,85000,\"HDFC Salary\",\"\",\"Salary\",\"Salary ACME Corp\",\"\"\n2026-02-01T03:30:00.000Z,expense,22000,\"HDFC Salary\",\"\",\"\",\"Rent 202602\",\"\"\n2026-02-02T02:30:00.000Z,transfer,10000,\"HDFC Salary\",\"SBI Savings\",\"Transfer\",\"To savings\",\"\"\n2026-02-03T14:45:00.000Z,expense,761,\"Amex Platinum\",\"\",\"\",\"BigBasket\",\"\"\n2026-02-09T14:45:00.000Z,expense,874.5,\"HDFC Salary\",\"\",\"Food\",\"Swiggy/9921\",\"\"\n2026-02-14T14:45:00.000Z,expense,988,\"Amex Platinum\",\"\",\"Food\",\"Swiggy 449\",\"\"\n2026-02-20T14:45:00.000Z,expense,1101.5,\"HDFC Salary\",\"\",\"Food\",\"Zomato order #4471\",\"\"\n2026-02-07T00:30:00.000Z,expense,649,\"Amex Platinum\",\"\",\"Subscriptions\",\"NETFLIX.COM 8812\",\"\"\n2026-02-15T00:30:00.000Z,expense,119,\"Amex Platinum\",\"\",\"Subscriptions\",\"Spotify\",\"\"\n2026-02-16T00:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Subscriptions\",\"Hotstar 299\",\"\"\n2026-02-12T05:30:00.000Z,expense,1619,\"HDFC Salary\",\"\",\"Utilities\",\"BESCOM electricity\",\"\"\n2026-02-11T13:30:00.000Z,expense,340.75,\"Cash\",\"\",\"Transport\",\"Uber trip\",\"\"\n2026-02-09T18:30:00.000Z,transfer,5000,\"HDFC Salary\",\"SBI RD\",\"Transfer\",\"RD installment\",\"\"\n2026-02-17T12:30:00.000Z,expense,3000.5,\"Amex Platinum\",\"\",\"Split (2)\",\"DMart Ready\",\"Unknown: 2000.25 | Unknown: 1000.25\"\n2026-02-22T04:30:00.000Z,transfer,9750,\"HDFC Salary\",\"Amex Platinum\",\"Transfer\",\"Amex bill payment\",\"\"\n2026-02-28T18:29:00.000Z,income,412.37,\"SBI Savings\",\"\",\"Interest\",\"Interest\",\"\"\n2026-02-25T03:30:00.000Z,income,85000,\"HDFC Salary\",\"\",\"Salary\",\"Salary ACME Corp\",\"\"\n2026-03-01T03:30:00.000Z,expense,22000,\"HDFC Salary\",\"\",\"\",\"Rent 202603\",\"\"\n2026-03-02T02:30:00.000Z,transfer,10000,\"HDFC Salary\",\"SBI Savings\",\"Transfer\",\"To savings\",\"\"\n2026-03-03T14:45:00.000Z,expense,798,\"Amex Platinum\",\"\",\"Food\",\"Swiggy/9921\",\"\"\n2026-03-09T14:45:00.000Z,expense,911.5,\"HDFC Salary\",\"\",\"Food\",\"Swiggy 449\",\"\"\n2026-03-14T14:45:00.000Z,expense,1025,\"Amex Platinum\",\"\",\"Food\",\"Zomato order #4471\",\"\"\n2026-03-20T14:45:00.000Z,expense,1138.5,\"HDFC Salary\",\"\",\"\",\"BigBasket\",\"\"\n2026-03-07T00:30:00.000Z,expense,649,\"Amex Platinum\",\"\",\"Subscriptions\",\"NETFLIX.COM 8812\",\"\"\n2026-03-15T00:30:00.000Z,expense,119,\"Amex Platinum\",\"\",\"Subscriptions\",\"Spotify\",\"\"\n2026-03-16T00:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Subscriptions\",\"Hotstar 299\",\"\"\n2026-03-12T05:30:00.000Z,expense,1792,\"HDFC Salary\",\"\",\"Utilities\",\"BESCOM electricity\",\"\"\n2026-03-11T13:30:00.000Z,expense,340.75,\"Cash\",\"\",\"Transport\",\"Uber trip\",\"\"\n2026-03-09T18:30:00.000Z,transfer,5000,\"HDFC Salary\",\"SBI RD\",\"Transfer\",\"RD installment\",\"\"\n2026-03-17T12:30:00.000Z,expense,3000.5,\"Amex Platinum\",\"\",\"Split (2)\",\"DMart Ready\",\"Unknown: 2000.25 | Unknown: 1000.25\"\n2026-03-22T04:30:00.000Z,transfer,10000,\"HDFC Salary\",\"Amex Platinum\",\"Transfer\",\"Amex bill payment\",\"\"\n2026-03-25T03:30:00.000Z,income,85000,\"HDFC Salary\",\"\",\"Salary\",\"Salary ACME Corp\",\"\"\n2026-04-01T03:30:00.000Z,expense,22000,\"HDFC Salary\",\"\",\"\",\"Rent 202604\",\"\"\n2026-04-02T02:30:00.000Z,transfer,10000,\"HDFC Salary\",\"SBI Savings\",\"Transfer\",\"To savings\",\"\"\n2026-04-03T14:45:00.000Z,expense,835,\"Amex Platinum\",\"\",\"Food\",\"Swiggy 449\",\"\"\n2026-04-09T14:45:00.000Z,expense,948.5,\"HDFC Salary\",\"\",\"Food\",\"Zomato order #4471\",\"\"\n2026-04-14T14:45:00.000Z,expense,1062,\"Amex Platinum\",\"\",\"\",\"BigBasket\",\"\"\n2026-04-20T14:45:00.000Z,expense,1175.5,\"HDFC Salary\",\"\",\"Food\",\"Swiggy/9921\",\"\"\n2026-04-07T00:30:00.000Z,expense,649,\"Amex Platinum\",\"\",\"Subscriptions\",\"NETFLIX.COM 8812\",\"\"\n2026-04-15T00:30:00.000Z,expense,121,\"Amex Platinum\",\"\",\"Subscriptions\",\"Spotify\",\"\"\n2026-04-16T00:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Subscriptions\",\"Hotstar 299\",\"\"\n2026-04-12T05:30:00.000Z,expense,1965,\"HDFC Salary\",\"\",\"Utilities\",\"BESCOM electricity\",\"\"\n2026-04-11T13:30:00.000Z,expense,340.75,\"Cash\",\"\",\"Transport\",\"Uber trip\",\"\"\n2026-04-09T18:30:00.000Z,transfer,5000,\"HDFC Salary\",\"SBI RD\",\"Transfer\",\"RD installment\",\"\"\n2026-04-17T12:30:00.000Z,expense,3000.5,\"Amex Platinum\",\"\",\"Split (2)\",\"DMart Ready\",\"Unknown: 2000.25 | Unknown: 1000.25\"\n2026-04-22T04:30:00.000Z,transfer,10250,\"HDFC Salary\",\"Amex Platinum\",\"Transfer\",\"Amex bill payment\",\"\"\n2026-04-28T18:29:00.000Z,income,412.37,\"SBI Savings\",\"\",\"Interest\",\"Interest\",\"\"\n2026-04-25T03:30:00.000Z,income,85000,\"HDFC Salary\",\"\",\"Salary\",\"Salary ACME Corp\",\"\"\n2026-05-01T03:30:00.000Z,expense,22000,\"HDFC Salary\",\"\",\"\",\"Rent 202605\",\"\"\n2026-05-02T02:30:00.000Z,transfer,10000,\"HDFC Salary\",\"SBI Savings\",\"Transfer\",\"To savings\",\"\"\n2026-05-03T14:45:00.000Z,expense,872,\"Amex Platinum\",\"\",\"Food\",\"Zomato order #4471\",\"\"\n2026-05-09T14:45:00.000Z,expense,985.5,\"HDFC Salary\",\"\",\"\",\"BigBasket\",\"\"\n2026-05-14T14:45:00.000Z,expense,1099,\"Amex Platinum\",\"\",\"Food\",\"Swiggy/9921\",\"\"\n2026-05-20T14:45:00.000Z,expense,1212.5,\"HDFC Salary\",\"\",\"Food\",\"Swiggy 449\",\"\"\n2026-05-07T00:30:00.000Z,expense,649,\"Amex Platinum\",\"\",\"Subscriptions\",\"NETFLIX.COM 8812\",\"\"\n2026-05-15T00:30:00.000Z,expense,119,\"Amex Platinum\",\"\",\"Subscriptions\",\"Spotify\",\"\"\n2026-05-16T00:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Subscriptions\",\"Hotstar 299\",\"\"\n2026-05-12T05:30:00.000Z,expense,1238,\"HDFC Salary\",\"\",\"Utilities\",\"BESCOM electricity\",\"\"\n2026-05-11T13:30:00.000Z,expense,340.75,\"Cash\",\"\",\"Transport\",\"Uber trip\",\"\"\n2026-05-09T18:30:00.000Z,transfer,5000,\"HDFC Salary\",\"SBI RD\",\"Transfer\",\"RD installment\",\"\"\n2026-05-17T12:30:00.000Z,expense,3000.5,\"Amex Platinum\",\"\",\"Split (2)\",\"DMart Ready\",\"Unknown: 2000.25 | Unknown: 1000.25\"\n2026-05-22T04:30:00.000Z,transfer,10500,\"HDFC Salary\",\"Amex Platinum\",\"Transfer\",\"Amex bill payment\",\"\"\n2026-05-25T03:30:00.000Z,income,85000,\"HDFC Salary\",\"\",\"Salary\",\"Salary ACME Corp\",\"\"\n2026-06-01T03:30:00.000Z,expense,22000,\"HDFC Salary\",\"\",\"\",\"Rent 202606\",\"\"\n2026-06-02T02:30:00.000Z,transfer,10000,\"HDFC Salary\",\"SBI Savings\",\"Transfer\",\"To savings\",\"\"\n2026-06-03T14:45:00.000Z,expense,909,\"Amex Platinum\",\"\",\"\",\"BigBasket\",\"\"\n2026-06-09T14:45:00.000Z,expense,1022.5,\"HDFC Salary\",\"\",\"Food\",\"Swiggy/9921\",\"\"\n2026-06-14T14:45:00.000Z,expense,1136,\"Amex Platinum\",\"\",\"Food\",\"Swiggy 449\",\"\"\n2026-06-07T00:30:00.000Z,expense,649,\"Amex Platinum\",\"\",\"Subscriptions\",\"NETFLIX.COM 8812\",\"\"\n2026-06-15T00:30:00.000Z,expense,119,\"Amex Platinum\",\"\",\"Subscriptions\",\"Spotify\",\"\"\n2026-06-16T00:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Subscriptions\",\"Hotstar 299\",\"\"\n2026-06-12T05:30:00.000Z,expense,1411,\"HDFC Salary\",\"\",\"Utilities\",\"BESCOM electricity\",\"\"\n2026-06-11T13:30:00.000Z,expense,340.75,\"Cash\",\"\",\"Transport\",\"Uber trip\",\"\"\n2026-06-09T18:30:00.000Z,transfer,5000,\"HDFC Salary\",\"SBI RD\",\"Transfer\",\"RD installment\",\"\"\n2026-06-17T12:30:00.000Z,expense,3000.5,\"Amex Platinum\",\"\",\"Split (2)\",\"DMart Ready\",\"Unknown: 2000.25 | Unknown: 1000.25\"\n2026-06-28T18:29:00.000Z,income,412.37,\"SBI Savings\",\"\",\"Interest\",\"Interest\",\"\"\n2026-04-06T01:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Fitness & Wellness\",\"Cult.fit class\",\"\"\n2026-04-13T01:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Fitness & Wellness\",\"Cult.fit class\",\"\"\n2026-04-20T01:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Fitness & Wellness\",\"Cult.fit class\",\"\"\n2026-04-27T01:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Fitness & Wellness\",\"Cult.fit class\",\"\"\n2026-05-04T01:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Fitness & Wellness\",\"Cult.fit class\",\"\"\n2026-05-11T01:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Fitness & Wellness\",\"Cult.fit class\",\"\"\n2026-05-18T01:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Fitness & Wellness\",\"Cult.fit class\",\"\"\n2026-05-25T01:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Fitness & Wellness\",\"Cult.fit class\",\"\"\n2026-06-01T01:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Fitness & Wellness\",\"Cult.fit class\",\"\"\n2026-06-08T01:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Fitness & Wellness\",\"Cult.fit class\",\"\"\n2026-06-15T01:30:00.000Z,expense,299,\"Amex Platinum\",\"\",\"Fitness & Wellness\",\"Cult.fit class\",\"\"\n2026-03-05T08:30:00.000Z,expense,18000,\"Amex Platinum\",\"\",\"Travel\",\"IndiGo 6E-221\",\"\"\n2026-06-13T16:30:00.000Z,expense,6500,\"Amex Platinum\",\"\",\"Food\",\"Swiggy party\",\"\"\n2026-06-10T06:30:00.000Z,income,32000.5,\"HDFC Salary\",\"\",\"Side income\",\"Upwork payout\",\"\"\n2025-12-25T06:30:00.000Z,income,2500,\"Cash\",\"\",\"\",\"Gift from Mom\",\"\"\n2026-05-06T07:30:00.000Z,expense,350,\"Paytm Wallet\",\"\",\"Food\",\"Chai Point\",\"\"\n2025-12-04T06:30:00.000Z,expense,1200,\"Old Axis\",\"\",\"Shopping\",\"Myntra\",\"\"\n2026-05-31,expense,99,\"Cash\",\"\",\"Food\",\"Chai\",\"\"\n2026-05-31T18:30:00.000Z,expense,180,\"Cash\",\"\",\"Food\",\"Midnight snack\",\"\"\n2026-05-31T18:29:59.999Z,expense,220,\"Cash\",\"\",\"Food\",\"Late dinner\",\"\"\n2026-05-24T18:30:00.000Z,expense,75,\"Cash\",\"\",\"Transport\",\"Auto 25th\",\"\"\n2026-05-24T18:29:00.000Z,expense,60,\"Cash\",\"\",\"Transport\",\"Auto 24th\",\"\"\n2026-06-25T03:30:00.000Z,expense,22000,\"HDFC Salary\",\"\",\"\",\"Rent advance\",\"\"\n2026-06-04T03:30:00.000Z,expense,0.30000000000000004,\"Cash\",\"\",\"Miscellaneous\",\"'+91 tip\",\"\"\n2026-06-05T03:30:00.000Z,expense,450,\"Cash\",\"\",\"\",\"'=cmd|calc\",\"\"\n2026-06-06T03:30:00.000Z,expense,800,\"Amex Platinum\",\"\",\"Shopping\",\"Amazon order\",\"\"\n2026-06-08T03:30:00.000Z,income,1999,\"Amex Platinum\",\"\",\"Shopping\",\"Amazon refund\",\"\""
     },
     {
       "fn": "transactionsToCsv",
@@ -14266,7 +14149,7 @@
           {
             "id": "acc-evil",
             "name": "=HYPERLINK(\"x\")",
-            "type": "checking",
+            "type": "savings",
             "color": "#4b36c7",
             "icon": "landmark",
             "balance": 349052,

@@ -146,7 +146,6 @@ Defined in [src/types/index.ts](web/src/types/index.ts):
 | `Budget`                | id, categoryId ('' = overall budget), labelId?, amount, period, rollover                                                                                                      |
 | `RecurringTransaction`  | id, type, amount, accountId, toAccountId?, categoryId, frequency, startDate, endDate?, maxOccurrences?, occurrenceCount, pausedAt?, lastRunDate, goalId?                      |
 | `TransactionTemplate`   | id, name + every `Transaction` field except the date                                                                                                                          |
-| `CategoryRule`          | id, pattern, matchType, scope, categoryId, labelIds[], enabled                                                                                                                |
 | `Goal`                  | id, name, icon, color, targetAmount, targetDate?, linkedAccountId? (informational only)                                                                                       |
 | `GoalContribution`      | id, goalId, amount (signed), date, note — the goal's own ledger, not a transaction                                                                                            |
 | `Person`                | id, name, icon, color                                                                                                                                                         |
@@ -160,7 +159,7 @@ Defined in [src/types/index.ts](web/src/types/index.ts):
 | `BackupCryptoConfig`    | enabled, salt, iterations, verifierIv, verifierCiphertext — **not** in `Settings`, same reason                                                                                |
 | `ScheduledNotification` | id (`kind:subject:occurrence`), kind, fireAt, expiresAt, title, body, url                                                                                                     |
 
-Enums: `AccountType`, `TransactionType` (expense/income/transfer), `RecurrenceFrequency` (daily/weekly/monthly/yearly), `BudgetPeriod` (weekly/monthly/yearly), `RuleMatchType` (contains/startsWith/endsWith/equals/regex), `RuleScope` (expense/income/any), `Theme` (dark/light/system).
+Enums: `AccountType`, `TransactionType` (expense/income/transfer), `RecurrenceFrequency` (daily/weekly/monthly/yearly), `BudgetPeriod` (weekly/monthly/yearly), `Theme` (dark/light/system).
 
 ---
 
@@ -183,14 +182,6 @@ Enums: `AccountType`, `TransactionType` (expense/income/transfer), `RecurrenceFr
 - **INR only:** Multi-currency was removed in persisted-schema v4. `formatCurrency(amount, compact?)` hardcodes INR/`en-IN`; there is no per-account or per-setting currency field. Old persisted state and old backup JSON are stripped of the legacy `currency` key on load and on import.
 - **"This month" is a financial month:** every month window comes from `web/src/utils/period.ts` and starts on `Settings.monthStartDay` (1–28, default 1), so a 25th-of-the-month salary cycle runs 25 Jun–24 Jul. Never call `startOfMonth`/`endOfMonth` directly in feature code — use `periodRange`/`monthPeriodStart` (or `getCurrentMonthTransactions(txns, monthStartDay)`) or the app will disagree with itself. `Year in Review` walks financial _years_ the same way — see `buildYearInReview()` in `analytics.ts`.
 - **Budget scope and period:** a `Budget` is scoped by `labelId` if set, otherwise by `categoryId` (`''` = overall across all expenses) — `budgetScopeKey()` is the identity, and `addBudget` replaces any budget sharing it. Each budget carries its own `period`, so `computeBudgetStatuses(budgets, transactions, { monthStartDay })` takes the _full_ transaction list and slices per budget. With `rollover`, `status.limit` is `amount + carryover` (carryover is signed — an overspend carries forward as a debt) and the chain never reaches back past the budget's `createdAt` period, capped at `MAX_ROLLOVER_LOOKBACK`.
-- **Auto-categorization is first-match-wins and never destructive:** the order of `rules` in the
-  store _is_ their priority, so anything that rewrites the array (reorder, import merge) changes
-  which rule fires. Every consumer goes through [`web/src/utils/autoCategorize.ts`](web/src/utils/autoCategorize.ts)
-  — never re-implement matching. Two invariants the engine enforces and callers must not work
-  around: a rule never fires on a `transfer`, and never touches a transaction with `splits`.
-  Rule labels are additive (`mergeLabels`), and a user-typed regex is compiled defensively — an
-  invalid one matches nothing rather than throwing. On CSV import, a category the file itself
-  supplied always outranks a rule.
 - **Recurring processing:** `processRecurring()` (from `useFinanceStore`) generates any overdue recurring transactions. Today it runs **only** once on hydration inside `Layout` (so only when the first route rendered is a `<Layout>` route) and from the Recurring page — **not** on resume from background, and not when the app is opened straight onto a full-screen route such as `/add-transaction` or `/share-target`. Generated rows are announced by an Undo toast. `planRecurring` skips paused rules, stops at `endDate` and `maxOccurrences`, and requires both accounts to exist for a transfer rule. Before saving a rule dated in the past, preview it with `previewBackfill()` — "start from today" is expressed as `lastRunDate = lastOccurrenceOnOrBefore(rule, now)`, which keeps the cadence anchored to `startDate` while skipping the history.
 - **Fixed and recurring deposits are accounts (`type: 'fd' | 'rd'`) with `Account.deposit` terms.**
   Their value is derived in [`web/src/utils/deposit.ts`](web/src/utils/deposit.ts) and never stored. An FD

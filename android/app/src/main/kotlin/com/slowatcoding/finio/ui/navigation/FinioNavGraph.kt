@@ -6,7 +6,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.createGraph
 import androidx.navigation.toRoute
 import com.slowatcoding.finio.core.model.FinanceState
-import com.slowatcoding.finio.core.model.RuleScope
 import com.slowatcoding.finio.debugGallery
 import com.slowatcoding.finio.ui.common.EditGuard
 import com.slowatcoding.finio.ui.screens.accounts.AccountsScreen
@@ -22,7 +21,6 @@ import com.slowatcoding.finio.ui.screens.categories.ManageCategoriesScreen
 import com.slowatcoding.finio.ui.screens.dashboard.DashboardScreen
 import com.slowatcoding.finio.ui.screens.debts.DebtsScreen
 import com.slowatcoding.finio.ui.screens.goals.GoalsScreen
-import com.slowatcoding.finio.ui.screens.importcsv.ImportCsvScreen
 import com.slowatcoding.finio.ui.screens.labels.ManageLabelsScreen
 import com.slowatcoding.finio.ui.screens.legal.PrivacyScreen
 import com.slowatcoding.finio.ui.screens.legal.TermsScreen
@@ -31,7 +29,6 @@ import com.slowatcoding.finio.ui.screens.loans.LoanScheduleScreen
 import com.slowatcoding.finio.ui.screens.loans.LoansScreen
 import com.slowatcoding.finio.ui.screens.merchants.MerchantsScreen
 import com.slowatcoding.finio.ui.screens.recurring.RecurringScreen
-import com.slowatcoding.finio.ui.screens.rules.CategoryRulesScreen
 import com.slowatcoding.finio.ui.screens.settings.SettingsCategoryScreen
 import com.slowatcoding.finio.ui.screens.settings.SettingsScreen
 import com.slowatcoding.finio.ui.screens.tools.ToolsScreen
@@ -96,15 +93,6 @@ fun buildFinioNavGraph(
         EditGuard(exists = { current().loans.any { it.id == id } }, fallback = Routes.Loans, nav = nav) {
             LoanScheduleScreen(nav, loanId = id)
         }
-    }
-    composable<Routes.ImportCsv> { ImportCsvScreen(nav) }
-    composable<Routes.CategoryRules> {
-        val route = it.toRoute<Routes.CategoryRules>()
-        CategoryRulesScreen(
-            nav,
-            prefillPattern = route.pattern,
-            prefillScope = RuleScope.entries.find { s -> s.wire == route.scope },
-        )
     }
     composable<Routes.Merchants> { MerchantsScreen(nav) }
     composable<Routes.YearInReview> { YearInReviewScreen(nav) }

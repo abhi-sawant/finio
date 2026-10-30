@@ -42,11 +42,11 @@ android/
 ├── core/  (pure Kotlin/JVM — no Android imports; every money rule, unit-tested against golden fixtures)
 │   └── com.slowatcoding.finio.core
 │       ├── model/      Model.kt (every domain type, wire names), FinioJson
-│       ├── store/      FinanceStore (all actions, atomic), Persistence (encode/decodePersisted, v1→v18
+│       ├── store/      FinanceStore (all actions, atomic), Persistence (encode/decodePersisted, v1→v19
 │       │               migrations), Balance, Recurring, AppLockState, AuthState, BackupCryptoState
 │       ├── calc/       Calculations, Analytics, Forecast, Insights, Merchants, NetWorth
 │       ├── period/     Period (financial months, monthStartDay), DateExtras
-│       ├── loan/ deposit/ rules/ (AutoCategorize, JsRegex) csv/ importing/ (ImportValidation)
+│       ├── loan/ deposit/ rules/ (JsRegex) importing/ (ImportValidation)
 │       ├── notify/     Notifications (selection), NotificationSchedule (pure builder)
 │       ├── backup/     BackupPayload (collectBackupPayload), BackupMeta
 │       ├── crypto/     PinCrypto, BackupCrypto (AES-GCM envelope), JsJson
@@ -125,7 +125,7 @@ schedule + ledger, cancels workers) — for the Settings "off" switch.
 
 **Signature.** Every screen is `@Composable fun <Name>Screen(nav: FinioNavigator, …args)` in
 `ui/screens/<feature>/`. The NavHost (`ui/navigation/FinioNavGraph.kt`) calls it; keep the
-signature. Route args arrive already decoded (ids, `SharedTransactionDraft?`, `RuleScope?`).
+signature. Route args arrive already decoded (ids, `SharedTransactionDraft?`).
 
 **Data.** No ViewModels. Read and act on the store directly:
 
@@ -160,7 +160,7 @@ opening, so the keyboard never pops back when their popup closes.
 `nav.openTab(FinioTab.Accounts)`, `nav.replace(Routes.Settings)` (web `<Navigate replace>`),
 `nav.navigateToPath("/budgets")` (insight `action.to`, notification URLs). Always qualify routes
 (`Routes.Settings` — names collide with core types). The web's `location.state` payloads are route
-args (`Routes.VerifyOtp(email)`, `Routes.CategoryRules(pattern, scope)`). Edit routes are already
+args (`Routes.VerifyOtp(email)`). Edit routes are already
 wrapped in `EditGuard` by the NavHost (a stale id replaces itself with the list, checked once at
 entry) — a screen that deletes its own entity just calls `nav.back()`.
 
@@ -186,7 +186,7 @@ entry) — a screen that deletes its own entity just calls `nav.back()`.
 | PWA                                              | Android                                                                                     |
 | ------------------------------------------------ | ------------------------------------------------------------------------------------------- |
 | localStorage keys (`finio-storage`, `finio-lock`…) | One atomic JSON file each in `filesDir` (`JsonFileStore`, `StoreFiles`), `.bak` fallback       |
-| Zustand `persist` + `migrate`                    | `encodePersisted`/`decodePersisted` (same `{state, version}` envelope, v18) + debounced writer |
+| Zustand `persist` + `migrate`                    | `encodePersisted`/`decodePersisted` (same `{state, version}` envelope, v19) + debounced writer |
 | `useAutoLock` (visibilitychange/pagehide)        | `AppLifecycleWatcher` (ProcessLifecycleOwner) → `AppContainer.onBackground/onForeground`     |
 | Task-switcher snapshot of the lock screen        | `FLAG_SECURE` while the lock is enabled (`SecureWindowEffect`)                               |
 | WebAuthn platform authenticator                  | `BiometricPrompt` BIOMETRIC_STRONG (`BiometricUnlock`); flag stored in `webauthnCredentialId` |

@@ -36,8 +36,6 @@ const Debts = lazy(() => import('@/pages/Debts'));
 const Loans = lazy(() => import('@/pages/Loans'));
 const AddLoan = lazy(() => import('@/pages/AddLoan'));
 const LoanSchedule = lazy(() => import('@/pages/LoanSchedule'));
-const ImportCsv = lazy(() => import('@/pages/ImportCsv'));
-const CategoryRules = lazy(() => import('@/pages/CategoryRules'));
 const Merchants = lazy(() => import('@/pages/Merchants'));
 const YearInReview = lazy(() => import('@/pages/YearInReview'));
 const Login = lazy(() => import('@/pages/auth/Login'));
@@ -163,8 +161,6 @@ function AppRoutes() {
             </EditGuard>
           }
         />
-        <Route path="import-csv" element={<ImportCsv />} />
-        <Route path="category-rules" element={<CategoryRules />} />
         <Route path="merchants" element={<Merchants />} />
         <Route path="year-in-review" element={<YearInReview />} />
       </Route>

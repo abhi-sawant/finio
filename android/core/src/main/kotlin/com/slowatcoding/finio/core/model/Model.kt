@@ -11,12 +11,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 enum class AccountType {
-    @SerialName("checking") Checking,
     @SerialName("savings") Savings,
     @SerialName("cash") Cash,
     @SerialName("credit") Credit,
-    @SerialName("investment") Investment,
-    @SerialName("wallet") Wallet,
     @SerialName("fd") Fd,
     @SerialName("rd") Rd;
 
@@ -73,27 +70,6 @@ enum class BudgetPeriod {
     @SerialName("weekly") Weekly,
     @SerialName("monthly") Monthly,
     @SerialName("yearly") Yearly;
-
-    val wire: String get() = wireName(this)
-}
-
-@Serializable
-enum class RuleMatchType {
-    @SerialName("contains") Contains,
-    @SerialName("startsWith") StartsWith,
-    @SerialName("endsWith") EndsWith,
-    @SerialName("equals") Equals,
-    @SerialName("regex") Regex;
-
-    val wire: String get() = wireName(this)
-}
-
-/** Which transaction types a rule is allowed to fire on. Transfers are never matched. */
-@Serializable
-enum class RuleScope {
-    @SerialName("expense") Expense,
-    @SerialName("income") Income,
-    @SerialName("any") Any;
 
     val wire: String get() = wireName(this)
 }
@@ -340,18 +316,6 @@ data class LoanPrepayment(
 )
 
 @Serializable
-data class CategoryRule(
-    val id: String,
-    val pattern: String,
-    val matchType: RuleMatchType,
-    val scope: RuleScope,
-    val categoryId: String,
-    val labelIds: List<String> = emptyList(),
-    val enabled: Boolean,
-    val createdAt: String,
-)
-
-@Serializable
 data class NetWorthSnapshot(
     val id: String,
     /** `yyyy-MM` of the financial month's start — the snapshot's real identity. */
@@ -377,14 +341,6 @@ data class TransactionTemplate(
     val splits: List<TransactionSplit>? = null,
 )
 
-/** The only fields a rule may rewrite on an existing transaction — enough to undo one pass. */
-data class TransactionCategorization(
-    val id: String,
-    val categoryId: String,
-    val labels: List<String>,
-    val splits: List<TransactionSplit>?,
-)
-
 /** Sanitized backup contents accepted by importData. A null collection = absent from the file. */
 data class ImportPayload(
     val accounts: List<Account>? = null,
@@ -394,7 +350,6 @@ data class ImportPayload(
     val budgets: List<Budget>? = null,
     val recurring: List<RecurringTransaction>? = null,
     val templates: List<TransactionTemplate>? = null,
-    val rules: List<CategoryRule>? = null,
     val goals: List<Goal>? = null,
     val goalContributions: List<GoalContribution>? = null,
     val people: List<Person>? = null,
@@ -417,7 +372,6 @@ data class FinanceState(
     val budgets: List<Budget> = emptyList(),
     val recurring: List<RecurringTransaction> = emptyList(),
     val templates: List<TransactionTemplate> = emptyList(),
-    val rules: List<CategoryRule> = emptyList(),
     val goals: List<Goal> = emptyList(),
     val goalContributions: List<GoalContribution> = emptyList(),
     val people: List<Person> = emptyList(),

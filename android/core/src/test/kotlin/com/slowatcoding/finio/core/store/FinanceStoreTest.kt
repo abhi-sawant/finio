@@ -8,7 +8,6 @@ import com.slowatcoding.finio.core.js.toIso
 import com.slowatcoding.finio.core.model.Account
 import com.slowatcoding.finio.core.model.AccountType
 import com.slowatcoding.finio.core.model.BudgetPeriod
-import com.slowatcoding.finio.core.model.CategoryRule
 import com.slowatcoding.finio.core.model.DepositCompounding
 import com.slowatcoding.finio.core.model.DepositTerms
 import com.slowatcoding.finio.core.model.ImportMode
@@ -20,8 +19,6 @@ import com.slowatcoding.finio.core.model.Goal
 import com.slowatcoding.finio.core.model.GoalContribution
 import com.slowatcoding.finio.core.model.Person
 import com.slowatcoding.finio.core.model.DebtEntry
-import com.slowatcoding.finio.core.model.RuleMatchType
-import com.slowatcoding.finio.core.model.RuleScope
 import com.slowatcoding.finio.core.model.Theme
 import com.slowatcoding.finio.core.model.TrackingMode
 import com.slowatcoding.finio.core.model.Transaction
@@ -45,7 +42,7 @@ class FinanceStoreTest {
     private val state get() = store.current
 
     private fun account(id: String, balance: Double, openingBalance: Double = balance) = Account(
-        id = id, name = id, type = AccountType.Checking, color = "#000", icon = "landmark",
+        id = id, name = id, type = AccountType.Savings, color = "#000", icon = "landmark",
         balance = balance, openingBalance = openingBalance, createdAt = "2026-01-01T00:00:00.000Z",
     )
 
@@ -349,79 +346,6 @@ class FinanceStoreTest {
         store.addTemplate(coffee(""))
         store.resetToDefaults()
         assertTrue(state.templates.isEmpty())
-    }
-
-    // ---- categorization rules -----------------------------------------------------------------
-
-    private fun addUberRule(
-        pattern: String = "uber",
-        categoryId: String = "cat-2",
-        labelIds: List<String> = listOf("lbl-1"),
-    ) = store.addRule(NewRule(pattern, RuleMatchType.Contains, RuleScope.Any, categoryId, labelIds, true))
-
-    @Test fun rulesAreAppended() {
-        addUberRule(pattern = "first")
-        addUberRule(pattern = "second")
-        assertEquals(listOf("first", "second"), state.rules.map(CategoryRule::pattern))
-    }
-
-    @Test fun moveRuleSwapsNeighboursAndStopsAtTheEnds() {
-        val a = addUberRule(pattern = "a")
-        val b = addUberRule(pattern = "b")
-        store.moveRule(b, MoveDirection.Up)
-        assertEquals(listOf("b", "a"), state.rules.map { it.pattern })
-        store.moveRule(b, MoveDirection.Up)
-        assertEquals(listOf("b", "a"), state.rules.map { it.pattern })
-        store.moveRule(a, MoveDirection.Down)
-        assertEquals(listOf("b", "a"), state.rules.map { it.pattern })
-    }
-
-    @Test fun applyRulesToExistingRecategorizesAndReportsForUndo() {
-        seed(listOf(account("a", 1000.0)), listOf(tx("t1", E, 100.0, "a", note = "Uber to work"), tx("t2", E, 50.0, "a", note = "Groceries")))
-        addUberRule()
-        val (changed, previous) = store.applyRulesToExisting()
-        assertEquals(1, changed)
-        val (t1, t2) = state.transactions
-        assertEquals("cat-2", t1.categoryId); assertEquals(listOf("lbl-1"), t1.labels)
-        assertEquals("cat-1", t2.categoryId); assertEquals(emptyList<String>(), t2.labels)
-        store.restoreCategorization(previous)
-        assertEquals("cat-1", state.transactions[0].categoryId)
-        assertEquals(emptyList<String>(), state.transactions[0].labels)
-    }
-
-    @Test fun applyingRulesLeavesBalancesAlone() {
-        seed(listOf(account("a", 900.0, 1000.0)), listOf(tx("t1", E, 100.0, "a", note = "Uber")))
-        addUberRule()
-        store.applyRulesToExisting()
-        assertEquals(900.0, state.accounts[0].balance, 0.0)
-    }
-
-    @Test fun applyRulesCanBeRestrictedToOneCategory() {
-        seed(
-            listOf(account("a", 1000.0)),
-            listOf(tx("t1", E, 10.0, "a", note = "Uber", categoryId = "cat-24"), tx("t2", E, 10.0, "a", note = "Uber", categoryId = "cat-3")),
-        )
-        addUberRule()
-        assertEquals(1, store.applyRulesToExisting(restrictToCategoryId = "cat-24").changed)
-        assertEquals("cat-3", state.transactions[1].categoryId)
-    }
-
-    @Test fun deletingACategoryRepointsRules() {
-        addUberRule(categoryId = "cat-2")
-        store.deleteCategory("cat-2")
-        assertEquals("cat-24", state.rules[0].categoryId)
-    }
-
-    @Test fun deletingALabelStripsItFromRules() {
-        addUberRule(labelIds = listOf("lbl-1", "lbl-2"))
-        store.deleteLabel("lbl-1")
-        assertEquals(listOf("lbl-2"), state.rules[0].labelIds)
-    }
-
-    @Test fun rulesAreClearedByReset() {
-        addUberRule()
-        store.resetToDefaults()
-        assertTrue(state.rules.isEmpty())
     }
 
     // ---- goals --------------------------------------------------------------------------------
@@ -958,7 +882,7 @@ class FinanceStoreTest {
 
     // ---- migrations ---------------------------------------------------------------------------
 
-    private val accountJson = """{"id":"a","name":"a","type":"checking","color":"#000","icon":"landmark","balance":100,"openingBalance":100,"createdAt":"2026-01-01T00:00:00.000Z"}"""
+    private val accountJson = """{"id":"a","name":"a","type":"savings","color":"#000","icon":"landmark","balance":100,"openingBalance":100,"createdAt":"2026-01-01T00:00:00.000Z"}"""
 
     private fun envelope(version: Int, state: String) = """{"version":$version,"state":$state}"""
 
@@ -985,8 +909,8 @@ class FinanceStoreTest {
             envelope(
                 4,
                 """{"accounts":[
-                  {"id":"a","name":"a","type":"checking","color":"#000","icon":"landmark","balance":750,"createdAt":"2026-01-01T00:00:00.000Z","currency":"INR"},
-                  {"id":"b","name":"b","type":"checking","color":"#000","icon":"landmark","balance":1200,"createdAt":"2026-01-01T00:00:00.000Z"}],
+                  {"id":"a","name":"a","type":"savings","color":"#000","icon":"landmark","balance":750,"createdAt":"2026-01-01T00:00:00.000Z","currency":"INR"},
+                  {"id":"b","name":"b","type":"savings","color":"#000","icon":"landmark","balance":1200,"createdAt":"2026-01-01T00:00:00.000Z"}],
                 "transactions":[
                   {"id":"t1","type":"expense","amount":250,"accountId":"a","categoryId":"cat-1","date":"2026-06-01T00:00:00.000Z","note":"","labels":[],"createdAt":"2026-06-01T00:00:00.000Z"},
                   {"id":"t2","type":"transfer","amount":200,"accountId":"a","toAccountId":"b","categoryId":"cat-1","date":"2026-06-01T00:00:00.000Z","note":"","labels":[],"createdAt":"2026-06-01T00:00:00.000Z"}]}""",
@@ -1013,15 +937,14 @@ class FinanceStoreTest {
         assertTrue(s.debtEntries.isEmpty())
     }
 
-    @Test fun v11SeedsEmptyRulesAndRecategorizesNothing() {
+    @Test fun v19DropsRulesStillCarriedByTheDevice() {
         val s = decodePersisted(
             envelope(
-                10,
-                """{"accounts":[$accountJson],"transactions":[{"id":"t1","type":"expense","amount":20,"accountId":"a","categoryId":"cat-1","date":"2026-06-01T00:00:00.000Z","note":"Uber","labels":[],"createdAt":"2026-06-01T00:00:00.000Z"}],"settings":$settingsV8}""",
+                18,
+                """{"rules":[{"id":"r1"}],"accounts":[$accountJson],"transactions":[{"id":"t1","type":"expense","amount":20,"accountId":"a","categoryId":"cat-1","date":"2026-06-01T00:00:00.000Z","note":"Uber","labels":[],"createdAt":"2026-06-01T00:00:00.000Z"}],"settings":$settingsV8}""",
             ),
             now,
         )
-        assertTrue(s.rules.isEmpty())
         assertEquals("cat-1", s.transactions[0].categoryId)
     }
 

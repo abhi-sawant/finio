@@ -66,13 +66,10 @@ private fun Color.gray(): Color {
 
 val AccountType.denomination: Denomination
     get() = when (this) {
-        AccountType.Checking -> Denomination.Rs100
         AccountType.Savings -> Denomination.Rs500
         AccountType.Credit -> Denomination.Rs2000
         AccountType.Fd, AccountType.Rd -> Denomination.Rs200
         AccountType.Cash -> Denomination.Rs10
-        AccountType.Wallet -> Denomination.Rs50
-        AccountType.Investment -> Denomination.Rs20
     }
 
 /** `noteStyle(type)` — the account type's note tint in the current mode. */
@@ -83,12 +80,9 @@ fun noteStyle(type: AccountType): NoteStyle = type.denomination.style(FinioTheme
 /** Human labels for account types — row captions and note tiles show these, never the raw key. */
 val AccountType.label: String
     get() = when (this) {
-        AccountType.Checking -> "Bank account"
         AccountType.Savings -> "Savings"
         AccountType.Cash -> "Cash"
         AccountType.Credit -> "Credit card"
-        AccountType.Investment -> "Investment"
-        AccountType.Wallet -> "Wallet"
         AccountType.Fd -> "Fixed deposit"
         AccountType.Rd -> "Recurring deposit"
     }
