@@ -38,7 +38,7 @@ object Routes {
     /** `/settings` — reached from the Dashboard header on mobile, not a tab. */
     @Serializable data object Settings : FinioRoute
 
-    /** `/settings/:category` — account | backup | profile | security | notifications | organise. */
+    /** `/settings/:category` — account | backup | profile | security | notifications. */
     @Serializable data class SettingsCategory(val category: String) : FinioRoute
 
     // ---- Full-screen routes -----------------------------------------------------------------

@@ -85,6 +85,28 @@ fun transactionCategoryAmounts(categoryId: String, amount: Double, splits: List<
 fun transactionCategoryAmounts(t: Transaction): List<TransactionSplit> =
     transactionCategoryAmounts(t.categoryId, t.amount, t.splits)
 
+/** How many transactions use each category (a split counts once per distinct category). */
+fun categoryUsageCounts(transactions: List<Transaction>): Map<String, Int> {
+    val counts = HashMap<String, Int>()
+    for (t in transactions) {
+        for (id in transactionCategoryAmounts(t).map { it.categoryId }.toSet()) counts[id] = (counts[id] ?: 0) + 1
+    }
+    return counts
+}
+
+/** How many transactions carry each label. */
+fun labelUsageCounts(transactions: List<Transaction>): Map<String, Int> {
+    val counts = HashMap<String, Int>()
+    for (t in transactions) {
+        for (id in t.labels.toSet()) counts[id] = (counts[id] ?: 0) + 1
+    }
+    return counts
+}
+
+/** "No transactions" / "1 transaction" / "12 transactions". */
+fun formatTransactionCount(n: Int): String =
+    if (n == 0) "No transactions" else "$n ${if (n == 1) "transaction" else "transactions"}"
+
 fun getTotalIncome(transactions: List<Transaction>): Double =
     transactions.filter { it.type == TransactionType.Income }.fold(0.0) { sum, t -> sum + t.amount }
 

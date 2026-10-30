@@ -24,6 +24,8 @@ enum class FinioTab(val route: FinioRoute, val label: String, val iconName: Stri
 data class MoreNavItem(val route: FinioRoute, val icon: ImageVector, val label: String, val description: String)
 
 val MoreNavItems: List<MoreNavItem> = listOf(
+    MoreNavItem(Routes.ManageCategories, LucideIcons.FolderOpen, "Categories", "Add, edit and remove categories"),
+    MoreNavItem(Routes.ManageLabels, LucideIcons.Tag, "Labels", "Tag transactions your way"),
     MoreNavItem(Routes.Budgets, LucideIcons.Target, "Budgets", "Spending limits by category or label"),
     MoreNavItem(Routes.Recurring, LucideIcons.Repeat, "Recurring", "Bills, subscriptions and income that repeat"),
     MoreNavItem(Routes.Goals, LucideIcons.PiggyBank, "Goals", "Savings targets and contributions"),

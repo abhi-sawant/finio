@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router';
-import { ArrowLeft, ChevronRight, FolderOpen, Tag } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import Header from '@/components/ui/header';
 import { HeaderIconButton } from '@/components/ui/header-icon-button';
 import Main from '@/components/ui/main';
@@ -10,40 +10,12 @@ import { ProfileSection } from '@/components/settings/ProfileSection';
 import { AppLockSection } from '@/components/settings/AppLockSection';
 import { NotificationsSection } from '@/components/settings/NotificationsSection';
 
-function OrganiseLinks() {
-  const navigate = useNavigate();
-  const rows = [
-    { to: '/manage-categories', icon: FolderOpen, title: 'Manage categories' },
-    { to: '/manage-labels', icon: Tag, title: 'Manage labels' },
-  ];
-  return (
-    <div className="card-elevated divide-border divide-y rounded-md">
-      {rows.map(({ to, icon: Icon, title }) => (
-        <button
-          key={to}
-          onClick={() => navigate(to)}
-          className="hover:bg-muted/50 flex w-full items-center justify-between gap-3 p-4 text-left transition-colors"
-        >
-          <div className="flex items-center gap-3">
-            <Icon size={18} className="text-muted-foreground shrink-0" />
-            <div>
-              <p className="text-sm font-medium">{title}</p>
-            </div>
-          </div>
-          <ChevronRight size={16} className="text-muted-foreground shrink-0" />
-        </button>
-      ))}
-    </div>
-  );
-}
-
 const categories: Record<string, { title: string; body: ReactNode }> = {
   account: { title: 'Cloud account', body: <CloudAccountSection /> },
   backup: { title: 'Backup & data', body: <BackupSection /> },
   profile: { title: 'Profile & preferences', body: <ProfileSection /> },
   security: { title: 'Security', body: <AppLockSection /> },
   notifications: { title: 'Notifications', body: <NotificationsSection /> },
-  organise: { title: 'Categories & labels', body: <OrganiseLinks /> },
 };
 
 export default function SettingsCategory() {

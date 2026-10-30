@@ -1,14 +1,11 @@
 package com.slowatcoding.finio.ui.screens.settings
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
-import com.slowatcoding.finio.ui.components.FinioCard
-import com.slowatcoding.finio.ui.components.FinioDivider
 import com.slowatcoding.finio.ui.components.FinioScreen
 import com.slowatcoding.finio.ui.components.HeaderIconButton
 import com.slowatcoding.finio.ui.components.ScreenTitle
@@ -22,7 +19,6 @@ private val categoryTitles = linkedMapOf(
     "profile" to "Profile & preferences",
     "security" to "Security",
     "notifications" to "Notifications",
-    "organise" to "Categories & labels",
 )
 
 /**
@@ -50,16 +46,6 @@ fun SettingsCategoryScreen(nav: FinioNavigator, category: String) {
             "profile" -> ProfileSection()
             "security" -> AppLockSection()
             "notifications" -> NotificationsSection()
-            "organise" -> OrganiseLinks(nav)
         }
-    }
-}
-
-@Composable
-private fun OrganiseLinks(nav: FinioNavigator) {
-    FinioCard(contentPadding = PaddingValues(0.dp)) {
-        SettingsRow(LucideIcons.FolderOpen, "Manage categories", onClick = { nav.navigate(Routes.ManageCategories) }, chevron = true)
-        FinioDivider()
-        SettingsRow(LucideIcons.Tag, "Manage labels", onClick = { nav.navigate(Routes.ManageLabels) }, chevron = true)
     }
 }

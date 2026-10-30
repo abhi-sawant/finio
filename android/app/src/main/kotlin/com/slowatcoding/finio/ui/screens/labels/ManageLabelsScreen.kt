@@ -21,6 +21,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.slowatcoding.finio.core.calc.formatTransactionCount
+import com.slowatcoding.finio.core.calc.labelUsageCounts
 import com.slowatcoding.finio.core.data.COLOR_PALETTE
 import com.slowatcoding.finio.core.model.Label
 import com.slowatcoding.finio.core.store.NewLabel
@@ -124,6 +126,7 @@ fun ManageLabelsScreen(nav: FinioNavigator) {
             tone = HeaderIconTone.Primary,
         )
     }) {
+        val usage = remember(state.transactions) { labelUsageCounts(state.transactions) }
         if (labels.isNotEmpty()) {
             FinioCard(contentPadding = PaddingValues(horizontal = 16.dp)) {
                 labels.forEachIndexed { index, label ->
@@ -134,14 +137,16 @@ fun ManageLabelsScreen(nav: FinioNavigator) {
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(LucideIcons.Tag, null, Modifier.size(16.dp), tint = parseHexColor(label.color))
-                        Text(
-                            label.name,
-                            Modifier.weight(1f),
-                            style = FinioType.bodyMedium,
-                            color = colors.foreground,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                        )
+                        Column(Modifier.weight(1f)) {
+                            Text(
+                                label.name,
+                                style = FinioType.bodyMedium,
+                                color = colors.foreground,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                            Text(formatTransactionCount(usage[label.id] ?: 0), style = FinioType.caption, color = colors.mutedForeground)
+                        }
                         Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                             FinioIconButton(LucideIcons.Pencil, "Edit ${label.name}", onClick = { handleEdit(label) }, tint = colors.mutedForeground)
                             FinioIconButton(

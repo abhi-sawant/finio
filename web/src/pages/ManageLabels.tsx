@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { ArrowLeft, Plus, Tag, Trash2, Pencil } from 'lucide-react';
 import { toast } from 'sonner';
@@ -12,6 +12,7 @@ import { useConfirm } from '@/components/ui/use-confirm';
 import Header from '@/components/ui/header';
 import { HeaderIconButton } from '@/components/ui/header-icon-button';
 import Main from '@/components/ui/main';
+import { formatTransactionCount, labelUsageCounts } from '@/utils/calculations';
 import { MAX_NAME_LENGTH, cleanText, stripLeading } from '@/utils/validation';
 
 const labelColors = COLOR_PALETTE;
@@ -20,6 +21,8 @@ export default function ManageLabels() {
   const navigate = useNavigate();
   const confirm = useConfirm();
   const labels = useFinanceStore((s) => s.labels);
+  const transactions = useFinanceStore((s) => s.transactions);
+  const usage = useMemo(() => labelUsageCounts(transactions), [transactions]);
   const addLabel = useFinanceStore((s) => s.addLabel);
   const updateLabel = useFinanceStore((s) => s.updateLabel);
   const deleteLabel = useFinanceStore((s) => s.deleteLabel);
@@ -145,7 +148,12 @@ export default function ManageLabels() {
               <div key={label.id} className="flex items-center justify-between py-3">
                 <div className="flex min-w-0 items-center gap-3">
                   <Tag size={16} style={{ color: label.color }} className="shrink-0" aria-hidden />
-                  <p className="truncate text-sm font-medium">{label.name}</p>
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-medium">{label.name}</p>
+                    <p className="text-muted-foreground text-xs">
+                      {formatTransactionCount(usage.get(label.id) ?? 0)}
+                    </p>
+                  </div>
                 </div>
                 <div className="flex shrink-0 gap-1">
                   <Button

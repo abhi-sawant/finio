@@ -71,6 +71,32 @@ export function transactionCategoryAmounts(
     : [{ categoryId: t.categoryId, amount: t.amount }];
 }
 
+/** "No transactions" / "1 transaction" / "12 transactions". */
+export const formatTransactionCount = (n: number) =>
+  n === 0 ? 'No transactions' : `${n} ${n === 1 ? 'transaction' : 'transactions'}`;
+
+/** How many transactions use each category (a split counts once per distinct category). */
+export function categoryUsageCounts(
+  transactions: Pick<Transaction, 'categoryId' | 'amount' | 'splits'>[],
+): Map<string, number> {
+  const counts = new Map<string, number>();
+  for (const t of transactions) {
+    for (const id of new Set(transactionCategoryAmounts(t).map((s) => s.categoryId))) {
+      counts.set(id, (counts.get(id) ?? 0) + 1);
+    }
+  }
+  return counts;
+}
+
+/** How many transactions carry each label. */
+export function labelUsageCounts(transactions: Pick<Transaction, 'labels'>[]): Map<string, number> {
+  const counts = new Map<string, number>();
+  for (const t of transactions) {
+    for (const id of new Set(t.labels)) counts.set(id, (counts.get(id) ?? 0) + 1);
+  }
+  return counts;
+}
+
 export function getTotalIncome(transactions: Transaction[]): number {
   return transactions.filter((t) => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
 }

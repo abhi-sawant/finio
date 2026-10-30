@@ -57,6 +57,8 @@ import com.slowatcoding.finio.ui.icons.LucideIcons
 import com.slowatcoding.finio.ui.navigation.FinioNavigator
 import com.slowatcoding.finio.ui.theme.FinioTheme
 import com.slowatcoding.finio.ui.theme.FinioType
+import com.slowatcoding.finio.core.calc.categoryUsageCounts
+import com.slowatcoding.finio.core.calc.formatTransactionCount
 import kotlinx.coroutines.launch
 
 private enum class CategoryFilter(val label: String) { All("All"), Expense("Expense"), Income("Income"), Both("Both") }
@@ -85,6 +87,8 @@ fun ManageCategoriesScreen(nav: FinioNavigator) {
     var icon by rememberSaveable { mutableStateOf("circle-ellipsis") }
     var error by remember { mutableStateOf<String?>(null) }
     var filter by rememberSaveable { mutableStateOf(CategoryFilter.All) }
+
+    val usage = remember(state.transactions) { categoryUsageCounts(state.transactions) }
 
     val filtered = remember(categories, filter) {
         when (filter) {
@@ -176,7 +180,7 @@ fun ManageCategoriesScreen(nav: FinioNavigator) {
                             cat.id == TRANSFER_CATEGORY_ID -> " · Built in, used by every transfer"
                             else -> " · Built in, the catch-all for deleted categories"
                         }
-                        Text(cat.type.label() + note, style = FinioType.caption, color = colors.mutedForeground)
+                        Text(cat.type.label() + " · " + formatTransactionCount(usage[cat.id] ?: 0) + note, style = FinioType.caption, color = colors.mutedForeground)
                     }
                     Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                         FinioIconButton(
