@@ -32,7 +32,6 @@ internal fun encodeValidated(v: ValidatedBackup): JsonElement = buildJsonObject 
         d.budgets?.let { put("budgets", Golden.encode(it)) }
         d.recurring?.let { put("recurring", Golden.encode(it)) }
         d.templates?.let { put("templates", Golden.encode(it)) }
-        d.rules?.let { put("rules", Golden.encode(it)) }
         d.goals?.let { put("goals", Golden.encode(it)) }
         d.goalContributions?.let { put("goalContributions", Golden.encode(it)) }
         d.people?.let { put("people", Golden.encode(it)) }

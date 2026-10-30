@@ -25,7 +25,6 @@ const DATA_KEYS = [
   'budgets',
   'recurring',
   'templates',
-  'rules',
   'goals',
   'goalContributions',
   'people',
@@ -274,30 +273,6 @@ export default async function cases(): Promise<GoldenCase[]> {
     run('bulkRecategorize', T1, [uberTx], 'nope');
     run('bulkAddLabel', T1, [uberTx, swiggyTx, salary], 'lbl-2');
 
-    // ---- Rules -----------------------------------------------------------------------------
-    run('addRule', T1, {
-      pattern: 'uber',
-      matchType: 'contains',
-      scope: 'any',
-      categoryId: 'cat-19',
-      labelIds: ['lbl-3'],
-      enabled: true,
-    });
-    const swiggyRule = run('addRule', T1, {
-      pattern: 'swiggy\\s\\d+',
-      matchType: 'regex',
-      scope: 'expense',
-      categoryId: 'cat-1',
-      labelIds: ['lbl-1', 'lbl-2'],
-      enabled: true,
-    });
-    run('moveRule', T1, swiggyRule, 'up');
-    run('moveRule', T1, swiggyRule, 'up');
-    const applied = run('applyRulesToExisting', T1);
-    run('restoreCategorization', T1, applied.previous);
-    run('applyRulesToExisting', T1, { restrictToCategoryId: 'cat-24' });
-    run('updateRule', T1, swiggyRule, { enabled: false });
-
     // ---- Templates, categories, labels, budgets ------------------------------------------------
     const tmpl = run('addTemplate', T1, {
       name: 'Coffee',
@@ -339,14 +314,6 @@ export default async function cases(): Promise<GoldenCase[]> {
       rollover: false,
     });
     run('updateBudget', T1, get().budgets[0].id, { amount: 32000 });
-    run('addRule', T1, {
-      pattern: 'dmart',
-      matchType: 'startsWith',
-      scope: 'any',
-      categoryId: 'cat-25',
-      labelIds: [trip, 'lbl-1'],
-      enabled: true,
-    });
     run('deleteLabel', T1, trip);
     run('addTransaction', T1, {
       type: 'expense',
@@ -645,7 +612,7 @@ export default async function cases(): Promise<GoldenCase[]> {
         {
           id: 'imp-acct',
           name: 'Imported',
-          type: 'current',
+          type: 'savings',
           color: '#000000',
           icon: 'landmark',
           balance: 750,
@@ -750,7 +717,6 @@ async function migrationCases(): Promise<GoldenCase[]> {
     budgets: [],
     recurring: [],
     templates: [],
-    rules: [],
     goals: [],
     goalContributions: [],
     people: [],
@@ -766,7 +732,7 @@ async function migrationCases(): Promise<GoldenCase[]> {
   const account = (id: string, balance: number, extra: object = {}) => ({
     id,
     name: id,
-    type: 'current',
+    type: 'savings',
     color: '#000',
     icon: 'landmark',
     balance,

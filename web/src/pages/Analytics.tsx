@@ -15,7 +15,6 @@ import { PeriodComparison } from '@/components/analytics/PeriodComparison';
 import { SpendingHeatmap } from '@/components/analytics/SpendingHeatmap';
 import { TopMerchants } from '@/components/analytics/TopMerchants';
 import { CashFlowForecast } from '@/components/analytics/CashFlowForecast';
-import { CashFlowCalendar } from '@/components/analytics/CashFlowCalendar';
 import { NetWorthTrend } from '@/components/analytics/NetWorthTrend';
 import { HideAmountsToggle } from '@/components/HideAmountsToggle';
 import Header from '@/components/ui/header';
@@ -243,7 +242,6 @@ export default function Analytics() {
             {!trackerMode && (
               <>
                 <CashFlowForecast />
-                <CashFlowCalendar />
                 <NetWorthTrend />
               </>
             )}

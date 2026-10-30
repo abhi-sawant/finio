@@ -317,7 +317,7 @@ export function buildInsights(input: InsightInput, options: InsightOptions): Ins
     input.categories.find((c) => c.id === id)?.name ?? 'Uncategorized';
 
   // ── Impossible balances ───────────────────────────────────────────────────
-  // A cash/current/savings/investment/wallet account going negative is almost always a
+  // A cash/savings/deposit account going negative is almost always a
   // data-entry error — unlike `credit`, none of these types represent a line of credit, so
   // there's no legitimate way to owe money on one. Sorted worst-first, most urgent kept first
   // among `warn` insights below (the overall sort is stable).

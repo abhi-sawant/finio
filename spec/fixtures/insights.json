@@ -10,7 +10,7 @@
           {
             "id": "acc-bank",
             "name": "HDFC Salary",
-            "type": "current",
+            "type": "savings",
             "color": "#4b36c7",
             "icon": "landmark",
             "balance": 349052,
@@ -67,7 +67,7 @@
           {
             "id": "acc-wallet",
             "name": "Paytm Wallet",
-            "type": "wallet",
+            "type": "cash",
             "color": "#4b36c7",
             "icon": "landmark",
             "balance": -250,
@@ -113,7 +113,7 @@
           {
             "id": "acc-old",
             "name": "Old Axis",
-            "type": "current",
+            "type": "savings",
             "color": "#4b36c7",
             "icon": "landmark",
             "balance": 3800,
@@ -7113,7 +7113,7 @@
             {
               "id": "acc-current",
               "name": "Current",
-              "type": "current",
+              "type": "savings",
               "color": "#000",
               "icon": "landmark",
               "balance": -500,
@@ -7153,7 +7153,7 @@
             {
               "id": "acc-old",
               "name": "Old Wallet",
-              "type": "wallet",
+              "type": "cash",
               "color": "#000",
               "icon": "landmark",
               "balance": -100,
@@ -7221,7 +7221,7 @@
             {
               "id": "acc-current",
               "name": "Current",
-              "type": "current",
+              "type": "savings",
               "color": "#000",
               "icon": "landmark",
               "balance": -500,
@@ -7261,7 +7261,7 @@
             {
               "id": "acc-old",
               "name": "Old Wallet",
-              "type": "wallet",
+              "type": "cash",
               "color": "#000",
               "icon": "landmark",
               "balance": -100,

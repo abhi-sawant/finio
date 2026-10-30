@@ -216,7 +216,7 @@ fun BackupSection(nav: FinioNavigator) {
             val confirmed = confirm.confirm(
                 title = "Reset all data?",
                 description = "Accounts, transactions, budgets, recurring rules, loans, savings goals, people/debts, " +
-                    "categorization rules, templates and net-worth history will be erased, and categories and labels " +
+                    "templates and net-worth history will be erased, and categories and labels " +
                     "restored to defaults. Your name and settings are kept. This cannot be undone.",
                 confirmLabel = "Reset everything",
             )
@@ -555,12 +555,6 @@ fun BackupSection(nav: FinioNavigator) {
         FinioDivider()
         SettingsRow(LucideIcons.Upload, "Import data", onClick = pickImport)
         FinioDivider()
-        SettingsRow(
-            LucideIcons.FileSpreadsheet,
-            "Import bank CSV",
-            subtitle = "Map columns from a bank or card statement export",
-            onClick = { nav.navigate(Routes.ImportCsv) },
-        )
         if (settings.trackingMode != TrackingMode.Transactions) {
             FinioDivider()
             SettingsRow(

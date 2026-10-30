@@ -1,12 +1,11 @@
 import { useState, useMemo, useRef, useCallback } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router';
-import { ArrowLeft, Trash2, Split, Plus, X, Wand2 } from 'lucide-react';
+import { ArrowLeft, Trash2, Split, Plus, X } from 'lucide-react';
 import { CategoryIcon } from '@/components/categories/CategoryIcon';
 import { CategoryGrid } from '@/components/categories/CategoryGrid';
 import { toast } from 'sonner';
 import { useFinanceStore } from '@/store/useFinanceStore';
 import { roundMoney } from '@/store/balance';
-import { findMatchingRule, mergeLabels } from '@/utils/autoCategorize';
 import { findTransferCategory, isCategoryValidForType, miscLast } from '@/utils/calculations';
 import { MAX_NAME_LENGTH, MAX_NOTE_LENGTH, cleanText } from '@/utils/validation';
 import { parseSharePayload } from '@/utils/shareTarget';
@@ -23,7 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import type { Account, CategoryRule, Transaction, TransactionType } from '@/types';
+import type { Account, Transaction, TransactionType } from '@/types';
 import { ACCOUNT_TYPE_LABEL } from '@/components/accounts/note';
 import Main from '@/components/ui/main';
 import Header from '@/components/ui/header';
@@ -49,7 +48,6 @@ export default function AddTransaction() {
   const hideAmounts = useFinanceStore((s) => s.settings.hideAmounts);
   const categories = useFinanceStore((s) => s.categories);
   const labels = useFinanceStore((s) => s.labels);
-  const rules = useFinanceStore((s) => s.rules);
   const addTransaction = useFinanceStore((s) => s.addTransaction);
   const updateTransaction = useFinanceStore((s) => s.updateTransaction);
   const deleteTransaction = useFinanceStore((s) => s.deleteTransaction);
@@ -76,17 +74,6 @@ export default function AddTransaction() {
     [existing, searchParams],
   );
 
-  /**
-   * Auto-categorize the shared note up front rather than in a mount effect: `setNote` alone
-   * does not run rules (that lives in `applyRulesToNote`, which can't be called during render),
-   * and seeding `appliedRule` below means the existing "filed by your rule / Undo" banner shows
-   * up — so a shared transaction gets the same visible, reversible treatment as a typed one.
-   */
-  const sharedRule = useMemo(
-    () => (shared?.note ? findMatchingRule(rules, shared.note, shared.type) : undefined),
-    [rules, shared],
-  );
-
   const [type, setType] = useState<TransactionType>(existing?.type ?? shared?.type ?? 'expense');
   const [amount, setAmount] = useState(existing?.amount?.toString() ?? shared?.amount ?? '');
   const [accountId, setAccountId] = useState(
@@ -95,9 +82,7 @@ export default function AddTransaction() {
       '',
   );
   const [toAccountId, setToAccountId] = useState(existing?.toAccountId ?? '');
-  const [categoryId, setCategoryId] = useState(
-    existing?.categoryId ?? sharedRule?.categoryId ?? '',
-  );
+  const [categoryId, setCategoryId] = useState(existing?.categoryId ?? '');
   const [date, setDate] = useState(
     existing?.date
       ? toLocalDateTimeInputValue(existing.date)
@@ -105,9 +90,7 @@ export default function AddTransaction() {
   );
   const [note, setNote] = useState(existing?.note ?? shared?.note ?? '');
   const [merchant, setMerchant] = useState(existing?.merchant ?? '');
-  const [selectedLabels, setSelectedLabels] = useState<string[]>(
-    existing?.labels ?? mergeLabels([], sharedRule?.labelIds ?? []),
-  );
+  const [selectedLabels, setSelectedLabels] = useState<string[]>(existing?.labels ?? []);
 
   const [splitMode, setSplitMode] = useState(!!existing?.splits?.length);
   const [splitRows, setSplitRows] = useState<{ categoryId: string; amount: string }[]>(
@@ -117,22 +100,6 @@ export default function AddTransaction() {
           { categoryId: '', amount: '' },
           { categoryId: '', amount: '' },
         ],
-  );
-
-  /**
-   * Auto-categorization only ever fills a blank the user hasn't filled themselves. Once they
-   * touch the category picker (or dismiss a suggestion) rules stop firing for this form, and
-   * editing an existing transaction never triggers them at all — a saved category is a decision.
-   */
-  const categoryTouched = useRef(false);
-  const [appliedRule, setAppliedRule] = useState<{
-    rule: CategoryRule;
-    prevCategoryId: string;
-    prevLabels: string[];
-  } | null>(
-    // A rule seeded from a shared note starts from a blank baseline, so editing the note backs
-    // it out to an empty category exactly as if the user had typed the note themselves.
-    sharedRule ? { rule: sharedRule, prevCategoryId: '', prevLabels: [] } : null,
   );
 
   /**
@@ -146,58 +113,12 @@ export default function AddTransaction() {
     else navigate('/', { replace: true });
   }, [navigate]);
 
-  /**
-   * `categoryCleared` means the caller has just wiped the category (a type switch made it
-   * invalid), so the closure's `categoryId` is stale: the baseline is blank, and a rule that
-   * matched before must be re-evaluated rather than assumed still in force.
-   */
-  const applyRulesToNote = (
-    value: string,
-    txType: TransactionType,
-    splitting: boolean,
-    categoryCleared = false,
-  ) => {
-    if (existing || categoryTouched.current || (txType === 'expense' && splitting)) return;
-
-    const rule = findMatchingRule(rules, value, txType);
-    if (!categoryCleared && rule && appliedRule?.rule.id === rule.id) return;
-
-    // Baseline is whatever the user had before *any* rule touched the form, so re-matching a
-    // different rule (or matching nothing) never compounds an earlier rule's edits.
-    const baseCategoryId = categoryCleared
-      ? ''
-      : appliedRule
-        ? appliedRule.prevCategoryId
-        : categoryId;
-    const baseLabels = appliedRule ? appliedRule.prevLabels : selectedLabels;
-
-    if (!rule) {
-      // The note no longer matches — back out, rather than leaving behind a category the
-      // user never chose.
-      if (!appliedRule) return;
-      setCategoryId(baseCategoryId);
-      setSelectedLabels(baseLabels);
-      setAppliedRule(null);
-      return;
-    }
-
-    setCategoryId(rule.categoryId);
-    setSelectedLabels(mergeLabels(baseLabels, rule.labelIds));
-    setAppliedRule({ rule, prevCategoryId: baseCategoryId, prevLabels: baseLabels });
-  };
-
-  const handleNoteChange = (value: string) => {
-    setNote(value);
-    applyRulesToNote(value, type, splitMode);
-  };
-
   const handleTypeChange = (next: TransactionType) => {
     if (next === type) return;
     setType(next);
 
     // The picker hides categories of the other type, but state would still hold the old id and
-    // save it. Clear anything the new type can't take — and settle which rule (if any) still
-    // applies from that clean baseline.
+    // save it. Clear anything the new type can't take.
     const isValid = (id: string) => {
       const cat = categories.find((c) => c.id === id);
       return !!cat && isCategoryValidForType(cat, next);
@@ -209,24 +130,6 @@ export default function AddTransaction() {
         prev.map((r) => (r.categoryId && !isValid(r.categoryId) ? { ...r, categoryId: '' } : r)),
       );
     }
-    // A rule is scoped to expense or income, so switching type can change which one wins.
-    applyRulesToNote(note, next, splitMode, staleCategory);
-    // No rule re-filed it: a leftover banner's Undo would restore a category of the old type.
-    if (staleCategory && appliedRule && !findMatchingRule(rules, note, next)) setAppliedRule(null);
-  };
-
-  const dismissAppliedRule = () => {
-    if (!appliedRule) return;
-    setCategoryId(appliedRule.prevCategoryId);
-    setSelectedLabels(appliedRule.prevLabels);
-    setAppliedRule(null);
-    categoryTouched.current = true;
-  };
-
-  const chooseCategory = (id: string) => {
-    categoryTouched.current = true;
-    setAppliedRule(null);
-    setCategoryId(id);
   };
 
   const notesSuggestions = useMemo(
@@ -293,10 +196,6 @@ export default function AddTransaction() {
   };
 
   const toggleSplitMode = () => {
-    // Either direction is the user taking charge of the category — a rule has no business
-    // flattening a split, or re-firing once they fold one back down.
-    categoryTouched.current = true;
-    setAppliedRule(null);
     if (splitMode) {
       const first = splitRows.find((r) => r.categoryId);
       if (first) setCategoryId(first.categoryId);
@@ -612,7 +511,7 @@ export default function AddTransaction() {
                     <button
                       key={cat.id}
                       data-selected={selected}
-                      onClick={() => chooseCategory(cat.id)}
+                      onClick={() => setCategoryId(cat.id)}
                       className={`flex flex-col items-center gap-1 rounded-sm border p-2 text-center transition-all ${
                         selected
                           ? 'ring-grad-primary border-transparent'
@@ -670,7 +569,7 @@ export default function AddTransaction() {
             placeholder="Add a note..."
             value={note}
             maxLength={MAX_NOTE_LENGTH}
-            onChange={(e) => handleNoteChange(e.target.value)}
+            onChange={(e) => setNote(e.target.value)}
             list="note-suggestions"
             className="[&::-webkit-calendar-picker-indicator]:hidden! [&::-webkit-list-button]:hidden!"
           />
@@ -679,22 +578,6 @@ export default function AddTransaction() {
               <option key={n} value={n} />
             ))}
           </datalist>
-          {appliedRule && (
-            <div className="text-primary mt-1.5 flex items-center gap-1.5 text-xs">
-              <Wand2 size={12} className="shrink-0" />
-              <span className="min-w-0 flex-1 truncate">
-                Filed as {categories.find((c) => c.id === appliedRule.rule.categoryId)?.name} by
-                your "{appliedRule.rule.pattern}" rule
-              </span>
-              <button
-                type="button"
-                onClick={dismissAppliedRule}
-                className="text-muted-foreground shrink-0 underline"
-              >
-                Undo
-              </button>
-            </div>
-          )}
         </div>
 
         {/* Labels */}

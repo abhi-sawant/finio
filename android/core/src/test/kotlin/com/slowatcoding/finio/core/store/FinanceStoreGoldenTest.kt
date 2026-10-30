@@ -18,7 +18,6 @@ import com.slowatcoding.finio.core.model.ImportPayload
 import com.slowatcoding.finio.core.model.LoanPrepayment
 import com.slowatcoding.finio.core.model.Settings
 import com.slowatcoding.finio.core.model.Transaction
-import com.slowatcoding.finio.core.model.TransactionCategorization
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.JsonArray
@@ -45,7 +44,7 @@ import java.time.Instant
  */
 class FinanceStoreGoldenTest {
     private val stateKeys = listOf(
-        "accounts", "transactions", "categories", "labels", "budgets", "recurring", "templates", "rules",
+        "accounts", "transactions", "categories", "labels", "budgets", "recurring", "templates",
         "goals", "goalContributions", "people", "debtEntries", "netWorthSnapshots", "loans", "loanPrepayments",
         "settings", "lastLocalBackupAt",
     )
@@ -138,18 +137,6 @@ class FinanceStoreGoldenTest {
             "processRecurring" -> encode(store.processRecurring(), ListSerializer(Transaction.serializer()))
             "addTemplate" -> str(store.addTemplate(dec(a[0])))
             "deleteTemplate" -> JsonNull.also { store.deleteTemplate(a[0].s) }
-            "addRule" -> str(store.addRule(dec(a[0])))
-            "updateRule" -> JsonNull.also { store.updateRule(a[0].s) { patch(it, serializer(), a[1]) } }
-            "moveRule" -> JsonNull.also { store.moveRule(a[0].s, if (a[1].s == "up") MoveDirection.Up else MoveDirection.Down) }
-            "applyRulesToExisting" -> {
-                val restrict = (a.getOrNull(0) as? JsonObject)?.get("restrictToCategoryId")?.s
-                val result = store.applyRulesToExisting(restrict)
-                buildJsonObject {
-                    put("changed", result.changed)
-                    put("previous", JsonArray(result.previous.map(::encodeCategorization)))
-                }
-            }
-            "restoreCategorization" -> JsonNull.also { store.restoreCategorization(a[0].jsonArray.map(::decodeCategorization)) }
             "addGoal" -> str(store.addGoal(dec(a[0])))
             "updateGoal" -> JsonNull.also { store.updateGoal(a[0].s) { patch(it, serializer(), a[1]) } }
             "deleteGoal" -> JsonNull.also { store.deleteGoal(a[0].s) }
@@ -187,23 +174,6 @@ class FinanceStoreGoldenTest {
         }
     }
 
-    private fun encodeCategorization(c: TransactionCategorization): JsonElement = buildJsonObject {
-        put("id", c.id)
-        put("categoryId", c.categoryId)
-        put("labels", JsonArray(c.labels.map(::JsonPrimitive)))
-        c.splits?.let { put("splits", FinioJson.encodeToJsonElement(it)) }
-    }
-
-    private fun decodeCategorization(e: JsonElement): TransactionCategorization {
-        val o = e.jsonObject
-        return TransactionCategorization(
-            id = o.getValue("id").s,
-            categoryId = o.getValue("categoryId").s,
-            labels = strings(o.getValue("labels")),
-            splits = o["splits"]?.takeIf { it !is JsonNull }?.let { FinioJson.decodeFromJsonElement(it) },
-        )
-    }
-
     /** A test-side stand-in for validateBackup's output: accounts without an opening balance are flagged. */
     private fun importPayload(o: JsonObject): ImportPayload {
         val missing = HashSet<String>()
@@ -222,7 +192,6 @@ class FinanceStoreGoldenTest {
             budgets = o["budgets"]?.let { dec(it) },
             recurring = o["recurring"]?.let { dec(it) },
             templates = o["templates"]?.let { dec(it) },
-            rules = o["rules"]?.let { dec(it) },
             goals = o["goals"]?.let { dec(it) },
             goalContributions = o["goalContributions"]?.let { dec(it) },
             people = o["people"]?.let { dec(it) },

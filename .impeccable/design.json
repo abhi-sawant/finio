@@ -122,18 +122,6 @@
     },
     "denominations": [
       {
-        "denomination": "₹100",
-        "accountTypes": "current",
-        "light": {
-          "fill": "linear-gradient(135deg, #ece6ff 0%, #d9cffc 100%)",
-          "ink": "#3b2a86"
-        },
-        "dark": {
-          "fill": "linear-gradient(135deg, #3a2f86 0%, #251c5c 100%)",
-          "ink": "#dcd3ff"
-        }
-      },
-      {
         "denomination": "₹500",
         "accountTypes": "savings",
         "light": {
@@ -179,30 +167,6 @@
         "dark": {
           "fill": "linear-gradient(135deg, #4a2c18 0%, #2f1c0f 100%)",
           "ink": "#f6d9c0"
-        }
-      },
-      {
-        "denomination": "₹50",
-        "accountTypes": "wallet",
-        "light": {
-          "fill": "linear-gradient(135deg, #e0f6fb 0%, #b8e8f2 100%)",
-          "ink": "#0d4f60"
-        },
-        "dark": {
-          "fill": "linear-gradient(135deg, #0f4652 0%, #0a2f37 100%)",
-          "ink": "#c4f1fa"
-        }
-      },
-      {
-        "denomination": "₹20",
-        "accountTypes": "investment",
-        "light": {
-          "fill": "linear-gradient(135deg, #f2f8d8 0%, #dcebaa 100%)",
-          "ink": "#485a0c"
-        },
-        "dark": {
-          "fill": "linear-gradient(135deg, #3f4c0f 0%, #29320a 100%)",
-          "ink": "#e8f5b8"
         }
       }
     ],

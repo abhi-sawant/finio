@@ -25,7 +25,6 @@ A JSON object with these 16 keys, in this order:
 | `budgets`           | `Budget[]`               |                                                          |
 | `recurring`         | `RecurringTransaction[]` | `lastRunDate` is written as `null` when never run         |
 | `templates`         | `TransactionTemplate[]`  |                                                          |
-| `rules`             | `CategoryRule[]`         | array order **is** rule priority                         |
 | `goals`             | `Goal[]`                 |                                                          |
 | `goalContributions` | `GoalContribution[]`     |                                                          |
 | `people`            | `Person[]`               |                                                          |

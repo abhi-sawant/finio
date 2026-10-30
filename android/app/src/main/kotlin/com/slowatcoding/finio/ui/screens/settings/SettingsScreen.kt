@@ -68,7 +68,7 @@ fun SettingsScreen(nav: FinioNavigator) {
             if (settings.notificationsEnabled) "Reminders on" else "Reminders off",
         ),
         SettingsCategoryEntry(
-            "organise", LucideIcons.FolderOpen, "Categories, labels & rules",
+            "organise", LucideIcons.FolderOpen, "Categories & labels",
             "Organise how transactions are filed",
         ),
     )

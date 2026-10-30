@@ -79,12 +79,9 @@ private data class AccountTypeOption(val value: AccountType, val label: String, 
 /** AddAccount.tsx `accountTypes` (FD's stored icon key stays 'vault'; it draws LockKeyhole). */
 private val accountTypes: List<AccountTypeOption>
     get() = listOf(
-        AccountTypeOption(AccountType.Current, "Current", "landmark", LucideIcons.Landmark),
         AccountTypeOption(AccountType.Savings, "Savings", "piggy-bank", LucideIcons.PiggyBank),
         AccountTypeOption(AccountType.Cash, "Cash", "banknote", LucideIcons.Banknote),
         AccountTypeOption(AccountType.Credit, "Credit card", "credit-card", LucideIcons.CreditCard),
-        AccountTypeOption(AccountType.Investment, "Investment", "trending-up", LucideIcons.TrendingUp),
-        AccountTypeOption(AccountType.Wallet, "Wallet", "wallet", LucideIcons.Wallet),
         AccountTypeOption(AccountType.Fd, "Fixed deposit", "vault", LucideIcons.LockKeyhole),
         AccountTypeOption(AccountType.Rd, "Recurring deposit", "calendar-clock", LucideIcons.CalendarClock),
     )
@@ -111,7 +108,7 @@ fun AddAccountScreen(nav: FinioNavigator, accountId: String?) {
 
     val owedOn = { balance: Double -> jsNumberString(max(-balance, 0.0)) }
     var name by rememberSaveable { mutableStateOf(initial?.name ?: "") }
-    var type by rememberSaveable { mutableStateOf(initial?.type ?: AccountType.Current) }
+    var type by rememberSaveable { mutableStateOf(initial?.type ?: AccountType.Savings) }
     var balance by rememberSaveable {
         mutableStateOf(if (initial == null || initial.type == AccountType.Credit) "0" else jsNumberString(initial.balance))
     }

@@ -41,7 +41,6 @@ export type BackupPayload = Pick<
   | 'budgets'
   | 'recurring'
   | 'templates'
-  | 'rules'
   | 'goals'
   | 'goalContributions'
   | 'people'
@@ -67,7 +66,6 @@ export function collectBackupPayload(): BackupPayload {
     budgets,
     recurring,
     templates,
-    rules,
     goals,
     goalContributions,
     people,
@@ -85,7 +83,6 @@ export function collectBackupPayload(): BackupPayload {
     budgets,
     recurring,
     templates,
-    rules,
     goals,
     goalContributions,
     people,

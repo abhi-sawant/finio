@@ -25,7 +25,9 @@ const CATEGORIES: Category[] = [
   { id: 'cat-fun', name: 'Entertainment', icon: 'clapperboard', color: '#0f0', type: 'expense' },
 ];
 
-function tx(partial: Partial<Transaction> & Pick<Transaction, 'type' | 'amount' | 'date'>): Transaction {
+function tx(
+  partial: Partial<Transaction> & Pick<Transaction, 'type' | 'amount' | 'date'>,
+): Transaction {
   return {
     id: partial.id ?? `${partial.type}-${partial.amount}-${partial.date}`,
     accountId: 'acc-1',
@@ -37,7 +39,12 @@ function tx(partial: Partial<Transaction> & Pick<Transaction, 'type' | 'amount' 
   };
 }
 
-function subscriptionRows(note: string, amount: number, months: number[], extra: Partial<Transaction> = {}) {
+function subscriptionRows(
+  note: string,
+  amount: number,
+  months: number[],
+  extra: Partial<Transaction> = {},
+) {
   return months.map((month) =>
     tx({
       id: `${note}-${month}`,
@@ -61,7 +68,13 @@ const base = (transactions: Transaction[], extra: Partial<InsightInput> = {}): I
   ...extra,
 });
 
-const acct = (id: string, name: string, type: Account['type'], balance: number, extra: Partial<Account> = {}): Account => ({
+const acct = (
+  id: string,
+  name: string,
+  type: Account['type'],
+  balance: number,
+  extra: Partial<Account> = {},
+): Account => ({
   id,
   name,
   type,
@@ -115,7 +128,13 @@ export default function cases(): GoldenCase[] {
   }
 
   // ── detectSubscriptions ───────────────────────────────────────────────────
-  for (const now of [NOW, at(2026, 6, 7, 6), at(2026, 6, 7, 5, 59), at(2026, 2, 20), at(2027, 6, 1)]) {
+  for (const now of [
+    NOW,
+    at(2026, 6, 7, 6),
+    at(2026, 6, 7, 5, 59),
+    at(2026, 2, 20),
+    at(2027, 6, 1),
+  ]) {
     out.push(
       gc(
         'detectSubscriptions',
@@ -125,24 +144,55 @@ export default function cases(): GoldenCase[] {
     );
   }
   out.push(
-    gc('detectSubscriptions', [L('transactions'), [], NOW], detectSubscriptions(ledger.transactions, [], NOW)),
+    gc(
+      'detectSubscriptions',
+      [L('transactions'), [], NOW],
+      detectSubscriptions(ledger.transactions, [], NOW),
+    ),
   );
   const subScenarios: Transaction[][] = [
     subscriptionRows('Spotify', 499, [3, 4, 5]),
     subscriptionRows('Spotify', 499, [4, 5]),
-    [...subscriptionRows('Gym', 499, [3, 4]), ...subscriptionRows('Gym', 650, [5]).map((t) => ({ ...t, id: 'gym-x' }))],
+    [
+      ...subscriptionRows('Gym', 499, [3, 4]),
+      ...subscriptionRows('Gym', 650, [5]).map((t) => ({ ...t, id: 'gym-x' })),
+    ],
     subscriptionRows('Irregular', 100, [1, 2, 5]),
     subscriptionRows('Generated', 199, [3, 4, 5], { recurringId: 'r1' }),
     subscriptionRows('EmptyRec', 199, [3, 4, 5], { recurringId: '' }),
     subscriptionRows('Split', 199, [3, 4, 5], { splits: [] }),
     subscriptionRows('Small', 10, [3, 4, 5]).map((t, i) => ({ ...t, amount: 10 + i })),
     [
-      tx({ id: 'y1', type: 'expense', amount: 1499, date: '2024-06-20T00:00:00.000Z', note: 'Prime' }),
-      tx({ id: 'y2', type: 'expense', amount: 1499, date: '2025-06-20T00:00:00.000Z', note: 'Prime' }),
-      tx({ id: 'y3', type: 'expense', amount: 1499, date: '2026-06-15T00:00:00.000Z', note: 'Prime' }),
+      tx({
+        id: 'y1',
+        type: 'expense',
+        amount: 1499,
+        date: '2024-06-20T00:00:00.000Z',
+        note: 'Prime',
+      }),
+      tx({
+        id: 'y2',
+        type: 'expense',
+        amount: 1499,
+        date: '2025-06-20T00:00:00.000Z',
+        note: 'Prime',
+      }),
+      tx({
+        id: 'y3',
+        type: 'expense',
+        amount: 1499,
+        date: '2026-06-15T00:00:00.000Z',
+        note: 'Prime',
+      }),
     ],
     [3, 10, 17, 24].map((d) =>
-      tx({ id: `w${d}`, type: 'expense', amount: 99, date: `2026-05-${d < 10 ? '0' + d : d}`, note: 'Weekly 99' }),
+      tx({
+        id: `w${d}`,
+        type: 'expense',
+        amount: 99,
+        date: `2026-05-${d < 10 ? '0' + d : d}`,
+        note: 'Weekly 99',
+      }),
     ),
     subscriptionRows('Future', 50, [6, 7, 8]),
   ];
@@ -154,7 +204,11 @@ export default function cases(): GoldenCase[] {
     out.push(gc('detectSubscriptions', [rows, [], T_NOW], detectSubscriptions(rows, [], T_NOW)));
   }
   out.push(
-    gc('detectSubscriptions', [subScenarios[0], covering, T_NOW], detectSubscriptions(subScenarios[0], covering, T_NOW)),
+    gc(
+      'detectSubscriptions',
+      [subScenarios[0], covering, T_NOW],
+      detectSubscriptions(subScenarios[0], covering, T_NOW),
+    ),
   );
 
   // ── buildInsights over the ledger ─────────────────────────────────────────
@@ -191,23 +245,72 @@ export default function cases(): GoldenCase[] {
       ...(withAccounts ? { accounts: L('accounts') } : {}),
       ...extra,
     };
-    out.push(gc('buildInsights', [args, fmt], buildInsights(input, { formatAmount: FORMATTERS[fmt] })));
+    out.push(
+      gc('buildInsights', [args, fmt], buildInsights(input, { formatAmount: FORMATTERS[fmt] })),
+    );
   }
 
   // ── buildInsights scenarios from insights.test.ts ─────────────────────────
   const monthly = (amounts: number[], dates: string[]) =>
     amounts.map((amount, i) => tx({ type: 'expense', amount, date: dates[i] }));
   const scenarios: InsightInput[] = [
-    base(monthly([4000, 4000, 4000, 4000], ['2026-03-10T00:00:00.000Z', '2026-04-10T00:00:00.000Z', '2026-05-10T00:00:00.000Z', '2026-06-10T00:00:00.000Z'])),
-    base(monthly([1000, 1000, 1000, 7000], ['2026-03-10T00:00:00.000Z', '2026-04-10T00:00:00.000Z', '2026-05-10T00:00:00.000Z', '2026-06-10T00:00:00.000Z'])),
-    base(monthly([1000, 1000, 1000, 2100], ['2026-03-10T00:00:00.000Z', '2026-04-10T00:00:00.000Z', '2026-05-10T00:00:00.000Z', '2026-06-10T00:00:00.000Z'])),
-    base(monthly([4000, 4000, 2000], ['2026-04-10T00:00:00.000Z', '2026-05-10T00:00:00.000Z', '2026-06-10T00:00:00.000Z'])),
-    base(monthly([4000, 4000, 400], ['2026-04-10T00:00:00.000Z', '2026-05-10T00:00:00.000Z', '2026-06-10T00:00:00.000Z'])),
+    base(
+      monthly(
+        [4000, 4000, 4000, 4000],
+        [
+          '2026-03-10T00:00:00.000Z',
+          '2026-04-10T00:00:00.000Z',
+          '2026-05-10T00:00:00.000Z',
+          '2026-06-10T00:00:00.000Z',
+        ],
+      ),
+    ),
+    base(
+      monthly(
+        [1000, 1000, 1000, 7000],
+        [
+          '2026-03-10T00:00:00.000Z',
+          '2026-04-10T00:00:00.000Z',
+          '2026-05-10T00:00:00.000Z',
+          '2026-06-10T00:00:00.000Z',
+        ],
+      ),
+    ),
+    base(
+      monthly(
+        [1000, 1000, 1000, 2100],
+        [
+          '2026-03-10T00:00:00.000Z',
+          '2026-04-10T00:00:00.000Z',
+          '2026-05-10T00:00:00.000Z',
+          '2026-06-10T00:00:00.000Z',
+        ],
+      ),
+    ),
+    base(
+      monthly(
+        [4000, 4000, 2000],
+        ['2026-04-10T00:00:00.000Z', '2026-05-10T00:00:00.000Z', '2026-06-10T00:00:00.000Z'],
+      ),
+    ),
+    base(
+      monthly(
+        [4000, 4000, 400],
+        ['2026-04-10T00:00:00.000Z', '2026-05-10T00:00:00.000Z', '2026-06-10T00:00:00.000Z'],
+      ),
+    ),
     ...['2026-06-03T12:00:00.000Z', '2026-06-10T12:00:00.000Z'].map((now) =>
       base(
         monthly(
           [4000, 4000, 4000, 3000, 3000, 3000],
-          ['2026-03-10T00:00:00.000Z', '2026-04-10T00:00:00.000Z', '2026-05-10T00:00:00.000Z', '2026-06-01T00:00:00.000Z', '2026-06-02T00:00:00.000Z', '2026-06-03T00:00:00.000Z'],
+          [
+            '2026-03-10T00:00:00.000Z',
+            '2026-04-10T00:00:00.000Z',
+            '2026-05-10T00:00:00.000Z',
+            '2026-06-01T00:00:00.000Z',
+            '2026-06-02T00:00:00.000Z',
+            '2026-06-03T00:00:00.000Z',
+          ],
         ),
         { now: new Date(now) },
       ),
@@ -217,14 +320,48 @@ export default function cases(): GoldenCase[] {
     base(
       [
         tx({ type: 'expense', amount: 1500, date: '2026-06-05T00:00:00.000Z' }),
-        tx({ type: 'expense', amount: 800, date: '2026-06-05T00:00:00.000Z', categoryId: 'cat-fun' }),
+        tx({
+          type: 'expense',
+          amount: 800,
+          date: '2026-06-05T00:00:00.000Z',
+          categoryId: 'cat-fun',
+        }),
       ],
       {
         budgets: [
-          { id: 'b-over', categoryId: 'cat-food', amount: 1000, period: 'monthly', rollover: false, createdAt: '2026-01-01T00:00:00.000Z' },
-          { id: 'b-pace', categoryId: 'cat-fun', amount: 1000, period: 'monthly', rollover: false, createdAt: '2026-01-01T00:00:00.000Z' },
-          { id: 'b-lbl', categoryId: '', labelId: 'lbl-gone', amount: 1, period: 'monthly', rollover: false, createdAt: '2026-01-01T00:00:00.000Z' },
-          { id: 'b-all', categoryId: '', amount: 2000, period: 'weekly', rollover: false, createdAt: '2026-01-01T00:00:00.000Z' },
+          {
+            id: 'b-over',
+            categoryId: 'cat-food',
+            amount: 1000,
+            period: 'monthly',
+            rollover: false,
+            createdAt: '2026-01-01T00:00:00.000Z',
+          },
+          {
+            id: 'b-pace',
+            categoryId: 'cat-fun',
+            amount: 1000,
+            period: 'monthly',
+            rollover: false,
+            createdAt: '2026-01-01T00:00:00.000Z',
+          },
+          {
+            id: 'b-lbl',
+            categoryId: '',
+            labelId: 'lbl-gone',
+            amount: 1,
+            period: 'monthly',
+            rollover: false,
+            createdAt: '2026-01-01T00:00:00.000Z',
+          },
+          {
+            id: 'b-all',
+            categoryId: '',
+            amount: 2000,
+            period: 'weekly',
+            rollover: false,
+            createdAt: '2026-01-01T00:00:00.000Z',
+          },
         ],
       },
     ),
@@ -251,34 +388,39 @@ export default function cases(): GoldenCase[] {
     base([]),
     base([], {
       accounts: [
-        acct('acc-current', 'Current', 'current', -500),
+        acct('acc-current', 'Current', 'savings', -500),
         acct('acc-credit', 'Credit Card', 'credit', -2000),
         acct('acc-fd', 'Broken FD', 'fd', -10.5),
         acct('acc-cash', 'Cash', 'cash', -0.01),
-        acct('acc-old', 'Old Wallet', 'wallet', -100, { archivedAt: '2026-02-01T00:00:00.000Z' }),
+        acct('acc-old', 'Old Wallet', 'cash', -100, { archivedAt: '2026-02-01T00:00:00.000Z' }),
       ],
     }),
-    base(
-      [
-        tx({ type: 'expense', amount: 600, date: '2026-06-02T00:00:00.000Z' }),
-        tx({ type: 'expense', amount: 300, date: '2026-06-03T00:00:00.000Z', categoryId: 'cat-fun' }),
-        tx({ type: 'expense', amount: 200, date: '2026-06-04T00:00:00.000Z', categoryId: 'cat-gone' }),
-        tx({
-          type: 'expense',
-          amount: 1000,
-          date: '2026-06-04T00:00:00.000Z',
-          categoryId: '',
-          splits: [
-            { categoryId: 'cat-food', amount: 700 },
-            { categoryId: 'cat-fun', amount: 300 },
-          ],
-        }),
-      ],
-    ),
+    base([
+      tx({ type: 'expense', amount: 600, date: '2026-06-02T00:00:00.000Z' }),
+      tx({ type: 'expense', amount: 300, date: '2026-06-03T00:00:00.000Z', categoryId: 'cat-fun' }),
+      tx({
+        type: 'expense',
+        amount: 200,
+        date: '2026-06-04T00:00:00.000Z',
+        categoryId: 'cat-gone',
+      }),
+      tx({
+        type: 'expense',
+        amount: 1000,
+        date: '2026-06-04T00:00:00.000Z',
+        categoryId: '',
+        splits: [
+          { categoryId: 'cat-food', amount: 700 },
+          { categoryId: 'cat-fun', amount: 300 },
+        ],
+      }),
+    ]),
   ];
   for (const input of scenarios) {
     for (const fmt of ['plain', 'currency']) {
-      out.push(gc('buildInsights', [input, fmt], buildInsights(input, { formatAmount: FORMATTERS[fmt] })));
+      out.push(
+        gc('buildInsights', [input, fmt], buildInsights(input, { formatAmount: FORMATTERS[fmt] })),
+      );
     }
   }
   return out;

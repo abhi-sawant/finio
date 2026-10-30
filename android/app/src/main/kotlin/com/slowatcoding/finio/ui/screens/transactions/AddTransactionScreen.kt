@@ -61,13 +61,10 @@ import com.slowatcoding.finio.core.js.jsNumberToString
 import com.slowatcoding.finio.core.js.nowInstant
 import com.slowatcoding.finio.core.js.toIso
 import com.slowatcoding.finio.core.model.AccountType
-import com.slowatcoding.finio.core.model.CategoryRule
 import com.slowatcoding.finio.core.model.Transaction
 import com.slowatcoding.finio.core.model.TransactionSplit
 import com.slowatcoding.finio.core.model.TransactionType
 import com.slowatcoding.finio.core.money.roundMoney
-import com.slowatcoding.finio.core.rules.findMatchingRule
-import com.slowatcoding.finio.core.rules.mergeLabels
 import com.slowatcoding.finio.core.share.SharedTransactionDraft
 import com.slowatcoding.finio.core.store.NewTransaction
 import com.slowatcoding.finio.core.util.MAX_NAME_LENGTH
@@ -110,8 +107,6 @@ import kotlin.math.abs
 
 private data class SplitRow(val categoryId: String = "", val amount: String = "")
 
-private data class AppliedRule(val rule: CategoryRule, val prevCategoryId: String, val prevLabels: List<String>)
-
 private fun blankSplitRows() = listOf(SplitRow(), SplitRow())
 
 /**
@@ -131,7 +126,6 @@ fun AddTransactionScreen(nav: FinioNavigator, transactionId: String?, draft: Sha
     val accounts = state.accounts
     val categories = state.categories
     val labels = state.labels
-    val rules = state.rules
 
     // Snapshotted once: deleting the row from here must not flip the form into "add" mode.
     val existing = remember(transactionId) { transactionId?.let { id -> store.current.transactions.find { it.id == id } } }
@@ -139,21 +133,13 @@ fun AddTransactionScreen(nav: FinioNavigator, transactionId: String?, draft: Sha
     /** The OS-provided draft only ever seeds a blank form. */
     val shared = if (existing != null) null else draft
 
-    /**
-     * Auto-categorize the shared note up front, and seed `appliedRule` so the "filed by your
-     * rule / Undo" hint shows — a shared transaction gets the same visible, reversible treatment.
-     */
-    val sharedRule = remember {
-        shared?.note?.takeIf { it.isNotEmpty() }?.let { findMatchingRule(store.current.rules, it, shared.type) }
-    }
-
     var type by remember { mutableStateOf(existing?.type ?: shared?.type ?: TransactionType.Expense) }
     var amount by remember { mutableStateOf(existing?.let { jsNumberToString(it.amount) } ?: shared?.amount ?: "") }
     var accountId by remember {
         mutableStateOf(existing?.accountId ?: store.current.accounts.firstOrNull { it.archivedAt.isNullOrEmpty() && !it.type.isDeposit() }?.id ?: "")
     }
     var toAccountId by remember { mutableStateOf(existing?.toAccountId ?: "") }
-    var categoryId by remember { mutableStateOf(existing?.categoryId ?: sharedRule?.categoryId ?: "") }
+    var categoryId by remember { mutableStateOf(existing?.categoryId ?: "") }
     var date by remember {
         mutableStateOf(
             LocalDateTime.parse(
@@ -163,7 +149,7 @@ fun AddTransactionScreen(nav: FinioNavigator, transactionId: String?, draft: Sha
     }
     var note by remember { mutableStateOf(existing?.note ?: shared?.note ?: "") }
     var merchant by remember { mutableStateOf(existing?.merchant ?: "") }
-    var selectedLabels by remember { mutableStateOf(existing?.labels ?: mergeLabels(emptyList(), sharedRule?.labelIds ?: emptyList())) }
+    var selectedLabels by remember { mutableStateOf(existing?.labels ?: emptyList()) }
 
     var splitMode by remember { mutableStateOf(!existing?.splits.isNullOrEmpty()) }
     val splitRows = remember {
@@ -173,56 +159,14 @@ fun AddTransactionScreen(nav: FinioNavigator, transactionId: String?, draft: Sha
         }
     }
 
-    /**
-     * Auto-categorization only fills a blank the user hasn't filled themselves. Once they touch
-     * the category picker (or dismiss a suggestion) rules stop firing for this form, and editing
-     * an existing transaction never triggers them at all.
-     */
-    val categoryTouched = remember { booleanArrayOf(false) }
-    var appliedRule by remember {
-        mutableStateOf(sharedRule?.let { AppliedRule(it, "", emptyList()) })
-    }
-
     val goBack: () -> Unit = { if (!nav.back()) nav.replace(Routes.Dashboard) }
 
-    val applyRulesToNote = { value: String, txType: TransactionType, splitting: Boolean, categoryCleared: Boolean ->
-        run {
-            if (existing != null || categoryTouched[0] || (txType == TransactionType.Expense && splitting)) return@run
-            val rule = findMatchingRule(rules, value, txType)
-            if (!categoryCleared && rule != null && appliedRule?.rule?.id == rule.id) return@run
-
-            // Baseline is what the user had before *any* rule touched the form.
-            val applied = appliedRule
-            val baseCategoryId = when {
-                categoryCleared -> ""
-                applied != null -> applied.prevCategoryId
-                else -> categoryId
-            }
-            val baseLabels = applied?.prevLabels ?: selectedLabels
-
-            if (rule == null) {
-                // The note no longer matches — back out rather than leave a category the user never chose.
-                if (applied == null) return@run
-                categoryId = baseCategoryId
-                selectedLabels = baseLabels
-                appliedRule = null
-                return@run
-            }
-            categoryId = rule.categoryId
-            selectedLabels = mergeLabels(baseLabels, rule.labelIds)
-            appliedRule = AppliedRule(rule, baseCategoryId, baseLabels)
-        }
-    }
-
-    val handleNoteChange = { value: String ->
-        note = value
-        applyRulesToNote(value, type, splitMode, false)
-    }
+    val handleNoteChange = { value: String -> note = value }
 
     val handleTypeChange = { next: TransactionType ->
         if (next != type) {
             type = next
-            // Clear anything the new type can't take, then settle which rule still applies.
+            // Clear anything the new type can't take.
             val isValid = { id: String -> categories.find { it.id == id }?.let { isCategoryValidForType(it, next) } == true }
             val staleCategory = categoryId.isNotEmpty() && !isValid(categoryId)
             if (staleCategory) categoryId = ""
@@ -230,26 +174,7 @@ fun AddTransactionScreen(nav: FinioNavigator, transactionId: String?, draft: Sha
                 val r = splitRows[i]
                 if (r.categoryId.isNotEmpty() && !isValid(r.categoryId)) splitRows[i] = r.copy(categoryId = "")
             }
-            val hadRule = appliedRule != null
-            applyRulesToNote(note, next, splitMode, staleCategory)
-            // No rule re-filed it: a leftover hint's Undo would restore a category of the old type.
-            if (staleCategory && hadRule && findMatchingRule(rules, note, next) == null) appliedRule = null
         }
-    }
-
-    val dismissAppliedRule = {
-        appliedRule?.let {
-            categoryId = it.prevCategoryId
-            selectedLabels = it.prevLabels
-            appliedRule = null
-            categoryTouched[0] = true
-        }
-    }
-
-    val chooseCategory = { id: String ->
-        categoryTouched[0] = true
-        appliedRule = null
-        categoryId = id
     }
 
     val noteSuggestions = remember(state.transactions) { distinctValues(state.transactions) { it.note } }
@@ -289,9 +214,6 @@ fun AddTransactionScreen(nav: FinioNavigator, transactionId: String?, draft: Sha
     }
 
     val toggleSplitMode = {
-        // Either direction is the user taking charge of the category.
-        categoryTouched[0] = true
-        appliedRule = null
         if (splitMode) {
             splitRows.firstOrNull { it.categoryId.isNotEmpty() }?.let { categoryId = it.categoryId }
             splitMode = false
@@ -522,7 +444,7 @@ fun AddTransactionScreen(nav: FinioNavigator, transactionId: String?, draft: Sha
                         CategoryGrid(
                             categories = filteredCategories.map { CategoryTileData(it.id, it.name, it.icon, parseHexColor(it.color)) },
                             selectedId = categoryId.ifEmpty { null },
-                            onSelect = chooseCategory,
+                            onSelect = { categoryId = it },
                         )
                     }
                 }
@@ -554,29 +476,6 @@ fun AddTransactionScreen(nav: FinioNavigator, transactionId: String?, draft: Sha
                 }
                 if (matches.isNotEmpty()) {
                     NoteSuggestions(matches, onPick = handleNoteChange)
-                }
-                appliedRule?.let { applied ->
-                    Row(
-                        Modifier.padding(top = 6.dp).fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(6.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Icon(LucideIcons.Wand2, null, Modifier.size(12.dp), tint = colors.primary)
-                        Text(
-                            "Filed as ${categories.find { it.id == applied.rule.categoryId }?.name} by your \"${applied.rule.pattern}\" rule",
-                            Modifier.weight(1f),
-                            style = FinioType.caption,
-                            color = colors.primary,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                        )
-                        Text(
-                            "Undo",
-                            Modifier.clickable(role = Role.Button) { dismissAppliedRule() },
-                            style = FinioType.caption.copy(textDecoration = TextDecoration.Underline),
-                            color = colors.mutedForeground,
-                        )
-                    }
                 }
             }
 

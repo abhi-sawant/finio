@@ -9,14 +9,11 @@ import type { AccountType } from '@/types';
 export type Denomination = '10' | '20' | '50' | '100' | '200' | '500' | '2000';
 
 export const ACCOUNT_DENOMINATION: Record<AccountType, Denomination> = {
-  current: '100', // lavender
   savings: '500', // stone
   credit: '2000', // magenta
   fd: '200', // yellow
   rd: '200',
   cash: '10', // chocolate
-  wallet: '50', // cyan
-  investment: '20', // greenish-yellow
 };
 
 /** Inline style that paints an element in its account type's note tint. */
@@ -27,12 +24,9 @@ export function noteStyle(type: AccountType): React.CSSProperties {
 
 /** Human labels for account types — the row captions and note tiles show these, never the raw key. */
 export const ACCOUNT_TYPE_LABEL: Record<AccountType, string> = {
-  current: 'Bank account',
   savings: 'Savings',
   cash: 'Cash',
   credit: 'Credit card',
-  investment: 'Investment',
-  wallet: 'Wallet',
   fd: 'Fixed deposit',
   rd: 'Recurring deposit',
 };

@@ -22,7 +22,7 @@ private val categoryTitles = linkedMapOf(
     "profile" to "Profile & preferences",
     "security" to "Security",
     "notifications" to "Notifications",
-    "organise" to "Categories, labels & rules",
+    "organise" to "Categories & labels",
 )
 
 /**
@@ -61,13 +61,5 @@ private fun OrganiseLinks(nav: FinioNavigator) {
         SettingsRow(LucideIcons.FolderOpen, "Manage categories", onClick = { nav.navigate(Routes.ManageCategories) }, chevron = true)
         FinioDivider()
         SettingsRow(LucideIcons.Tag, "Manage labels", onClick = { nav.navigate(Routes.ManageLabels) }, chevron = true)
-        FinioDivider()
-        SettingsRow(
-            LucideIcons.Wand2,
-            "Categorization rules",
-            subtitle = "File transactions automatically from their note",
-            onClick = { nav.navigate(Routes.CategoryRules()) },
-            chevron = true,
-        )
     }
 }

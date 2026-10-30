@@ -12,8 +12,8 @@
         "exportedAt": "2026-06-15T12:00:00.000Z",
         "accounts": [
           {
-            "name": "HDFC Current",
-            "type": "current",
+            "name": "HDFC Savings",
+            "type": "savings",
             "color": "#146b54",
             "icon": "landmark",
             "balance": 125075,
@@ -22,7 +22,7 @@
             "createdAt": "2026-06-15T12:00:00.000Z"
           },
           {
-            "name": "Savings",
+            "name": "SBI Savings",
             "type": "savings",
             "color": "#22c55e",
             "icon": "piggy-bank",
@@ -1107,7 +1107,6 @@
           }
         ],
         "templates": [],
-        "rules": [],
         "goals": [
           {
             "name": "Vacation Fund",

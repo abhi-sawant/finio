@@ -67,7 +67,7 @@ export default function Settings() {
     {
       to: '/settings/organise',
       icon: FolderOpen,
-      title: 'Categories, labels & rules',
+      title: 'Categories & labels',
       status: 'Organise how transactions are filed',
     },
   ];

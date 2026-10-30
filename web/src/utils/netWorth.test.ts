@@ -13,7 +13,7 @@ const NOW = new Date('2026-06-15T12:00:00.000Z');
 function account(partial: Partial<Account> & Pick<Account, 'id'>): Account {
   return {
     name: partial.id,
-    type: 'current',
+    type: 'savings',
     color: '#000',
     icon: 'landmark',
     balance: 0,

@@ -27,7 +27,7 @@ class AnalyticsForecastTest {
         )
 
     private fun current(balance: Double) = Account(
-        "current", "current", AccountType.Current, "#000", "landmark", balance, 0.0, "2026-01-01T00:00:00.000Z",
+        "current", "current", AccountType.Savings, "#000", "landmark", balance, 0.0, "2026-01-01T00:00:00.000Z",
     )
 
     private fun rule(id: String, amount: Double, type: TransactionType = TransactionType.Expense) = RecurringTransaction(
@@ -96,22 +96,5 @@ class AnalyticsForecastTest {
         assertEquals(0.0, liquidDelta(TransactionType.Transfer, 500.0, "current", "savings", liquid), 0.0)
         assertEquals(-500.0, liquidDelta(TransactionType.Transfer, 500.0, "current", "card", liquid), 0.0)
         assertEquals(0.0, liquidDelta(TransactionType.Expense, 100.0, "card", null, liquid), 0.0)
-    }
-
-    @Test
-    fun calendarNetsSameDayFlows() {
-        val forecast = buildCashFlowForecast(
-            ForecastInput(
-                accounts = listOf(current(10000.0)),
-                transactions = emptyList(),
-                recurring = listOf(rule("rent", 2000.0), rule("salary", 50000.0, TransactionType.Income)),
-                now = now,
-                days = 30,
-            ),
-        )
-        val day20 = buildCashFlowCalendarMonth(forecast.scheduled, periodRange(PeriodType.Monthly, now), now)
-            .weeks.flatten().first { it.key == "2026-06-20" }
-        assertEquals(48000.0, day20.netFlow, 0.0)
-        assertEquals(2, day20.flows.size)
     }
 }

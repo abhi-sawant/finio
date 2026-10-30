@@ -25,7 +25,7 @@ const without = (row: Row, ...keys: string[]): Row => {
 const account: Row = {
   id: 'a1',
   name: 'Bank',
-  type: 'current',
+  type: 'savings',
   color: '#111111',
   icon: 'landmark',
   balance: 1200.5,
@@ -36,7 +36,7 @@ const account2: Row = {
   ...account,
   id: 'a2',
   name: 'Wallet',
-  type: 'wallet',
+  type: 'cash',
   balance: 0,
   openingBalance: 0,
 };
@@ -127,16 +127,6 @@ const template: Row = {
   categoryId: 'c1',
   note: 'Coffee',
   labels: [],
-  createdAt: T0,
-};
-const rule: Row = {
-  id: 'ru1',
-  pattern: 'swiggy',
-  matchType: 'contains',
-  scope: 'expense',
-  categoryId: 'c1',
-  labelIds: ['l1'],
-  enabled: true,
   createdAt: T0,
 };
 const goal: Row = {
@@ -437,25 +427,6 @@ const variants: Record<string, Row[]> = {
       ],
     },
   ],
-  rules: [
-    rule,
-    { ...rule, matchType: 'regex', pattern: '^upi/(swiggy|zomato)\\b' },
-    { ...rule, matchType: 'regex', pattern: '(' },
-    { ...rule, matchType: 'regex', pattern: '[a-' },
-    { ...rule, matchType: 'contains', pattern: '(' },
-    { ...rule, matchType: 'fuzzy' },
-    without(rule, 'matchType'),
-    without(rule, 'pattern'),
-    { ...rule, pattern: '  ' },
-    without(rule, 'categoryId'),
-    without(rule, 'scope', 'labelIds', 'enabled', 'createdAt'),
-    { ...rule, scope: 'transfer', enabled: 'no', labelIds: ['l1', 2, 'l2'] },
-    { ...rule, enabled: false },
-    { ...rule, enabled: 0 },
-    { ...rule, matchType: 'startsWith' },
-    { ...rule, matchType: 'endsWith', scope: 'income' },
-    { ...rule, matchType: 'equals', scope: 'any' },
-  ],
   goals: [
     goal,
     without(goal, 'targetDate', 'linkedAccountId', 'icon', 'color', 'createdAt'),
@@ -541,7 +512,6 @@ const fullFile = {
   budgets: [budget, { ...budget, id: 'b2', categoryId: '', labelId: 'l1' }],
   recurring: [recurring, { ...recurring, id: 'r2', goalId: 'g1' }],
   templates: [template],
-  rules: [rule],
   goals: [goal],
   goalContributions: [contribution],
   people: [person],
@@ -583,7 +553,7 @@ const files: Array<[string, unknown]> = [
   ['empty collections', { accounts: [], transactions: [] }],
   ['collection is an object', { accounts: { a1: account }, transactions: [tx] }],
   ['collection is a string', { transactions: 'x' }],
-  ['collection is a number', { rules: 3, loans: true }],
+  ['collection is a number', { goals: 3, loans: true }],
   ['rows not objects', { accounts: [null, 5, 'x', [], true, account] }],
   [
     'duplicate ids',
@@ -681,17 +651,6 @@ const files: Array<[string, unknown]> = [
       budgets: [{ ...budget, labelId: 'q', categoryId: 'q' }],
     },
   ],
-  [
-    'orphan rules',
-    {
-      categories: [category],
-      rules: [
-        { ...rule, categoryId: 'zz' },
-        { ...rule, id: 'ru2', categoryId: 'yy' },
-      ],
-    },
-  ],
-  ['orphan rule x1', { categories: [category], rules: [{ ...rule, categoryId: 'zz' }] }],
   [
     'orphan contributions',
     {

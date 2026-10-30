@@ -97,7 +97,7 @@ data class SampleData(
     val debtEntries: List<SampleDebtEntrySpec>,
 )
 
-private const val CURRENT = "current"
+private const val PRIMARY = "primary"
 private const val SAVINGS = "savings"
 private const val CARD = "card"
 private const val VACATION_GOAL = "vacation"
@@ -116,8 +116,8 @@ private fun at(now: Instant, monthsAgo: Int, day: Int, hour: Int = 12): String {
 
 fun generateSampleData(now: Instant = nowInstant()): SampleData {
     val accounts = listOf(
-        SampleAccountSpec(CURRENT, "HDFC Current", AccountType.Current, "#146b54", "landmark", 15000.0),
-        SampleAccountSpec(SAVINGS, "Savings", AccountType.Savings, "#22c55e", "piggy-bank", 40000.0),
+        SampleAccountSpec(PRIMARY, "HDFC Savings", AccountType.Savings, "#146b54", "landmark", 15000.0),
+        SampleAccountSpec(SAVINGS, "SBI Savings", AccountType.Savings, "#22c55e", "piggy-bank", 40000.0),
         SampleAccountSpec(
             CARD, "Credit Card", AccountType.Credit, "#ef4444", "credit-card", 0.0,
             creditLimit = 100000.0, statementCloseDay = 28, paymentDueDays = 18,
@@ -131,29 +131,29 @@ fun generateSampleData(now: Instant = nowInstant()): SampleData {
 
     // Salary + freelance income, one of each per sample month.
     for (m in 3 downTo 1) {
-        transactions += SampleTransactionSpec(TransactionType.Income, 65000.0, CURRENT, null, "cat-9", at(now, m, 1), "Monthly salary", emptyList())
+        transactions += SampleTransactionSpec(TransactionType.Income, 65000.0, PRIMARY, null, "cat-9", at(now, m, 1), "Monthly salary", emptyList())
     }
-    transactions += SampleTransactionSpec(TransactionType.Income, 12000.0, CURRENT, null, "cat-10", at(now, 2, 15), "Freelance project", emptyList())
+    transactions += SampleTransactionSpec(TransactionType.Income, 12000.0, PRIMARY, null, "cat-10", at(now, 2, 15), "Freelance project", emptyList())
 
-    // Rent, paid from Current, every sample month.
-    for (m in 3 downTo 1) expense(15000.0, CURRENT, "cat-8", at(now, m, 2), "Monthly rent", listOf("lbl-1"))
+    // Rent, paid from the primary account, every sample month.
+    for (m in 3 downTo 1) expense(15000.0, PRIMARY, "cat-8", at(now, m, 2), "Monthly rent", listOf("lbl-1"))
 
-    // Groceries and everyday food, on Current, spread across the month.
+    // Groceries and everyday food, on the primary account, spread across the month.
     val groceryAmounts = listOf(1800.0, 2200.0, 1500.0, 2000.0)
     val foodAmounts = listOf(350.0, 620.0, 480.0, 900.0, 275.0)
     for (m in 3 downTo 1) {
         GROCERY_DAYS.forEachIndexed { i, day ->
-            expense(groceryAmounts[i], CURRENT, "cat-25", at(now, m, day), "Groceries", listOf("lbl-1"))
+            expense(groceryAmounts[i], PRIMARY, "cat-25", at(now, m, day), "Groceries", listOf("lbl-1"))
         }
         FOOD_DAYS.forEachIndexed { i, day ->
-            expense(foodAmounts[i], CURRENT, "cat-1", at(now, m, day), if (i % 2 == 0) "Lunch with friends" else "Zomato order", listOf("lbl-2"))
+            expense(foodAmounts[i], PRIMARY, "cat-1", at(now, m, day), if (i % 2 == 0) "Lunch with friends" else "Zomato order", listOf("lbl-2"))
         }
     }
 
-    // Transport, on Current.
+    // Transport, on the primary account.
     for (m in 3 downTo 1) {
-        expense(1200.0, CURRENT, "cat-2", at(now, m, 8), "Fuel", emptyList())
-        expense(450.0, CURRENT, "cat-2", at(now, m, 22), "Cab rides", emptyList())
+        expense(1200.0, PRIMARY, "cat-2", at(now, m, 8), "Fuel", emptyList())
+        expense(450.0, PRIMARY, "cat-2", at(now, m, 22), "Cab rides", emptyList())
     }
 
     // Card spend, including a recurring-looking subscription deliberately left uncovered by any
@@ -164,12 +164,12 @@ fun generateSampleData(now: Instant = nowInstant()): SampleData {
         expense(800.0, CARD, "cat-4", at(now, m, 19), "Movie night", listOf("lbl-2"))
     }
 
-    // Utilities, paid from Current.
-    for (m in 3 downTo 1) expense(2200.0, CURRENT, "cat-5", at(now, m, 12), "Electricity bill", listOf("lbl-1"))
+    // Utilities, paid from the primary account.
+    for (m in 3 downTo 1) expense(2200.0, PRIMARY, "cat-5", at(now, m, 12), "Electricity bill", listOf("lbl-1"))
 
-    // Paying down the card from Current, each sample month.
+    // Paying down the card from the primary account, each sample month.
     for (m in 2 downTo 1) {
-        transactions += SampleTransactionSpec(TransactionType.Transfer, 5000.0, CURRENT, CARD, "cat-13", at(now, m, 20), "Credit card payment", emptyList())
+        transactions += SampleTransactionSpec(TransactionType.Transfer, 5000.0, PRIMARY, CARD, "cat-13", at(now, m, 20), "Credit card payment", emptyList())
     }
 
     val budgets = listOf(
@@ -189,11 +189,11 @@ fun generateSampleData(now: Instant = nowInstant()): SampleData {
     // goal-linked transfer that auto-funds the Vacation Fund.
     val recurring = listOf(
         SampleRecurringSpec(
-            TransactionType.Expense, 15000.0, CURRENT, null, "cat-8", "Monthly rent", listOf("lbl-1"),
+            TransactionType.Expense, 15000.0, PRIMARY, null, "cat-8", "Monthly rent", listOf("lbl-1"),
             RecurrenceFrequency.Monthly, at(now, 0, 2),
         ),
         SampleRecurringSpec(
-            TransactionType.Transfer, 3000.0, CURRENT, SAVINGS, "cat-13", "Vacation savings", emptyList(),
+            TransactionType.Transfer, 3000.0, PRIMARY, SAVINGS, "cat-13", "Vacation savings", emptyList(),
             RecurrenceFrequency.Monthly, at(now, 0, 25), VACATION_GOAL,
         ),
     )

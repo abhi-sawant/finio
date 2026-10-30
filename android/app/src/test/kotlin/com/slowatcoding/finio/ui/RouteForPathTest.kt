@@ -20,7 +20,6 @@ class RouteForPathTest {
         assertEquals(Routes.EditTransaction("t1"), routeForPath("/edit-transaction/t1"))
         assertEquals(Routes.EditLoan("l1"), routeForPath("/edit-loan/l1"))
         assertEquals(Routes.LoanSchedule("l1"), routeForPath("/loan-schedule/l1"))
-        assertEquals(Routes.CategoryRules(), routeForPath("/category-rules"))
         assertEquals(Routes.YearInReview, routeForPath("/year-in-review"))
     }
 

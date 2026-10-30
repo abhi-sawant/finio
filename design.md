@@ -220,13 +220,10 @@ sidecar.
 
 | Account type | Denomination | Light (from → to, ink) | Dark (from → to, ink) |
 | --- | --- | --- | --- |
-| Bank account (`current`) | ₹100 lavender | `#ece6ff` → `#d9cffc`, `#3b2a86` | `#3a2f86` → `#251c5c`, `#dcd3ff` |
 | Savings | ₹500 stone | `#eef0e6` → `#d8dccb`, `#3d4630` | `#3a4030` → `#262a1f`, `#e2e6d2` |
 | Credit card | ₹2000 magenta | `#ffe3f1` → `#fbc6e0`, `#8a1550` | `#6a1846` → `#43102d`, `#ffd0e6` |
 | Fixed / recurring deposit | ₹200 yellow | `#fff4c4` → `#ffe48a`, `#6b4d00` | `#5e4a0c` → `#3c2f07`, `#ffe9a3` |
 | Cash | ₹10 chocolate | `#f6e8dc` → `#e6c9b0`, `#5a3215` | `#4a2c18` → `#2f1c0f`, `#f6d9c0` |
-| Wallet | ₹50 cyan | `#e0f6fb` → `#b8e8f2`, `#0d4f60` | `#0f4652` → `#0a2f37`, `#c4f1fa` |
-| Investment | ₹20 green-yellow | `#f2f8d8` → `#dcebaa`, `#485a0c` | `#3f4c0f` → `#29320a`, `#e8f5b8` |
 
 Charts use `primary`, `chart-magenta`, `chart-gold`, `chart-green`, `chart-blue` in light and
 `#a495ff`, `#ff6fae`, `#f2c55c`, `#4fd6a2`, `#6fb4ff` in dark.

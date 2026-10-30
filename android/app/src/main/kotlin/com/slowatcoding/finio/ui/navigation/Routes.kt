@@ -12,8 +12,7 @@ import kotlinx.serialization.Serializable
  * with core model types.
  *
  * Arguments are plain strings/nullables so they survive the saved-state bundle; enums travel as
- * their web wire name (e.g. `"expense"`). The web's `location.state` payloads (VerifyOtp's email,
- * CategoryRules' prefill) are route arguments here.
+ * their web wire name (e.g. `"expense"`). The web's `location.state` payloads (VerifyOtp's email) are route arguments here.
  */
 @Serializable
 sealed interface FinioRoute
@@ -91,15 +90,6 @@ object Routes {
     /** `/loan-schedule/:id` — guarded: a stale id goes back to Loans. */
     @Serializable data class LoanSchedule(val id: String) : FinioRoute
 
-    @Serializable data object ImportCsv : FinioRoute
-
-    /**
-     * `/category-rules`. [pattern]/[scope] are Merchants' "Create a rule" prefill (web
-     * `location.state`); [scope] is a RuleScope wire name: any|expense|income.
-     */
-    @Serializable
-    data class CategoryRules(val pattern: String? = null, val scope: String? = null) : FinioRoute
-
     @Serializable data object Merchants : FinioRoute
     @Serializable data object YearInReview : FinioRoute
 
@@ -161,8 +151,6 @@ fun routeForPath(path: String): FinioRoute {
             "debts" -> Routes.Debts
             "loans" -> Routes.Loans
             "add-loan" -> Routes.AddLoan
-            "import-csv" -> Routes.ImportCsv
-            "category-rules" -> Routes.CategoryRules()
             "merchants" -> Routes.Merchants
             "year-in-review" -> Routes.YearInReview
             "login" -> Routes.Login

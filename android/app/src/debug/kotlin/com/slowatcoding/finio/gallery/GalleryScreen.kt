@@ -165,7 +165,7 @@ private fun GalleryContent() {
                 NoteTile(
                     type = type,
                     name = when (type) {
-                        AccountType.Current -> "HDFC Salary"
+                        AccountType.Savings -> "HDFC Salary"
                         AccountType.Credit -> "Amazon Pay ICICI card"
                         else -> type.label
                     },
@@ -180,10 +180,10 @@ private fun GalleryContent() {
         AccountType.entries.forEachIndexed { i, type ->
             if (i > 0) FinioDivider()
             Row(Modifier.padding(vertical = 12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                NoteChip(type, archived = type == AccountType.Wallet)
+                NoteChip(type, archived = type == AccountType.Cash)
                 Column(Modifier.weight(1f)) {
                     Text(type.label, style = FinioType.bodyMedium)
-                    Text(if (type == AccountType.Wallet) "Closed · 4 transactions" else type.label, style = FinioType.caption, color = colors.mutedForeground)
+                    Text(if (type == AccountType.Cash) "Closed · 4 transactions" else type.label, style = FinioType.caption, color = colors.mutedForeground)
                 }
                 Text("₹12,500", style = FinioType.rowValue)
             }
@@ -478,7 +478,7 @@ private fun NoteTilesPreview() = Column {
     listOf(false, true).forEach { d ->
         PreviewFrame(d) {
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                NoteTile(AccountType.Current, "HDFC Salary", "₹42,180", {}, Modifier.width(160.dp))
+                NoteTile(AccountType.Savings, "HDFC Salary", "₹42,180", {}, Modifier.width(160.dp))
                 NoteTile(AccountType.Credit, "Amazon Pay", "-₹8,200", {}, Modifier.width(160.dp))
             }
         }

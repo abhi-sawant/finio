@@ -305,7 +305,7 @@ describe('buildInsights', () => {
       {
         id: 'acc-current',
         name: 'Current',
-        type: 'current',
+        type: 'savings',
         color: '#000',
         icon: 'landmark',
         balance: -500,
@@ -337,7 +337,7 @@ describe('buildInsights', () => {
       {
         id: 'acc-archived',
         name: 'Old Wallet',
-        type: 'wallet',
+        type: 'cash',
         color: '#000',
         icon: 'wallet',
         balance: -100,

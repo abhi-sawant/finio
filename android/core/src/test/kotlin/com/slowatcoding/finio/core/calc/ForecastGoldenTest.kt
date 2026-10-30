@@ -131,27 +131,6 @@ class ForecastGoldenTest {
                     ),
                 ).json()
             }
-            "buildCashFlowCalendarMonth" -> {
-                val r = buildCashFlowCalendarMonth(
-                    c.arg(0).jsonArray.map(::decodeFlow),
-                    c.arg(1).rangeArg(),
-                    c.arg(2).instantArg,
-                )
-                buildJsonObject {
-                    put("weeks", JsonArray(r.weeks.map { w ->
-                        JsonArray(w.map { d ->
-                            buildJsonObject {
-                                put("date", d.date.json())
-                                put("key", JsonPrimitive(d.key))
-                                put("netFlow", JsonPrimitive(d.netFlow))
-                                put("flows", JsonArray(d.flows.map { it.json() }))
-                                put("inRange", JsonPrimitive(d.inRange))
-                                put("isToday", JsonPrimitive(d.isToday))
-                            }
-                        })
-                    }))
-                }
-            }
             else -> null
         }
     }

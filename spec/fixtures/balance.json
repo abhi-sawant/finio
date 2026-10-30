@@ -72,7 +72,7 @@
           {
             "id": "a",
             "name": "a",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": 1000,
@@ -82,7 +82,7 @@
           {
             "id": "b",
             "name": "b",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": 0,
@@ -92,7 +92,7 @@
           {
             "id": "c",
             "name": "c",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": -500,
@@ -111,7 +111,7 @@
         {
           "id": "a",
           "name": "a",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": 879.65,
@@ -121,7 +121,7 @@
         {
           "id": "b",
           "name": "b",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": 0,
@@ -131,7 +131,7 @@
         {
           "id": "c",
           "name": "c",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": -500,
@@ -147,7 +147,7 @@
           {
             "id": "a",
             "name": "a",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": 1000,
@@ -157,7 +157,7 @@
           {
             "id": "b",
             "name": "b",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": 0,
@@ -167,7 +167,7 @@
           {
             "id": "c",
             "name": "c",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": -500,
@@ -186,7 +186,7 @@
         {
           "id": "a",
           "name": "a",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": 1120.35,
@@ -196,7 +196,7 @@
         {
           "id": "b",
           "name": "b",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": 0,
@@ -206,7 +206,7 @@
         {
           "id": "c",
           "name": "c",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": -500,
@@ -222,7 +222,7 @@
           {
             "id": "a",
             "name": "a",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": 1000,
@@ -232,7 +232,7 @@
           {
             "id": "b",
             "name": "b",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": 0,
@@ -242,7 +242,7 @@
           {
             "id": "c",
             "name": "c",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": -500,
@@ -261,7 +261,7 @@
         {
           "id": "a",
           "name": "a",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": 51000,
@@ -271,7 +271,7 @@
         {
           "id": "b",
           "name": "b",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": 0,
@@ -281,7 +281,7 @@
         {
           "id": "c",
           "name": "c",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": -500,
@@ -297,7 +297,7 @@
           {
             "id": "a",
             "name": "a",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": 1000,
@@ -307,7 +307,7 @@
           {
             "id": "b",
             "name": "b",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": 0,
@@ -317,7 +317,7 @@
           {
             "id": "c",
             "name": "c",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": -500,
@@ -336,7 +336,7 @@
         {
           "id": "a",
           "name": "a",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": -49000,
@@ -346,7 +346,7 @@
         {
           "id": "b",
           "name": "b",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": 0,
@@ -356,7 +356,7 @@
         {
           "id": "c",
           "name": "c",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": -500,
@@ -372,7 +372,7 @@
           {
             "id": "a",
             "name": "a",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": 1000,
@@ -382,7 +382,7 @@
           {
             "id": "b",
             "name": "b",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": 0,
@@ -392,7 +392,7 @@
           {
             "id": "c",
             "name": "c",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": -500,
@@ -412,7 +412,7 @@
         {
           "id": "a",
           "name": "a",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": 999.9,
@@ -422,7 +422,7 @@
         {
           "id": "b",
           "name": "b",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": 0.1,
@@ -432,7 +432,7 @@
         {
           "id": "c",
           "name": "c",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": -500,
@@ -448,7 +448,7 @@
           {
             "id": "a",
             "name": "a",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": 1000,
@@ -458,7 +458,7 @@
           {
             "id": "b",
             "name": "b",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": 0,
@@ -468,7 +468,7 @@
           {
             "id": "c",
             "name": "c",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": -500,
@@ -488,7 +488,7 @@
         {
           "id": "a",
           "name": "a",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": 1000.1,
@@ -498,7 +498,7 @@
         {
           "id": "b",
           "name": "b",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": -0.1,
@@ -508,7 +508,7 @@
         {
           "id": "c",
           "name": "c",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": -500,
@@ -524,7 +524,7 @@
           {
             "id": "a",
             "name": "a",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": 1000,
@@ -534,7 +534,7 @@
           {
             "id": "b",
             "name": "b",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": 0,
@@ -544,7 +544,7 @@
           {
             "id": "c",
             "name": "c",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": -500,
@@ -564,7 +564,7 @@
         {
           "id": "a",
           "name": "a",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": 1000,
@@ -574,7 +574,7 @@
         {
           "id": "b",
           "name": "b",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": -0.2,
@@ -584,7 +584,7 @@
         {
           "id": "c",
           "name": "c",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": -499.8,
@@ -600,7 +600,7 @@
           {
             "id": "a",
             "name": "a",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": 1000,
@@ -610,7 +610,7 @@
           {
             "id": "b",
             "name": "b",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": 0,
@@ -620,7 +620,7 @@
           {
             "id": "c",
             "name": "c",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": -500,
@@ -640,7 +640,7 @@
         {
           "id": "a",
           "name": "a",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": 1000,
@@ -650,7 +650,7 @@
         {
           "id": "b",
           "name": "b",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": 0.2,
@@ -660,7 +660,7 @@
         {
           "id": "c",
           "name": "c",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": -500.2,
@@ -676,7 +676,7 @@
           {
             "id": "a",
             "name": "a",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": 1000,
@@ -686,7 +686,7 @@
           {
             "id": "b",
             "name": "b",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": 0,
@@ -696,7 +696,7 @@
           {
             "id": "c",
             "name": "c",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": -500,
@@ -715,7 +715,7 @@
         {
           "id": "a",
           "name": "a",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": 1000,
@@ -725,7 +725,7 @@
         {
           "id": "b",
           "name": "b",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": 0,
@@ -735,7 +735,7 @@
         {
           "id": "c",
           "name": "c",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": -533.33,
@@ -751,7 +751,7 @@
           {
             "id": "a",
             "name": "a",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": 1000,
@@ -761,7 +761,7 @@
           {
             "id": "b",
             "name": "b",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": 0,
@@ -771,7 +771,7 @@
           {
             "id": "c",
             "name": "c",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": -500,
@@ -790,7 +790,7 @@
         {
           "id": "a",
           "name": "a",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": 1000,
@@ -800,7 +800,7 @@
         {
           "id": "b",
           "name": "b",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": 0,
@@ -810,7 +810,7 @@
         {
           "id": "c",
           "name": "c",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": -466.67,
@@ -826,7 +826,7 @@
           {
             "id": "a",
             "name": "a",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": 1000,
@@ -836,7 +836,7 @@
           {
             "id": "b",
             "name": "b",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": 0,
@@ -846,7 +846,7 @@
           {
             "id": "c",
             "name": "c",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": -500,
@@ -865,7 +865,7 @@
         {
           "id": "a",
           "name": "a",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": 1000,
@@ -875,7 +875,7 @@
         {
           "id": "b",
           "name": "b",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": 0,
@@ -885,7 +885,7 @@
         {
           "id": "c",
           "name": "c",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": -500,
@@ -901,7 +901,7 @@
           {
             "id": "a",
             "name": "a",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": 1000,
@@ -911,7 +911,7 @@
           {
             "id": "b",
             "name": "b",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": 0,
@@ -921,7 +921,7 @@
           {
             "id": "c",
             "name": "c",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": -500,
@@ -940,7 +940,7 @@
         {
           "id": "a",
           "name": "a",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": 1000,
@@ -950,7 +950,7 @@
         {
           "id": "b",
           "name": "b",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": 0,
@@ -960,7 +960,7 @@
         {
           "id": "c",
           "name": "c",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": -500,
@@ -1020,7 +1020,7 @@
           {
             "id": "a",
             "name": "a",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": 49879.55,
@@ -1029,7 +1029,7 @@
           {
             "id": "b",
             "name": "b",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": 0.1,
@@ -1039,7 +1039,7 @@
           {
             "id": "c",
             "name": "c",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": 99.7,
@@ -1085,7 +1085,7 @@
         {
           "id": "a",
           "name": "a",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": 49879.55,
@@ -1095,7 +1095,7 @@
         {
           "id": "b",
           "name": "b",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": 0.1,
@@ -1105,7 +1105,7 @@
         {
           "id": "c",
           "name": "c",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": 99.7,
@@ -1121,7 +1121,7 @@
           {
             "id": "a",
             "name": "a",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": 49879.55,
@@ -1130,7 +1130,7 @@
           {
             "id": "b",
             "name": "b",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": 0.1,
@@ -1140,7 +1140,7 @@
           {
             "id": "c",
             "name": "c",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": 99.7,
@@ -1186,7 +1186,7 @@
         {
           "id": "a",
           "name": "a",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": 49879.55,
@@ -1196,7 +1196,7 @@
         {
           "id": "b",
           "name": "b",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": -0.1,
@@ -1206,7 +1206,7 @@
         {
           "id": "c",
           "name": "c",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": 99.7,
@@ -1222,7 +1222,7 @@
           {
             "id": "a",
             "name": "a",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": 1000,
@@ -1232,7 +1232,7 @@
           {
             "id": "b",
             "name": "b",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": 0,
@@ -1242,7 +1242,7 @@
           {
             "id": "c",
             "name": "c",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": -500,
@@ -1289,7 +1289,7 @@
         {
           "id": "a",
           "name": "a",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": 50879.55,
@@ -1299,7 +1299,7 @@
         {
           "id": "b",
           "name": "b",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": -0.1,
@@ -1309,7 +1309,7 @@
         {
           "id": "c",
           "name": "c",
-          "type": "current",
+          "type": "savings",
           "color": "#000000",
           "icon": "landmark",
           "balance": -533.13,
@@ -1380,7 +1380,7 @@
           {
             "id": "a",
             "name": "a",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": 1000,
@@ -1390,7 +1390,7 @@
           {
             "id": "b",
             "name": "b",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": 0,
@@ -1400,7 +1400,7 @@
           {
             "id": "c",
             "name": "c",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": -500,
@@ -1412,7 +1412,7 @@
           {
             "id": "a",
             "name": "a",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": 50879.55,
@@ -1422,7 +1422,7 @@
           {
             "id": "b",
             "name": "b",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": -0.1,
@@ -1432,7 +1432,7 @@
           {
             "id": "c",
             "name": "c",
-            "type": "current",
+            "type": "savings",
             "color": "#000000",
             "icon": "landmark",
             "balance": -533.13,

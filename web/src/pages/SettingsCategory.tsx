@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router';
-import { ArrowLeft, ChevronRight, FolderOpen, Tag, Wand2 } from 'lucide-react';
+import { ArrowLeft, ChevronRight, FolderOpen, Tag } from 'lucide-react';
 import Header from '@/components/ui/header';
 import { HeaderIconButton } from '@/components/ui/header-icon-button';
 import Main from '@/components/ui/main';
@@ -15,16 +15,10 @@ function OrganiseLinks() {
   const rows = [
     { to: '/manage-categories', icon: FolderOpen, title: 'Manage categories' },
     { to: '/manage-labels', icon: Tag, title: 'Manage labels' },
-    {
-      to: '/category-rules',
-      icon: Wand2,
-      title: 'Categorization rules',
-      hint: 'File transactions automatically from their note',
-    },
   ];
   return (
     <div className="card-elevated divide-border divide-y rounded-md">
-      {rows.map(({ to, icon: Icon, title, hint }) => (
+      {rows.map(({ to, icon: Icon, title }) => (
         <button
           key={to}
           onClick={() => navigate(to)}
@@ -34,7 +28,6 @@ function OrganiseLinks() {
             <Icon size={18} className="text-muted-foreground shrink-0" />
             <div>
               <p className="text-sm font-medium">{title}</p>
-              {hint && <p className="text-muted-foreground text-xs">{hint}</p>}
             </div>
           </div>
           <ChevronRight size={16} className="text-muted-foreground shrink-0" />
@@ -50,7 +43,7 @@ const categories: Record<string, { title: string; body: ReactNode }> = {
   profile: { title: 'Profile & preferences', body: <ProfileSection /> },
   security: { title: 'Security', body: <AppLockSection /> },
   notifications: { title: 'Notifications', body: <NotificationsSection /> },
-  organise: { title: 'Categories, labels & rules', body: <OrganiseLinks /> },
+  organise: { title: 'Categories & labels', body: <OrganiseLinks /> },
 };
 
 export default function SettingsCategory() {

@@ -197,7 +197,7 @@ describe('buildYearInReview', () => {
   const account: Account = {
     id: 'acc-1',
     name: 'Current',
-    type: 'current',
+    type: 'savings',
     color: '#000',
     icon: 'landmark',
     balance: 5000,

@@ -63,13 +63,21 @@ export default function cases(): GoldenCase[] {
         Object.fromEntries(accountBalancesAt(accounts, transactions, asOf)),
       ),
     );
-    out.push(gc('netWorthAt', [L('accounts'), L('transactions'), asOf], netWorthAt(accounts, transactions, asOf)));
+    out.push(
+      gc(
+        'netWorthAt',
+        [L('accounts'), L('transactions'), asOf],
+        netWorthAt(accounts, transactions, asOf),
+      ),
+    );
   }
-  const junk: Transaction[] = [
-    { ...transactions[0], id: 'bad', date: 'garbage', amount: 1e6 },
-  ];
+  const junk: Transaction[] = [{ ...transactions[0], id: 'bad', date: 'garbage', amount: 1e6 }];
   out.push(
-    gc('netWorthAt', [L('accounts'), junk, at(2020, 1, 1)], netWorthAt(accounts, junk, at(2020, 1, 1))),
+    gc(
+      'netWorthAt',
+      [L('accounts'), junk, at(2020, 1, 1)],
+      netWorthAt(accounts, junk, at(2020, 1, 1)),
+    ),
   );
 
   // Series: snapshots for some closed months, one for the live month (ignored), msd 1 and 25.
@@ -123,7 +131,9 @@ export default function cases(): GoldenCase[] {
       ...input,
       accounts: input.accounts && typeof input.accounts !== 'string' ? input.accounts : accounts,
       transactions:
-        input.transactions && typeof input.transactions !== 'string' ? input.transactions : transactions,
+        input.transactions && typeof input.transactions !== 'string'
+          ? input.transactions
+          : transactions,
       snapshots: typeof input.snapshots === 'string' ? snapshots : input.snapshots,
     };
     out.push(

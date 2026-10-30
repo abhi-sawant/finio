@@ -27,7 +27,7 @@ Used in short, frequent sessions (quick add of an expense, often via the FAB, sh
 
 - React 19 + TypeScript + Vite + Tailwind CSS 4 + shadcn/ui (base-nova, @base-ui/react); Zustand stores persisted to localStorage; hand-written service worker.
 - INR only; financial months honour a user-set start day; transfers, splits, recurring rules, loans, deposits, goals, debts, merchants, net worth snapshots, forecast, insights.
-- Manual entry plus bank-statement CSV import; no bank aggregation.
+- Manual entry; no bank aggregation.
 - Terminology: accounts, transactions, categories, labels, budgets, recurring, templates, goals, debts, loans, merchants.
 - The lock is a screen gate, not encryption; the UI says so.
 
@@ -37,7 +37,7 @@ Name: Finio. The visual world is **Mudra** (adopted 2026-10-04, replacing the ea
 
 - Chosen by the owner from three prototyped directions (Kaanch, Mudra, Gulal), in both light ("note paper in daylight") and dark ("the note under a UV lamp"); both modes are first-class.
 - Familjen Grotesk (the banknote numeral) sets page titles, dialog titles and headline money; Instrument Sans sets everything people read or type.
-- An account's note tint is decided by its account type, never by its user-chosen colour: bank ₹100 lavender, savings ₹500 stone, card ₹2000 magenta, FD/RD ₹200 yellow, cash ₹10 chocolate, wallet ₹50 cyan, investment ₹20 green-yellow.
+- An account's note tint is decided by its account type, never by its user-chosen colour: savings ₹500 stone, card ₹2000 magenta, FD/RD ₹200 yellow, cash ₹10 chocolate.
 - The add-transaction button is a single-hue ₹100-lavender coin, never multicolour.
 - Ornament never outranks a figure: rosettes, sheen and microprint stay faint enough that every number reads first (Product Principle 2).
 

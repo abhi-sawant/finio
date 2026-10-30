@@ -108,7 +108,7 @@ export interface SampleData {
   debtEntries: SampleDebtEntrySpec[];
 }
 
-const CURRENT = 'current';
+const PRIMARY = 'primary';
 const SAVINGS = 'savings';
 const CARD = 'card';
 const VACATION_GOAL = 'vacation';
@@ -127,16 +127,16 @@ function at(now: Date, monthsAgo: number, day: number, hour = 12): string {
 export function generateSampleData(now = new Date()): SampleData {
   const accounts: SampleAccountSpec[] = [
     {
-      key: CURRENT,
-      name: 'HDFC Current',
-      type: 'current',
+      key: PRIMARY,
+      name: 'HDFC Savings',
+      type: 'savings',
       color: '#146b54',
       icon: 'landmark',
       balance: 15000,
     },
     {
       key: SAVINGS,
-      name: 'Savings',
+      name: 'SBI Savings',
       type: 'savings',
       color: '#22c55e',
       icon: 'piggy-bank',
@@ -162,7 +162,7 @@ export function generateSampleData(now = new Date()): SampleData {
     transactions.push({
       type: 'income',
       amount: 65000,
-      accountKey: CURRENT,
+      accountKey: PRIMARY,
       categoryId: 'cat-9',
       date: at(now, m, 1),
       note: 'Monthly salary',
@@ -172,7 +172,7 @@ export function generateSampleData(now = new Date()): SampleData {
   transactions.push({
     type: 'income',
     amount: 12000,
-    accountKey: CURRENT,
+    accountKey: PRIMARY,
     categoryId: 'cat-10',
     date: at(now, 2, 15),
     note: 'Freelance project',
@@ -184,7 +184,7 @@ export function generateSampleData(now = new Date()): SampleData {
     transactions.push({
       type: 'expense',
       amount: 15000,
-      accountKey: CURRENT,
+      accountKey: PRIMARY,
       categoryId: 'cat-8',
       date: at(now, m, 2),
       note: 'Monthly rent',
@@ -200,7 +200,7 @@ export function generateSampleData(now = new Date()): SampleData {
       transactions.push({
         type: 'expense',
         amount: groceryAmounts[i],
-        accountKey: CURRENT,
+        accountKey: PRIMARY,
         categoryId: 'cat-25',
         date: at(now, m, day),
         note: 'Groceries',
@@ -211,7 +211,7 @@ export function generateSampleData(now = new Date()): SampleData {
       transactions.push({
         type: 'expense',
         amount: foodAmounts[i],
-        accountKey: CURRENT,
+        accountKey: PRIMARY,
         categoryId: 'cat-1',
         date: at(now, m, day),
         note: i % 2 === 0 ? 'Lunch with friends' : 'Zomato order',
@@ -225,7 +225,7 @@ export function generateSampleData(now = new Date()): SampleData {
     transactions.push({
       type: 'expense',
       amount: 1200,
-      accountKey: CURRENT,
+      accountKey: PRIMARY,
       categoryId: 'cat-2',
       date: at(now, m, 8),
       note: 'Fuel',
@@ -234,7 +234,7 @@ export function generateSampleData(now = new Date()): SampleData {
     transactions.push({
       type: 'expense',
       amount: 450,
-      accountKey: CURRENT,
+      accountKey: PRIMARY,
       categoryId: 'cat-2',
       date: at(now, m, 22),
       note: 'Cab rides',
@@ -280,7 +280,7 @@ export function generateSampleData(now = new Date()): SampleData {
     transactions.push({
       type: 'expense',
       amount: 2200,
-      accountKey: CURRENT,
+      accountKey: PRIMARY,
       categoryId: 'cat-5',
       date: at(now, m, 12),
       note: 'Electricity bill',
@@ -293,7 +293,7 @@ export function generateSampleData(now = new Date()): SampleData {
     transactions.push({
       type: 'transfer',
       amount: 5000,
-      accountKey: CURRENT,
+      accountKey: PRIMARY,
       toAccountKey: CARD,
       categoryId: 'cat-13',
       date: at(now, m, 20),
@@ -336,7 +336,7 @@ export function generateSampleData(now = new Date()): SampleData {
     {
       type: 'expense',
       amount: 15000,
-      accountKey: CURRENT,
+      accountKey: PRIMARY,
       categoryId: 'cat-8',
       note: 'Monthly rent',
       labels: ['lbl-1'],
@@ -346,7 +346,7 @@ export function generateSampleData(now = new Date()): SampleData {
     {
       type: 'transfer',
       amount: 3000,
-      accountKey: CURRENT,
+      accountKey: PRIMARY,
       toAccountKey: SAVINGS,
       categoryId: 'cat-13',
       note: 'Vacation savings',

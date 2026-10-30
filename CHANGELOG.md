@@ -3,6 +3,20 @@
 Finio follows [Semantic Versioning](https://semver.org). The repo-root `VERSION` file is the single
 source of truth for both clients; see "Releasing" in [CLAUDE.md](CLAUDE.md).
 
+## Unreleased
+
+### Removed
+
+- **Investment, Current and Wallet account types.** Accounts are now Savings, Cash, Credit card,
+  Fixed deposit or Recurring deposit. The onboarding sample uses two savings accounts.
+- **Categorization rules.** The rules screen, the auto-filing banner on Add Transaction, the
+  "Create a rule" shortcut on Merchants and the `rules` backup collection are gone. Older backups
+  that still carry `rules` import fine; the key is ignored. Persisted store version is now 19.
+- **Import bank CSV.** CSV export of transactions is unchanged.
+- **Cash-flow calendar** card on Analytics. The cash-flow forecast stays.
+
+Backups holding accounts of a removed type have those accounts rejected by the import preview.
+
 ## 3.0.3 — 2026-10-21
 
 ### Added

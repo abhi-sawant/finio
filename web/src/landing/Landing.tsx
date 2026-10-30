@@ -16,13 +16,10 @@ interface InstallPromptEvent extends Event {
 }
 
 const NOTES = [
-  { d: '100', name: 'Bank account' },
   { d: '500', name: 'Savings' },
   { d: '2000', name: 'Credit card' },
   { d: '200', name: 'FD or RD' },
   { d: '10', name: 'Cash' },
-  { d: '50', name: 'Wallet' },
-  { d: '20', name: 'Investment' },
 ] as const;
 
 const INSIDE: ReadonlyArray<[string, string]> = [
@@ -47,8 +44,8 @@ const INSIDE: ReadonlyArray<[string, string]> = [
     'Track savings goals and who owes whom, without touching real balances until you settle up.',
   ],
   [
-    'SMS and statements',
-    'Share a payment SMS to Finio, or import a bank statement CSV. Rules categorise as you go.',
+    'Share a payment SMS',
+    'Share a payment SMS to Finio and the amount and note are filled in for you.',
   ],
 ];
 
@@ -148,9 +145,8 @@ export function Landing({ onOpenApp }: { onOpenApp: () => void }) {
           <div className="lp-wrap">
             <h1 className="lp-rise">Your money, on your device.</h1>
             <p className="lp-lede lp-rise" style={{ '--i': 1 } as React.CSSProperties}>
-              Finio is a rupee ledger that never asks for your bank login, an account, or your
-              data. Everything you record stays on your phone, and it works offline from the first
-              tap.
+              Finio is a rupee ledger that never asks for your bank login, an account, or your data.
+              Everything you record stays on your phone, and it works offline from the first tap.
             </p>
             <div className="lp-cta lp-rise" style={{ '--i': 2 } as React.CSSProperties}>
               <a className="lp-btn lp-btn-primary" href="/" onClick={open}>
@@ -250,8 +246,8 @@ export function Landing({ onOpenApp }: { onOpenApp: () => void }) {
           <div className="lp-wrap">
             <h2 className="lp-narrow">This is the app, not a mock-up.</h2>
             <p className="lp-lede lp-mt">
-              Real screens, captured from Finio running on its built-in sample data. Light or
-              dark, on a phone or a desktop.
+              Real screens, captured from Finio running on its built-in sample data. Light or dark,
+              on a phone or a desktop.
             </p>
             <div className="lp-window">
               <div className="lp-window-bar" aria-hidden="true">
@@ -290,8 +286,8 @@ export function Landing({ onOpenApp }: { onOpenApp: () => void }) {
             <div className="lp-head">
               <h2>Every account type is printed as its own note.</h2>
               <p>
-                Bank accounts, cards, cash, wallets, FDs and RDs each keep the colour of the rupee
-                note they resemble, so you know which is which before you read the name.
+                Savings accounts, cards, cash, FDs and RDs each keep the colour of the rupee note
+                they resemble, so you know which is which before you read the name.
               </p>
             </div>
             <div className="lp-strip">
