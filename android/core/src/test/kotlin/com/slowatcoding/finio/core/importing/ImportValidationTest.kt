@@ -6,6 +6,7 @@ import com.slowatcoding.finio.core.model.FinioJson
 import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonArray
+import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import org.junit.Assert.assertEquals
@@ -68,7 +69,7 @@ class ImportValidationTest {
         val v = validateBackup(file, now)
         assertTrue(v.report.issues.isEmpty())
         assertTrue(v.report.warnings.isEmpty())
-        assertEquals(54, v.data.transactions!!.size)
+        assertEquals((file as kotlinx.serialization.json.JsonObject).getValue("transactions").jsonArray.size, v.data.transactions!!.size)
         assertTrue(v.data.accountsMissingOpeningBalance.isEmpty())
         assertEquals(1, v.meta.version)
     }

@@ -57,6 +57,10 @@ export default async function cases(): Promise<GoldenCase[]> {
         addRecurring: s.addRecurring,
         addContribution: s.addContribution,
         addDebtEntry: s.addDebtEntry,
+        addDeposit: s.addDeposit,
+        addTemplate: s.addTemplate,
+        addLoan: s.addLoan,
+        addLoanPrepayment: s.addLoanPrepayment,
         bulkAddTransactions: s.bulkAddTransactions,
       },
       NOW,
@@ -64,9 +68,10 @@ export default async function cases(): Promise<GoldenCase[]> {
     const file = withBackupMeta(collectBackupPayload(), NOW);
     // Round-trip through JSON so the fixture is exactly what a file on disk holds.
     const out = JSON.parse(JSON.stringify(file)) as unknown;
-    // Sanity: the sample is what the file contains, not an empty store.
+    // Sanity: the sample is what the file contains, not an empty store. The store posts a few
+    // transactions of its own (the FD funding transfer, loan prepayments), hence `<`.
     if (
-      (out as { transactions: unknown[] }).transactions.length !==
+      (out as { transactions: unknown[] }).transactions.length <
       generateSampleData(NOW).transactions.length
     ) {
       throw new Error('sample data did not load into the store');

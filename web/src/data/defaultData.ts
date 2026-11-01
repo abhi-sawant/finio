@@ -24,29 +24,21 @@ export const defaultCategories: Category[] = [
     color: '#10b981',
     type: 'expense',
   },
-  { id: 'cat-9', name: 'Salary', icon: 'briefcase', color: '#22c55e', type: 'income' },
-  { id: 'cat-10', name: 'Side income', icon: 'laptop', color: '#146b54', type: 'income' },
-  { id: 'cat-23', name: 'Interest', icon: 'dollar-sign', color: '#10b981', type: 'income' },
-  { id: 'cat-13', name: 'Transfer', icon: 'repeat', color: '#3b82f6', type: 'both' },
-  { id: 'cat-24', name: 'Miscellaneous', icon: 'circle-ellipsis', color: '#94a3b8', type: 'both' },
   { id: 'cat-26', name: 'Insurance', icon: 'umbrella', color: '#0ea5e9', type: 'expense' },
   { id: 'cat-27', name: 'Loan / EMI', icon: 'banknote', color: '#f43f5e', type: 'expense' },
-  { id: 'cat-29', name: 'Fitness & Wellness', icon: 'dumbbell', color: '#14b8a6', type: 'expense' },
+  { id: 'cat-9', name: 'Salary', icon: 'briefcase', color: '#22c55e', type: 'income' },
+  { id: 'cat-23', name: 'Interest', icon: 'dollar-sign', color: '#10b981', type: 'income' },
   { id: 'cat-33', name: 'Bonus', icon: 'sparkles', color: '#fbbf24', type: 'income' },
+  { id: 'cat-13', name: 'Transfer', icon: 'repeat', color: '#3b82f6', type: 'both' },
+  { id: 'cat-24', name: 'Miscellaneous', icon: 'circle-ellipsis', color: '#94a3b8', type: 'both' },
 ];
 
 /** Ids added after the original v1 category set — appended to existing installs by migration
  * rather than shipped only to fresh ones. */
-export const NEW_DEFAULT_CATEGORY_IDS = [
-  'cat-26',
-  'cat-27',
-  'cat-29',
-  'cat-33',
-];
+export const NEW_DEFAULT_CATEGORY_IDS = ['cat-26', 'cat-27', 'cat-29', 'cat-33'];
 
 export const defaultLabels: Label[] = [
   { id: 'lbl-1', name: 'Essential', color: '#22c55e' },
-  { id: 'lbl-2', name: 'Discretionary', color: '#f59e0b' },
   { id: 'lbl-3', name: 'Recurring', color: '#3b82f6' },
   { id: 'lbl-4', name: 'Tax', color: '#ef4444' },
   { id: 'lbl-5', name: 'Obligation', color: '#10b981' },
@@ -54,10 +46,7 @@ export const defaultLabels: Label[] = [
   { id: 'lbl-7', name: 'Lending', color: '#ec4899' },
   { id: 'lbl-8', name: 'For Self', color: '#64748b' },
   { id: 'lbl-9', name: 'For Others', color: '#06b6d4' },
-  { id: 'lbl-10', name: 'Reimbursable', color: '#14b8a6' },
   { id: 'lbl-11', name: 'Business', color: '#6366f1' },
-  { id: 'lbl-12', name: 'One-time', color: '#f43f5e' },
-  { id: 'lbl-13', name: 'Planned', color: '#0ea5e9' },
   { id: 'lbl-14', name: 'Family', color: '#eab308' },
 ];
 

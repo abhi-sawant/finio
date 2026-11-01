@@ -29,6 +29,7 @@ import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.decodeFromJsonElement
 import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.put
 import kotlinx.serialization.serializer
@@ -222,7 +223,8 @@ class FinanceStoreGoldenTest {
         assertEquals(sampleFile().keys.toList(), file.keys.toList())
         assertNull(Golden.diff(sampleFile(), file, "$"))
         // `lastRunDate` is written as an explicit null, as the web does.
-        val rule = file.getValue("recurring").jsonArray.first().jsonObject
+        // The rent rule never ran; the deposit and loan rules were folded past their history.
+        val rule = file.getValue("recurring").jsonArray.map { it.jsonObject }.first { it["note"]?.jsonPrimitive?.content == "Monthly rent" }
         assertEquals(JsonNull, rule["lastRunDate"])
     }
 

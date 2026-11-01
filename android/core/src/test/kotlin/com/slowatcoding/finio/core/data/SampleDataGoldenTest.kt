@@ -22,6 +22,12 @@ internal class RecordingActions : SampleDataActions {
     override fun addPerson(person: NewSamplePerson): String { rec("addPerson", Golden.encode(person)); return "person-${next++}" }
     override fun addBudget(budget: NewSampleBudget) { rec("addBudget", Golden.encode(budget)) }
     override fun addRecurring(rule: NewSampleRecurring): String { rec("addRecurring", Golden.encode(rule)); return "recurring-${next++}" }
+    override fun addTemplate(template: NewSampleTemplate): String { rec("addTemplate", Golden.encode(template)); return "template-${next++}" }
+    override fun addDeposit(deposit: NewSampleDeposit): String { rec("addDeposit", Golden.encode(deposit)); return "deposit-${next++}" }
+    override fun addLoan(loan: NewSampleLoan): String { rec("addLoan", Golden.encode(loan)); return "loan-${next++}" }
+    override fun addLoanPrepayment(prepayment: NewSampleLoanPrepayment): String? {
+        rec("addLoanPrepayment", Golden.encode(prepayment)); return "prepayment-${next++}"
+    }
     override fun addContribution(contribution: NewSampleContribution): String { rec("addContribution", Golden.encode(contribution)); return "contribution-${next++}" }
     override fun addDebtEntry(entry: NewSampleDebtEntry): String { rec("addDebtEntry", Golden.encode(entry)); return "debt-${next++}" }
     override fun bulkAddTransactions(transactions: List<NewSampleTransaction>): Int {

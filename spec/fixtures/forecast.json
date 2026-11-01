@@ -1814,7 +1814,7 @@
             "type": "income",
             "amount": 32000.5,
             "accountId": "acc-bank",
-            "categoryId": "cat-10",
+            "categoryId": "cat-x",
             "date": "2026-06-10T06:30:00.000Z",
             "note": "Upwork payout",
             "labels": [],
@@ -2061,6 +2061,20 @@
             "type": "expense"
           },
           {
+            "id": "cat-26",
+            "name": "Insurance",
+            "icon": "umbrella",
+            "color": "#0ea5e9",
+            "type": "expense"
+          },
+          {
+            "id": "cat-27",
+            "name": "Loan / EMI",
+            "icon": "banknote",
+            "color": "#f43f5e",
+            "type": "expense"
+          },
+          {
             "id": "cat-9",
             "name": "Salary",
             "icon": "briefcase",
@@ -2068,17 +2082,17 @@
             "type": "income"
           },
           {
-            "id": "cat-10",
-            "name": "Side income",
-            "icon": "laptop",
-            "color": "#146b54",
-            "type": "income"
-          },
-          {
             "id": "cat-23",
             "name": "Interest",
             "icon": "dollar-sign",
             "color": "#10b981",
+            "type": "income"
+          },
+          {
+            "id": "cat-33",
+            "name": "Bonus",
+            "icon": "sparkles",
+            "color": "#fbbf24",
             "type": "income"
           },
           {
@@ -2096,34 +2110,6 @@
             "type": "both"
           },
           {
-            "id": "cat-26",
-            "name": "Insurance",
-            "icon": "umbrella",
-            "color": "#0ea5e9",
-            "type": "expense"
-          },
-          {
-            "id": "cat-27",
-            "name": "Loan / EMI",
-            "icon": "banknote",
-            "color": "#f43f5e",
-            "type": "expense"
-          },
-          {
-            "id": "cat-29",
-            "name": "Fitness & Wellness",
-            "icon": "dumbbell",
-            "color": "#14b8a6",
-            "type": "expense"
-          },
-          {
-            "id": "cat-33",
-            "name": "Bonus",
-            "icon": "sparkles",
-            "color": "#fbbf24",
-            "type": "income"
-          },
-          {
             "id": "cat-x",
             "name": "Side hustle",
             "icon": "tag",
@@ -2136,11 +2122,6 @@
             "id": "lbl-1",
             "name": "Essential",
             "color": "#22c55e"
-          },
-          {
-            "id": "lbl-2",
-            "name": "Discretionary",
-            "color": "#f59e0b"
           },
           {
             "id": "lbl-3",
@@ -2178,24 +2159,9 @@
             "color": "#06b6d4"
           },
           {
-            "id": "lbl-10",
-            "name": "Reimbursable",
-            "color": "#14b8a6"
-          },
-          {
             "id": "lbl-11",
             "name": "Business",
             "color": "#6366f1"
-          },
-          {
-            "id": "lbl-12",
-            "name": "One-time",
-            "color": "#f43f5e"
-          },
-          {
-            "id": "lbl-13",
-            "name": "Planned",
-            "color": "#0ea5e9"
           },
           {
             "id": "lbl-14",

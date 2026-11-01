@@ -62,6 +62,10 @@ export function Onboarding() {
   const addRecurring = useFinanceStore((s) => s.addRecurring);
   const addContribution = useFinanceStore((s) => s.addContribution);
   const addDebtEntry = useFinanceStore((s) => s.addDebtEntry);
+  const addDeposit = useFinanceStore((s) => s.addDeposit);
+  const addTemplate = useFinanceStore((s) => s.addTemplate);
+  const addLoan = useFinanceStore((s) => s.addLoan);
+  const addLoanPrepayment = useFinanceStore((s) => s.addLoanPrepayment);
   const bulkAddTransactions = useFinanceStore((s) => s.bulkAddTransactions);
 
   const [step, setStep] = useState<Step>('name');
@@ -112,6 +116,10 @@ export function Onboarding() {
       addRecurring,
       addContribution,
       addDebtEntry,
+      addDeposit,
+      addTemplate,
+      addLoan,
+      addLoanPrepayment,
       bulkAddTransactions,
     });
     updateSettings({ userName: trimmedName || 'there', onboardedAt: new Date().toISOString() });

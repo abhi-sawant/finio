@@ -27,6 +27,10 @@ function recorder() {
     addRecurring: rec('addRecurring', () => `recurring-${next++}`),
     addContribution: rec('addContribution', () => `contribution-${next++}`),
     addDebtEntry: rec('addDebtEntry', () => `debt-${next++}`),
+    addDeposit: rec('addDeposit', () => `deposit-${next++}`),
+    addTemplate: rec('addTemplate', () => `template-${next++}`),
+    addLoan: rec('addLoan', () => `loan-${next++}`),
+    addLoanPrepayment: rec('addLoanPrepayment', () => `prepayment-${next++}`),
     bulkAddTransactions: rec('bulkAddTransactions', (t: unknown[]) => t.length),
   };
   return { actions, calls };

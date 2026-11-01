@@ -10,6 +10,10 @@ import com.slowatcoding.finio.core.data.MISC_CATEGORY_ID
 import com.slowatcoding.finio.core.data.NewSampleAccount
 import com.slowatcoding.finio.core.data.NewSampleBudget
 import com.slowatcoding.finio.core.data.NewSampleContribution
+import com.slowatcoding.finio.core.data.NewSampleDeposit
+import com.slowatcoding.finio.core.data.NewSampleLoan
+import com.slowatcoding.finio.core.data.NewSampleLoanPrepayment
+import com.slowatcoding.finio.core.data.NewSampleTemplate
 import com.slowatcoding.finio.core.data.NewSampleDebtEntry
 import com.slowatcoding.finio.core.data.NewSampleGoal
 import com.slowatcoding.finio.core.data.NewSamplePerson
@@ -1408,17 +1412,22 @@ class FinanceStore(
                 name = account.name, type = account.type, color = account.color, icon = account.icon,
                 balance = account.balance, creditLimit = account.creditLimit,
                 statementCloseDay = account.statementCloseDay, paymentDueDays = account.paymentDueDays,
+                minimumDuePercent = account.minimumDuePercent,
             ),
         )
 
         override fun addGoal(goal: NewSampleGoal): String =
-            this@FinanceStore.addGoal(NewGoal(goal.name, goal.icon, goal.color, goal.targetAmount, goal.targetDate))
+            this@FinanceStore.addGoal(
+                NewGoal(goal.name, goal.icon, goal.color, goal.targetAmount, goal.targetDate, goal.linkedAccountId),
+            )
 
         override fun addPerson(person: NewSamplePerson): String =
             this@FinanceStore.addPerson(NewPerson(person.name, person.icon, person.color))
 
         override fun addBudget(budget: NewSampleBudget) =
-            this@FinanceStore.addBudget(NewBudget(budget.categoryId, null, budget.amount, budget.period, budget.rollover))
+            this@FinanceStore.addBudget(
+                NewBudget(budget.categoryId, budget.labelId, budget.amount, budget.period, budget.rollover),
+            )
 
         override fun addRecurring(rule: NewSampleRecurring): String = this@FinanceStore.addRecurring(
             NewRecurring(
@@ -1427,6 +1436,30 @@ class FinanceStore(
                 startDate = rule.startDate, goalId = rule.goalId,
             ),
         )
+
+        override fun addTemplate(template: NewSampleTemplate): String = this@FinanceStore.addTemplate(
+            NewTemplate(
+                name = template.name, type = template.type, amount = template.amount, accountId = template.accountId,
+                toAccountId = template.toAccountId, categoryId = template.categoryId, note = template.note,
+                labels = template.labels, splits = template.splits,
+            ),
+        )
+
+        override fun addDeposit(deposit: NewSampleDeposit): String = this@FinanceStore.addDeposit(
+            NewDeposit(deposit.type, deposit.name, deposit.color, deposit.terms, deposit.deductPast),
+        )
+
+        override fun addLoan(loan: NewSampleLoan): String = this@FinanceStore.addLoan(
+            NewLoan(
+                loan.name, loan.principal, loan.interestRate, loan.tenureMonths, loan.startDate,
+                loan.accountId, loan.categoryId,
+            ),
+        )
+
+        override fun addLoanPrepayment(prepayment: NewSampleLoanPrepayment): String? =
+            this@FinanceStore.addLoanPrepayment(
+                NewLoanPrepayment(prepayment.loanId, prepayment.amount, prepayment.date, prepayment.note),
+            )
 
         override fun addContribution(contribution: NewSampleContribution): String = this@FinanceStore.addContribution(
             NewContribution(contribution.goalId, contribution.amount, contribution.date, contribution.note),
@@ -1441,6 +1474,7 @@ class FinanceStore(
                     NewTransaction(
                         type = it.type, amount = it.amount, accountId = it.accountId, toAccountId = it.toAccountId,
                         categoryId = it.categoryId, date = it.date, note = it.note, labels = it.labels,
+                        splits = it.splits,
                     )
                 },
             )

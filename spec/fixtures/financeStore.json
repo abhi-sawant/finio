@@ -117,6 +117,20 @@
               "type": "expense"
             },
             {
+              "id": "cat-26",
+              "name": "Insurance",
+              "icon": "umbrella",
+              "color": "#0ea5e9",
+              "type": "expense"
+            },
+            {
+              "id": "cat-27",
+              "name": "Loan / EMI",
+              "icon": "banknote",
+              "color": "#f43f5e",
+              "type": "expense"
+            },
+            {
               "id": "cat-9",
               "name": "Salary",
               "icon": "briefcase",
@@ -124,17 +138,17 @@
               "type": "income"
             },
             {
-              "id": "cat-10",
-              "name": "Side income",
-              "icon": "laptop",
-              "color": "#146b54",
-              "type": "income"
-            },
-            {
               "id": "cat-23",
               "name": "Interest",
               "icon": "dollar-sign",
               "color": "#10b981",
+              "type": "income"
+            },
+            {
+              "id": "cat-33",
+              "name": "Bonus",
+              "icon": "sparkles",
+              "color": "#fbbf24",
               "type": "income"
             },
             {
@@ -150,34 +164,6 @@
               "icon": "circle-ellipsis",
               "color": "#94a3b8",
               "type": "both"
-            },
-            {
-              "id": "cat-26",
-              "name": "Insurance",
-              "icon": "umbrella",
-              "color": "#0ea5e9",
-              "type": "expense"
-            },
-            {
-              "id": "cat-27",
-              "name": "Loan / EMI",
-              "icon": "banknote",
-              "color": "#f43f5e",
-              "type": "expense"
-            },
-            {
-              "id": "cat-29",
-              "name": "Fitness & Wellness",
-              "icon": "dumbbell",
-              "color": "#14b8a6",
-              "type": "expense"
-            },
-            {
-              "id": "cat-33",
-              "name": "Bonus",
-              "icon": "sparkles",
-              "color": "#fbbf24",
-              "type": "income"
             }
           ],
           "labels": [
@@ -185,11 +171,6 @@
               "id": "lbl-1",
               "name": "Essential",
               "color": "#22c55e"
-            },
-            {
-              "id": "lbl-2",
-              "name": "Discretionary",
-              "color": "#f59e0b"
             },
             {
               "id": "lbl-3",
@@ -227,24 +208,9 @@
               "color": "#06b6d4"
             },
             {
-              "id": "lbl-10",
-              "name": "Reimbursable",
-              "color": "#14b8a6"
-            },
-            {
               "id": "lbl-11",
               "name": "Business",
               "color": "#6366f1"
-            },
-            {
-              "id": "lbl-12",
-              "name": "One-time",
-              "color": "#f43f5e"
-            },
-            {
-              "id": "lbl-13",
-              "name": "Planned",
-              "color": "#0ea5e9"
             },
             {
               "id": "lbl-14",
@@ -352,6 +318,20 @@
               "type": "expense"
             },
             {
+              "id": "cat-26",
+              "name": "Insurance",
+              "icon": "umbrella",
+              "color": "#0ea5e9",
+              "type": "expense"
+            },
+            {
+              "id": "cat-27",
+              "name": "Loan / EMI",
+              "icon": "banknote",
+              "color": "#f43f5e",
+              "type": "expense"
+            },
+            {
               "id": "cat-9",
               "name": "Salary",
               "icon": "briefcase",
@@ -359,17 +339,17 @@
               "type": "income"
             },
             {
-              "id": "cat-10",
-              "name": "Side income",
-              "icon": "laptop",
-              "color": "#146b54",
-              "type": "income"
-            },
-            {
               "id": "cat-23",
               "name": "Interest",
               "icon": "dollar-sign",
               "color": "#10b981",
+              "type": "income"
+            },
+            {
+              "id": "cat-33",
+              "name": "Bonus",
+              "icon": "sparkles",
+              "color": "#fbbf24",
               "type": "income"
             },
             {
@@ -385,34 +365,6 @@
               "icon": "circle-ellipsis",
               "color": "#94a3b8",
               "type": "both"
-            },
-            {
-              "id": "cat-26",
-              "name": "Insurance",
-              "icon": "umbrella",
-              "color": "#0ea5e9",
-              "type": "expense"
-            },
-            {
-              "id": "cat-27",
-              "name": "Loan / EMI",
-              "icon": "banknote",
-              "color": "#f43f5e",
-              "type": "expense"
-            },
-            {
-              "id": "cat-29",
-              "name": "Fitness & Wellness",
-              "icon": "dumbbell",
-              "color": "#14b8a6",
-              "type": "expense"
-            },
-            {
-              "id": "cat-33",
-              "name": "Bonus",
-              "icon": "sparkles",
-              "color": "#fbbf24",
-              "type": "income"
             }
           ],
           "labels": [
@@ -420,11 +372,6 @@
               "id": "lbl-1",
               "name": "Essential",
               "color": "#22c55e"
-            },
-            {
-              "id": "lbl-2",
-              "name": "Discretionary",
-              "color": "#f59e0b"
             },
             {
               "id": "lbl-3",
@@ -462,24 +409,9 @@
               "color": "#06b6d4"
             },
             {
-              "id": "lbl-10",
-              "name": "Reimbursable",
-              "color": "#14b8a6"
-            },
-            {
               "id": "lbl-11",
               "name": "Business",
               "color": "#6366f1"
-            },
-            {
-              "id": "lbl-12",
-              "name": "One-time",
-              "color": "#f43f5e"
-            },
-            {
-              "id": "lbl-13",
-              "name": "Planned",
-              "color": "#0ea5e9"
             },
             {
               "id": "lbl-14",
@@ -2216,6 +2148,20 @@
               "type": "expense"
             },
             {
+              "id": "cat-26",
+              "name": "Insurance",
+              "icon": "umbrella",
+              "color": "#0ea5e9",
+              "type": "expense"
+            },
+            {
+              "id": "cat-27",
+              "name": "Loan / EMI",
+              "icon": "banknote",
+              "color": "#f43f5e",
+              "type": "expense"
+            },
+            {
               "id": "cat-9",
               "name": "Salary",
               "icon": "briefcase",
@@ -2223,17 +2169,17 @@
               "type": "income"
             },
             {
-              "id": "cat-10",
-              "name": "Side income",
-              "icon": "laptop",
-              "color": "#146b54",
-              "type": "income"
-            },
-            {
               "id": "cat-23",
               "name": "Interest",
               "icon": "dollar-sign",
               "color": "#10b981",
+              "type": "income"
+            },
+            {
+              "id": "cat-33",
+              "name": "Bonus",
+              "icon": "sparkles",
+              "color": "#fbbf24",
               "type": "income"
             },
             {
@@ -2249,34 +2195,6 @@
               "icon": "circle-ellipsis",
               "color": "#94a3b8",
               "type": "both"
-            },
-            {
-              "id": "cat-26",
-              "name": "Insurance",
-              "icon": "umbrella",
-              "color": "#0ea5e9",
-              "type": "expense"
-            },
-            {
-              "id": "cat-27",
-              "name": "Loan / EMI",
-              "icon": "banknote",
-              "color": "#f43f5e",
-              "type": "expense"
-            },
-            {
-              "id": "cat-29",
-              "name": "Fitness & Wellness",
-              "icon": "dumbbell",
-              "color": "#14b8a6",
-              "type": "expense"
-            },
-            {
-              "id": "cat-33",
-              "name": "Bonus",
-              "icon": "sparkles",
-              "color": "#fbbf24",
-              "type": "income"
             },
             {
               "name": "Side gigs",
@@ -2395,6 +2313,20 @@
               "type": "expense"
             },
             {
+              "id": "cat-26",
+              "name": "Insurance",
+              "icon": "umbrella",
+              "color": "#0ea5e9",
+              "type": "expense"
+            },
+            {
+              "id": "cat-27",
+              "name": "Loan / EMI",
+              "icon": "banknote",
+              "color": "#f43f5e",
+              "type": "expense"
+            },
+            {
               "id": "cat-9",
               "name": "Salary",
               "icon": "briefcase",
@@ -2402,17 +2334,17 @@
               "type": "income"
             },
             {
-              "id": "cat-10",
-              "name": "Side income",
-              "icon": "laptop",
-              "color": "#146b54",
-              "type": "income"
-            },
-            {
               "id": "cat-23",
               "name": "Interest",
               "icon": "dollar-sign",
               "color": "#10b981",
+              "type": "income"
+            },
+            {
+              "id": "cat-33",
+              "name": "Bonus",
+              "icon": "sparkles",
+              "color": "#fbbf24",
               "type": "income"
             },
             {
@@ -2428,34 +2360,6 @@
               "icon": "circle-ellipsis",
               "color": "#94a3b8",
               "type": "both"
-            },
-            {
-              "id": "cat-26",
-              "name": "Insurance",
-              "icon": "umbrella",
-              "color": "#0ea5e9",
-              "type": "expense"
-            },
-            {
-              "id": "cat-27",
-              "name": "Loan / EMI",
-              "icon": "banknote",
-              "color": "#f43f5e",
-              "type": "expense"
-            },
-            {
-              "id": "cat-29",
-              "name": "Fitness & Wellness",
-              "icon": "dumbbell",
-              "color": "#14b8a6",
-              "type": "expense"
-            },
-            {
-              "id": "cat-33",
-              "name": "Bonus",
-              "icon": "sparkles",
-              "color": "#fbbf24",
-              "type": "income"
             },
             {
               "name": "Side gig income",
@@ -2486,11 +2390,6 @@
               "id": "lbl-1",
               "name": "Essential",
               "color": "#22c55e"
-            },
-            {
-              "id": "lbl-2",
-              "name": "Discretionary",
-              "color": "#f59e0b"
             },
             {
               "id": "lbl-3",
@@ -2528,24 +2427,9 @@
               "color": "#06b6d4"
             },
             {
-              "id": "lbl-10",
-              "name": "Reimbursable",
-              "color": "#14b8a6"
-            },
-            {
               "id": "lbl-11",
               "name": "Business",
               "color": "#6366f1"
-            },
-            {
-              "id": "lbl-12",
-              "name": "One-time",
-              "color": "#f43f5e"
-            },
-            {
-              "id": "lbl-13",
-              "name": "Planned",
-              "color": "#0ea5e9"
             },
             {
               "id": "lbl-14",
@@ -2581,11 +2465,6 @@
               "color": "#22c55e"
             },
             {
-              "id": "lbl-2",
-              "name": "Discretionary",
-              "color": "#f59e0b"
-            },
-            {
               "id": "lbl-3",
               "name": "Recurring",
               "color": "#3b82f6"
@@ -2621,24 +2500,9 @@
               "color": "#06b6d4"
             },
             {
-              "id": "lbl-10",
-              "name": "Reimbursable",
-              "color": "#14b8a6"
-            },
-            {
               "id": "lbl-11",
               "name": "Business",
               "color": "#6366f1"
-            },
-            {
-              "id": "lbl-12",
-              "name": "One-time",
-              "color": "#f43f5e"
-            },
-            {
-              "id": "lbl-13",
-              "name": "Planned",
-              "color": "#0ea5e9"
             },
             {
               "id": "lbl-14",
@@ -3053,11 +2917,6 @@
               "color": "#22c55e"
             },
             {
-              "id": "lbl-2",
-              "name": "Discretionary",
-              "color": "#f59e0b"
-            },
-            {
               "id": "lbl-3",
               "name": "Recurring",
               "color": "#3b82f6"
@@ -3093,24 +2952,9 @@
               "color": "#06b6d4"
             },
             {
-              "id": "lbl-10",
-              "name": "Reimbursable",
-              "color": "#14b8a6"
-            },
-            {
               "id": "lbl-11",
               "name": "Business",
               "color": "#6366f1"
-            },
-            {
-              "id": "lbl-12",
-              "name": "One-time",
-              "color": "#f43f5e"
-            },
-            {
-              "id": "lbl-13",
-              "name": "Planned",
-              "color": "#0ea5e9"
             },
             {
               "id": "lbl-14",
@@ -3734,6 +3578,20 @@
               "type": "expense"
             },
             {
+              "id": "cat-26",
+              "name": "Insurance",
+              "icon": "umbrella",
+              "color": "#0ea5e9",
+              "type": "expense"
+            },
+            {
+              "id": "cat-27",
+              "name": "Loan / EMI",
+              "icon": "banknote",
+              "color": "#f43f5e",
+              "type": "expense"
+            },
+            {
               "id": "cat-9",
               "name": "Salary",
               "icon": "briefcase",
@@ -3741,17 +3599,17 @@
               "type": "income"
             },
             {
-              "id": "cat-10",
-              "name": "Side income",
-              "icon": "laptop",
-              "color": "#146b54",
-              "type": "income"
-            },
-            {
               "id": "cat-23",
               "name": "Interest",
               "icon": "dollar-sign",
               "color": "#10b981",
+              "type": "income"
+            },
+            {
+              "id": "cat-33",
+              "name": "Bonus",
+              "icon": "sparkles",
+              "color": "#fbbf24",
               "type": "income"
             },
             {
@@ -3767,34 +3625,6 @@
               "icon": "circle-ellipsis",
               "color": "#94a3b8",
               "type": "both"
-            },
-            {
-              "id": "cat-26",
-              "name": "Insurance",
-              "icon": "umbrella",
-              "color": "#0ea5e9",
-              "type": "expense"
-            },
-            {
-              "id": "cat-27",
-              "name": "Loan / EMI",
-              "icon": "banknote",
-              "color": "#f43f5e",
-              "type": "expense"
-            },
-            {
-              "id": "cat-29",
-              "name": "Fitness & Wellness",
-              "icon": "dumbbell",
-              "color": "#14b8a6",
-              "type": "expense"
-            },
-            {
-              "id": "cat-33",
-              "name": "Bonus",
-              "icon": "sparkles",
-              "color": "#fbbf24",
-              "type": "income"
             },
             {
               "name": "Side gig income",
@@ -20097,6 +19927,20 @@
               "type": "expense"
             },
             {
+              "id": "cat-26",
+              "name": "Insurance",
+              "icon": "umbrella",
+              "color": "#0ea5e9",
+              "type": "expense"
+            },
+            {
+              "id": "cat-27",
+              "name": "Loan / EMI",
+              "icon": "banknote",
+              "color": "#f43f5e",
+              "type": "expense"
+            },
+            {
               "id": "cat-9",
               "name": "Salary",
               "icon": "briefcase",
@@ -20104,17 +19948,17 @@
               "type": "income"
             },
             {
-              "id": "cat-10",
-              "name": "Side income",
-              "icon": "laptop",
-              "color": "#146b54",
-              "type": "income"
-            },
-            {
               "id": "cat-23",
               "name": "Interest",
               "icon": "dollar-sign",
               "color": "#10b981",
+              "type": "income"
+            },
+            {
+              "id": "cat-33",
+              "name": "Bonus",
+              "icon": "sparkles",
+              "color": "#fbbf24",
               "type": "income"
             },
             {
@@ -20130,34 +19974,6 @@
               "icon": "circle-ellipsis",
               "color": "#94a3b8",
               "type": "both"
-            },
-            {
-              "id": "cat-26",
-              "name": "Insurance",
-              "icon": "umbrella",
-              "color": "#0ea5e9",
-              "type": "expense"
-            },
-            {
-              "id": "cat-27",
-              "name": "Loan / EMI",
-              "icon": "banknote",
-              "color": "#f43f5e",
-              "type": "expense"
-            },
-            {
-              "id": "cat-29",
-              "name": "Fitness & Wellness",
-              "icon": "dumbbell",
-              "color": "#14b8a6",
-              "type": "expense"
-            },
-            {
-              "id": "cat-33",
-              "name": "Bonus",
-              "icon": "sparkles",
-              "color": "#fbbf24",
-              "type": "income"
             }
           ],
           "goals": []
@@ -20168,7 +19984,7 @@
       "fn": "decodePersisted",
       "name": "v1",
       "args": [
-        "{\"version\":1,\"state\":{\"accounts\":[{\"id\":\"a\",\"name\":\"a\",\"type\":\"savings\",\"color\":\"#000\",\"icon\":\"landmark\",\"balance\":750,\"createdAt\":\"2026-01-01T00:00:00.000Z\",\"currency\":\"INR\"},{\"id\":\"b\",\"name\":\"b\",\"type\":\"savings\",\"color\":\"#000\",\"icon\":\"landmark\",\"balance\":1200,\"createdAt\":\"2026-01-01T00:00:00.000Z\"}],\"transactions\":[{\"id\":\"t1\",\"type\":\"expense\",\"amount\":250,\"accountId\":\"a\",\"categoryId\":\"cat-1\",\"date\":\"2026-06-01T00:00:00.000Z\",\"note\":\"\",\"labels\":[],\"createdAt\":\"2026-06-01T00:00:00.000Z\"},{\"id\":\"t2\",\"type\":\"transfer\",\"amount\":200,\"accountId\":\"a\",\"categoryId\":\"cat-1\",\"date\":\"2026-06-01T00:00:00.000Z\",\"note\":\"\",\"labels\":[],\"createdAt\":\"2026-06-01T00:00:00.000Z\",\"toAccountId\":\"b\"}],\"categories\":[{\"id\":\"cat-1\",\"name\":\"Food\",\"icon\":\"utensils\",\"color\":\"#ef4444\",\"type\":\"expense\"},{\"id\":\"cat-2\",\"name\":\"Transport\",\"icon\":\"car\",\"color\":\"#f97316\",\"type\":\"expense\"},{\"id\":\"cat-3\",\"name\":\"Shopping\",\"icon\":\"shopping-bag\",\"color\":\"#8b5cf6\",\"type\":\"expense\"},{\"id\":\"cat-4\",\"name\":\"Entertainment\",\"icon\":\"film\",\"color\":\"#ec4899\",\"type\":\"expense\"},{\"id\":\"cat-6\",\"name\":\"Healthcare\",\"icon\":\"heart-pulse\",\"color\":\"#10b981\",\"type\":\"expense\"},{\"id\":\"cat-8\",\"name\":\"Housing\",\"icon\":\"home\",\"color\":\"#64748b\",\"type\":\"expense\"},{\"id\":\"cat-15\",\"name\":\"Travel\",\"icon\":\"plane\",\"color\":\"#ef4444\",\"type\":\"expense\"},{\"id\":\"cat-16\",\"name\":\"Gifts\",\"icon\":\"gift\",\"color\":\"#f97316\",\"type\":\"expense\"},{\"id\":\"cat-17\",\"name\":\"Personal Care\",\"icon\":\"scissors\",\"color\":\"#8b5cf6\",\"type\":\"expense\"},{\"id\":\"cat-18\",\"name\":\"Subscriptions\",\"icon\":\"repeat\",\"color\":\"#ec4899\",\"type\":\"expense\"},{\"id\":\"cat-19\",\"name\":\"Vehicles\",\"icon\":\"truck\",\"color\":\"#06b6d4\",\"type\":\"expense\"},{\"id\":\"cat-20\",\"name\":\"Financial\",\"icon\":\"dollar-sign\",\"color\":\"#10b981\",\"type\":\"expense\"},{\"id\":\"cat-9\",\"name\":\"Salary\",\"icon\":\"briefcase\",\"color\":\"#22c55e\",\"type\":\"income\"},{\"id\":\"cat-10\",\"name\":\"Side income\",\"icon\":\"laptop\",\"color\":\"#146b54\",\"type\":\"income\"},{\"id\":\"cat-23\",\"name\":\"Interest\",\"icon\":\"dollar-sign\",\"color\":\"#10b981\",\"type\":\"income\"},{\"id\":\"cat-13\",\"name\":\"Transfer\",\"icon\":\"repeat\",\"color\":\"#3b82f6\",\"type\":\"both\"},{\"id\":\"cat-24\",\"name\":\"Miscellaneous\",\"icon\":\"circle-ellipsis\",\"color\":\"#94a3b8\",\"type\":\"both\"}],\"settings\":{\"theme\":\"dark\",\"currency\":\"USD\",\"userName\":\"Old\"}}}",
+        "{\"version\":1,\"state\":{\"accounts\":[{\"id\":\"a\",\"name\":\"a\",\"type\":\"savings\",\"color\":\"#000\",\"icon\":\"landmark\",\"balance\":750,\"createdAt\":\"2026-01-01T00:00:00.000Z\",\"currency\":\"INR\"},{\"id\":\"b\",\"name\":\"b\",\"type\":\"savings\",\"color\":\"#000\",\"icon\":\"landmark\",\"balance\":1200,\"createdAt\":\"2026-01-01T00:00:00.000Z\"}],\"transactions\":[{\"id\":\"t1\",\"type\":\"expense\",\"amount\":250,\"accountId\":\"a\",\"categoryId\":\"cat-1\",\"date\":\"2026-06-01T00:00:00.000Z\",\"note\":\"\",\"labels\":[],\"createdAt\":\"2026-06-01T00:00:00.000Z\"},{\"id\":\"t2\",\"type\":\"transfer\",\"amount\":200,\"accountId\":\"a\",\"categoryId\":\"cat-1\",\"date\":\"2026-06-01T00:00:00.000Z\",\"note\":\"\",\"labels\":[],\"createdAt\":\"2026-06-01T00:00:00.000Z\",\"toAccountId\":\"b\"}],\"categories\":[{\"id\":\"cat-1\",\"name\":\"Food\",\"icon\":\"utensils\",\"color\":\"#ef4444\",\"type\":\"expense\"},{\"id\":\"cat-2\",\"name\":\"Transport\",\"icon\":\"car\",\"color\":\"#f97316\",\"type\":\"expense\"},{\"id\":\"cat-3\",\"name\":\"Shopping\",\"icon\":\"shopping-bag\",\"color\":\"#8b5cf6\",\"type\":\"expense\"},{\"id\":\"cat-4\",\"name\":\"Entertainment\",\"icon\":\"film\",\"color\":\"#ec4899\",\"type\":\"expense\"},{\"id\":\"cat-6\",\"name\":\"Healthcare\",\"icon\":\"heart-pulse\",\"color\":\"#10b981\",\"type\":\"expense\"},{\"id\":\"cat-8\",\"name\":\"Housing\",\"icon\":\"home\",\"color\":\"#64748b\",\"type\":\"expense\"},{\"id\":\"cat-15\",\"name\":\"Travel\",\"icon\":\"plane\",\"color\":\"#ef4444\",\"type\":\"expense\"},{\"id\":\"cat-16\",\"name\":\"Gifts\",\"icon\":\"gift\",\"color\":\"#f97316\",\"type\":\"expense\"},{\"id\":\"cat-17\",\"name\":\"Personal Care\",\"icon\":\"scissors\",\"color\":\"#8b5cf6\",\"type\":\"expense\"},{\"id\":\"cat-18\",\"name\":\"Subscriptions\",\"icon\":\"repeat\",\"color\":\"#ec4899\",\"type\":\"expense\"},{\"id\":\"cat-19\",\"name\":\"Vehicles\",\"icon\":\"truck\",\"color\":\"#06b6d4\",\"type\":\"expense\"},{\"id\":\"cat-20\",\"name\":\"Financial\",\"icon\":\"dollar-sign\",\"color\":\"#10b981\",\"type\":\"expense\"},{\"id\":\"cat-9\",\"name\":\"Salary\",\"icon\":\"briefcase\",\"color\":\"#22c55e\",\"type\":\"income\"},{\"id\":\"cat-23\",\"name\":\"Interest\",\"icon\":\"dollar-sign\",\"color\":\"#10b981\",\"type\":\"income\"},{\"id\":\"cat-13\",\"name\":\"Transfer\",\"icon\":\"repeat\",\"color\":\"#3b82f6\",\"type\":\"both\"},{\"id\":\"cat-24\",\"name\":\"Miscellaneous\",\"icon\":\"circle-ellipsis\",\"color\":\"#94a3b8\",\"type\":\"both\"}],\"settings\":{\"theme\":\"dark\",\"currency\":\"USD\",\"userName\":\"Old\"}}}",
         "2026-06-15T12:00:00.000Z"
       ],
       "out": {
@@ -20312,13 +20128,6 @@
             "type": "income"
           },
           {
-            "id": "cat-10",
-            "name": "Side income",
-            "icon": "laptop",
-            "color": "#146b54",
-            "type": "income"
-          },
-          {
             "id": "cat-23",
             "name": "Interest",
             "icon": "dollar-sign",
@@ -20354,13 +20163,6 @@
             "type": "expense"
           },
           {
-            "id": "cat-29",
-            "name": "Fitness & Wellness",
-            "icon": "dumbbell",
-            "color": "#14b8a6",
-            "type": "expense"
-          },
-          {
             "id": "cat-33",
             "name": "Bonus",
             "icon": "sparkles",
@@ -20373,11 +20175,6 @@
             "id": "lbl-1",
             "name": "Essential",
             "color": "#22c55e"
-          },
-          {
-            "id": "lbl-2",
-            "name": "Discretionary",
-            "color": "#f59e0b"
           },
           {
             "id": "lbl-3",
@@ -20415,24 +20212,9 @@
             "color": "#06b6d4"
           },
           {
-            "id": "lbl-10",
-            "name": "Reimbursable",
-            "color": "#14b8a6"
-          },
-          {
             "id": "lbl-11",
             "name": "Business",
             "color": "#6366f1"
-          },
-          {
-            "id": "lbl-12",
-            "name": "One-time",
-            "color": "#f43f5e"
-          },
-          {
-            "id": "lbl-13",
-            "name": "Planned",
-            "color": "#0ea5e9"
           },
           {
             "id": "lbl-14",
@@ -20473,7 +20255,7 @@
       "fn": "decodePersisted",
       "name": "v4",
       "args": [
-        "{\"version\":4,\"state\":{\"accounts\":[{\"id\":\"a\",\"name\":\"a\",\"type\":\"savings\",\"color\":\"#000\",\"icon\":\"landmark\",\"balance\":750,\"createdAt\":\"2026-01-01T00:00:00.000Z\",\"openingBalance\":900},{\"id\":\"b\",\"name\":\"b\",\"type\":\"savings\",\"color\":\"#000\",\"icon\":\"landmark\",\"balance\":40,\"createdAt\":\"2026-01-01T00:00:00.000Z\"}],\"transactions\":[{\"id\":\"t1\",\"type\":\"expense\",\"amount\":250,\"accountId\":\"a\",\"categoryId\":\"cat-1\",\"date\":\"2026-06-01T00:00:00.000Z\",\"note\":\"\",\"labels\":[],\"createdAt\":\"2026-06-01T00:00:00.000Z\"}],\"budgets\":[{\"id\":\"b1\",\"categoryId\":\"cat-1\",\"amount\":500,\"createdAt\":\"2026-01-01\"}],\"recurring\":[{\"id\":\"r1\",\"type\":\"expense\",\"amount\":10,\"accountId\":\"a\",\"categoryId\":\"cat-1\",\"note\":\"\",\"labels\":[],\"frequency\":\"monthly\",\"startDate\":\"2026-01-01T00:00:00.000Z\",\"lastRunDate\":null,\"createdAt\":\"2026-01-01T00:00:00.000Z\"}],\"categories\":[{\"id\":\"cat-1\",\"name\":\"Food\",\"icon\":\"utensils\",\"color\":\"#ef4444\",\"type\":\"expense\"},{\"id\":\"cat-2\",\"name\":\"Transport\",\"icon\":\"car\",\"color\":\"#f97316\",\"type\":\"expense\"},{\"id\":\"cat-3\",\"name\":\"Shopping\",\"icon\":\"shopping-bag\",\"color\":\"#8b5cf6\",\"type\":\"expense\"},{\"id\":\"cat-4\",\"name\":\"Entertainment\",\"icon\":\"film\",\"color\":\"#ec4899\",\"type\":\"expense\"},{\"id\":\"cat-5\",\"name\":\"Utilities\",\"icon\":\"zap\",\"color\":\"#06b6d4\",\"type\":\"expense\"},{\"id\":\"cat-6\",\"name\":\"Healthcare\",\"icon\":\"heart-pulse\",\"color\":\"#10b981\",\"type\":\"expense\"},{\"id\":\"cat-8\",\"name\":\"Housing\",\"icon\":\"home\",\"color\":\"#64748b\",\"type\":\"expense\"},{\"id\":\"cat-15\",\"name\":\"Travel\",\"icon\":\"plane\",\"color\":\"#ef4444\",\"type\":\"expense\"},{\"id\":\"cat-16\",\"name\":\"Gifts\",\"icon\":\"gift\",\"color\":\"#f97316\",\"type\":\"expense\"},{\"id\":\"cat-17\",\"name\":\"Personal Care\",\"icon\":\"scissors\",\"color\":\"#8b5cf6\",\"type\":\"expense\"},{\"id\":\"cat-18\",\"name\":\"Subscriptions\",\"icon\":\"repeat\",\"color\":\"#ec4899\",\"type\":\"expense\"},{\"id\":\"cat-19\",\"name\":\"Vehicles\",\"icon\":\"truck\",\"color\":\"#06b6d4\",\"type\":\"expense\"},{\"id\":\"cat-20\",\"name\":\"Financial\",\"icon\":\"dollar-sign\",\"color\":\"#10b981\",\"type\":\"expense\"},{\"id\":\"cat-9\",\"name\":\"Salary\",\"icon\":\"briefcase\",\"color\":\"#22c55e\",\"type\":\"income\"},{\"id\":\"cat-10\",\"name\":\"Side income\",\"icon\":\"laptop\",\"color\":\"#146b54\",\"type\":\"income\"},{\"id\":\"cat-23\",\"name\":\"Interest\",\"icon\":\"dollar-sign\",\"color\":\"#10b981\",\"type\":\"income\"},{\"id\":\"cat-13\",\"name\":\"Transfer\",\"icon\":\"repeat\",\"color\":\"#3b82f6\",\"type\":\"both\"},{\"id\":\"cat-24\",\"name\":\"Miscellaneous\",\"icon\":\"circle-ellipsis\",\"color\":\"#94a3b8\",\"type\":\"both\"},{\"id\":\"cat-26\",\"name\":\"Insurance\",\"icon\":\"umbrella\",\"color\":\"#0ea5e9\",\"type\":\"expense\"},{\"id\":\"cat-27\",\"name\":\"Loan / EMI\",\"icon\":\"banknote\",\"color\":\"#f43f5e\",\"type\":\"expense\"},{\"id\":\"cat-29\",\"name\":\"Fitness & Wellness\",\"icon\":\"dumbbell\",\"color\":\"#14b8a6\",\"type\":\"expense\"},{\"id\":\"cat-33\",\"name\":\"Bonus\",\"icon\":\"sparkles\",\"color\":\"#fbbf24\",\"type\":\"income\"}],\"settings\":{\"theme\":\"light\",\"userName\":\"Four\",\"autoLocalBackup\":true,\"monthStartDay\":40},\"lastLocalBackupAt\":\"2026-01-02\"}}",
+        "{\"version\":4,\"state\":{\"accounts\":[{\"id\":\"a\",\"name\":\"a\",\"type\":\"savings\",\"color\":\"#000\",\"icon\":\"landmark\",\"balance\":750,\"createdAt\":\"2026-01-01T00:00:00.000Z\",\"openingBalance\":900},{\"id\":\"b\",\"name\":\"b\",\"type\":\"savings\",\"color\":\"#000\",\"icon\":\"landmark\",\"balance\":40,\"createdAt\":\"2026-01-01T00:00:00.000Z\"}],\"transactions\":[{\"id\":\"t1\",\"type\":\"expense\",\"amount\":250,\"accountId\":\"a\",\"categoryId\":\"cat-1\",\"date\":\"2026-06-01T00:00:00.000Z\",\"note\":\"\",\"labels\":[],\"createdAt\":\"2026-06-01T00:00:00.000Z\"}],\"budgets\":[{\"id\":\"b1\",\"categoryId\":\"cat-1\",\"amount\":500,\"createdAt\":\"2026-01-01\"}],\"recurring\":[{\"id\":\"r1\",\"type\":\"expense\",\"amount\":10,\"accountId\":\"a\",\"categoryId\":\"cat-1\",\"note\":\"\",\"labels\":[],\"frequency\":\"monthly\",\"startDate\":\"2026-01-01T00:00:00.000Z\",\"lastRunDate\":null,\"createdAt\":\"2026-01-01T00:00:00.000Z\"}],\"categories\":[{\"id\":\"cat-1\",\"name\":\"Food\",\"icon\":\"utensils\",\"color\":\"#ef4444\",\"type\":\"expense\"},{\"id\":\"cat-2\",\"name\":\"Transport\",\"icon\":\"car\",\"color\":\"#f97316\",\"type\":\"expense\"},{\"id\":\"cat-3\",\"name\":\"Shopping\",\"icon\":\"shopping-bag\",\"color\":\"#8b5cf6\",\"type\":\"expense\"},{\"id\":\"cat-4\",\"name\":\"Entertainment\",\"icon\":\"film\",\"color\":\"#ec4899\",\"type\":\"expense\"},{\"id\":\"cat-5\",\"name\":\"Utilities\",\"icon\":\"zap\",\"color\":\"#06b6d4\",\"type\":\"expense\"},{\"id\":\"cat-6\",\"name\":\"Healthcare\",\"icon\":\"heart-pulse\",\"color\":\"#10b981\",\"type\":\"expense\"},{\"id\":\"cat-8\",\"name\":\"Housing\",\"icon\":\"home\",\"color\":\"#64748b\",\"type\":\"expense\"},{\"id\":\"cat-15\",\"name\":\"Travel\",\"icon\":\"plane\",\"color\":\"#ef4444\",\"type\":\"expense\"},{\"id\":\"cat-16\",\"name\":\"Gifts\",\"icon\":\"gift\",\"color\":\"#f97316\",\"type\":\"expense\"},{\"id\":\"cat-17\",\"name\":\"Personal Care\",\"icon\":\"scissors\",\"color\":\"#8b5cf6\",\"type\":\"expense\"},{\"id\":\"cat-18\",\"name\":\"Subscriptions\",\"icon\":\"repeat\",\"color\":\"#ec4899\",\"type\":\"expense\"},{\"id\":\"cat-19\",\"name\":\"Vehicles\",\"icon\":\"truck\",\"color\":\"#06b6d4\",\"type\":\"expense\"},{\"id\":\"cat-20\",\"name\":\"Financial\",\"icon\":\"dollar-sign\",\"color\":\"#10b981\",\"type\":\"expense\"},{\"id\":\"cat-26\",\"name\":\"Insurance\",\"icon\":\"umbrella\",\"color\":\"#0ea5e9\",\"type\":\"expense\"},{\"id\":\"cat-27\",\"name\":\"Loan / EMI\",\"icon\":\"banknote\",\"color\":\"#f43f5e\",\"type\":\"expense\"},{\"id\":\"cat-9\",\"name\":\"Salary\",\"icon\":\"briefcase\",\"color\":\"#22c55e\",\"type\":\"income\"},{\"id\":\"cat-23\",\"name\":\"Interest\",\"icon\":\"dollar-sign\",\"color\":\"#10b981\",\"type\":\"income\"},{\"id\":\"cat-33\",\"name\":\"Bonus\",\"icon\":\"sparkles\",\"color\":\"#fbbf24\",\"type\":\"income\"},{\"id\":\"cat-13\",\"name\":\"Transfer\",\"icon\":\"repeat\",\"color\":\"#3b82f6\",\"type\":\"both\"},{\"id\":\"cat-24\",\"name\":\"Miscellaneous\",\"icon\":\"circle-ellipsis\",\"color\":\"#94a3b8\",\"type\":\"both\"}],\"settings\":{\"theme\":\"light\",\"userName\":\"Four\",\"autoLocalBackup\":true,\"monthStartDay\":40},\"lastLocalBackupAt\":\"2026-01-02\"}}",
         "2026-06-15T12:00:00.000Z"
       ],
       "out": {
@@ -20605,6 +20387,20 @@
             "type": "expense"
           },
           {
+            "id": "cat-26",
+            "name": "Insurance",
+            "icon": "umbrella",
+            "color": "#0ea5e9",
+            "type": "expense"
+          },
+          {
+            "id": "cat-27",
+            "name": "Loan / EMI",
+            "icon": "banknote",
+            "color": "#f43f5e",
+            "type": "expense"
+          },
+          {
             "id": "cat-9",
             "name": "Salary",
             "icon": "briefcase",
@@ -20612,17 +20408,17 @@
             "type": "income"
           },
           {
-            "id": "cat-10",
-            "name": "Side income",
-            "icon": "laptop",
-            "color": "#146b54",
-            "type": "income"
-          },
-          {
             "id": "cat-23",
             "name": "Interest",
             "icon": "dollar-sign",
             "color": "#10b981",
+            "type": "income"
+          },
+          {
+            "id": "cat-33",
+            "name": "Bonus",
+            "icon": "sparkles",
+            "color": "#fbbf24",
             "type": "income"
           },
           {
@@ -20638,34 +20434,6 @@
             "icon": "circle-ellipsis",
             "color": "#94a3b8",
             "type": "both"
-          },
-          {
-            "id": "cat-26",
-            "name": "Insurance",
-            "icon": "umbrella",
-            "color": "#0ea5e9",
-            "type": "expense"
-          },
-          {
-            "id": "cat-27",
-            "name": "Loan / EMI",
-            "icon": "banknote",
-            "color": "#f43f5e",
-            "type": "expense"
-          },
-          {
-            "id": "cat-29",
-            "name": "Fitness & Wellness",
-            "icon": "dumbbell",
-            "color": "#14b8a6",
-            "type": "expense"
-          },
-          {
-            "id": "cat-33",
-            "name": "Bonus",
-            "icon": "sparkles",
-            "color": "#fbbf24",
-            "type": "income"
           }
         ],
         "labels": [
@@ -20673,11 +20441,6 @@
             "id": "lbl-1",
             "name": "Essential",
             "color": "#22c55e"
-          },
-          {
-            "id": "lbl-2",
-            "name": "Discretionary",
-            "color": "#f59e0b"
           },
           {
             "id": "lbl-3",
@@ -20715,24 +20478,9 @@
             "color": "#06b6d4"
           },
           {
-            "id": "lbl-10",
-            "name": "Reimbursable",
-            "color": "#14b8a6"
-          },
-          {
             "id": "lbl-11",
             "name": "Business",
             "color": "#6366f1"
-          },
-          {
-            "id": "lbl-12",
-            "name": "One-time",
-            "color": "#f43f5e"
-          },
-          {
-            "id": "lbl-13",
-            "name": "Planned",
-            "color": "#0ea5e9"
           },
           {
             "id": "lbl-14",
@@ -20797,7 +20545,7 @@
       "fn": "decodePersisted",
       "name": "v6",
       "args": [
-        "{\"version\":6,\"state\":{\"accounts\":[{\"id\":\"a\",\"name\":\"a\",\"type\":\"savings\",\"color\":\"#000\",\"icon\":\"landmark\",\"balance\":100,\"createdAt\":\"2026-01-01T00:00:00.000Z\",\"openingBalance\":100}],\"transactions\":[],\"budgets\":[{\"id\":\"b1\",\"categoryId\":\"\",\"amount\":500,\"period\":\"weekly\",\"createdAt\":\"2026-01-01\"}],\"recurring\":[],\"categories\":[{\"id\":\"cat-1\",\"name\":\"Food\",\"icon\":\"utensils\",\"color\":\"#ef4444\",\"type\":\"expense\"},{\"id\":\"cat-2\",\"name\":\"Transport\",\"icon\":\"car\",\"color\":\"#f97316\",\"type\":\"expense\"},{\"id\":\"cat-3\",\"name\":\"Shopping\",\"icon\":\"shopping-bag\",\"color\":\"#8b5cf6\",\"type\":\"expense\"},{\"id\":\"cat-4\",\"name\":\"Entertainment\",\"icon\":\"film\",\"color\":\"#ec4899\",\"type\":\"expense\"},{\"id\":\"cat-5\",\"name\":\"Utilities\",\"icon\":\"zap\",\"color\":\"#06b6d4\",\"type\":\"expense\"},{\"id\":\"cat-6\",\"name\":\"Healthcare\",\"icon\":\"heart-pulse\",\"color\":\"#10b981\",\"type\":\"expense\"},{\"id\":\"cat-8\",\"name\":\"Housing\",\"icon\":\"home\",\"color\":\"#64748b\",\"type\":\"expense\"},{\"id\":\"cat-15\",\"name\":\"Travel\",\"icon\":\"plane\",\"color\":\"#ef4444\",\"type\":\"expense\"},{\"id\":\"cat-16\",\"name\":\"Gifts\",\"icon\":\"gift\",\"color\":\"#f97316\",\"type\":\"expense\"},{\"id\":\"cat-17\",\"name\":\"Personal Care\",\"icon\":\"scissors\",\"color\":\"#8b5cf6\",\"type\":\"expense\"},{\"id\":\"cat-18\",\"name\":\"Subscriptions\",\"icon\":\"repeat\",\"color\":\"#ec4899\",\"type\":\"expense\"},{\"id\":\"cat-19\",\"name\":\"Vehicles\",\"icon\":\"truck\",\"color\":\"#06b6d4\",\"type\":\"expense\"},{\"id\":\"cat-20\",\"name\":\"Financial\",\"icon\":\"dollar-sign\",\"color\":\"#10b981\",\"type\":\"expense\"},{\"id\":\"cat-9\",\"name\":\"Salary\",\"icon\":\"briefcase\",\"color\":\"#22c55e\",\"type\":\"income\"},{\"id\":\"cat-10\",\"name\":\"Side income\",\"icon\":\"laptop\",\"color\":\"#146b54\",\"type\":\"income\"},{\"id\":\"cat-23\",\"name\":\"Interest\",\"icon\":\"dollar-sign\",\"color\":\"#10b981\",\"type\":\"income\"},{\"id\":\"cat-13\",\"name\":\"Transfer\",\"icon\":\"repeat\",\"color\":\"#3b82f6\",\"type\":\"both\"},{\"id\":\"cat-24\",\"name\":\"Miscellaneous\",\"icon\":\"circle-ellipsis\",\"color\":\"#94a3b8\",\"type\":\"both\"},{\"id\":\"cat-26\",\"name\":\"Insurance\",\"icon\":\"umbrella\",\"color\":\"#0ea5e9\",\"type\":\"expense\"},{\"id\":\"cat-27\",\"name\":\"Loan / EMI\",\"icon\":\"banknote\",\"color\":\"#f43f5e\",\"type\":\"expense\"},{\"id\":\"cat-29\",\"name\":\"Fitness & Wellness\",\"icon\":\"dumbbell\",\"color\":\"#14b8a6\",\"type\":\"expense\"},{\"id\":\"cat-33\",\"name\":\"Bonus\",\"icon\":\"sparkles\",\"color\":\"#fbbf24\",\"type\":\"income\"}],\"settings\":{\"theme\":\"dark\",\"userName\":\"Alex\",\"autoLocalBackup\":false,\"onboardedAt\":\"2025-01-01T00:00:00.000Z\"}}}",
+        "{\"version\":6,\"state\":{\"accounts\":[{\"id\":\"a\",\"name\":\"a\",\"type\":\"savings\",\"color\":\"#000\",\"icon\":\"landmark\",\"balance\":100,\"createdAt\":\"2026-01-01T00:00:00.000Z\",\"openingBalance\":100}],\"transactions\":[],\"budgets\":[{\"id\":\"b1\",\"categoryId\":\"\",\"amount\":500,\"period\":\"weekly\",\"createdAt\":\"2026-01-01\"}],\"recurring\":[],\"categories\":[{\"id\":\"cat-1\",\"name\":\"Food\",\"icon\":\"utensils\",\"color\":\"#ef4444\",\"type\":\"expense\"},{\"id\":\"cat-2\",\"name\":\"Transport\",\"icon\":\"car\",\"color\":\"#f97316\",\"type\":\"expense\"},{\"id\":\"cat-3\",\"name\":\"Shopping\",\"icon\":\"shopping-bag\",\"color\":\"#8b5cf6\",\"type\":\"expense\"},{\"id\":\"cat-4\",\"name\":\"Entertainment\",\"icon\":\"film\",\"color\":\"#ec4899\",\"type\":\"expense\"},{\"id\":\"cat-5\",\"name\":\"Utilities\",\"icon\":\"zap\",\"color\":\"#06b6d4\",\"type\":\"expense\"},{\"id\":\"cat-6\",\"name\":\"Healthcare\",\"icon\":\"heart-pulse\",\"color\":\"#10b981\",\"type\":\"expense\"},{\"id\":\"cat-8\",\"name\":\"Housing\",\"icon\":\"home\",\"color\":\"#64748b\",\"type\":\"expense\"},{\"id\":\"cat-15\",\"name\":\"Travel\",\"icon\":\"plane\",\"color\":\"#ef4444\",\"type\":\"expense\"},{\"id\":\"cat-16\",\"name\":\"Gifts\",\"icon\":\"gift\",\"color\":\"#f97316\",\"type\":\"expense\"},{\"id\":\"cat-17\",\"name\":\"Personal Care\",\"icon\":\"scissors\",\"color\":\"#8b5cf6\",\"type\":\"expense\"},{\"id\":\"cat-18\",\"name\":\"Subscriptions\",\"icon\":\"repeat\",\"color\":\"#ec4899\",\"type\":\"expense\"},{\"id\":\"cat-19\",\"name\":\"Vehicles\",\"icon\":\"truck\",\"color\":\"#06b6d4\",\"type\":\"expense\"},{\"id\":\"cat-20\",\"name\":\"Financial\",\"icon\":\"dollar-sign\",\"color\":\"#10b981\",\"type\":\"expense\"},{\"id\":\"cat-26\",\"name\":\"Insurance\",\"icon\":\"umbrella\",\"color\":\"#0ea5e9\",\"type\":\"expense\"},{\"id\":\"cat-27\",\"name\":\"Loan / EMI\",\"icon\":\"banknote\",\"color\":\"#f43f5e\",\"type\":\"expense\"},{\"id\":\"cat-9\",\"name\":\"Salary\",\"icon\":\"briefcase\",\"color\":\"#22c55e\",\"type\":\"income\"},{\"id\":\"cat-23\",\"name\":\"Interest\",\"icon\":\"dollar-sign\",\"color\":\"#10b981\",\"type\":\"income\"},{\"id\":\"cat-33\",\"name\":\"Bonus\",\"icon\":\"sparkles\",\"color\":\"#fbbf24\",\"type\":\"income\"},{\"id\":\"cat-13\",\"name\":\"Transfer\",\"icon\":\"repeat\",\"color\":\"#3b82f6\",\"type\":\"both\"},{\"id\":\"cat-24\",\"name\":\"Miscellaneous\",\"icon\":\"circle-ellipsis\",\"color\":\"#94a3b8\",\"type\":\"both\"}],\"settings\":{\"theme\":\"dark\",\"userName\":\"Alex\",\"autoLocalBackup\":false,\"onboardedAt\":\"2025-01-01T00:00:00.000Z\"}}}",
         "2026-06-15T12:00:00.000Z"
       ],
       "out": {
@@ -20907,6 +20655,20 @@
             "type": "expense"
           },
           {
+            "id": "cat-26",
+            "name": "Insurance",
+            "icon": "umbrella",
+            "color": "#0ea5e9",
+            "type": "expense"
+          },
+          {
+            "id": "cat-27",
+            "name": "Loan / EMI",
+            "icon": "banknote",
+            "color": "#f43f5e",
+            "type": "expense"
+          },
+          {
             "id": "cat-9",
             "name": "Salary",
             "icon": "briefcase",
@@ -20914,17 +20676,17 @@
             "type": "income"
           },
           {
-            "id": "cat-10",
-            "name": "Side income",
-            "icon": "laptop",
-            "color": "#146b54",
-            "type": "income"
-          },
-          {
             "id": "cat-23",
             "name": "Interest",
             "icon": "dollar-sign",
             "color": "#10b981",
+            "type": "income"
+          },
+          {
+            "id": "cat-33",
+            "name": "Bonus",
+            "icon": "sparkles",
+            "color": "#fbbf24",
             "type": "income"
           },
           {
@@ -20940,34 +20702,6 @@
             "icon": "circle-ellipsis",
             "color": "#94a3b8",
             "type": "both"
-          },
-          {
-            "id": "cat-26",
-            "name": "Insurance",
-            "icon": "umbrella",
-            "color": "#0ea5e9",
-            "type": "expense"
-          },
-          {
-            "id": "cat-27",
-            "name": "Loan / EMI",
-            "icon": "banknote",
-            "color": "#f43f5e",
-            "type": "expense"
-          },
-          {
-            "id": "cat-29",
-            "name": "Fitness & Wellness",
-            "icon": "dumbbell",
-            "color": "#14b8a6",
-            "type": "expense"
-          },
-          {
-            "id": "cat-33",
-            "name": "Bonus",
-            "icon": "sparkles",
-            "color": "#fbbf24",
-            "type": "income"
           }
         ],
         "labels": [
@@ -20975,11 +20709,6 @@
             "id": "lbl-1",
             "name": "Essential",
             "color": "#22c55e"
-          },
-          {
-            "id": "lbl-2",
-            "name": "Discretionary",
-            "color": "#f59e0b"
           },
           {
             "id": "lbl-3",
@@ -21017,24 +20746,9 @@
             "color": "#06b6d4"
           },
           {
-            "id": "lbl-10",
-            "name": "Reimbursable",
-            "color": "#14b8a6"
-          },
-          {
             "id": "lbl-11",
             "name": "Business",
             "color": "#6366f1"
-          },
-          {
-            "id": "lbl-12",
-            "name": "One-time",
-            "color": "#f43f5e"
-          },
-          {
-            "id": "lbl-13",
-            "name": "Planned",
-            "color": "#0ea5e9"
           },
           {
             "id": "lbl-14",
@@ -21084,7 +20798,7 @@
       "fn": "decodePersisted",
       "name": "v12",
       "args": [
-        "{\"version\":12,\"state\":{\"accounts\":[{\"id\":\"a\",\"name\":\"a\",\"type\":\"savings\",\"color\":\"#000\",\"icon\":\"landmark\",\"balance\":100,\"createdAt\":\"2026-01-01T00:00:00.000Z\",\"openingBalance\":100}],\"transactions\":[],\"categories\":[{\"id\":\"cat-1\",\"name\":\"Food\",\"icon\":\"utensils\",\"color\":\"#ef4444\",\"type\":\"expense\"},{\"id\":\"cat-2\",\"name\":\"Transport\",\"icon\":\"car\",\"color\":\"#f97316\",\"type\":\"expense\"},{\"id\":\"cat-3\",\"name\":\"Shopping\",\"icon\":\"shopping-bag\",\"color\":\"#8b5cf6\",\"type\":\"expense\"},{\"id\":\"cat-4\",\"name\":\"Entertainment\",\"icon\":\"film\",\"color\":\"#ec4899\",\"type\":\"expense\"},{\"id\":\"cat-5\",\"name\":\"Utilities\",\"icon\":\"zap\",\"color\":\"#06b6d4\",\"type\":\"expense\"},{\"id\":\"cat-6\",\"name\":\"Healthcare\",\"icon\":\"heart-pulse\",\"color\":\"#10b981\",\"type\":\"expense\"},{\"id\":\"cat-8\",\"name\":\"Housing\",\"icon\":\"home\",\"color\":\"#64748b\",\"type\":\"expense\"},{\"id\":\"cat-15\",\"name\":\"Travel\",\"icon\":\"plane\",\"color\":\"#ef4444\",\"type\":\"expense\"},{\"id\":\"cat-16\",\"name\":\"Gifts\",\"icon\":\"gift\",\"color\":\"#f97316\",\"type\":\"expense\"},{\"id\":\"cat-17\",\"name\":\"Personal Care\",\"icon\":\"scissors\",\"color\":\"#8b5cf6\",\"type\":\"expense\"},{\"id\":\"cat-18\",\"name\":\"Subscriptions\",\"icon\":\"repeat\",\"color\":\"#ec4899\",\"type\":\"expense\"},{\"id\":\"cat-19\",\"name\":\"Vehicles\",\"icon\":\"truck\",\"color\":\"#06b6d4\",\"type\":\"expense\"},{\"id\":\"cat-20\",\"name\":\"Financial\",\"icon\":\"dollar-sign\",\"color\":\"#10b981\",\"type\":\"expense\"},{\"id\":\"cat-9\",\"name\":\"Salary\",\"icon\":\"briefcase\",\"color\":\"#22c55e\",\"type\":\"income\"},{\"id\":\"cat-10\",\"name\":\"Side income\",\"icon\":\"laptop\",\"color\":\"#146b54\",\"type\":\"income\"},{\"id\":\"cat-23\",\"name\":\"Interest\",\"icon\":\"dollar-sign\",\"color\":\"#10b981\",\"type\":\"income\"},{\"id\":\"cat-13\",\"name\":\"Transfer\",\"icon\":\"repeat\",\"color\":\"#3b82f6\",\"type\":\"both\"},{\"id\":\"cat-24\",\"name\":\"Miscellaneous\",\"icon\":\"circle-ellipsis\",\"color\":\"#94a3b8\",\"type\":\"both\"},{\"id\":\"cat-26\",\"name\":\"Insurance\",\"icon\":\"umbrella\",\"color\":\"#0ea5e9\",\"type\":\"expense\"},{\"id\":\"cat-27\",\"name\":\"Loan / EMI\",\"icon\":\"banknote\",\"color\":\"#f43f5e\",\"type\":\"expense\"},{\"id\":\"cat-29\",\"name\":\"Fitness & Wellness\",\"icon\":\"dumbbell\",\"color\":\"#14b8a6\",\"type\":\"expense\"},{\"id\":\"cat-33\",\"name\":\"Bonus\",\"icon\":\"sparkles\",\"color\":\"#fbbf24\",\"type\":\"income\"}],\"settings\":{\"theme\":\"dark\",\"userName\":\"Alex\",\"autoLocalBackup\":false,\"monthStartDay\":25,\"hideAmounts\":true,\"onboardedAt\":\"2025-01-01T00:00:00.000Z\",\"notifyBills\":false}}}",
+        "{\"version\":12,\"state\":{\"accounts\":[{\"id\":\"a\",\"name\":\"a\",\"type\":\"savings\",\"color\":\"#000\",\"icon\":\"landmark\",\"balance\":100,\"createdAt\":\"2026-01-01T00:00:00.000Z\",\"openingBalance\":100}],\"transactions\":[],\"categories\":[{\"id\":\"cat-1\",\"name\":\"Food\",\"icon\":\"utensils\",\"color\":\"#ef4444\",\"type\":\"expense\"},{\"id\":\"cat-2\",\"name\":\"Transport\",\"icon\":\"car\",\"color\":\"#f97316\",\"type\":\"expense\"},{\"id\":\"cat-3\",\"name\":\"Shopping\",\"icon\":\"shopping-bag\",\"color\":\"#8b5cf6\",\"type\":\"expense\"},{\"id\":\"cat-4\",\"name\":\"Entertainment\",\"icon\":\"film\",\"color\":\"#ec4899\",\"type\":\"expense\"},{\"id\":\"cat-5\",\"name\":\"Utilities\",\"icon\":\"zap\",\"color\":\"#06b6d4\",\"type\":\"expense\"},{\"id\":\"cat-6\",\"name\":\"Healthcare\",\"icon\":\"heart-pulse\",\"color\":\"#10b981\",\"type\":\"expense\"},{\"id\":\"cat-8\",\"name\":\"Housing\",\"icon\":\"home\",\"color\":\"#64748b\",\"type\":\"expense\"},{\"id\":\"cat-15\",\"name\":\"Travel\",\"icon\":\"plane\",\"color\":\"#ef4444\",\"type\":\"expense\"},{\"id\":\"cat-16\",\"name\":\"Gifts\",\"icon\":\"gift\",\"color\":\"#f97316\",\"type\":\"expense\"},{\"id\":\"cat-17\",\"name\":\"Personal Care\",\"icon\":\"scissors\",\"color\":\"#8b5cf6\",\"type\":\"expense\"},{\"id\":\"cat-18\",\"name\":\"Subscriptions\",\"icon\":\"repeat\",\"color\":\"#ec4899\",\"type\":\"expense\"},{\"id\":\"cat-19\",\"name\":\"Vehicles\",\"icon\":\"truck\",\"color\":\"#06b6d4\",\"type\":\"expense\"},{\"id\":\"cat-20\",\"name\":\"Financial\",\"icon\":\"dollar-sign\",\"color\":\"#10b981\",\"type\":\"expense\"},{\"id\":\"cat-26\",\"name\":\"Insurance\",\"icon\":\"umbrella\",\"color\":\"#0ea5e9\",\"type\":\"expense\"},{\"id\":\"cat-27\",\"name\":\"Loan / EMI\",\"icon\":\"banknote\",\"color\":\"#f43f5e\",\"type\":\"expense\"},{\"id\":\"cat-9\",\"name\":\"Salary\",\"icon\":\"briefcase\",\"color\":\"#22c55e\",\"type\":\"income\"},{\"id\":\"cat-23\",\"name\":\"Interest\",\"icon\":\"dollar-sign\",\"color\":\"#10b981\",\"type\":\"income\"},{\"id\":\"cat-33\",\"name\":\"Bonus\",\"icon\":\"sparkles\",\"color\":\"#fbbf24\",\"type\":\"income\"},{\"id\":\"cat-13\",\"name\":\"Transfer\",\"icon\":\"repeat\",\"color\":\"#3b82f6\",\"type\":\"both\"},{\"id\":\"cat-24\",\"name\":\"Miscellaneous\",\"icon\":\"circle-ellipsis\",\"color\":\"#94a3b8\",\"type\":\"both\"}],\"settings\":{\"theme\":\"dark\",\"userName\":\"Alex\",\"autoLocalBackup\":false,\"monthStartDay\":25,\"hideAmounts\":true,\"onboardedAt\":\"2025-01-01T00:00:00.000Z\",\"notifyBills\":false}}}",
         "2026-06-15T12:00:00.000Z"
       ],
       "out": {
@@ -21194,6 +20908,20 @@
             "type": "expense"
           },
           {
+            "id": "cat-26",
+            "name": "Insurance",
+            "icon": "umbrella",
+            "color": "#0ea5e9",
+            "type": "expense"
+          },
+          {
+            "id": "cat-27",
+            "name": "Loan / EMI",
+            "icon": "banknote",
+            "color": "#f43f5e",
+            "type": "expense"
+          },
+          {
             "id": "cat-9",
             "name": "Salary",
             "icon": "briefcase",
@@ -21201,17 +20929,17 @@
             "type": "income"
           },
           {
-            "id": "cat-10",
-            "name": "Side income",
-            "icon": "laptop",
-            "color": "#146b54",
-            "type": "income"
-          },
-          {
             "id": "cat-23",
             "name": "Interest",
             "icon": "dollar-sign",
             "color": "#10b981",
+            "type": "income"
+          },
+          {
+            "id": "cat-33",
+            "name": "Bonus",
+            "icon": "sparkles",
+            "color": "#fbbf24",
             "type": "income"
           },
           {
@@ -21227,34 +20955,6 @@
             "icon": "circle-ellipsis",
             "color": "#94a3b8",
             "type": "both"
-          },
-          {
-            "id": "cat-26",
-            "name": "Insurance",
-            "icon": "umbrella",
-            "color": "#0ea5e9",
-            "type": "expense"
-          },
-          {
-            "id": "cat-27",
-            "name": "Loan / EMI",
-            "icon": "banknote",
-            "color": "#f43f5e",
-            "type": "expense"
-          },
-          {
-            "id": "cat-29",
-            "name": "Fitness & Wellness",
-            "icon": "dumbbell",
-            "color": "#14b8a6",
-            "type": "expense"
-          },
-          {
-            "id": "cat-33",
-            "name": "Bonus",
-            "icon": "sparkles",
-            "color": "#fbbf24",
-            "type": "income"
           }
         ],
         "labels": [
@@ -21262,11 +20962,6 @@
             "id": "lbl-1",
             "name": "Essential",
             "color": "#22c55e"
-          },
-          {
-            "id": "lbl-2",
-            "name": "Discretionary",
-            "color": "#f59e0b"
           },
           {
             "id": "lbl-3",
@@ -21304,24 +20999,9 @@
             "color": "#06b6d4"
           },
           {
-            "id": "lbl-10",
-            "name": "Reimbursable",
-            "color": "#14b8a6"
-          },
-          {
             "id": "lbl-11",
             "name": "Business",
             "color": "#6366f1"
-          },
-          {
-            "id": "lbl-12",
-            "name": "One-time",
-            "color": "#f43f5e"
-          },
-          {
-            "id": "lbl-13",
-            "name": "Planned",
-            "color": "#0ea5e9"
           },
           {
             "id": "lbl-14",
@@ -21362,7 +21042,7 @@
       "fn": "decodePersisted",
       "name": "v15",
       "args": [
-        "{\"version\":15,\"state\":{\"accounts\":[],\"transactions\":[],\"categories\":[{\"id\":\"cat-1\",\"name\":\"Food\",\"icon\":\"utensils\",\"color\":\"#ef4444\",\"type\":\"expense\"},{\"id\":\"cat-2\",\"name\":\"Transport\",\"icon\":\"car\",\"color\":\"#f97316\",\"type\":\"expense\"},{\"id\":\"cat-3\",\"name\":\"Shopping\",\"icon\":\"shopping-bag\",\"color\":\"#8b5cf6\",\"type\":\"expense\"},{\"id\":\"cat-4\",\"name\":\"Entertainment\",\"icon\":\"film\",\"color\":\"#ec4899\",\"type\":\"expense\"},{\"id\":\"cat-5\",\"name\":\"Utilities\",\"icon\":\"zap\",\"color\":\"#06b6d4\",\"type\":\"expense\"},{\"id\":\"cat-6\",\"name\":\"Healthcare\",\"icon\":\"heart-pulse\",\"color\":\"#10b981\",\"type\":\"expense\"},{\"id\":\"cat-8\",\"name\":\"Housing\",\"icon\":\"home\",\"color\":\"#64748b\",\"type\":\"expense\"},{\"id\":\"cat-15\",\"name\":\"Travel\",\"icon\":\"plane\",\"color\":\"#ef4444\",\"type\":\"expense\"},{\"id\":\"cat-16\",\"name\":\"Gifts\",\"icon\":\"gift\",\"color\":\"#f97316\",\"type\":\"expense\"},{\"id\":\"cat-17\",\"name\":\"Personal Care\",\"icon\":\"scissors\",\"color\":\"#8b5cf6\",\"type\":\"expense\"},{\"id\":\"cat-18\",\"name\":\"Subscriptions\",\"icon\":\"repeat\",\"color\":\"#ec4899\",\"type\":\"expense\"},{\"id\":\"cat-19\",\"name\":\"Vehicles\",\"icon\":\"truck\",\"color\":\"#06b6d4\",\"type\":\"expense\"},{\"id\":\"cat-20\",\"name\":\"Financial\",\"icon\":\"dollar-sign\",\"color\":\"#10b981\",\"type\":\"expense\"},{\"id\":\"cat-9\",\"name\":\"Salary\",\"icon\":\"briefcase\",\"color\":\"#22c55e\",\"type\":\"income\"},{\"id\":\"cat-10\",\"name\":\"Side income\",\"icon\":\"laptop\",\"color\":\"#146b54\",\"type\":\"income\"},{\"id\":\"cat-23\",\"name\":\"Interest\",\"icon\":\"dollar-sign\",\"color\":\"#10b981\",\"type\":\"income\"},{\"id\":\"cat-13\",\"name\":\"Transfer\",\"icon\":\"repeat\",\"color\":\"#3b82f6\",\"type\":\"both\"},{\"id\":\"cat-24\",\"name\":\"Miscellaneous\",\"icon\":\"circle-ellipsis\",\"color\":\"#94a3b8\",\"type\":\"both\"},{\"id\":\"cat-26\",\"name\":\"Insurance\",\"icon\":\"umbrella\",\"color\":\"#0ea5e9\",\"type\":\"expense\"},{\"id\":\"cat-27\",\"name\":\"Loan / EMI\",\"icon\":\"banknote\",\"color\":\"#f43f5e\",\"type\":\"expense\"},{\"id\":\"cat-29\",\"name\":\"Fitness & Wellness\",\"icon\":\"dumbbell\",\"color\":\"#14b8a6\",\"type\":\"expense\"},{\"id\":\"cat-33\",\"name\":\"Bonus\",\"icon\":\"sparkles\",\"color\":\"#fbbf24\",\"type\":\"income\"}],\"loans\":[],\"settings\":{\"theme\":\"system\",\"trackingMode\":\"full\",\"amoledDark\":false,\"userName\":\"\",\"autoLocalBackup\":false,\"monthStartDay\":1,\"hideAmounts\":false,\"notificationsEnabled\":false,\"notifyBills\":true,\"notifyBudgets\":true,\"notifyCreditDue\":true,\"notifyLeadDays\":2,\"notifyDailyLog\":true,\"onboardedAt\":\"2025-01-01T00:00:00.000Z\"}}}",
+        "{\"version\":15,\"state\":{\"accounts\":[],\"transactions\":[],\"categories\":[{\"id\":\"cat-1\",\"name\":\"Food\",\"icon\":\"utensils\",\"color\":\"#ef4444\",\"type\":\"expense\"},{\"id\":\"cat-2\",\"name\":\"Transport\",\"icon\":\"car\",\"color\":\"#f97316\",\"type\":\"expense\"},{\"id\":\"cat-3\",\"name\":\"Shopping\",\"icon\":\"shopping-bag\",\"color\":\"#8b5cf6\",\"type\":\"expense\"},{\"id\":\"cat-4\",\"name\":\"Entertainment\",\"icon\":\"film\",\"color\":\"#ec4899\",\"type\":\"expense\"},{\"id\":\"cat-5\",\"name\":\"Utilities\",\"icon\":\"zap\",\"color\":\"#06b6d4\",\"type\":\"expense\"},{\"id\":\"cat-6\",\"name\":\"Healthcare\",\"icon\":\"heart-pulse\",\"color\":\"#10b981\",\"type\":\"expense\"},{\"id\":\"cat-8\",\"name\":\"Housing\",\"icon\":\"home\",\"color\":\"#64748b\",\"type\":\"expense\"},{\"id\":\"cat-15\",\"name\":\"Travel\",\"icon\":\"plane\",\"color\":\"#ef4444\",\"type\":\"expense\"},{\"id\":\"cat-16\",\"name\":\"Gifts\",\"icon\":\"gift\",\"color\":\"#f97316\",\"type\":\"expense\"},{\"id\":\"cat-17\",\"name\":\"Personal Care\",\"icon\":\"scissors\",\"color\":\"#8b5cf6\",\"type\":\"expense\"},{\"id\":\"cat-18\",\"name\":\"Subscriptions\",\"icon\":\"repeat\",\"color\":\"#ec4899\",\"type\":\"expense\"},{\"id\":\"cat-19\",\"name\":\"Vehicles\",\"icon\":\"truck\",\"color\":\"#06b6d4\",\"type\":\"expense\"},{\"id\":\"cat-20\",\"name\":\"Financial\",\"icon\":\"dollar-sign\",\"color\":\"#10b981\",\"type\":\"expense\"},{\"id\":\"cat-26\",\"name\":\"Insurance\",\"icon\":\"umbrella\",\"color\":\"#0ea5e9\",\"type\":\"expense\"},{\"id\":\"cat-27\",\"name\":\"Loan / EMI\",\"icon\":\"banknote\",\"color\":\"#f43f5e\",\"type\":\"expense\"},{\"id\":\"cat-9\",\"name\":\"Salary\",\"icon\":\"briefcase\",\"color\":\"#22c55e\",\"type\":\"income\"},{\"id\":\"cat-23\",\"name\":\"Interest\",\"icon\":\"dollar-sign\",\"color\":\"#10b981\",\"type\":\"income\"},{\"id\":\"cat-33\",\"name\":\"Bonus\",\"icon\":\"sparkles\",\"color\":\"#fbbf24\",\"type\":\"income\"},{\"id\":\"cat-13\",\"name\":\"Transfer\",\"icon\":\"repeat\",\"color\":\"#3b82f6\",\"type\":\"both\"},{\"id\":\"cat-24\",\"name\":\"Miscellaneous\",\"icon\":\"circle-ellipsis\",\"color\":\"#94a3b8\",\"type\":\"both\"}],\"loans\":[],\"settings\":{\"theme\":\"system\",\"trackingMode\":\"full\",\"amoledDark\":false,\"userName\":\"\",\"autoLocalBackup\":false,\"monthStartDay\":1,\"hideAmounts\":false,\"notificationsEnabled\":false,\"notifyBills\":true,\"notifyBudgets\":true,\"notifyCreditDue\":true,\"notifyLeadDays\":2,\"notifyDailyLog\":true,\"onboardedAt\":\"2025-01-01T00:00:00.000Z\"}}}",
         "2026-06-15T12:00:00.000Z"
       ],
       "out": {
@@ -21461,6 +21141,20 @@
             "type": "expense"
           },
           {
+            "id": "cat-26",
+            "name": "Insurance",
+            "icon": "umbrella",
+            "color": "#0ea5e9",
+            "type": "expense"
+          },
+          {
+            "id": "cat-27",
+            "name": "Loan / EMI",
+            "icon": "banknote",
+            "color": "#f43f5e",
+            "type": "expense"
+          },
+          {
             "id": "cat-9",
             "name": "Salary",
             "icon": "briefcase",
@@ -21468,17 +21162,17 @@
             "type": "income"
           },
           {
-            "id": "cat-10",
-            "name": "Side income",
-            "icon": "laptop",
-            "color": "#146b54",
-            "type": "income"
-          },
-          {
             "id": "cat-23",
             "name": "Interest",
             "icon": "dollar-sign",
             "color": "#10b981",
+            "type": "income"
+          },
+          {
+            "id": "cat-33",
+            "name": "Bonus",
+            "icon": "sparkles",
+            "color": "#fbbf24",
             "type": "income"
           },
           {
@@ -21494,34 +21188,6 @@
             "icon": "circle-ellipsis",
             "color": "#94a3b8",
             "type": "both"
-          },
-          {
-            "id": "cat-26",
-            "name": "Insurance",
-            "icon": "umbrella",
-            "color": "#0ea5e9",
-            "type": "expense"
-          },
-          {
-            "id": "cat-27",
-            "name": "Loan / EMI",
-            "icon": "banknote",
-            "color": "#f43f5e",
-            "type": "expense"
-          },
-          {
-            "id": "cat-29",
-            "name": "Fitness & Wellness",
-            "icon": "dumbbell",
-            "color": "#14b8a6",
-            "type": "expense"
-          },
-          {
-            "id": "cat-33",
-            "name": "Bonus",
-            "icon": "sparkles",
-            "color": "#fbbf24",
-            "type": "income"
           }
         ],
         "labels": [
@@ -21529,11 +21195,6 @@
             "id": "lbl-1",
             "name": "Essential",
             "color": "#22c55e"
-          },
-          {
-            "id": "lbl-2",
-            "name": "Discretionary",
-            "color": "#f59e0b"
           },
           {
             "id": "lbl-3",
@@ -21571,24 +21232,9 @@
             "color": "#06b6d4"
           },
           {
-            "id": "lbl-10",
-            "name": "Reimbursable",
-            "color": "#14b8a6"
-          },
-          {
             "id": "lbl-11",
             "name": "Business",
             "color": "#6366f1"
-          },
-          {
-            "id": "lbl-12",
-            "name": "One-time",
-            "color": "#f43f5e"
-          },
-          {
-            "id": "lbl-13",
-            "name": "Planned",
-            "color": "#0ea5e9"
           },
           {
             "id": "lbl-14",
@@ -21728,6 +21374,20 @@
             "type": "expense"
           },
           {
+            "id": "cat-26",
+            "name": "Insurance",
+            "icon": "umbrella",
+            "color": "#0ea5e9",
+            "type": "expense"
+          },
+          {
+            "id": "cat-27",
+            "name": "Loan / EMI",
+            "icon": "banknote",
+            "color": "#f43f5e",
+            "type": "expense"
+          },
+          {
             "id": "cat-9",
             "name": "Salary",
             "icon": "briefcase",
@@ -21735,17 +21395,17 @@
             "type": "income"
           },
           {
-            "id": "cat-10",
-            "name": "Side income",
-            "icon": "laptop",
-            "color": "#146b54",
-            "type": "income"
-          },
-          {
             "id": "cat-23",
             "name": "Interest",
             "icon": "dollar-sign",
             "color": "#10b981",
+            "type": "income"
+          },
+          {
+            "id": "cat-33",
+            "name": "Bonus",
+            "icon": "sparkles",
+            "color": "#fbbf24",
             "type": "income"
           },
           {
@@ -21761,34 +21421,6 @@
             "icon": "circle-ellipsis",
             "color": "#94a3b8",
             "type": "both"
-          },
-          {
-            "id": "cat-26",
-            "name": "Insurance",
-            "icon": "umbrella",
-            "color": "#0ea5e9",
-            "type": "expense"
-          },
-          {
-            "id": "cat-27",
-            "name": "Loan / EMI",
-            "icon": "banknote",
-            "color": "#f43f5e",
-            "type": "expense"
-          },
-          {
-            "id": "cat-29",
-            "name": "Fitness & Wellness",
-            "icon": "dumbbell",
-            "color": "#14b8a6",
-            "type": "expense"
-          },
-          {
-            "id": "cat-33",
-            "name": "Bonus",
-            "icon": "sparkles",
-            "color": "#fbbf24",
-            "type": "income"
           }
         ],
         "labels": [
@@ -21796,11 +21428,6 @@
             "id": "lbl-1",
             "name": "Essential",
             "color": "#22c55e"
-          },
-          {
-            "id": "lbl-2",
-            "name": "Discretionary",
-            "color": "#f59e0b"
           },
           {
             "id": "lbl-3",
@@ -21838,24 +21465,9 @@
             "color": "#06b6d4"
           },
           {
-            "id": "lbl-10",
-            "name": "Reimbursable",
-            "color": "#14b8a6"
-          },
-          {
             "id": "lbl-11",
             "name": "Business",
             "color": "#6366f1"
-          },
-          {
-            "id": "lbl-12",
-            "name": "One-time",
-            "color": "#f43f5e"
-          },
-          {
-            "id": "lbl-13",
-            "name": "Planned",
-            "color": "#0ea5e9"
           },
           {
             "id": "lbl-14",
@@ -21995,6 +21607,20 @@
             "type": "expense"
           },
           {
+            "id": "cat-26",
+            "name": "Insurance",
+            "icon": "umbrella",
+            "color": "#0ea5e9",
+            "type": "expense"
+          },
+          {
+            "id": "cat-27",
+            "name": "Loan / EMI",
+            "icon": "banknote",
+            "color": "#f43f5e",
+            "type": "expense"
+          },
+          {
             "id": "cat-9",
             "name": "Salary",
             "icon": "briefcase",
@@ -22002,17 +21628,17 @@
             "type": "income"
           },
           {
-            "id": "cat-10",
-            "name": "Side income",
-            "icon": "laptop",
-            "color": "#146b54",
-            "type": "income"
-          },
-          {
             "id": "cat-23",
             "name": "Interest",
             "icon": "dollar-sign",
             "color": "#10b981",
+            "type": "income"
+          },
+          {
+            "id": "cat-33",
+            "name": "Bonus",
+            "icon": "sparkles",
+            "color": "#fbbf24",
             "type": "income"
           },
           {
@@ -22028,34 +21654,6 @@
             "icon": "circle-ellipsis",
             "color": "#94a3b8",
             "type": "both"
-          },
-          {
-            "id": "cat-26",
-            "name": "Insurance",
-            "icon": "umbrella",
-            "color": "#0ea5e9",
-            "type": "expense"
-          },
-          {
-            "id": "cat-27",
-            "name": "Loan / EMI",
-            "icon": "banknote",
-            "color": "#f43f5e",
-            "type": "expense"
-          },
-          {
-            "id": "cat-29",
-            "name": "Fitness & Wellness",
-            "icon": "dumbbell",
-            "color": "#14b8a6",
-            "type": "expense"
-          },
-          {
-            "id": "cat-33",
-            "name": "Bonus",
-            "icon": "sparkles",
-            "color": "#fbbf24",
-            "type": "income"
           }
         ],
         "labels": [
@@ -22063,11 +21661,6 @@
             "id": "lbl-1",
             "name": "Essential",
             "color": "#22c55e"
-          },
-          {
-            "id": "lbl-2",
-            "name": "Discretionary",
-            "color": "#f59e0b"
           },
           {
             "id": "lbl-3",
@@ -22105,24 +21698,9 @@
             "color": "#06b6d4"
           },
           {
-            "id": "lbl-10",
-            "name": "Reimbursable",
-            "color": "#14b8a6"
-          },
-          {
             "id": "lbl-11",
             "name": "Business",
             "color": "#6366f1"
-          },
-          {
-            "id": "lbl-12",
-            "name": "One-time",
-            "color": "#f43f5e"
-          },
-          {
-            "id": "lbl-13",
-            "name": "Planned",
-            "color": "#0ea5e9"
           },
           {
             "id": "lbl-14",
@@ -22273,6 +21851,20 @@
             "type": "expense"
           },
           {
+            "id": "cat-26",
+            "name": "Insurance",
+            "icon": "umbrella",
+            "color": "#0ea5e9",
+            "type": "expense"
+          },
+          {
+            "id": "cat-27",
+            "name": "Loan / EMI",
+            "icon": "banknote",
+            "color": "#f43f5e",
+            "type": "expense"
+          },
+          {
             "id": "cat-9",
             "name": "Salary",
             "icon": "briefcase",
@@ -22280,17 +21872,17 @@
             "type": "income"
           },
           {
-            "id": "cat-10",
-            "name": "Side income",
-            "icon": "laptop",
-            "color": "#146b54",
-            "type": "income"
-          },
-          {
             "id": "cat-23",
             "name": "Interest",
             "icon": "dollar-sign",
             "color": "#10b981",
+            "type": "income"
+          },
+          {
+            "id": "cat-33",
+            "name": "Bonus",
+            "icon": "sparkles",
+            "color": "#fbbf24",
             "type": "income"
           },
           {
@@ -22306,34 +21898,6 @@
             "icon": "circle-ellipsis",
             "color": "#94a3b8",
             "type": "both"
-          },
-          {
-            "id": "cat-26",
-            "name": "Insurance",
-            "icon": "umbrella",
-            "color": "#0ea5e9",
-            "type": "expense"
-          },
-          {
-            "id": "cat-27",
-            "name": "Loan / EMI",
-            "icon": "banknote",
-            "color": "#f43f5e",
-            "type": "expense"
-          },
-          {
-            "id": "cat-29",
-            "name": "Fitness & Wellness",
-            "icon": "dumbbell",
-            "color": "#14b8a6",
-            "type": "expense"
-          },
-          {
-            "id": "cat-33",
-            "name": "Bonus",
-            "icon": "sparkles",
-            "color": "#fbbf24",
-            "type": "income"
           }
         ],
         "labels": [
@@ -22341,11 +21905,6 @@
             "id": "lbl-1",
             "name": "Essential",
             "color": "#22c55e"
-          },
-          {
-            "id": "lbl-2",
-            "name": "Discretionary",
-            "color": "#f59e0b"
           },
           {
             "id": "lbl-3",
@@ -22383,24 +21942,9 @@
             "color": "#06b6d4"
           },
           {
-            "id": "lbl-10",
-            "name": "Reimbursable",
-            "color": "#14b8a6"
-          },
-          {
             "id": "lbl-11",
             "name": "Business",
             "color": "#6366f1"
-          },
-          {
-            "id": "lbl-12",
-            "name": "One-time",
-            "color": "#f43f5e"
-          },
-          {
-            "id": "lbl-13",
-            "name": "Planned",
-            "color": "#0ea5e9"
           },
           {
             "id": "lbl-14",

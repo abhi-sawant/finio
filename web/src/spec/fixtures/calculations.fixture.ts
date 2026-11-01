@@ -333,7 +333,7 @@ export function buildLedger(): Ledger {
       labels: ['lbl-2'],
     }),
     txn('party-jun', 'expense', 6500, 'acc-card', 'cat-1', iso(2026, 6, 13, 22), 'Swiggy party'),
-    txn('fl-jun', 'income', 32000.5, 'acc-bank', 'cat-10', iso(2026, 6, 10, 12), 'Upwork payout'),
+    txn('fl-jun', 'income', 32000.5, 'acc-bank', 'cat-x', iso(2026, 6, 10, 12), 'Upwork payout'),
     txn('gift-dec', 'income', 2500, 'acc-cash', 'cat-21', iso(2025, 12, 25, 12), 'Gift from Mom'),
     txn('wallet-1', 'expense', 350, 'acc-wallet', 'cat-1', iso(2026, 5, 6, 13), 'Chai Point'),
     txn('old-1', 'expense', 1200, 'acc-old', 'cat-3', iso(2025, 12, 4, 12), 'Myntra'),

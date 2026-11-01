@@ -11,12 +11,21 @@ describe('generateSampleData', () => {
     const labelIds = new Set(defaultLabels.map((l) => l.id));
 
     for (const t of data.transactions) {
-      expect(categoryIds.has(t.categoryId)).toBe(true);
+      // A split transaction has no category of its own — its parts do.
+      if (!t.splits) expect(categoryIds.has(t.categoryId)).toBe(true);
       for (const labelId of t.labels) expect(labelIds.has(labelId)).toBe(true);
     }
     for (const b of data.budgets) {
       if (b.categoryId !== '') expect(categoryIds.has(b.categoryId)).toBe(true);
+      if (b.labelId) expect(labelIds.has(b.labelId)).toBe(true);
     }
+    for (const t of [...data.transactions, ...data.templates]) {
+      for (const s of t.splits ?? []) expect(categoryIds.has(s.categoryId)).toBe(true);
+    }
+    for (const t of data.templates) {
+      for (const labelId of t.labels) expect(labelIds.has(labelId)).toBe(true);
+    }
+    for (const l of data.loans) expect(categoryIds.has(l.categoryId)).toBe(true);
     for (const r of data.recurring) expect(categoryIds.has(r.categoryId)).toBe(true);
   });
 
@@ -37,6 +46,27 @@ describe('generateSampleData', () => {
     }
     for (const c of data.contributions) expect(goalKeys.has(c.goalKey)).toBe(true);
     for (const d of data.debtEntries) expect(personKeys.has(d.personKey)).toBe(true);
+  });
+
+  it('exercises the newer features', () => {
+    const data = generateSampleData(NOW);
+    expect(data.transactions.some((t) => t.splits)).toBe(true);
+    expect(data.budgets.some((b) => b.labelId)).toBe(true);
+    expect(data.deposits.map((d) => d.type).sort()).toEqual(['fd', 'rd']);
+    expect(data.loans.length).toBeGreaterThan(0);
+    expect(data.loanPrepayments.length).toBeGreaterThan(0);
+    expect(data.templates.some((t) => t.splits)).toBe(true);
+    expect(data.goals.some((g) => g.linkedAccountKey)).toBe(true);
+  });
+
+  it('keeps every split balanced and category-free on the parent', () => {
+    const data = generateSampleData(NOW);
+    for (const t of [...data.transactions, ...data.templates]) {
+      if (!t.splits) continue;
+      expect(t.categoryId).toBe('');
+      expect(t.splits.length).toBeGreaterThanOrEqual(2);
+      expect(t.splits.reduce((sum, s) => sum + s.amount, 0)).toBeCloseTo(t.amount, 2);
+    }
   });
 
   it('produces only positive amounts and parseable dates', () => {
@@ -63,6 +93,10 @@ describe('loadSampleData', () => {
       addRecurring: [],
       addContribution: [],
       addDebtEntry: [],
+      addDeposit: [],
+      addTemplate: [],
+      addLoan: [],
+      addLoanPrepayment: [],
       bulkAddTransactions: [],
     };
     const actions: SampleDataActions = {
@@ -92,6 +126,22 @@ describe('loadSampleData', () => {
       addDebtEntry: vi.fn((d) => {
         calls.addDebtEntry.push(d);
         return `debt-${nextId++}`;
+      }),
+      addDeposit: vi.fn((d) => {
+        calls.addDeposit.push(d);
+        return `acc-${nextId++}`;
+      }),
+      addTemplate: vi.fn((t) => {
+        calls.addTemplate.push(t);
+        return `template-${nextId++}`;
+      }),
+      addLoan: vi.fn((l) => {
+        calls.addLoan.push(l);
+        return `loan-${nextId++}`;
+      }),
+      addLoanPrepayment: vi.fn((p) => {
+        calls.addLoanPrepayment.push(p);
+        return `prepayment-${nextId++}`;
       }),
       bulkAddTransactions: vi.fn((t) => {
         calls.bulkAddTransactions.push(t);
@@ -132,15 +182,38 @@ describe('loadSampleData', () => {
     const { actions, calls } = fakeActions();
     loadSampleData(actions, NOW);
 
-    expect(calls.addDebtEntry).toHaveLength(1);
-    expect((calls.addDebtEntry[0] as { personId: string }).personId).toMatch(/^person-\d+$/);
+    expect(calls.addDebtEntry.length).toBeGreaterThan(0);
+    for (const e of calls.addDebtEntry as Array<{ personId: string }>) {
+      expect(e.personId).toMatch(/^person-\d+$/);
+    }
   });
 
   it('resolves the manual contribution to the real goal id', () => {
     const { actions, calls } = fakeActions();
     loadSampleData(actions, NOW);
 
-    expect(calls.addContribution).toHaveLength(1);
-    expect((calls.addContribution[0] as { goalId: string }).goalId).toMatch(/^goal-\d+$/);
+    expect(calls.addContribution.length).toBeGreaterThan(0);
+    for (const c of calls.addContribution as Array<{ goalId: string }>) {
+      expect(c.goalId).toMatch(/^goal-\d+$/);
+    }
+  });
+
+  it('resolves deposits, loans, prepayments and templates to real ids', () => {
+    const { actions, calls } = fakeActions();
+    loadSampleData(actions, NOW);
+
+    for (const d of calls.addDeposit as Array<{ terms: { linkedAccountId: string } }>) {
+      expect(d.terms.linkedAccountId).toMatch(/^acc-\d+$/);
+    }
+    for (const l of calls.addLoan as Array<{ accountId: string }>) {
+      expect(l.accountId).toMatch(/^acc-\d+$/);
+    }
+    expect(calls.addLoanPrepayment.length).toBeGreaterThan(0);
+    for (const p of calls.addLoanPrepayment as Array<{ loanId: string }>) {
+      expect(p.loanId).toMatch(/^loan-\d+$/);
+    }
+    for (const t of calls.addTemplate as Array<{ accountId: string }>) {
+      expect(t.accountId).toMatch(/^acc-\d+$/);
+    }
   });
 });
