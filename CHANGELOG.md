@@ -3,7 +3,7 @@
 Finio follows [Semantic Versioning](https://semver.org). The repo-root `VERSION` file is the single
 source of truth for both clients; see "Releasing" in [CLAUDE.md](CLAUDE.md).
 
-## Unreleased
+## 3.1.0 — 2026-11-04
 
 ### Added
 
@@ -17,6 +17,11 @@ source of truth for both clients; see "Releasing" in [CLAUDE.md](CLAUDE.md).
 - The chosen theme is a per-device preference stored on its own (web: `finio-visual-theme`; Android:
   its own `finio-visual-theme` SharedPreferences file); it is not in backups and does not change the
   backup format. The Android app has the same five themes and the same picker.
+
+### Changed
+
+- **Slightly larger install.** The web build and the Android APK now carry the fonts of the new
+  themes (about 2.6 MB more on Android); a font is only loaded once its theme is used.
 
 ## 3.0.4 — 2026-10-30
 
