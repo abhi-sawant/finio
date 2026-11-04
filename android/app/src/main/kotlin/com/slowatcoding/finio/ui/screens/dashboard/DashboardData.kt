@@ -77,6 +77,8 @@ data class DashboardData(
     val stats: DashboardQuickStats,
     val overallBudget: BudgetStatus?,
     val daysLeftInPeriod: Int,
+    /** 0–1: how far through the budget's period today is (Shunya's month line, Bagh's sun). */
+    val periodElapsed: Float,
     val periodNoun: String,
     val upcomingBillsTotal: Double,
     val safePerDay: Double,
@@ -109,6 +111,10 @@ fun computeDashboardData(s: FinanceState): DashboardData {
     val budgetPeriod = overallBudget?.budget?.period ?: BudgetPeriod.Monthly
     val range = periodRange(budgetPeriod.toPeriodType(), now, monthStartDay)
     val daysLeftInPeriod = max(1, differenceInCalendarDays(range.end, now) + 1)
+    val periodSpan = (range.end.toEpochMilli() - range.start.toEpochMilli()).toFloat()
+    val periodElapsed = if (periodSpan > 0f) {
+        ((now.toEpochMilli() - range.start.toEpochMilli()) / periodSpan).coerceIn(0f, 1f)
+    } else 0f
 
     // The overall budget has its own hero card, so it's excluded from the alert list.
     val nearLimitBudgets = allBudgetStatuses
@@ -192,6 +198,7 @@ fun computeDashboardData(s: FinanceState): DashboardData {
         stats = stats,
         overallBudget = overallBudget,
         daysLeftInPeriod = daysLeftInPeriod,
+        periodElapsed = periodElapsed,
         periodNoun = budgetPeriod.noun(),
         upcomingBillsTotal = upcomingBillsTotal,
         safePerDay = safePerDay,

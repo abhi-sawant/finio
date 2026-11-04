@@ -1,0 +1,326 @@
+/*
+ * Khata — the accountant's ledger. Celadon columnar paper, blue-black ink, a red margin rule.
+ * Near-square, ruled, serif figures; totals are underlined once and double-underlined at the foot,
+ * and the hero figure carries a paise column behind a red rule. Dense on purpose.
+ */
+html[data-visual-theme='khata'] {
+  --ff-heading: 'Source Serif 4 Variable', Georgia, serif;
+  --ff-money: 'Source Serif 4 Variable', Georgia, serif;
+  --ff-sans: 'Source Sans 3 Variable', system-ui, sans-serif;
+
+  --background: #e3ecd9;
+  --foreground: #14234a;
+  --card: #eef4e6;
+  --card-foreground: #14234a;
+  --popover: #f3f8ec;
+  --popover-foreground: #14234a;
+  --primary: #14234a;
+  --primary-foreground: #f3f7ec;
+  --secondary: #d5e2ca;
+  --secondary-foreground: #14234a;
+  --muted: #d5e2ca;
+  --muted-foreground: #46556e;
+  --accent: #cddbc1;
+  --accent-foreground: #14234a;
+  --destructive: #b8322a;
+  --destructive-foreground: #ffffff;
+  --positive: #1b6a42;
+  --warning: #8a5a00;
+  --border: #b4c9ab;
+  --input: rgb(20 35 74 / 0.45);
+  --ring: #b8322a;
+  --chart-1: #14234a;
+  --chart-2: #b8322a;
+  --chart-3: #8a5a00;
+  --chart-4: #1b6a42;
+  --chart-5: #3d6aa8;
+  --radius: 0.25rem;
+  --sidebar: #14234a;
+  --sidebar-foreground: #e8f0e0;
+  --sidebar-primary: #b8322a;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #b8322a;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #14234a;
+  --sidebar-ring: #b8322a;
+
+  --warning-band: #f6e0dc;
+  --warning-band-foreground: #5a1410;
+  --warning-band-accent: #b8322a;
+
+  --paper: none;
+  --engraving: transparent;
+  --glass: #eef4e6;
+  --glass-strong: #eef4e6;
+  --glass-border: rgb(20 35 74 / 0.5);
+  --glass-highlight: transparent;
+
+  --grad-primary: linear-gradient(#14234a, #14234a);
+  --grad-primary-soft: linear-gradient(#d5e2ca, #d5e2ca);
+  --grad-success: linear-gradient(#1b6a42, #1b6a42);
+  --grad-success-soft: linear-gradient(#d2e8d6, #d2e8d6);
+  --grad-danger: linear-gradient(#b8322a, #b8322a);
+  --grad-danger-soft: linear-gradient(#f2d6d2, #f2d6d2);
+  --grad-info: linear-gradient(#3d6aa8, #3d6aa8);
+  --grad-warning: linear-gradient(#8a5a00, #8a5a00);
+  --grad-surface: linear-gradient(#eef4e6, #eef4e6);
+  --coin: linear-gradient(#b8322a, #b8322a);
+  --coin-ink: #ffffff;
+  --register: repeating-linear-gradient(90deg, #14234a 0 2px, transparent 2px 7px);
+  --thread: repeating-linear-gradient(90deg, #14234a 0 2px, transparent 2px 7px);
+
+  --shadow-tint: 20 35 74;
+  --scrim: rgb(14 24 52 / 0.35);
+  --shadow-card: none;
+  --shadow-float: 0 14px 28px -14px rgb(20 35 74 / 0.5);
+  --shadow-primary: none;
+  --shadow-danger: none;
+  --shadow-success: none;
+
+  --note-100: linear-gradient(135deg, #d4e0f2, #c3d3ec);
+  --note-100-ink: #14234a;
+  --note-500: linear-gradient(135deg, #dbe8cc, #cbdcb8);
+  --note-500-ink: #1f4a2a;
+  --note-2000: linear-gradient(135deg, #f3d9d5, #ecc3bd);
+  --note-2000-ink: #8a1d16;
+  --note-200: linear-gradient(135deg, #f3e6bd, #ead69a);
+  --note-200-ink: #5c4300;
+  --note-10: linear-gradient(135deg, #ebdcc7, #dfc8aa);
+  --note-10-ink: #4d3217;
+  --note-50: linear-gradient(135deg, #d2e8ec, #bddde3);
+  --note-50-ink: #0d4f60;
+  --note-20: linear-gradient(135deg, #e2ecc2, #d3e2a4);
+  --note-20-ink: #485a0c;
+}
+
+html.dark[data-visual-theme='khata'] {
+  --background: #0f1b17;
+  --foreground: #e4eede;
+  --card: #15241f;
+  --card-foreground: #e4eede;
+  --popover: #1a2c26;
+  --popover-foreground: #e4eede;
+  --primary: #a9bdf5;
+  --primary-foreground: #0f1b17;
+  --secondary: #1d3029;
+  --secondary-foreground: #e4eede;
+  --muted: #1d3029;
+  --muted-foreground: #9db2a4;
+  --accent: #24392f;
+  --accent-foreground: #e4eede;
+  --destructive: #ff7b6c;
+  --destructive-foreground: #1a0e0c;
+  --positive: #6fd79d;
+  --warning: #f0c15a;
+  --border: #2a4036;
+  --input: rgb(228 238 222 / 0.35);
+  --ring: #ff7b6c;
+  --chart-1: #a9bdf5;
+  --chart-2: #ff7b6c;
+  --chart-3: #f0c15a;
+  --chart-4: #6fd79d;
+  --chart-5: #7fb0e8;
+  --sidebar: #09110e;
+  --sidebar-foreground: #dfe9d8;
+  --sidebar-primary: #ff7b6c;
+  --sidebar-primary-foreground: #1a0e0c;
+  --sidebar-accent: #ff7b6c;
+  --sidebar-accent-foreground: #1a0e0c;
+  --sidebar-border: #2a4036;
+
+  --warning-band: #3a1b17;
+  --warning-band-foreground: #ffe2dc;
+  --warning-band-accent: #ff7b6c;
+
+  --glass: #15241f;
+  --glass-strong: #15241f;
+  --glass-border: rgb(228 238 222 / 0.4);
+
+  --grad-primary: linear-gradient(#34508f, #34508f);
+  --grad-primary-soft: linear-gradient(#1d3029, #1d3029);
+  --grad-success: linear-gradient(#1e7a4c, #1e7a4c);
+  --grad-success-soft: linear-gradient(#173a2b, #173a2b);
+  --grad-danger: linear-gradient(#b8322a, #b8322a);
+  --grad-danger-soft: linear-gradient(#3a1b17, #3a1b17);
+  --grad-surface: linear-gradient(#15241f, #15241f);
+  --coin: linear-gradient(#ff7b6c, #ff7b6c);
+  --coin-ink: #1a0e0c;
+  --register: repeating-linear-gradient(90deg, #e4eede 0 2px, transparent 2px 7px);
+  --thread: repeating-linear-gradient(90deg, #e4eede 0 2px, transparent 2px 7px);
+
+  --shadow-tint: 0 0 0;
+  --scrim: rgb(3 8 6 / 0.6);
+  --shadow-float: 0 14px 28px -14px rgb(0 0 0 / 0.8);
+
+  --note-100: linear-gradient(135deg, #263a63, #1d2d4f);
+  --note-100-ink: #d6e2ff;
+  --note-500: linear-gradient(135deg, #2a4332, #213627);
+  --note-500-ink: #dcecd2;
+  --note-2000: linear-gradient(135deg, #4a2622, #3a1c19);
+  --note-2000-ink: #ffd8d2;
+  --note-200: linear-gradient(135deg, #4a3d12, #3a300d);
+  --note-200-ink: #ffe9a8;
+  --note-10: linear-gradient(135deg, #3d2e1e, #2f2317);
+  --note-10-ink: #f2dcc2;
+  --note-50: linear-gradient(135deg, #1c424a, #15333a);
+  --note-50-ink: #c8eef5;
+  --note-20: linear-gradient(135deg, #3a4818, #2e3a12);
+  --note-20-ink: #e8f5b8;
+}
+
+/* ── Shape: nothing is round, nothing floats, nothing is frosted ── */
+html[data-visual-theme='khata'] .rounded-full {
+  border-radius: 3px;
+}
+html[data-visual-theme='khata'] {
+  --khata-red: #b8322a;
+  --khata-red-ink: #ffffff;
+}
+html.dark[data-visual-theme='khata'] {
+  --khata-red: #ff7b6c;
+  --khata-red-ink: #1a0e0c;
+}
+html[data-visual-theme='khata'] .card-elevated {
+  border: 1px solid color-mix(in srgb, var(--foreground) 55%, transparent);
+  border-radius: 2px;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='khata'] .glass-chrome {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='khata'] .shadow-glow-primary,
+html[data-visual-theme='khata'] .shadow-glow-success,
+html[data-visual-theme='khata'] .shadow-glow-danger {
+  box-shadow: none;
+}
+html[data-visual-theme='khata'] .bg-coin {
+  color: var(--coin-ink);
+  box-shadow: 0 8px 16px -8px rgb(10 20 50 / 0.55);
+}
+html[data-visual-theme='khata'] h1 {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+html[data-visual-theme='khata'] .font-money {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+/* Page headings sit on a double rule, as on a ledger page. */
+html[data-visual-theme='khata'] [data-slot='page-header'] {
+  border-bottom: 3px double var(--foreground);
+}
+html[data-visual-theme='khata'] [data-slot='button'][class*='glass-border'] {
+  border-color: var(--foreground);
+  background: var(--card);
+  backdrop-filter: none;
+}
+
+/* Budgets and goals are tallied, not filled: a track of ticks, the used share inked in. */
+html[data-visual-theme='khata'] .thread-fill {
+  -webkit-mask: none;
+  mask: none;
+}
+html[data-visual-theme='khata'] [role='progressbar'] {
+  height: 0.875rem;
+  background: repeating-linear-gradient(90deg, var(--border) 0 2px, transparent 2px 7px);
+}
+html[data-visual-theme='khata'] [role='progressbar'] > div {
+  background-clip: border-box;
+}
+
+/* ── Hero: a ledger total. Rupees, a red rule, then the paise column. ── */
+html[data-visual-theme='khata'] .note-card {
+  border: 1px solid color-mix(in srgb, var(--foreground) 55%, transparent);
+  border-bottom: 3px double var(--foreground);
+  border-radius: 2px;
+  box-shadow: none;
+  background-image: none;
+  background-color: var(--card);
+}
+html[data-visual-theme='khata'] .hero-fig {
+  border-top: 1px solid var(--foreground);
+  border-bottom: 3px double var(--foreground);
+  padding: 0.05em 0.15em 0 0;
+  font-weight: 700;
+}
+html[data-visual-theme='khata'] .hero-fig[data-whole]::after {
+  content: '00';
+  margin-left: 0.2em;
+  padding-left: 0.2em;
+  border-left: 1.5px solid var(--khata-red);
+  font-size: 0.4em;
+  font-weight: 400;
+  color: var(--muted-foreground);
+}
+html[data-visual-theme='khata'] .note-tile {
+  border: 1px solid color-mix(in srgb, var(--foreground) 55%, transparent);
+  border-radius: 2px;
+  box-shadow: none;
+}
+
+/* ── Chrome: ink-blue bar, the active tab is a red index tab ── */
+html[data-visual-theme='khata'] [data-slot='tab-bar'] {
+  background: var(--sidebar);
+  border-top: 0;
+  padding: 0;
+  box-shadow: none;
+}
+html[data-visual-theme='khata'] [data-slot='tab'] {
+  color: var(--sidebar-foreground);
+  opacity: 0.82;
+  border-radius: 0;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+html[data-visual-theme='khata'] [data-slot='tab'][aria-current='page'] {
+  background: var(--khata-red);
+  color: var(--khata-red-ink);
+  opacity: 1;
+}
+html[data-visual-theme='khata'] [data-slot='fab'] {
+  border-radius: 3px;
+  border: 1px solid var(--foreground);
+  background-image: var(--coin);
+  color: var(--khata-red-ink);
+}
+html[data-visual-theme='khata'] [data-slot='sidebar'] {
+  background: var(--sidebar);
+  color: var(--sidebar-foreground);
+  border-right: 0;
+}
+html[data-visual-theme='khata'] [data-slot='sidebar'] [data-slot='nav-item'] {
+  border-radius: 2px;
+  color: var(--sidebar-foreground);
+  opacity: 0.85;
+}
+html[data-visual-theme='khata'] [data-slot='sidebar'] [data-slot='nav-item'][aria-current='page'] {
+  background: var(--khata-red);
+  color: var(--khata-red-ink);
+  opacity: 1;
+}
+html[data-visual-theme='khata'] [data-slot='sidebar'] [data-slot='add-button'] {
+  background: transparent;
+  border: 1px solid var(--sidebar-foreground);
+  border-radius: 2px;
+  box-shadow: none;
+  color: var(--sidebar-foreground);
+}
+html[data-visual-theme='khata'] [data-slot='sidebar'] .text-muted-foreground {
+  color: var(--sidebar-foreground);
+  opacity: 0.7;
+}
+
+/* ── Toasts ── */
+html[data-visual-theme='khata'] [data-sonner-toaster] {
+  --normal-bg: var(--popover);
+  --normal-border: var(--foreground);
+  --border-radius: 2px;
+}
+html[data-visual-theme='khata'] [data-sonner-toaster] [data-sonner-toast] {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: var(--shadow-float);
+}

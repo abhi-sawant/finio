@@ -1,0 +1,377 @@
+/*
+ * Gulal — Holi-powder pop. Sticker-bright: thick ink outlines, hard offset shadows, chunky radii,
+ * a pink hero stamped with a price-tag burst. Bricolage Grotesque at 800 for every figure.
+ */
+html[data-visual-theme='gulal'] {
+  --ff-heading: 'Bricolage Grotesque Variable', system-ui, sans-serif;
+  --ff-money: 'Bricolage Grotesque Variable', system-ui, sans-serif;
+  --ff-sans: 'Bricolage Grotesque Variable', system-ui, sans-serif;
+
+  --background: #ffe14d;
+  --foreground: #1b1230;
+  --card: #ffffff;
+  --card-foreground: #1b1230;
+  --popover: #ffffff;
+  --popover-foreground: #1b1230;
+  --primary: #4457ff;
+  --primary-foreground: #ffffff;
+  --secondary: #fff3a6;
+  --secondary-foreground: #1b1230;
+  --muted: #fff3a6;
+  --muted-foreground: #5a4780;
+  --accent: #ffb8dc;
+  --accent-foreground: #1b1230;
+  --destructive: #d6154f;
+  --destructive-foreground: #ffffff;
+  --positive: #05714a;
+  --warning: #8a4b00;
+  --border: rgb(27 18 48 / 0.3);
+  --input: #1b1230;
+  --ring: #4457ff;
+  --chart-1: #4457ff;
+  --chart-2: #ff5fa8;
+  --chart-3: #ff9a3d;
+  --chart-4: #1fb386;
+  --chart-5: #8b5cff;
+  --radius: 1.5rem;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #1b1230;
+  --sidebar-primary: #4457ff;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #ff5fa8;
+  --sidebar-accent-foreground: #1b1230;
+  --sidebar-border: #1b1230;
+  --sidebar-ring: #4457ff;
+
+  --warning-band: #1b1230;
+  --warning-band-foreground: #ffe14d;
+  --warning-band-accent: #ff9a3d;
+
+  --paper: none;
+  --engraving: transparent;
+  --glass: #ffffff;
+  --glass-strong: #ffffff;
+  --glass-border: #1b1230;
+  --glass-highlight: transparent;
+
+  --grad-primary: linear-gradient(135deg, #5568ff, #3a4bf0);
+  --grad-primary-soft: linear-gradient(135deg, #e3e6ff, #d3d8ff);
+  --grad-success: linear-gradient(135deg, #17b982, #079468);
+  --grad-success-soft: linear-gradient(135deg, #c9f7e3, #b3f0d4);
+  --grad-danger: linear-gradient(135deg, #f0306b, #d6154f);
+  --grad-danger-soft: linear-gradient(135deg, #ffd3df, #ffbdd0);
+  --grad-info: linear-gradient(135deg, #5ab6ff, #3a9be8);
+  --grad-warning: linear-gradient(135deg, #ffaa4d, #f08a1c);
+  --grad-surface: linear-gradient(#ffffff, #ffffff);
+  --coin: linear-gradient(135deg, #5568ff, #3a4bf0);
+  --coin-ink: #ffffff;
+  --register: repeating-linear-gradient(45deg, #4457ff 0 9px, #6b7aff 9px 18px);
+  --thread: repeating-linear-gradient(45deg, #ff5fa8 0 9px, #ff8cc2 9px 18px);
+
+  --gulal-shadow: #1b1230;
+  --gulal-hero-shadow: #1b1230;
+  --shadow-tint: 27 18 48;
+  --scrim: rgb(27 18 48 / 0.45);
+  --shadow-card: 4px 4px 0 #1b1230;
+  --shadow-float: 6px 6px 0 #1b1230;
+  --shadow-primary: 3px 3px 0 #1b1230;
+  --shadow-danger: 3px 3px 0 #1b1230;
+  --shadow-success: 3px 3px 0 #1b1230;
+
+  --note-100: linear-gradient(135deg, #bda9ff, #ad97fb);
+  --note-100-ink: #1b1230;
+  --note-500: linear-gradient(135deg, #72e8c2, #5ddcb2);
+  --note-500-ink: #1b1230;
+  --note-2000: linear-gradient(135deg, #ffab5c, #ff9a3d);
+  --note-2000-ink: #1b1230;
+  --note-200: linear-gradient(135deg, #ffd23f, #ffc21a);
+  --note-200-ink: #1b1230;
+  --note-10: linear-gradient(135deg, #ff9fcd, #ff8ac2);
+  --note-10-ink: #1b1230;
+  --note-50: linear-gradient(135deg, #82dcff, #6fd0ff);
+  --note-50-ink: #1b1230;
+  --note-20: linear-gradient(135deg, #cbf47f, #b9ea5e);
+  --note-20-ink: #1b1230;
+}
+
+html.dark[data-visual-theme='gulal'] {
+  --background: #1c1233;
+  --foreground: #fff3d6;
+  --card: #2b1e4b;
+  --card-foreground: #fff3d6;
+  --popover: #2b1e4b;
+  --popover-foreground: #fff3d6;
+  --primary: #9aa6ff;
+  --primary-foreground: #1c1233;
+  --secondary: #3a2a63;
+  --secondary-foreground: #fff3d6;
+  --muted: #33255a;
+  --muted-foreground: #c8b9ec;
+  --accent: #4b3480;
+  --accent-foreground: #fff3d6;
+  --destructive: #ff7a8a;
+  --destructive-foreground: #2b0a14;
+  --positive: #5be0a8;
+  --warning: #ffc83d;
+  --border: rgb(255 243 214 / 0.25);
+  --input: rgb(255 243 214 / 0.6);
+  --ring: #9aa6ff;
+  --chart-1: #9aa6ff;
+  --chart-2: #ff7fbb;
+  --chart-3: #ffc83d;
+  --chart-4: #5be0a8;
+  --chart-5: #6fd0ff;
+  --sidebar: #2b1e4b;
+  --sidebar-foreground: #fff3d6;
+  --sidebar-primary: #9aa6ff;
+  --sidebar-primary-foreground: #1c1233;
+  --sidebar-accent: #ff5fa8;
+  --sidebar-accent-foreground: #1b1230;
+  --sidebar-border: #fff3d6;
+
+  --warning-band: #fff3d6;
+  --warning-band-foreground: #1c1233;
+  --warning-band-accent: #d6154f;
+
+  --glass: #2b1e4b;
+  --glass-strong: #2b1e4b;
+  --glass-border: #fff3d6;
+
+  --grad-primary: linear-gradient(135deg, #5568ff, #3a4bf0);
+  --grad-primary-soft: linear-gradient(135deg, #3a2f78, #2f2565);
+  --grad-success-soft: linear-gradient(135deg, #17463a, #11382e);
+  --grad-danger-soft: linear-gradient(135deg, #532244, #431a37);
+  --grad-surface: linear-gradient(#2b1e4b, #2b1e4b);
+
+  --gulal-shadow: #ff5fa8;
+  --gulal-hero-shadow: #ffe14d;
+  --shadow-tint: 0 0 0;
+  --scrim: rgb(8 4 20 / 0.62);
+  --shadow-card: 4px 4px 0 #ff5fa8;
+  --shadow-float: 6px 6px 0 #ff5fa8;
+  --shadow-primary: 3px 3px 0 #ff5fa8;
+  --shadow-danger: 3px 3px 0 #ff5fa8;
+  --shadow-success: 3px 3px 0 #ff5fa8;
+}
+
+/* ── Shape: chunky outlines, hard shadows, everything lifts off the page ── */
+html[data-visual-theme='gulal'] {
+  font-weight: 500;
+}
+html[data-visual-theme='gulal'] h1 {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+html[data-visual-theme='gulal'] .font-money {
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+html[data-visual-theme='gulal'] .card-elevated {
+  border: 2.5px solid var(--foreground);
+  box-shadow: 4px 4px 0 var(--gulal-shadow);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='gulal'] .glass-chrome {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='gulal'] [data-slot='page-header'].glass-chrome {
+  background-color: var(--background);
+  border-bottom: 2.5px solid var(--foreground);
+}
+html[data-visual-theme='gulal'] .bg-coin {
+  color: var(--coin-ink);
+  border: 2.5px solid var(--foreground);
+  box-shadow: 4px 4px 0 var(--gulal-shadow);
+}
+html[data-visual-theme='gulal'] .shadow-glow-primary,
+html[data-visual-theme='gulal'] .shadow-glow-success,
+html[data-visual-theme='gulal'] .shadow-glow-danger {
+  border: 2px solid var(--foreground);
+  box-shadow: 3px 3px 0 var(--gulal-shadow);
+}
+html[data-visual-theme='gulal'] .shadow-glow-primary:active,
+html[data-visual-theme='gulal'] .shadow-glow-success:active,
+html[data-visual-theme='gulal'] .shadow-glow-danger:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--gulal-shadow);
+}
+html[data-visual-theme='gulal'] [data-slot='button'][class*='glass-border'] {
+  border: 2px solid var(--foreground);
+  background: var(--card);
+  box-shadow: 2px 2px 0 var(--gulal-shadow);
+  backdrop-filter: none;
+}
+html[data-visual-theme='gulal'] [role='progressbar'],
+html[data-visual-theme='gulal'] .bg-muted.overflow-hidden.rounded-full {
+  border: 2px solid var(--foreground);
+  background: var(--card);
+}
+html[data-visual-theme='gulal'] [role='progressbar'] {
+  height: 1.1rem;
+}
+html[data-visual-theme='gulal'] .thread-fill {
+  -webkit-mask: none;
+  mask: none;
+}
+
+/* ── Hero: a pink sticker with a burst badge. Its inside stays dark ink in both modes. ── */
+html[data-visual-theme='gulal'] .note-card {
+  --foreground: #1b1230;
+  --muted-foreground: #1b1230;
+  --primary: #1b1230;
+  --card: #ffffff;
+  --destructive: #8a0a32;
+  background-image: none;
+  background-color: #ff5fa8;
+  color: #1b1230;
+  border: 2.5px solid #1b1230;
+  box-shadow: 6px 6px 0 var(--gulal-hero-shadow);
+  transform: rotate(-0.6deg);
+}
+html[data-visual-theme='gulal'] .note-card [role='progressbar'] {
+  border-color: #1b1230;
+  background: #ffffff;
+}
+html[data-visual-theme='gulal'] .hero-fig {
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+html[data-visual-theme='gulal'] .burst-badge {
+  position: absolute;
+  top: -18px;
+  right: 14px;
+  z-index: 2;
+  width: 76px;
+  height: 76px;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  color: #1b1230;
+  transform: rotate(12deg);
+  animation: gulal-wobble 3.2s ease-in-out infinite;
+}
+html[data-visual-theme='gulal'] .burst-badge svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+html[data-visual-theme='gulal'] .burst-badge polygon {
+  fill: #ffe14d;
+  stroke: #1b1230;
+  stroke-width: 2.5;
+}
+html[data-visual-theme='gulal'] .burst-badge b {
+  position: relative;
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1;
+}
+html[data-visual-theme='gulal'] .burst-badge small {
+  position: relative;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1;
+}
+@keyframes gulal-wobble {
+  50% {
+    transform: rotate(4deg) scale(1.05);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-visual-theme='gulal'] .burst-badge {
+    animation: none;
+  }
+}
+@media (min-width: 1024px) {
+  html[data-visual-theme='gulal'] .burst-badge {
+    right: 40px;
+    width: 104px;
+    height: 104px;
+  }
+  html[data-visual-theme='gulal'] .burst-badge b {
+    font-size: 1.75rem;
+  }
+}
+html[data-visual-theme='gulal'] .note-tile {
+  border: 2.5px solid var(--foreground);
+  box-shadow: 4px 4px 0 var(--gulal-shadow);
+}
+html[data-visual-theme='gulal'] .note-tile:active {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0 var(--gulal-shadow);
+}
+
+/* The one alert: an ink pill. */
+html[data-visual-theme='gulal'] .bg-warning-band {
+  border: 0;
+  border-radius: 9999px;
+  box-shadow: none;
+}
+
+/* ── Chrome: a floating ink pill; the active tab is a yellow chip ── */
+html[data-visual-theme='gulal'] [data-slot='tab-bar'] {
+  left: 1rem;
+  right: 1rem;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 0.875rem) !important;
+  width: auto;
+  padding: 0.25rem 0.375rem;
+  border: 0;
+  border-radius: 9999px;
+  background: var(--foreground);
+  box-shadow: 4px 4px 0 var(--gulal-shadow);
+}
+html[data-visual-theme='gulal'] [data-slot='tab'] {
+  color: var(--background);
+  border-radius: 9999px;
+  padding: 0.5rem 0.25rem;
+  font-weight: 800;
+}
+html[data-visual-theme='gulal'] [data-slot='tab'][aria-current='page'] {
+  background: #ffe14d;
+  color: #1b1230;
+}
+html[data-visual-theme='gulal'] [data-slot='fab'] {
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 6.5rem) !important;
+  background-image: var(--coin);
+  color: #fff;
+}
+html[data-visual-theme='gulal'] [data-slot='sidebar'] {
+  background: var(--card);
+  border-right: 2.5px solid var(--foreground);
+}
+html[data-visual-theme='gulal'] [data-slot='sidebar'] [data-slot='nav-item'] {
+  border: 2px solid transparent;
+  font-weight: 700;
+}
+html[data-visual-theme='gulal'] [data-slot='sidebar'] [data-slot='nav-item'][aria-current='page'] {
+  background: #ff5fa8;
+  border-color: #1b1230;
+  color: #1b1230;
+}
+html[data-visual-theme='gulal'] [data-slot='sidebar'] [data-slot='add-button'] {
+  border: 2.5px solid var(--foreground);
+  box-shadow: 3px 3px 0 var(--gulal-shadow);
+}
+html[data-visual-theme='gulal'] [data-slot='brand-mark'] {
+  background-image: none;
+  background-color: #ff5fa8;
+  color: #1b1230;
+  border: 2px solid #1b1230;
+  box-shadow: none;
+}
+
+/* ── Toasts ── */
+html[data-visual-theme='gulal'] [data-sonner-toaster] {
+  --normal-bg: var(--card);
+  --normal-border: var(--foreground);
+  --border-radius: 20px;
+}
+html[data-visual-theme='gulal'] [data-sonner-toaster] [data-sonner-toast] {
+  border-width: 2.5px;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: 4px 4px 0 var(--gulal-shadow);
+}

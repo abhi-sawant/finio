@@ -79,7 +79,14 @@ fun Modifier.glassSurface(shape: Shape, fill: Color, shadows: List<CssShadow>): 
         .clip(shape)
         .background(fill, shape)
         .cssInsetShadow(shape, highlight)
-        .border(1.dp, colors.glassBorder, shape)
+        .themeBorder(shape)
+}
+
+/** The hairline (or chunky outline) a theme draws around glass surfaces; none when its width is 0. */
+@Composable
+fun Modifier.themeBorder(shape: Shape): Modifier {
+    val width = FinioTheme.spec.borderWidth
+    return if (width.value > 0f) border(width, FinioTheme.colors.glassBorder, shape) else this
 }
 
 /** `divide-y` / `border-t` — the 1dp ink-at-10% hairline between plain rows. */
@@ -109,7 +116,7 @@ fun AlertBand(
                 .clip(shape)
                 .background(colors.warningBand)
                 .cssInsetShadow(shape, highlight)
-                .border(1.dp, colors.glassBorder, shape)
+                .themeBorder(shape)
                 .padding(16.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {

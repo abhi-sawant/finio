@@ -175,6 +175,7 @@ export function Layout() {
             e.preventDefault();
             setTemplatesOpen(true);
           }}
+          data-slot="fab"
           className={cn(
             'bg-coin fixed right-4 z-50 flex h-14 w-14 items-center justify-center rounded-full transition-transform active:scale-95 in-data-[tx-selecting]:hidden lg:hidden',
             hideFab && 'hidden',
@@ -212,6 +213,7 @@ export function Layout() {
 
       {/* Bottom Nav — mobile only */}
       <nav
+        data-slot="tab-bar"
         className="pb-safe glass-chrome fixed right-0 left-0 z-40 flex w-full items-center border-t border-[var(--glass-border)] px-2 pt-2 shadow-[0_-12px_30px_-22px_rgb(40_26_110/0.45)] lg:hidden"
         style={{ bottom: 0 }}
       >
@@ -225,6 +227,7 @@ export function Layout() {
                 key={tab.path}
                 onClick={() => navigate(tab.path)}
                 aria-current={isActive ? 'page' : undefined}
+                data-slot="tab"
                 className={cn(
                   'relative flex flex-1 flex-col items-center gap-1 rounded-sm px-1 py-1.5 transition-colors',
                   isActive ? 'text-primary' : 'text-muted-foreground',
@@ -232,6 +235,7 @@ export function Layout() {
               >
                 <Icon size={20} strokeWidth={isActive ? 2.4 : 2} />
                 <span
+                  data-slot="tab-indicator"
                   className={cn('bg-grad-primary h-1 w-4 rounded-full', !isActive && 'opacity-0')}
                   aria-hidden="true"
                 />
@@ -242,6 +246,7 @@ export function Layout() {
         <button
           onClick={() => navigate('/tools')}
           aria-current={location.pathname === '/tools' ? 'page' : undefined}
+          data-slot="tab"
           className={cn(
             'relative flex flex-1 flex-col items-center gap-1 rounded-sm px-1 py-1.5 transition-colors',
             toolsActive ? 'text-primary' : 'text-muted-foreground',
@@ -249,6 +254,7 @@ export function Layout() {
         >
           <Wrench size={20} strokeWidth={toolsActive ? 2.4 : 2} />
           <span
+            data-slot="tab-indicator"
             className={cn('bg-grad-primary h-1 w-4 rounded-full', !toolsActive && 'opacity-0')}
             aria-hidden="true"
           />

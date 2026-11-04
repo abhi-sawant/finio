@@ -75,7 +75,8 @@ val AccountType.denomination: Denomination
 /** `noteStyle(type)` — the account type's note tint in the current mode. */
 @Composable
 @ReadOnlyComposable
-fun noteStyle(type: AccountType): NoteStyle = type.denomination.style(FinioTheme.colors.isDark, FinioTheme.colors.isAmoled)
+fun noteStyle(type: AccountType): NoteStyle =
+    FinioTheme.spec.notes?.get(type.denomination) ?: type.denomination.style(FinioTheme.colors.isDark, FinioTheme.colors.isAmoled)
 
 /** Human labels for account types — row captions and note tiles show these, never the raw key. */
 val AccountType.label: String

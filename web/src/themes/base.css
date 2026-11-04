@@ -1,0 +1,62 @@
+/*
+ * Shared plumbing for the alternative visual themes (khata, gulal, shunya, bagh).
+ *
+ * Mudra is the default and lives in src/index.css with no attribute. A theme is active when
+ * <html data-visual-theme="…"> is set (ThemeProvider; index.html does it before first paint).
+ * Each theme file does three things:
+ *   1. overrides the colour/type/shape tokens, light on `html[data-visual-theme]`, dark on
+ *      `html.dark[data-visual-theme]` (the extra class is what beats `.dark` in index.css);
+ *   2. restyles the shared Mudra utilities (card-elevated, glass-chrome, bg-coin, note-card …);
+ *   3. restyles the layout chrome through the `data-slot` hooks (tab-bar, fab, sidebar …).
+ * These rules are unlayered so they win over Tailwind's utilities layer without !important.
+ */
+
+/* Theme-only pieces (ui/theme-extras.tsx) are always in the DOM and hidden unless their theme is on. */
+.only-khata,
+.only-gulal,
+.only-shunya,
+.only-bagh {
+  display: none;
+}
+html[data-visual-theme='khata'] .only-khata,
+html[data-visual-theme='gulal'] .only-gulal,
+html[data-visual-theme='shunya'] .only-shunya,
+html[data-visual-theme='bagh'] .only-bagh {
+  display: block;
+}
+
+/* The page rosette, the banknote's thread / sheen / fibres / microprint and the tiles' thread are
+   Mudra's material. Every other theme brings its own, or none. */
+html[data-visual-theme] body::before,
+html[data-visual-theme] .note-card-rosette,
+html[data-visual-theme] .note-card-thread,
+html[data-visual-theme] .note-card-microprint,
+html[data-visual-theme] .note-card-fibres,
+html[data-visual-theme] .note-tile-rosette,
+html[data-visual-theme] .note-tile::after,
+html[data-visual-theme] .note-chip::after {
+  display: none;
+}
+html[data-visual-theme] .note-card {
+  transform: none;
+}
+html[data-visual-theme] .note-card::after {
+  display: none;
+}
+html[data-visual-theme] .note-chip {
+  box-shadow: none;
+}
+
+/* AMOLED is a dark-mode switch, not a Mudra feature: any theme's dark field can go true black. */
+html.dark.amoled[data-visual-theme] {
+  --background: #000;
+  --paper: none;
+}
+
+/* The same page-scale hooks every theme restyles. */
+html[data-visual-theme] [data-slot='tab-indicator'] {
+  display: none;
+}
+html[data-visual-theme] .hero-fig {
+  display: inline-block;
+}

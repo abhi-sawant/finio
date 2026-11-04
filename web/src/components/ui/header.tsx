@@ -22,6 +22,7 @@ function Header({ children, className, innerClassName, ...props }: HeaderProps) 
 
   return (
     <header
+      data-slot="page-header"
       className={cn(
         'sticky top-0 z-5 border-b border-transparent transition-[background-color,border-color] duration-200',
         scrolled && 'glass-chrome border-[var(--glass-border)]',

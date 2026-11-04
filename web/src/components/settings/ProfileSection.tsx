@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { SwitchToFullDialog } from './SwitchToFullDialog';
+import { VisualThemePicker } from './VisualThemePicker';
 import { formatOrdinal } from '@/utils/formatters';
 import {
   MAX_MONTH_START_DAY,
@@ -107,7 +108,7 @@ export function ProfileSection() {
         <div className="flex items-center justify-between p-4">
           <div className="flex w-32 items-center gap-3">
             <Palette size={18} className="text-muted-foreground" />
-            <span className="text-sm font-medium">Theme</span>
+            <span className="text-sm font-medium">Mode</span>
           </div>
           <Select
             value={settings.theme}
@@ -125,6 +126,7 @@ export function ProfileSection() {
             </SelectContent>
           </Select>
         </div>
+        <VisualThemePicker />
         <SwitchField
           className="p-4"
           icon={<Moon size={18} className="text-muted-foreground shrink-0" />}

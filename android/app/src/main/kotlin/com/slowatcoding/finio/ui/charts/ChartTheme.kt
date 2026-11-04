@@ -37,7 +37,8 @@ import kotlin.math.min
 // ticks, no tick marks or axis lines, a dashed horizontal grid, and a popover-surface tooltip.
 
 /** `AXIS_TICK`: muted, 10px. */
-internal val AxisTickStyle: TextStyle = FinioType.caption.copy(fontSize = 10.sp, lineHeight = 12.sp)
+internal val AxisTickStyle: TextStyle
+    @androidx.compose.runtime.Composable @androidx.compose.runtime.ReadOnlyComposable get() = FinioType.caption.copy(fontSize = 10.sp, lineHeight = 12.sp)
 
 /**
  * One money-axis tick format for every chart: always compact (₹90K, ₹1.35L, ₹2L) with up to two

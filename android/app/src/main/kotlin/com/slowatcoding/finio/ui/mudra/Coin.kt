@@ -4,6 +4,10 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.graphics.Shape
+import com.slowatcoding.finio.ui.theme.VisualTheme
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -41,14 +45,31 @@ val CoinInk = Color(0xFF1D1747)
 @Composable
 fun Coin(modifier: Modifier = Modifier, size: Dp = 56.dp, content: @Composable BoxScope.() -> Unit = {}) {
     val shadows = FinioTheme.shadows
-    CompositionLocalProvider(LocalContentColor provides CoinInk) {
+    val visual = FinioTheme.visual
+    val dark = FinioTheme.colors.isDark
+    // Each world's add button: Mudra's lavender coin, Khata's red stamp, Gulal's cobalt sticker,
+    // Shunya's ink dot, Bagh's gold leaf.
+    val ink = when (visual) {
+        VisualTheme.Mudra -> CoinInk
+        VisualTheme.Khata -> if (dark) Color(0xFF1A0E0C) else Color.White
+        VisualTheme.Gulal -> Color.White
+        VisualTheme.Shunya -> if (dark) Color(0xFF0A0A0B) else Color(0xFFFCFCFA)
+        VisualTheme.Bagh -> Color(0xFF16301F)
+    }
+    val shape: Shape = if (visual == VisualTheme.Bagh) RoundedCornerShape(50, 50, 50, 14) else FinioShapes.full
+    CompositionLocalProvider(LocalContentColor provides ink) {
         Box(
             modifier
                 .size(size)
-                .cssShadow(FinioShapes.full, shadows.coin)
-                .clip(FinioShapes.full)
+                .cssShadow(shape, shadows.coin)
+                .clip(shape)
                 .background(FinioTheme.brushes.coin)
-                .cssInsetShadow(FinioShapes.full, shadows.coin),
+                .cssInsetShadow(shape, shadows.coin)
+                .then(
+                    if (visual == VisualTheme.Gulal) Modifier.border(2.5.dp, Color(0xFF1B1230), shape)
+                    else if (visual == VisualTheme.Khata) Modifier.border(1.dp, FinioTheme.colors.foreground, shape)
+                    else Modifier,
+                ),
             contentAlignment = Alignment.Center,
             content = content,
         )

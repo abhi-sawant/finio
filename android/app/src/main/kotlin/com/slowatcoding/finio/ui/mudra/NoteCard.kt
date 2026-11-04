@@ -131,7 +131,23 @@ private val SheenColors = listOf(
  * at 512dp wide instead). Lay out the inside freely.
  */
 @Composable
-fun NoteCard(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
+fun NoteCard(
+    modifier: Modifier = Modifier,
+    /** Theme extras (see ThemeExtras.kt): each is drawn by one visual theme only. */
+    badge: (@Composable () -> Unit)? = null,
+    scene: (@Composable () -> Unit)? = null,
+    content: @Composable ColumnScope.() -> Unit,
+) {
+    val visual = FinioTheme.visual
+    if (visual == com.slowatcoding.finio.ui.theme.VisualTheme.Mudra) {
+        MudraNoteCard(modifier, content)
+    } else {
+        ThemedNoteCard(visual, modifier, badge, scene, content)
+    }
+}
+
+@Composable
+private fun MudraNoteCard(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
     val colors = FinioTheme.colors
     val brushes = FinioTheme.brushes
     val shadows = FinioTheme.shadows
@@ -316,6 +332,7 @@ fun noteFigureSize(text: String): TextUnit = when {
 }
 
 /** [FinioType.displayMoney] at the [noteFigureSize] step for [text] (line-height 1.05). */
+@androidx.compose.runtime.Composable
 fun noteFigureStyle(text: String) = noteFigureSize(text).let { size ->
     FinioType.displayMoney.copy(fontSize = size, lineHeight = size * 1.05f)
 }

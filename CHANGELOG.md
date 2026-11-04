@@ -3,6 +3,21 @@
 Finio follows [Semantic Versioning](https://semver.org). The repo-root `VERSION` file is the single
 source of truth for both clients; see "Releasing" in [CLAUDE.md](CLAUDE.md).
 
+## Unreleased
+
+### Added
+
+- **Four more visual themes, chosen in Settings → Profile & preferences → Style.** Mudra stays the
+  default. **Khata** is a ruled accountant's ledger (ink on celadon paper, a paise column, tally-mark
+  budgets); **Gulal** is sticker-bright pop (thick outlines, hard shadows, a burst badge on the
+  hero); **Shunya** removes everything but the figures (hairlines, light numerals, a month line that
+  shows spending pace); **Bagh** is a soft garden (leaf corners, a sun on an arc across the month,
+  goals drawn as plants). Each has a hand-tuned light and dark palette and its own type, shape,
+  density and motion, not just colours. Light/dark/system is now the separate "Mode" row.
+- The chosen theme is a per-device preference stored on its own (web: `finio-visual-theme`; Android:
+  its own `finio-visual-theme` SharedPreferences file); it is not in backups and does not change the
+  backup format. The Android app has the same five themes and the same picker.
+
 ## 3.0.4 — 2026-10-30
 
 ### Changed

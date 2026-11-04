@@ -51,6 +51,7 @@ fun FinioRoot(container: AppContainer) {
     val finance by container.financeStore.state.collectAsStateWithLifecycle()
     val hydrated by container.financeStore.isHydrated.collectAsStateWithLifecycle()
     val lock by container.appLock.state.collectAsStateWithLifecycle()
+    val visualTheme by container.visualTheme.theme.collectAsStateWithLifecycle()
 
     val navController = rememberNavController()
     val navigator = remember(navController) { FinioNavigator(navController) }
@@ -65,7 +66,7 @@ fun FinioRoot(container: AppContainer) {
         LocalFinioNavigator provides navigator,
         LocalShellState provides shellState,
     ) {
-        FinioTheme(finance.settings.theme, amoled = finance.settings.amoledDark) {
+        FinioTheme(finance.settings.theme, amoled = finance.settings.amoledDark, visual = visualTheme) {
             SystemBarsEffect(dark = finance.settings.theme.isDark())
             SecureWindowEffect(enabled = lock.config?.enabled == true)
             ConfirmHost {

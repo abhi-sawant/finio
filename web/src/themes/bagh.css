@@ -1,0 +1,397 @@
+/*
+ * Bagh — a kitchen garden. Leaf corners (three big radii, one tight), pebble buttons, a floating
+ * tab bar, plants for goals and a sun in the hero that sits where today sits in the month.
+ */
+html[data-visual-theme='bagh'] {
+  --ff-heading: 'Gabarito Variable', 'Figtree Variable', sans-serif;
+  --ff-money: 'Gabarito Variable', 'Figtree Variable', sans-serif;
+  --ff-sans: 'Figtree Variable', system-ui, sans-serif;
+
+  --background: #e6efdc;
+  --foreground: #16301f;
+  --card: #f8faf1;
+  --card-foreground: #16301f;
+  --popover: #f8faf1;
+  --popover-foreground: #16301f;
+  --primary: #3a7a36;
+  --primary-foreground: #ffffff;
+  --secondary: #d4e8bd;
+  --secondary-foreground: #16301f;
+  --muted: #dbe8cf;
+  --muted-foreground: #4b6652;
+  --accent: #d4e8bd;
+  --accent-foreground: #2a5a2d;
+  --destructive: #c4552f;
+  --destructive-foreground: #ffffff;
+  --positive: #16683a;
+  --warning: #8a5a00;
+  --border: #d3dfc4;
+  --input: rgb(22 48 31 / 0.28);
+  --ring: #3a7a36;
+  --chart-1: #3a7a36;
+  --chart-2: #f4b21b;
+  --chart-3: #c4552f;
+  --chart-4: #6bb5c9;
+  --chart-5: #b58ad9;
+  --radius: 1.5rem;
+  --sidebar: #f8faf1;
+  --sidebar-foreground: #16301f;
+  --sidebar-primary: #3a7a36;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #d4e8bd;
+  --sidebar-accent-foreground: #2a5a2d;
+  --sidebar-border: transparent;
+  --sidebar-ring: #3a7a36;
+
+  --warning-band: #f5d9cc;
+  --warning-band-foreground: #4a1d0d;
+  --warning-band-accent: #c4552f;
+
+  --paper: none;
+  --engraving: transparent;
+  --glass: #f8faf1;
+  --glass-strong: #f8faf1;
+  --glass-border: transparent;
+  --glass-highlight: transparent;
+
+  --grad-primary: linear-gradient(135deg, #4a9244, #2f6b3a);
+  --grad-primary-soft: linear-gradient(135deg, #e3f0d3, #d4e8bd);
+  --grad-success: linear-gradient(135deg, #2f9a5c, #16683a);
+  --grad-success-soft: linear-gradient(135deg, #dbf0e2, #c8e8d4);
+  --grad-danger: linear-gradient(135deg, #d9693f, #b4451f);
+  --grad-danger-soft: linear-gradient(135deg, #fbe3d8, #f5cfbd);
+  --grad-info: linear-gradient(135deg, #7cc3d6, #4f9fb5);
+  --grad-warning: linear-gradient(135deg, #f4b21b, #e08a1a);
+  --grad-surface: linear-gradient(180deg, #cde8ee, #eaf3d4);
+  --coin: linear-gradient(135deg, #ffc83d, #f4a000);
+  --coin-ink: #16301f;
+  --register: linear-gradient(90deg, #7fb069, #4f9a4a);
+  --thread: linear-gradient(90deg, #7fb069, #3f8a45);
+
+  --bagh-sky-1: #cde8ee;
+  --bagh-sky-2: #eaf3d4;
+  --bagh-hill-1: #7fb069;
+  --bagh-hill-2: #2f6b3a;
+  --shadow-tint: 35 75 40;
+  --scrim: rgb(22 48 31 / 0.35);
+  --shadow-card: 0 14px 26px -16px rgb(35 75 40 / 0.45);
+  --shadow-float: 0 24px 44px -18px rgb(25 60 30 / 0.5);
+  --shadow-primary: 0 12px 20px -12px rgb(40 100 45 / 0.6);
+  --shadow-danger: 0 12px 20px -12px rgb(180 69 31 / 0.5);
+  --shadow-success: 0 12px 20px -12px rgb(22 104 58 / 0.5);
+
+  --note-100: linear-gradient(135deg, #d4ecf0, #c3e0e6);
+  --note-100-ink: #16301f;
+  --note-500: linear-gradient(135deg, #dcedc4, #cce2ac);
+  --note-500-ink: #16301f;
+  --note-2000: linear-gradient(135deg, #f8d8c6, #f1c4ad);
+  --note-2000-ink: #3a1f12;
+  --note-200: linear-gradient(135deg, #f9e7b0, #f3d88a);
+  --note-200-ink: #4d3a00;
+  --note-10: linear-gradient(135deg, #efdfca, #e3cdb0);
+  --note-10-ink: #4a2f15;
+  --note-50: linear-gradient(135deg, #d0e8e8, #bddede);
+  --note-50-ink: #0d4f50;
+  --note-20: linear-gradient(135deg, #e2f0b8, #d3e69a);
+  --note-20-ink: #3d5008;
+
+  --plant-soil: #8a6446;
+  --plant-seed: #f4b21b;
+  --plant-stem: #3f7d3a;
+  --plant-leaf: #4f9a4a;
+  --plant-leaf-2: #78b45f;
+}
+
+html.dark[data-visual-theme='bagh'] {
+  --background: #0e1a12;
+  --foreground: #e9f3e0;
+  --card: #172a1d;
+  --card-foreground: #e9f3e0;
+  --popover: #1b3022;
+  --popover-foreground: #e9f3e0;
+  --primary: #7fcf7a;
+  --primary-foreground: #0e1a12;
+  --secondary: #1f3a27;
+  --secondary-foreground: #e9f3e0;
+  --muted: #1f3a27;
+  --muted-foreground: #a3bba8;
+  --accent: #27472d;
+  --accent-foreground: #e9f3e0;
+  --destructive: #ff8e68;
+  --destructive-foreground: #2a0f06;
+  --positive: #7fe0a3;
+  --warning: #ffc83d;
+  --border: rgb(233 243 224 / 0.1);
+  --input: rgb(233 243 224 / 0.25);
+  --ring: #7fcf7a;
+  --chart-1: #7fcf7a;
+  --chart-2: #ffc83d;
+  --chart-3: #ff8e68;
+  --chart-4: #7cc3d6;
+  --chart-5: #cfa6ee;
+  --sidebar: #172a1d;
+  --sidebar-foreground: #e9f3e0;
+  --sidebar-primary: #7fcf7a;
+  --sidebar-primary-foreground: #0e1a12;
+  --sidebar-accent: #27472d;
+  --sidebar-accent-foreground: #e9f3e0;
+
+  --warning-band: #3a1f14;
+  --warning-band-foreground: #ffe2d4;
+  --warning-band-accent: #ff8e68;
+
+  --glass: #172a1d;
+  --glass-strong: #172a1d;
+
+  --grad-primary: linear-gradient(135deg, #3f8a45, #2a6a34);
+  --grad-primary-soft: linear-gradient(135deg, #27472d, #1f3a27);
+  --grad-success-soft: linear-gradient(135deg, #1c3d2a, #153021);
+  --grad-danger-soft: linear-gradient(135deg, #4a2418, #3a1b12);
+  --grad-surface: linear-gradient(180deg, #12303a, #1a3523);
+  --register: linear-gradient(90deg, #5fae5a, #9be08f);
+  --thread: linear-gradient(90deg, #5fae5a, #9be08f);
+
+  --bagh-sky-1: #12303a;
+  --bagh-sky-2: #1a3523;
+  --bagh-hill-1: #2c6038;
+  --bagh-hill-2: #17391f;
+  --shadow-tint: 0 0 0;
+  --scrim: rgb(2 8 4 / 0.62);
+  --shadow-card: 0 14px 26px -16px rgb(0 0 0 / 0.7);
+  --shadow-float: 0 24px 44px -18px rgb(0 0 0 / 0.8);
+
+  --note-100: linear-gradient(135deg, #1f4048, #19353c);
+  --note-100-ink: #e4f2f4;
+  --note-500: linear-gradient(135deg, #27472d, #203b25);
+  --note-500-ink: #e6f3dd;
+  --note-2000: linear-gradient(135deg, #4c2f23, #3d251b);
+  --note-2000-ink: #fbe6da;
+  --note-200: linear-gradient(135deg, #4a3d12, #3a300d);
+  --note-200-ink: #ffe9a8;
+  --note-10: linear-gradient(135deg, #3d2e1e, #2f2317);
+  --note-10-ink: #f2dcc2;
+  --note-50: linear-gradient(135deg, #1c424a, #15333a);
+  --note-50-ink: #c8eef5;
+  --note-20: linear-gradient(135deg, #3a4818, #2e3a12);
+  --note-20-ink: #e8f5b8;
+
+  --plant-soil: #5b4330;
+  --plant-seed: #ffc83d;
+  --plant-stem: #5fae5a;
+  --plant-leaf: #7fcf7a;
+  --plant-leaf-2: #9be08f;
+}
+
+/* ── Shape: leaf corners, soft lifts ── */
+html[data-visual-theme='bagh'] h1 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+html[data-visual-theme='bagh'] .font-money {
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+html[data-visual-theme='bagh'] .card-elevated {
+  border: 0;
+  border-radius: 28px 28px 28px 10px;
+  box-shadow: var(--shadow-card);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='bagh'] .glass-chrome {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='bagh'] [data-slot='page-header'].glass-chrome {
+  border-bottom-color: transparent;
+  background-color: var(--background);
+}
+html[data-visual-theme='bagh'] .bg-coin {
+  color: var(--coin-ink);
+  border-radius: 50% 50% 50% 14%;
+  box-shadow:
+    0 4px 0 rgb(150 95 0 / 0.45),
+    0 16px 24px -10px rgb(190 120 0 / 0.6);
+}
+html[data-visual-theme='bagh'] [data-slot='button'][class*='glass-border'] {
+  border-color: transparent;
+  background: var(--card);
+  box-shadow: 0 3px 0 var(--border);
+  backdrop-filter: none;
+}
+html[data-visual-theme='bagh'] [role='progressbar'] {
+  height: 0.9rem;
+}
+/* Budget fills grow with a leaf at the tip. */
+html[data-visual-theme='bagh'] [role='progressbar'] {
+  overflow: visible;
+}
+html[data-visual-theme='bagh'] [role='progressbar'] > div {
+  position: relative;
+}
+html[data-visual-theme='bagh'] [role='progressbar'] > div[style*='width: 0%']::after {
+  display: none;
+}
+html[data-visual-theme='bagh'] [role='progressbar'] > div::after {
+  content: '';
+  position: absolute;
+  right: -3px;
+  top: -4px;
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50% 50% 50% 14%;
+  background: #f4b21b;
+  box-shadow: 0 2px 0 rgb(0 0 0 / 0.15);
+  transform: rotate(-12deg);
+}
+
+/* ── Hero: sky, the sun on its arc, and two hills along the bottom ── */
+html[data-visual-theme='bagh'] .note-card {
+  background-image: linear-gradient(180deg, var(--bagh-sky-1), var(--bagh-sky-2));
+  border: 0;
+  border-radius: 34px 34px 34px 10px;
+  box-shadow: var(--shadow-card);
+  padding-bottom: 88px;
+}
+html[data-visual-theme='bagh'] .note-card::after {
+  display: block;
+  content: '';
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 70px;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 342 70' preserveAspectRatio='none'%3E%3Cpath d='M0 40C60 22 130 28 190 40S300 50 342 34V70H0z' fill='%232f6b3a'/%3E%3C/svg%3E")
+      bottom / 100% 100% no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 342 70' preserveAspectRatio='none'%3E%3Cpath d='M0 22C50 4 110 8 170 24S290 36 342 14V70H0z' fill='%237fb069'/%3E%3C/svg%3E")
+      bottom / 100% 100% no-repeat;
+  mix-blend-mode: normal;
+  opacity: 1;
+  pointer-events: none;
+}
+html.dark[data-visual-theme='bagh'] .note-card::after {
+  opacity: 0.85;
+  filter: brightness(0.5) saturate(0.9);
+}
+html[data-visual-theme='bagh'] .sun-arc {
+  position: relative;
+  max-width: 340px;
+  margin: -6px auto 0.25rem;
+}
+html[data-visual-theme='bagh'] .sun-arc svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+html[data-visual-theme='bagh'] .sun-arc-path {
+  stroke: var(--foreground);
+  stroke-opacity: 0.28;
+  stroke-width: 1.5;
+}
+html[data-visual-theme='bagh'] .sun-arc-glow {
+  fill: #f4b21b;
+  opacity: 0.28;
+}
+html[data-visual-theme='bagh'] .sun-arc-sun {
+  fill: #f4b21b;
+}
+html[data-visual-theme='bagh'] .note-card-body {
+  padding-right: 0;
+}
+@media (min-width: 1024px) {
+  html[data-visual-theme='bagh'] .sun-arc {
+    position: absolute;
+    top: 18px;
+    right: 32px;
+    width: 340px;
+    margin: 0;
+  }
+}
+html[data-visual-theme='bagh'] .note-tile {
+  border: 0;
+  border-radius: 30px 30px 30px 9px;
+  box-shadow: var(--shadow-card);
+}
+html[data-visual-theme='bagh'] .bg-warning-band {
+  border: 0;
+  border-radius: 24px 24px 24px 8px;
+  box-shadow: none;
+}
+
+/* Goals as plants. */
+html[data-visual-theme='bagh'] .goal-plant {
+  flex: none;
+}
+html[data-visual-theme='bagh'] .goal-plant-sm {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+html[data-visual-theme='bagh'] .plant-soil {
+  fill: var(--plant-soil);
+}
+html[data-visual-theme='bagh'] .plant-seed {
+  fill: var(--plant-seed);
+}
+html[data-visual-theme='bagh'] .plant-stem {
+  stroke: var(--plant-stem);
+}
+html[data-visual-theme='bagh'] .plant-leaf {
+  fill: var(--plant-leaf);
+}
+html[data-visual-theme='bagh'] .plant-leaf-2 {
+  fill: var(--plant-leaf-2);
+}
+
+/* ── Chrome: a floating sheet, the active tab a moss pebble, a gold leaf for add ── */
+html[data-visual-theme='bagh'] [data-slot='tab-bar'] {
+  left: 0.875rem;
+  right: 0.875rem;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 0.875rem) !important;
+  width: auto;
+  padding: 0.375rem;
+  border: 0;
+  border-radius: 32px 32px 32px 12px;
+  background: var(--card);
+  box-shadow:
+    0 3px 0 var(--border),
+    0 20px 34px -14px rgb(25 60 30 / 0.5);
+}
+html[data-visual-theme='bagh'] [data-slot='tab'] {
+  border-radius: 22px;
+}
+html[data-visual-theme='bagh'] [data-slot='tab'][aria-current='page'] {
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+html[data-visual-theme='bagh'] [data-slot='fab'] {
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 6.5rem) !important;
+  border-radius: 50% 50% 50% 14%;
+}
+html[data-visual-theme='bagh'] [data-slot='sidebar'] {
+  top: 1rem;
+  left: 1rem;
+  height: calc(100dvh - 2rem);
+  width: calc(15rem - 1rem);
+  border: 0;
+  border-radius: 34px 34px 34px 10px;
+  background: var(--card);
+  box-shadow: var(--shadow-card);
+}
+html[data-visual-theme='bagh'] [data-slot='sidebar'] [data-slot='add-button'] {
+  border-radius: 23px 23px 23px 8px;
+}
+html[data-visual-theme='bagh'] [data-slot='brand-mark'] {
+  border-radius: 50% 50% 50% 14%;
+  color: #16301f;
+}
+
+/* ── Toasts ── */
+html[data-visual-theme='bagh'] [data-sonner-toaster] {
+  --normal-bg: var(--popover);
+  --normal-border: transparent;
+  --border-radius: 24px;
+}
+html[data-visual-theme='bagh'] [data-sonner-toaster] [data-sonner-toast] {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}

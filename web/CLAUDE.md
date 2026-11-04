@@ -221,6 +221,31 @@ page.
   - Fonts: Instrument Sans for everything people read or type; **Familjen Grotesk** (the banknote
     numeral) for `h1` page titles, dialog titles (`font-heading`) and headline money (`.font-money`).
     Row amounts stay Instrument Sans.
+- **Visual themes** (Mudra default + Khata, Gulal, Shunya, Bagh) — chosen in Settings → Profile &
+  preferences → Style. The choice lives in [`useVisualThemeStore`](src/store/useVisualThemeStore.ts)
+  (`finio-visual-theme`), **not** in `Settings`: settings travel in every backup, so a field there
+  would change the backup contract, and a look is a per-device preference anyway. `ThemeProvider`
+  sets `<html data-visual-theme="…">` (none = Mudra) and `index.html` does the same before first paint.
+  Each theme is a file in [`src/themes/`](src/themes) that (1) overrides the colour/type/radius tokens
+  for `html[data-visual-theme='x']` and `html.dark[data-visual-theme='x']`, (2) restyles the shared
+  Mudra utilities (`card-elevated`, `glass-chrome`, `bg-coin`, `note-card`, `note-tile` …), and (3)
+  restyles the layout chrome through `data-slot` hooks (`tab-bar`, `tab`, `fab`, `sidebar`,
+  `nav-item`, `add-button`, `page-header`). Rules that are easy to break:
+  - Theme CSS is **unlayered** so it beats Tailwind's utilities layer; selectors must carry the
+    attribute (and `.dark` for dark values, or `.dark` in index.css wins). Fonts go through
+    `--ff-heading/--ff-money/--ff-sans` because `@theme inline` bakes a font name into the utility
+    and would ignore an override.
+  - Keep `--grad-primary` deep enough for white text in **every** theme and mode — call sites
+    hardcode `text-white` on `bg-grad-primary`.
+  - Theme-only pieces (`BurstBadge`, `MonthLine`, `SunArc`, `GoalPlant` in
+    [`ui/theme-extras.tsx`](src/components/ui/theme-extras.tsx)) are always in the DOM and hidden by
+    `.only-<theme>`; add a new one there rather than checking the theme in a page. The hero figure
+    carries `hero-fig` (+ `data-whole` when it is whole rupees) and the budget bar `hero-bar` so a
+    theme can restyle or replace them.
+  - AMOLED is not Mudra-only: `html.dark.amoled[data-visual-theme]` forces a true-black field on any
+    theme. Adding a theme means: a `src/themes/<name>.css`, an entry in `VISUAL_THEMES` /
+    `THEME_COLORS`, the id in the `index.html` pre-paint script, and its font in `index.css`.
+  - The Android app mirrors every theme (`android/.../ui/theme/ThemePalettes.kt`); change both together.
 - **Tailwind CSS v4** — configured via `@tailwindcss/vite` plugin (no `tailwind.config.js`; directives in `index.css`).
 - **shadcn/ui** with `base-nova` style, using `@base-ui/react` under the hood. Add new components with `npx shadcn@latest add <component>`.
 - **Lucide React** for icons.

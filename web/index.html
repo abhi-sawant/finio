@@ -39,6 +39,13 @@
           }
           var dark = theme === 'dark' || (theme !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
           d.classList.toggle('dark', dark);
+          // The stored visual theme (src/store/useVisualThemeStore.ts). Keep the key, the field
+          // name and the id list in sync with it.
+          try {
+            var vt = JSON.parse(localStorage.getItem('finio-visual-theme') || 'null');
+            vt = vt && vt.state && vt.state.visualTheme;
+            if (vt === 'khata' || vt === 'gulal' || vt === 'shunya' || vt === 'bagh') d.dataset.visualTheme = vt;
+          } catch (e) {}
           var standalone = navigator.standalone === true ||
             matchMedia('(display-mode: standalone)').matches ||
             matchMedia('(display-mode: fullscreen)').matches ||

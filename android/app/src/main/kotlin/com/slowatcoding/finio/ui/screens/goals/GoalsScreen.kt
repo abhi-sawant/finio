@@ -68,6 +68,7 @@ import com.slowatcoding.finio.ui.components.ScreenTitle
 import com.slowatcoding.finio.ui.components.SelectOption
 import com.slowatcoding.finio.ui.components.toast
 import com.slowatcoding.finio.ui.icons.LucideIcons
+import com.slowatcoding.finio.ui.mudra.GoalPlant
 import com.slowatcoding.finio.ui.mudra.ThreadProgressBar
 import com.slowatcoding.finio.ui.navigation.FinioNavigator
 import com.slowatcoding.finio.ui.screens.budgets.CardIconAction
@@ -392,6 +393,7 @@ private fun GoalCard(
     val goal = status.goal
     FinioCard(Modifier.fillMaxWidth()) {
         Row(Modifier.fillMaxWidth().padding(bottom = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+            GoalPlant(status.percent.toFloat(), Modifier.padding(end = 8.dp))
             Column(Modifier.weight(1f)) {
                 Text(goal.name, style = FinioType.bodyMedium, color = colors.foreground, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 Text(

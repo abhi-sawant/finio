@@ -1,6 +1,9 @@
 package com.slowatcoding.finio.ui.theme
 
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -34,7 +37,35 @@ val FamiljenGrotesk = FontFamily(
     variable(R.font.familjen_grotesk, 700),
 )
 
-/** `font-variant-numeric: tabular-nums` is set on <body>, so every Instrument Sans style carries it. */
+// ── Faces for the alternative visual themes (web: the web theme stylesheets). Variable fonts; the weight axis
+// is driven by FontVariation, any other axis (opsz, wdth) stays at its default. ──
+val SourceSerif4 = FontFamily(
+    variable(R.font.source_serif_4, 400), variable(R.font.source_serif_4, 500),
+    variable(R.font.source_serif_4, 600), variable(R.font.source_serif_4, 700),
+)
+val SourceSans3 = FontFamily(
+    variable(R.font.source_sans_3, 400), variable(R.font.source_sans_3, 500),
+    variable(R.font.source_sans_3, 600), variable(R.font.source_sans_3, 700),
+)
+val BricolageGrotesque = FontFamily(
+    variable(R.font.bricolage_grotesque, 400), variable(R.font.bricolage_grotesque, 500),
+    variable(R.font.bricolage_grotesque, 600), variable(R.font.bricolage_grotesque, 700),
+    variable(R.font.bricolage_grotesque, 800),
+)
+val Geist = FontFamily(
+    variable(R.font.geist, 200), variable(R.font.geist, 300), variable(R.font.geist, 400),
+    variable(R.font.geist, 500), variable(R.font.geist, 600),
+)
+val Gabarito = FontFamily(
+    variable(R.font.gabarito, 400), variable(R.font.gabarito, 500),
+    variable(R.font.gabarito, 600), variable(R.font.gabarito, 700),
+)
+val Figtree = FontFamily(
+    variable(R.font.figtree, 400), variable(R.font.figtree, 500),
+    variable(R.font.figtree, 600), variable(R.font.figtree, 700),
+)
+
+/** `font-variant-numeric: tabular-nums` is set on <body>, so every body style carries it. */
 private const val TNUM = "tnum"
 
 /** CSS line boxes centre the glyphs in the line height and don't trim; match that. */
@@ -43,63 +74,113 @@ private val CssLineHeight = LineHeightStyle(
     trim = LineHeightStyle.Trim.None,
 )
 
-private fun instrumentSans(size: TextUnit, lineHeight: TextUnit, weight: Int = 400) = TextStyle(
-    fontFamily = InstrumentSans,
-    fontSize = size,
-    lineHeight = lineHeight,
-    fontWeight = FontWeight(weight),
-    fontFeatureSettings = TNUM,
-    lineHeightStyle = CssLineHeight,
-)
-
-private fun familjen(size: TextUnit, lineHeight: TextUnit, weight: Int, tracking: TextUnit) = TextStyle(
-    fontFamily = FamiljenGrotesk,
-    fontSize = size,
-    lineHeight = lineHeight,
-    fontWeight = FontWeight(weight),
-    letterSpacing = tracking,
-    fontFeatureSettings = TNUM,
-    lineHeightStyle = CssLineHeight,
-)
-
 /**
- * The Mudra type scale (design.md "Typography"), sized like Tailwind's (`text-xs` 12/16,
- * `text-sm` 14/20, `text-base` 16/24, `text-lg` 18/28, `text-xl` 20/28, `text-2xl` 24/32,
- * `text-3xl` 30/36). 1rem = 16sp.
+ * The type scale for one visual theme (design.md "Typography"), sized like Tailwind's (`text-xs`
+ * 12/16 … `text-3xl` 30/36; 1rem = 16sp). The sizes and line heights are shared by every theme;
+ * a theme chooses its faces and weights — the `--ff-*` variables of the web theme stylesheets.
  */
 @Immutable
-object FinioType {
-    // ── Familjen Grotesk ──
-    /** The hero figure on the banknote: 600, 2.75rem, line-height 1.05, −0.03em. Shrink with noteFigureSize. */
-    val displayMoney = familjen(44.sp, 46.2.sp, 600, (-0.02).em)
-    /** Tab-page `h1` ("Transactions", "Settings"): `text-2xl font-bold tracking-tight`. */
-    val pageTitle = familjen(24.sp, 32.sp, 700, (-0.025).em)
-    /** Sub-page `h1` in a back-button header: `text-base font-semibold`, −0.02em. */
-    val screenTitle = familjen(16.sp, 24.sp, 600, (-0.02).em)
-    /** Headline (h1 base): 600, 1.5rem, −0.02em. */
-    val headline = familjen(24.sp, 32.sp, 600, (-0.02).em)
-    /** `.font-money` at note-tile size (1.125rem). Use `.copy(fontSize = …)` for other steps. */
-    val money = familjen(18.sp, 28.sp, 600, (-0.02).em)
-    /** `DialogTitle`: `font-heading text-base leading-none font-medium`. */
-    val dialogTitle = familjen(16.sp, 16.sp, 500, (-0.02).em)
+class FinioTypeScale(
+    heading: FontFamily,
+    money: FontFamily,
+    private val sansFamily: FontFamily,
+    displayWeight: Int = 600, displayTracking: Float = -0.02f,
+    pageTitleWeight: Int = 700, screenTitleWeight: Int = 600, headlineWeight: Int = 600,
+    moneyWeight: Int = 600, dialogTitleWeight: Int = 500,
+    /** Added to every reading style's weight (Gulal sets body at 500). */
+    private val sansBoost: Int = 0,
+    /** Weight of section headings and other `title` text. */
+    titleWeight: Int = 600,
+) {
+    private fun sans(size: TextUnit, lineHeight: TextUnit, weight: Int = 400) = TextStyle(
+        fontFamily = sansFamily,
+        fontSize = size,
+        lineHeight = lineHeight,
+        fontWeight = FontWeight((weight + sansBoost).coerceAtMost(800)),
+        fontFeatureSettings = TNUM,
+        lineHeightStyle = CssLineHeight,
+    )
 
-    // ── Instrument Sans ──
-    /** Section headings ("Where it sits", "Latest"): 600, 1rem. */
-    val title = instrumentSans(16.sp, 24.sp, 600)
-    /** Inputs and select triggers on mobile (`text-base`). */
-    val input = instrumentSans(16.sp, 24.sp, 400)
-    /** Row names and sentences: 400, 0.875rem. */
-    val body = instrumentSans(14.sp, 20.sp, 400)
-    /** Row names that carry weight (`text-sm font-medium`), buttons. */
-    val bodyMedium = instrumentSans(14.sp, 20.sp, 500)
-    /** Row values: 600 Instrument Sans — never Familjen Grotesk. */
-    val rowValue = instrumentSans(14.sp, 20.sp, 600)
-    /** Labels: 500, 0.75rem, sentence case, muted. */
-    val label = instrumentSans(12.sp, 16.sp, 500)
-    /** Captions / secondary row text (`text-xs`). */
-    val caption = instrumentSans(12.sp, 16.sp, 400)
-    /** The budget badge and other 10px micro text. */
-    val micro = instrumentSans(10.sp, 14.sp, 500)
-    /** Toasts (Sonner's 13px). */
-    val toast = instrumentSans(13.sp, 19.5.sp, 500)
+    private fun face(family: FontFamily, size: TextUnit, lineHeight: TextUnit, weight: Int, tracking: Float) = TextStyle(
+        fontFamily = family,
+        fontSize = size,
+        lineHeight = lineHeight,
+        fontWeight = FontWeight(weight),
+        letterSpacing = tracking.em,
+        fontFeatureSettings = TNUM,
+        lineHeightStyle = CssLineHeight,
+    )
+
+    val displayMoney = face(money, 44.sp, 46.2.sp, displayWeight, displayTracking)
+    val pageTitle = face(heading, 24.sp, 32.sp, pageTitleWeight, -0.025f)
+    val screenTitle = face(heading, 16.sp, 24.sp, screenTitleWeight, -0.02f)
+    val headline = face(heading, 24.sp, 32.sp, headlineWeight, -0.02f)
+    val money = face(money, 18.sp, 28.sp, moneyWeight, -0.02f)
+    val dialogTitle = face(heading, 16.sp, 16.sp, dialogTitleWeight, -0.02f)
+
+    val title = sans(16.sp, 24.sp, titleWeight)
+    val input = sans(16.sp, 24.sp, 400)
+    val body = sans(14.sp, 20.sp, 400)
+    val bodyMedium = sans(14.sp, 20.sp, 500)
+    val rowValue = sans(14.sp, 20.sp, 600)
+    val label = sans(12.sp, 16.sp, 500)
+    val caption = sans(12.sp, 16.sp, 400)
+    val micro = sans(10.sp, 14.sp, 500)
+    val toast = sans(13.sp, 19.5.sp, 500)
+}
+
+/** Mudra: Familjen Grotesk (the banknote numeral) for titles and money, Instrument Sans to read. */
+val MudraTypeScale = FinioTypeScale(FamiljenGrotesk, FamiljenGrotesk, InstrumentSans)
+
+fun typeScaleFor(visual: VisualTheme): FinioTypeScale = when (visual) {
+    VisualTheme.Mudra -> MudraTypeScale
+    VisualTheme.Khata -> khataScale
+    VisualTheme.Gulal -> gulalScale
+    VisualTheme.Shunya -> shunyaScale
+    VisualTheme.Bagh -> baghScale
+}
+
+private val khataScale = FinioTypeScale(
+    SourceSerif4, SourceSerif4, SourceSans3,
+    displayWeight = 700, pageTitleWeight = 700, screenTitleWeight = 700, headlineWeight = 700, moneyWeight = 600,
+)
+private val gulalScale = FinioTypeScale(
+    BricolageGrotesque, BricolageGrotesque, BricolageGrotesque,
+    displayWeight = 800, displayTracking = -0.04f, pageTitleWeight = 800, screenTitleWeight = 800,
+    headlineWeight = 800, moneyWeight = 800, dialogTitleWeight = 700, sansBoost = 100, titleWeight = 700,
+)
+private val shunyaScale = FinioTypeScale(
+    Geist, Geist, Geist,
+    displayWeight = 200, displayTracking = -0.05f, pageTitleWeight = 300, screenTitleWeight = 400,
+    headlineWeight = 300, moneyWeight = 400, dialogTitleWeight = 400, titleWeight = 500,
+)
+private val baghScale = FinioTypeScale(
+    Gabarito, Gabarito, Figtree,
+    displayWeight = 700, displayTracking = -0.035f, pageTitleWeight = 700, screenTitleWeight = 700,
+    headlineWeight = 700, moneyWeight = 700, dialogTitleWeight = 600,
+)
+
+val LocalFinioType = staticCompositionLocalOf { MudraTypeScale }
+
+/**
+ * The type scale of the active visual theme, read like the old static object: `FinioType.body`.
+ * Every member is a composable getter, so it can only be read during composition (a `remember {}`
+ * or default argument is fine; a plain callback is not).
+ */
+object FinioType {
+    val displayMoney: TextStyle @Composable @ReadOnlyComposable get() = LocalFinioType.current.displayMoney
+    val pageTitle: TextStyle @Composable @ReadOnlyComposable get() = LocalFinioType.current.pageTitle
+    val screenTitle: TextStyle @Composable @ReadOnlyComposable get() = LocalFinioType.current.screenTitle
+    val headline: TextStyle @Composable @ReadOnlyComposable get() = LocalFinioType.current.headline
+    val money: TextStyle @Composable @ReadOnlyComposable get() = LocalFinioType.current.money
+    val dialogTitle: TextStyle @Composable @ReadOnlyComposable get() = LocalFinioType.current.dialogTitle
+    val title: TextStyle @Composable @ReadOnlyComposable get() = LocalFinioType.current.title
+    val input: TextStyle @Composable @ReadOnlyComposable get() = LocalFinioType.current.input
+    val body: TextStyle @Composable @ReadOnlyComposable get() = LocalFinioType.current.body
+    val bodyMedium: TextStyle @Composable @ReadOnlyComposable get() = LocalFinioType.current.bodyMedium
+    val rowValue: TextStyle @Composable @ReadOnlyComposable get() = LocalFinioType.current.rowValue
+    val label: TextStyle @Composable @ReadOnlyComposable get() = LocalFinioType.current.label
+    val caption: TextStyle @Composable @ReadOnlyComposable get() = LocalFinioType.current.caption
+    val micro: TextStyle @Composable @ReadOnlyComposable get() = LocalFinioType.current.micro
+    val toast: TextStyle @Composable @ReadOnlyComposable get() = LocalFinioType.current.toast
 }

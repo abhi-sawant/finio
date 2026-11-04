@@ -8,10 +8,16 @@ export function Sidebar() {
   const navigate = useNavigate();
 
   return (
-    <aside className="glass-chrome fixed top-0 left-0 z-30 hidden h-dvh w-60 shrink-0 flex-col gap-1 overflow-y-auto border-r border-[var(--glass-border)] px-3 py-5 lg:flex">
+    <aside
+      data-slot="sidebar"
+      className="glass-chrome fixed top-0 left-0 z-30 hidden h-dvh w-60 shrink-0 flex-col gap-1 overflow-y-auto border-r border-[var(--glass-border)] px-3 py-5 lg:flex"
+    >
       {/* Brand */}
       <div className="mb-4 flex items-center gap-2.5 px-2">
-        <div className="bg-coin font-money flex h-9 w-9 items-center justify-center rounded-full text-sm">
+        <div
+          data-slot="brand-mark"
+          className="bg-coin font-money flex h-9 w-9 items-center justify-center rounded-full text-sm"
+        >
           F
         </div>
         <span className="font-heading text-lg font-bold tracking-tight">Finio</span>
@@ -20,6 +26,7 @@ export function Sidebar() {
       {/* Add transaction */}
       <button
         onClick={() => navigate('/add-transaction')}
+        data-slot="add-button"
         className="bg-grad-primary shadow-glow-primary mb-3 flex items-center justify-center gap-2 rounded-full py-3 text-sm font-semibold text-white transition-transform active:scale-[0.98]"
       >
         <Plus size={18} strokeWidth={2.4} />
@@ -36,6 +43,7 @@ export function Sidebar() {
               key={tab.path}
               onClick={() => navigate(tab.path)}
               aria-current={isActive ? 'page' : undefined}
+              data-slot="nav-item"
               className={cn(
                 'flex items-center gap-3 rounded-full px-3 py-3 text-sm font-medium transition-colors',
                 isActive
@@ -61,6 +69,7 @@ export function Sidebar() {
               key={item.path}
               onClick={() => navigate(item.path)}
               aria-current={isActive ? 'page' : undefined}
+              data-slot="nav-item"
               className={cn(
                 'flex items-center gap-3 rounded-full px-3 py-3 text-sm font-medium transition-colors',
                 isActive

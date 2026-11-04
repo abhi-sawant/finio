@@ -36,6 +36,7 @@ import {
 import { accountDisplayValue, isDepositAccount } from '@/utils/deposit';
 import { BudgetProgressBar } from '@/components/budgets/BudgetHealthBadge';
 import { NoteCard } from '@/components/ui/note-card';
+import { BurstBadge, GoalPlant, MonthLine, SunArc } from '@/components/ui/theme-extras';
 import { noteFigureClass } from '@/components/ui/note-figure';
 import { Guilloche } from '@/components/ui/guilloche';
 import { ACCOUNT_TYPE_LABEL, noteStyle } from '@/components/accounts/note';
@@ -163,6 +164,12 @@ export default function Dashboard() {
   const safePerDay = overallBudget
     ? Math.floor(Math.max(overallBudget.remaining - upcomingBillsTotal, 0) / daysLeftInPeriod)
     : 0;
+  // How far through the budget's period today is — Shunya's month line and Bagh's sun read it.
+  const periodElapsed = useMemo(() => {
+    const range = periodRange(overallBudget?.budget.period ?? 'monthly', new Date(), monthStartDay);
+    const span = range.end.getTime() - range.start.getTime();
+    return span > 0 ? Math.min(Math.max((Date.now() - range.start.getTime()) / span, 0), 1) : 0;
+  }, [overallBudget?.budget.period, monthStartDay]);
   const periodLabel = useMemo(() => {
     const range = periodRange('monthly', new Date(), monthStartDay);
     return `${format(range.start, 'd MMM')} – ${format(range.end, 'd MMM')}`;
@@ -292,12 +299,21 @@ export default function Dashboard() {
 
       <Main className="flex flex-col gap-4 space-y-0 lg:grid lg:grid-cols-2 lg:items-start lg:space-y-0 lg:gap-x-8 lg:gap-y-6">
         {/* Hero */}
-        <NoteCard className="lg:col-span-2 lg:row-start-1">
+        <NoteCard
+          className="lg:col-span-2 lg:row-start-1"
+          badge={
+            overallBudget && overallBudget.spent > 0 ? (
+              <BurstBadge text={`${Math.round(overallBudget.percent)}%`} />
+            ) : undefined
+          }
+          scene={overallBudget ? <SunArc elapsed={periodElapsed} /> : undefined}
+        >
           {overallBudget ? (
             <>
               <p className="text-muted-foreground text-sm font-medium">Safe to spend today</p>
               <p
-                className={`font-money mt-1 leading-[1.05] ${noteFigureClass(formatCurrency(safePerDay, false, hideAmounts, { precise: false }))} ${overallBudget.isOver ? 'text-destructive' : ''}`}
+                data-whole
+                className={`hero-fig font-money mt-1 leading-[1.05] ${noteFigureClass(formatCurrency(safePerDay, false, hideAmounts, { precise: false }))} ${overallBudget.isOver ? 'text-destructive' : ''}`}
               >
                 {formatCurrency(safePerDay, false, hideAmounts, { precise: false })}
               </p>
@@ -324,14 +340,15 @@ export default function Dashboard() {
               )}
               {overallBudget.spent > 0 && (
                 <>
-                  <div className="mt-3">
+                  <MonthLine elapsed={periodElapsed} spent={overallBudget.percent} />
+                  <div className="hero-bar mt-3">
                     <BudgetProgressBar
                       status={overallBudget}
                       okFill="var(--register)"
                       valueText={`${formatCurrency(overallBudget.spent, true, hideAmounts)} of ${formatCurrency(overallBudget.limit, true, hideAmounts)} spent`}
                     />
                   </div>
-                  <p className="text-muted-foreground mt-1.5 text-xs" aria-hidden>
+                  <p className="hero-budget text-muted-foreground mt-1.5 text-xs" aria-hidden>
                     Spent {formatCurrency(overallBudget.spent, true, hideAmounts)} of{' '}
                     {formatCurrency(overallBudget.limit, true, hideAmounts)}
                   </p>
@@ -669,6 +686,7 @@ export default function Dashboard() {
                       {topGoals.map((s) => (
                         <div key={s.goal.id}>
                           <div className="mb-1 flex items-center justify-between gap-2">
+                            <GoalPlant percent={s.percent} className="goal-plant-sm" />
                             <span className="flex min-w-0 flex-1 items-center gap-1.5 text-xs font-medium">
                               <span className="shrink-0">
                                 <GoalIcon icon={s.goal.icon} size={12} color={s.goal.color} />

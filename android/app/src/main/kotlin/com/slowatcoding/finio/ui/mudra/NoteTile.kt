@@ -37,6 +37,7 @@ import com.slowatcoding.finio.ui.theme.EaseOutExpo
 import com.slowatcoding.finio.ui.theme.FinioShapes
 import com.slowatcoding.finio.ui.theme.FinioTheme
 import com.slowatcoding.finio.ui.theme.FinioType
+import com.slowatcoding.finio.ui.components.themeBorder
 import com.slowatcoding.finio.ui.theme.cssInsetShadow
 import com.slowatcoding.finio.ui.theme.cssShadow
 import kotlin.math.max
@@ -68,6 +69,7 @@ fun NoteTile(
     val shape = FinioShapes.md
     val highlight = remember(colors.glassHighlight) { listOf(CssShadow(y = 1.dp, color = colors.glassHighlight, inset = true)) }
     val rosette = remember { guillochePaths(14, 5) }
+    val engraved = FinioTheme.visual == com.slowatcoding.finio.ui.theme.VisualTheme.Mudra
 
     CompositionLocalProvider(LocalContentColor provides note.ink) {
         Layout(
@@ -98,13 +100,14 @@ fun NoteTile(
                 .clip(shape)
                 .background(note.background)
                 .cssInsetShadow(shape, highlight)
-                .border(1.dp, colors.glassBorder, shape)
+                .themeBorder(shape)
                 .drawWithCache {
                     val box = 150.dp.toPx()
                     val rosetteTopLeft = Offset(size.width + 64.dp.toPx() - box, size.height + 78.dp.toPx() - box)
                     val threadWidth = 4.dp.toPx()
                     val threadLeft = size.width - 14.dp.toPx() - threadWidth
                     onDrawBehind {
+                        if (!engraved) return@onDrawBehind
                         drawGuilloche(rosette, note.ink.copy(alpha = note.ink.alpha * 0.45f), rosetteTopLeft, box)
                         drawWindows(
                             SolidColor(note.ink),

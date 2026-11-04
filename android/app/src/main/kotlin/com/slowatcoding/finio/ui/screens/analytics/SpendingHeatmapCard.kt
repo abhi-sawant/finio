@@ -138,7 +138,8 @@ fun SpendingHeatmapCard(modifier: Modifier = Modifier) {
     }
 }
 
-private val statValue = FinioType.caption.copy(fontWeight = FontWeight.SemiBold)
+private val statValue: androidx.compose.ui.text.TextStyle
+    @androidx.compose.runtime.Composable @androidx.compose.runtime.ReadOnlyComposable get() = FinioType.caption.copy(fontWeight = FontWeight.SemiBold)
 
 @Composable
 private fun Stat(modifier: Modifier, label: String, value: @Composable () -> Unit) {

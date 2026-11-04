@@ -78,7 +78,13 @@ fun AppShell(navController: NavHostController, graph: NavGraph, navigator: Finio
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
                         .windowInsetsPadding(WindowInsets.navigationBars)
-                        .padding(end = 16.dp, bottom = 88.dp),
+                        .padding(
+                            end = 16.dp,
+                            bottom = if (com.slowatcoding.finio.ui.theme.FinioTheme.visual.let {
+                                it == com.slowatcoding.finio.ui.theme.VisualTheme.Gulal ||
+                                    it == com.slowatcoding.finio.ui.theme.VisualTheme.Bagh
+                            }) 106.dp else 88.dp,
+                        ),
                 )
             }
             FinioTabBar(

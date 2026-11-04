@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { GoalPlant } from '@/components/ui/theme-extras';
 import { useNavigate } from 'react-router';
 import {
   ArrowLeft,
@@ -475,7 +476,8 @@ function GoalCard({
   return (
     <div className="card-elevated rounded-md p-4">
       <div className="mb-2 flex items-center justify-between">
-        <div className="min-w-0">
+        <GoalPlant percent={status.percent} className="mr-2" />
+        <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-medium">{goal.name}</p>
           <p className="text-muted-foreground truncate text-[11px]">
             {linkedAccountName ? `Linked · ${linkedAccountName}` : 'No linked account'}

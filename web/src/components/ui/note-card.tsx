@@ -38,9 +38,14 @@ const MICROPRINT = 'FINIO · KEPT ON THIS DEVICE · NOT A BANK · YOUR DATA STAY
 export function NoteCard({
   children,
   className,
+  badge,
+  scene,
 }: {
   children: React.ReactNode;
   className?: string;
+  /** Theme extras (see ui/theme-extras.tsx), each shown by one visual theme only. */
+  badge?: React.ReactNode;
+  scene?: React.ReactNode;
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -88,7 +93,9 @@ export function NoteCard({
         </svg>
         <Guilloche className="note-card-rosette" />
         <div className="note-card-thread" aria-hidden />
-        <div className="relative z-1 pr-20 lg:max-w-lg lg:pr-0">{children}</div>
+        {badge}
+        {scene}
+        <div className="note-card-body relative z-1 pr-20 lg:max-w-lg lg:pr-0">{children}</div>
         <div className="note-card-microprint" aria-hidden>
           {MICROPRINT}
         </div>

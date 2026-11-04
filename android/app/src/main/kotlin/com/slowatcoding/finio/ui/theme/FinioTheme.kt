@@ -26,31 +26,52 @@ fun Theme.isDark(): Boolean = when (this) {
 }
 
 /**
- * The Mudra theme. Provides [FinioColors], [FinioBrushes] and [FinioShadows] through
- * composition locals (read them via [FinioTheme.colors] etc.) and maps the palette onto a
- * Material 3 [ColorScheme], so any stock M3 component that slips in still wears the world.
+ * The Finio theme. Provides [FinioColors], [FinioBrushes], [FinioShadows], the [FinioSpec], the type
+ * scale and the shape scale of the chosen [visual] world (Mudra by default) through composition
+ * locals (read them via [FinioTheme.colors] etc.) and maps the palette onto a Material 3
+ * [ColorScheme], so any stock M3 component that slips in still wears the world.
  */
 @Composable
-fun FinioTheme(theme: Theme = Theme.System, amoled: Boolean = false, content: @Composable () -> Unit) {
-    FinioTheme(dark = theme.isDark(), amoled = amoled, content = content)
+fun FinioTheme(
+    theme: Theme = Theme.System,
+    amoled: Boolean = false,
+    visual: VisualTheme = VisualTheme.Default,
+    content: @Composable () -> Unit,
+) {
+    FinioTheme(dark = theme.isDark(), amoled = amoled, visual = visual, content = content)
 }
 
 /** [amoled] only takes effect while [dark] is true, like `.dark.amoled` in the stylesheet. */
 @Composable
-fun FinioTheme(dark: Boolean, amoled: Boolean = false, content: @Composable () -> Unit) {
-    val black = dark && amoled
-    val colors = if (black) AmoledFinioColors else if (dark) DarkFinioColors else LightFinioColors
-    val brushes = if (black) AmoledFinioBrushes else if (dark) DarkFinioBrushes else LightFinioBrushes
-    val shadows = if (black) AmoledFinioShadows else if (dark) DarkFinioShadows else LightFinioShadows
+fun FinioTheme(
+    dark: Boolean,
+    amoled: Boolean = false,
+    visual: VisualTheme = VisualTheme.Default,
+    content: @Composable () -> Unit,
+) {
+    val palette = remember(visual, dark, amoled) { finioPalette(visual, dark, amoled) }
+    val colors = palette.colors
+    val typeScale = remember(visual) { typeScaleFor(visual) }
+    val shapeScale = remember(visual) { shapeScaleFor(visual) }
     val scheme = remember(colors) { colors.toColorScheme() }
+    val materialTypography = remember(typeScale) { typeScale.toMaterialTypography() }
+    val materialShapes = remember(shapeScale) {
+        Shapes(
+            extraSmall = shapeScale.chip, small = shapeScale.sm, medium = shapeScale.md,
+            large = shapeScale.lg, extraLarge = shapeScale.xl,
+        )
+    }
     // `::selection { background: color-mix(in srgb, var(--primary) 28%, transparent) }`.
     val selection = remember(colors) { TextSelectionColors(colors.primary, colors.primary.mix(0.28f)) }
 
-    MaterialTheme(colorScheme = scheme, typography = MaterialTypography, shapes = MaterialShapes) {
+    MaterialTheme(colorScheme = scheme, typography = materialTypography, shapes = materialShapes) {
         CompositionLocalProvider(
             LocalFinioColors provides colors,
-            LocalFinioBrushes provides brushes,
-            LocalFinioShadows provides shadows,
+            LocalFinioBrushes provides palette.brushes,
+            LocalFinioShadows provides palette.shadows,
+            LocalFinioSpec provides palette.spec,
+            LocalFinioType provides typeScale,
+            LocalFinioShapes provides shapeScale,
             LocalTextSelectionColors provides selection,
             LocalContentColor provides colors.foreground,
             content = content,
@@ -65,6 +86,11 @@ object FinioTheme {
         @Composable @ReadOnlyComposable get() = LocalFinioBrushes.current
     val shadows: FinioShadows
         @Composable @ReadOnlyComposable get() = LocalFinioShadows.current
+    val spec: FinioSpec
+        @Composable @ReadOnlyComposable get() = LocalFinioSpec.current
+    /** The active visual world — branch on this only for a theme's signature pieces. */
+    val visual: VisualTheme
+        @Composable @ReadOnlyComposable get() = LocalFinioSpec.current.visual
     val type: FinioType get() = FinioType
 }
 
@@ -110,28 +136,20 @@ private fun FinioColors.toColorScheme(): ColorScheme {
     )
 }
 
-private val MaterialTypography = Typography(
-    displayLarge = FinioType.displayMoney,
-    displayMedium = FinioType.displayMoney.copy(fontSize = FinioType.displayMoney.fontSize * 0.82f),
-    displaySmall = FinioType.headline,
-    headlineLarge = FinioType.pageTitle,
-    headlineMedium = FinioType.headline,
-    headlineSmall = FinioType.screenTitle,
-    titleLarge = FinioType.screenTitle,
-    titleMedium = FinioType.title,
-    titleSmall = FinioType.bodyMedium,
-    bodyLarge = FinioType.input,
-    bodyMedium = FinioType.body,
-    bodySmall = FinioType.caption,
-    labelLarge = FinioType.bodyMedium,
-    labelMedium = FinioType.label,
-    labelSmall = FinioType.micro,
-)
-
-private val MaterialShapes = Shapes(
-    extraSmall = FinioShapes.chip,
-    small = FinioShapes.sm,
-    medium = FinioShapes.md,
-    large = FinioShapes.lg,
-    extraLarge = FinioShapes.xl,
+private fun FinioTypeScale.toMaterialTypography() = Typography(
+    displayLarge = displayMoney,
+    displayMedium = displayMoney.copy(fontSize = displayMoney.fontSize * 0.82f),
+    displaySmall = headline,
+    headlineLarge = pageTitle,
+    headlineMedium = headline,
+    headlineSmall = screenTitle,
+    titleLarge = screenTitle,
+    titleMedium = title,
+    titleSmall = bodyMedium,
+    bodyLarge = input,
+    bodyMedium = body,
+    bodySmall = caption,
+    labelLarge = bodyMedium,
+    labelMedium = label,
+    labelSmall = micro,
 )

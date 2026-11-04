@@ -77,7 +77,12 @@ import com.slowatcoding.finio.ui.components.SectionHeader
 import com.slowatcoding.finio.ui.components.TransactionRow
 import com.slowatcoding.finio.ui.components.parseHexColor
 import com.slowatcoding.finio.ui.icons.LucideIcons
+import com.slowatcoding.finio.ui.mudra.BurstBadge
+import com.slowatcoding.finio.ui.mudra.GoalPlant
+import com.slowatcoding.finio.ui.mudra.HeroFigure
+import com.slowatcoding.finio.ui.mudra.MonthLine
 import com.slowatcoding.finio.ui.mudra.NoteCard
+import com.slowatcoding.finio.ui.mudra.SunArc
 import com.slowatcoding.finio.ui.mudra.NoteTile
 import com.slowatcoding.finio.ui.mudra.RegisterBar
 import com.slowatcoding.finio.ui.mudra.ThreadProgressBar
@@ -286,19 +291,28 @@ private fun jsRound(x: Double): Long = kotlin.math.floor(x + 0.5).toLong()
 
 @Composable
 private fun Hero(data: DashboardData, money: MoneyFormatter, hasAccounts: Boolean, nav: FinioNavigator, onHow: () -> Unit) {
-    val colors = FinioTheme.colors
-    NoteCard(Modifier.fillMaxWidth()) {
+    val heroOverall = data.overallBudget
+    NoteCard(
+        Modifier.fillMaxWidth(),
+        badge = if (heroOverall != null && heroOverall.spent > 0) {
+            { BurstBadge("${jsRound(heroOverall.percent)}%") }
+        } else null,
+        scene = if (heroOverall != null) {
+            { SunArc(data.periodElapsed) }
+        } else null,
+    ) {
+        // Read inside the card: Gulal re-inks its hero, which only shows through its own scope.
+        val colors = FinioTheme.colors
         val overall = data.overallBudget
         if (overall != null) {
             Text("Safe to spend today", style = FinioType.bodyMedium, color = colors.mutedForeground)
             val figure = money(data.safePerDay, precise = false)
-            Text(
+            HeroFigure(
                 figure,
-                Modifier.padding(top = 4.dp),
-                style = noteFigureStyle(figure),
+                noteFigureStyle(figure),
                 color = if (overall.isOver) colors.destructive else colors.foreground,
-                maxLines = 1,
-                softWrap = false,
+                whole = true,
+                modifier = Modifier.padding(top = 4.dp),
             )
             val days = data.daysLeftInPeriod
             Text(
@@ -329,7 +343,9 @@ private fun Hero(data: DashboardData, money: MoneyFormatter, hasAccounts: Boolea
                 )
             }
             if (overall.spent > 0) {
-                RegisterBar(
+                MonthLine(data.periodElapsed, overall.percent.toFloat(), Modifier.padding(top = 20.dp))
+                // Shunya replaces the bar with its month line (which draws nothing in other themes).
+                if (FinioTheme.visual != com.slowatcoding.finio.ui.theme.VisualTheme.Shunya) RegisterBar(
                     percent = overall.percent.toFloat(),
                     isOver = overall.isOver,
                     modifier = Modifier.padding(top = 12.dp),
@@ -670,6 +686,7 @@ private fun AlsoTracking(data: DashboardData, money: MoneyFormatter, nav: FinioN
                                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                                     verticalAlignment = Alignment.CenterVertically,
                                 ) {
+                                    GoalPlant(s.percent.toFloat(), size = 28.dp)
                                     Row(
                                         Modifier.weight(1f),
                                         horizontalArrangement = Arrangement.spacedBy(6.dp),

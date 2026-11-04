@@ -299,6 +299,9 @@ class AppContainer(private val app: Application) {
     private val skippedUpdate = SkippedUpdateStore(app)
     private var updateChecked = false
 
+    /** The visual theme (device-local, outside the backup contract). */
+    val visualTheme = com.slowatcoding.finio.platform.storage.VisualThemeStore(app)
+
     private val _availableUpdate = MutableStateFlow<ReleaseInfo?>(null)
 
     /** A newer, not-skipped release to offer; the dialog shows while this is non-null. */

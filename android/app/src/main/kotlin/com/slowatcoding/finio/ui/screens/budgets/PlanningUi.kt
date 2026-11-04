@@ -64,10 +64,12 @@ import com.slowatcoding.finio.ui.theme.mix
  */
 
 /** `text-[11px]` — the card meta lines. */
-val Micro: TextStyle get() = FinioType.caption.copy(fontSize = 11.sp, lineHeight = 16.sp)
+val Micro: TextStyle
+    @androidx.compose.runtime.Composable @androidx.compose.runtime.ReadOnlyComposable get() = FinioType.caption.copy(fontSize = 11.sp, lineHeight = 16.sp)
 
 /** `text-[10px]`. */
-val Tiny: TextStyle get() = FinioType.caption.copy(fontSize = 10.sp, lineHeight = 14.sp)
+val Tiny: TextStyle
+    @androidx.compose.runtime.Composable @androidx.compose.runtime.ReadOnlyComposable get() = FinioType.caption.copy(fontSize = 10.sp, lineHeight = 14.sp)
 
 /**
  * The radio pill row inside the inline forms (`bg-muted grid grid-cols-N gap-1 rounded-full p-1`,

@@ -33,7 +33,8 @@ import com.slowatcoding.finio.ui.theme.FinioType
 const val CONTACT_EMAIL = "contact@finio.slowatcoding.com"
 
 /** `text-sm leading-relaxed` — 14sp at 1.625. */
-private val LegalBody = FinioType.body.copy(lineHeight = 22.75.sp)
+private val LegalBody: androidx.compose.ui.text.TextStyle
+    @androidx.compose.runtime.Composable @androidx.compose.runtime.ReadOnlyComposable get() = FinioType.body.copy(lineHeight = 22.75.sp)
 
 /**
  * A legal page (PrivacyPolicy.tsx / TermsOfService.tsx): back · title · spacer header, then one

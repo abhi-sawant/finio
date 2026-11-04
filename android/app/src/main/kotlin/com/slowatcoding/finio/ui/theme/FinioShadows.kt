@@ -68,7 +68,7 @@ data class FinioShadows(
 
 private val whiteInset25 = CssShadow(y = 1.dp, color = rgba(255, 255, 255, 0.25f), inset = true)
 
-private fun stock(tint: Color) = listOf(
+internal fun stock(tint: Color) = listOf(
     listOf(CssShadow(y = 1.dp, blur = 2.dp, color = tint.copy(alpha = 0.08f))),
     listOf(
         CssShadow(y = 2.dp, blur = 6.dp, spread = (-1).dp, color = tint.copy(alpha = 0.14f)),

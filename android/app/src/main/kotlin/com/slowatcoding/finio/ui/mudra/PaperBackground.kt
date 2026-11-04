@@ -24,12 +24,14 @@ import com.slowatcoding.finio.ui.theme.FinioTheme
 fun PaperBackground(modifier: Modifier = Modifier, content: @Composable BoxScope.() -> Unit = {}) {
     val colors = FinioTheme.colors
     val paper = FinioTheme.brushes.paper
+    val visual = FinioTheme.visual
     Box(
         modifier
             .fillMaxSize()
             .background(colors.background)
             .background(paper)
             .drawBehind {
+                if (visual != com.slowatcoding.finio.ui.theme.VisualTheme.Mudra) return@drawBehind
                 val box = 560.dp.toPx()
                 val left = size.width + 240.dp.toPx() - box
                 val top = -200.dp.toPx()

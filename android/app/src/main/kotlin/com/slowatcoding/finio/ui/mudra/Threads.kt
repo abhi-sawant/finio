@@ -5,6 +5,7 @@ import com.slowatcoding.finio.core.calc.budgetHealth
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -73,7 +74,7 @@ fun ThreadProgressBar(percent: Float, modifier: Modifier = Modifier, valueText: 
         modifier
             .progressSemantics(percent, valueText)
             .fillMaxWidth()
-            .height(8.dp)
+            .height(progressTrackHeight())
             .clip(FinioShapes.full)
             .background(colors.muted)
             .drawBehind {
@@ -113,9 +114,10 @@ fun BudgetProgressBar(
         modifier
             .progressSemantics(percent, valueText)
             .fillMaxWidth()
-            .height(8.dp)
+            .height(progressTrackHeight())
             .clip(FinioShapes.full)
-            .background(colors.muted),
+            .background(colors.muted)
+            .gulalOutline(),
     ) {
         Box(
             Modifier
@@ -144,6 +146,13 @@ fun RegisterBar(percent: Float, isOver: Boolean, modifier: Modifier = Modifier, 
 @Composable
 fun BudgetProgressBar(percent: Float, isOver: Boolean, okColor: Color, modifier: Modifier = Modifier, valueText: String? = null) =
     BudgetProgressBar(percent, isOver, SolidColor(okColor), modifier, valueText)
+
+/** Gulal outlines its tracks in ink like everything else it prints. */
+@Composable
+private fun Modifier.gulalOutline(): Modifier =
+    if (FinioTheme.visual == com.slowatcoding.finio.ui.theme.VisualTheme.Gulal) {
+        border(2.dp, FinioTheme.colors.foreground, FinioShapes.full)
+    } else this
 
 private fun Modifier.progressSemantics(percent: Float, valueText: String?) = semantics {
     progressBarRangeInfo = ProgressBarRangeInfo(percent.coerceIn(0f, 100f), 0f..100f)

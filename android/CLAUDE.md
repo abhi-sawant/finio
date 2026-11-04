@@ -206,6 +206,41 @@ entry) — a screen that deletes its own entity just calls `nav.back()`.
 
 ---
 
+## Visual themes
+
+Five worlds — Mudra (default), Khata, Gulal, Shunya, Bagh — ported from `web/src/themes/*.css`
+(see [web/CLAUDE.md](../web/CLAUDE.md) for what each one is). Picker: Settings → Profile & preferences
+→ Style (`VisualThemePicker`); Light/dark/system is the separate **Mode** row.
+
+- **Where it lives.** `VisualTheme` (enum, ids shared with the web) and `finioPalette(visual, dark,
+  amoled)` in `ui/theme/` return one `ThemePalette` = `FinioColors` + `FinioBrushes` + `FinioShadows`
+  + `FinioSpec` (outline width, denomination tints). `FinioTheme(…, visual = …)` provides them plus the
+  theme's `FinioTypeScale` and `FinioShapeScale`. The choice is stored in
+  `platform/storage/VisualThemeStore` (SharedPreferences `finio-visual-theme`, read synchronously) and
+  exposed as `AppContainer.visualTheme` — **never** in `Settings`, which would change the backup contract.
+- **`FinioType.*` and `FinioShapes.*` are composable getters now**, reading the active theme's scale.
+  Read them during composition (default arguments and `remember {}` are fine); a top-level `val` or a
+  plain callback can't — make it a `@Composable @ReadOnlyComposable get()` like `PadDigitStyle`.
+- **Branching on the theme** (`FinioTheme.visual`) is for signature pieces only (tab bar, coin, hero,
+  tiles). Everything else must come from the palette/spec/scales so a new theme is data, not `if`s.
+  The pieces that belong to one theme (`BurstBadge`, `MonthLine`, `SunArc`, `GoalPlant`, `HeroFigure`
+  in `mudra/ThemeExtras.kt`) draw nothing in the others, so call sites place them unconditionally.
+- **Outlines** go through `Modifier.themeBorder(shape)` (`FinioSpec.borderWidth`: Gulal 2.5dp, Bagh 0,
+  others 1dp) — not a hand-written `border(1.dp, glassBorder)`.
+- **Keep `gradPrimary` deep enough for white text** in every theme and mode (the palette test checks
+  the primary pair); call sites hardcode white on it.
+- **Fonts** are variable TTFs in `res/font/` (Source Serif 4, Source Sans 3, Bricolage Grotesque,
+  Geist, Gabarito, Figtree — about 2.6 MB together; Source Serif 4 is the bulk). Only the weight axis
+  is driven; opsz/wdth stay at their defaults. A subsetted font would shrink the APK.
+- **Compromises.** Khata's tick pattern is a budget-bar fill only (goal bars keep the windowed solid ink
+  thread); Gulal/Bagh's floating tab bar lifts the coin to 106dp; the Bagh hills sit under the hero
+  content rather than behind the budget bar; `FinioRadius` follows the theme but a few picker cells
+  still use it for their own corner shapes.
+- Not verified on a device yet — no emulator was available when this was ported. Run the debug build
+  through each theme (light and dark, phone and tablet) before shipping.
+
+---
+
 ## Visual compromises (Mudra on Android)
 
 - **No backdrop blur.** Android can't blur what is behind an arbitrary view, so `card-elevated`,

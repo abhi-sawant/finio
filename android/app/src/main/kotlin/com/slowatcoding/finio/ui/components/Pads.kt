@@ -173,7 +173,8 @@ fun NumberPad(value: String, onValueChange: (String) -> Unit, modifier: Modifier
 /** CSS `ease-in-out`. */
 private val CssEaseInOut = CubicBezierEasing(0.42f, 0f, 0.58f, 1f)
 
-private val PadDigitStyle = FinioType.rowValue.copy(fontSize = 20.sp, lineHeight = 28.sp)
+private val PadDigitStyle: androidx.compose.ui.text.TextStyle
+    @androidx.compose.runtime.Composable @androidx.compose.runtime.ReadOnlyComposable get() = FinioType.rowValue.copy(fontSize = 20.sp, lineHeight = 28.sp)
 
 @Composable
 private fun <K> KeyGrid(keys: List<K>, key: @Composable BoxScope.(K) -> Unit) {

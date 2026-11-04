@@ -149,6 +149,7 @@ fun AccountsScreen(nav: FinioNavigator) {
     }) {
         // A balance total, so there is none in transactions-only mode.
         if (!trackerMode) NoteCard(Modifier.fillMaxWidth()) {
+            val colors = FinioTheme.colors // inside the card, so Gulal's ink override applies
             Text("Net balance", style = FinioType.bodyMedium, color = colors.mutedForeground)
             val total = money(totalBalance)
             Text(total, Modifier.padding(top = 4.dp), style = noteFigureStyle(total), color = colors.foreground, maxLines = 1, softWrap = false)

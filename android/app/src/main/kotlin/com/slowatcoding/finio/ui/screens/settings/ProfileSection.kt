@@ -157,16 +157,18 @@ fun ProfileSection() {
         ) {
             Row(Modifier.width(128.dp), horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
                 Icon(LucideIcons.Palette, null, Modifier.size(18.dp), tint = colors.mutedForeground)
-                Text("Theme", style = FinioType.bodyMedium, color = colors.foreground)
+                Text("Mode", style = FinioType.bodyMedium, color = colors.foreground)
             }
             FinioSelect(
                 value = settings.theme,
                 options = themes,
                 onValueChange = { theme -> store.updateSettings { it.copy(theme = theme) } },
                 modifier = Modifier.width(120.dp),
-                title = "Theme",
+                title = "Mode",
             )
         }
+        FinioDivider()
+        VisualThemePicker()
         FinioDivider()
         SwitchField(
             title = "Use AMOLED colors in dark mode",
