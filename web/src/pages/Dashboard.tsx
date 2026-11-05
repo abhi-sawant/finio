@@ -36,7 +36,17 @@ import {
 import { accountDisplayValue, isDepositAccount } from '@/utils/deposit';
 import { BudgetProgressBar } from '@/components/budgets/BudgetHealthBadge';
 import { NoteCard } from '@/components/ui/note-card';
-import { BurstBadge, GoalPlant, MonthLine, SunArc } from '@/components/ui/theme-extras';
+import {
+  AkhbaarPace,
+  BurstBadge,
+  GanakDisplay,
+  GoalPlant,
+  KhelHud,
+  MahalSunburst,
+  MonthLine,
+  ParchiSlip,
+  SunArc,
+} from '@/components/ui/theme-extras';
 import { noteFigureClass } from '@/components/ui/note-figure';
 import { Guilloche } from '@/components/ui/guilloche';
 import { ACCOUNT_TYPE_LABEL, noteStyle } from '@/components/accounts/note';
@@ -306,7 +316,18 @@ export default function Dashboard() {
               <BurstBadge text={`${Math.round(overallBudget.percent)}%`} />
             ) : undefined
           }
-          scene={overallBudget ? <SunArc elapsed={periodElapsed} /> : undefined}
+          scene={
+            overallBudget ? (
+              <>
+                <SunArc elapsed={periodElapsed} />
+                <MahalSunburst
+                  elapsed={periodElapsed}
+                  spent={overallBudget.percent}
+                  isOver={overallBudget.isOver}
+                />
+              </>
+            ) : undefined
+          }
         >
           {overallBudget ? (
             <>
@@ -317,6 +338,12 @@ export default function Dashboard() {
               >
                 {formatCurrency(safePerDay, false, hideAmounts, { precise: false })}
               </p>
+              <GanakDisplay
+                text={formatCurrency(safePerDay, false, hideAmounts, { precise: false })}
+                elapsed={periodElapsed}
+                spent={overallBudget.percent}
+                daysLeft={daysLeftInPeriod}
+              />
               <p className="mt-1.5 text-sm text-balance">
                 {overallBudget.isOver
                   ? `Over budget by ${formatCurrency(Math.abs(overallBudget.remaining), false, hideAmounts)}`
@@ -352,6 +379,13 @@ export default function Dashboard() {
                     Spent {formatCurrency(overallBudget.spent, true, hideAmounts)} of{' '}
                     {formatCurrency(overallBudget.limit, true, hideAmounts)}
                   </p>
+                  <AkhbaarPace elapsed={periodElapsed} spent={overallBudget.percent} />
+                  <ParchiSlip elapsed={periodElapsed} daysLeft={daysLeftInPeriod} />
+                  <KhelHud
+                    elapsed={periodElapsed}
+                    daysLeft={daysLeftInPeriod}
+                    spent={overallBudget.percent}
+                  />
                 </>
               )}
             </>

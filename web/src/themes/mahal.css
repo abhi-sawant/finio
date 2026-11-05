@@ -1,0 +1,855 @@
+/*
+ * Mahal — Bombay Art Deco after dark. Midnight peacock and antique gold, Marine Drive facades:
+ * stepped-notch corners with a gold outline, porthole chips, chamfered buttons, a terrazzo floor,
+ * a frieze for a tab bar and an arched proscenium hero with a gilt sunburst gauge in it
+ * (ui/extras/mahal.tsx). Limelight sets titles and the hero figure; Jost sets everything else.
+ */
+html[data-visual-theme='mahal'] {
+  /* Limelight and Jost have no ₹; Figtree (already shipped for Bagh) supplies it, so the rupee
+     sign is the same geometric glyph everywhere instead of whatever the OS picks. */
+  --ff-heading: 'Limelight', 'Jost Variable', 'Figtree Variable', serif;
+  --ff-money: 'Jost Variable', 'Figtree Variable', system-ui, sans-serif;
+  --ff-sans: 'Jost Variable', 'Figtree Variable', system-ui, sans-serif;
+
+  --background: #f4ecdc;
+  --foreground: #0f3a3f;
+  --card: #fbf6ea;
+  --card-foreground: #0f3a3f;
+  --popover: #fbf6ea;
+  --popover-foreground: #0f3a3f;
+  --primary: #0f4a50;
+  --primary-foreground: #fbf6ea;
+  --secondary: #ece1c8;
+  --secondary-foreground: #0f3a3f;
+  --muted: #ece1c8;
+  --muted-foreground: #4d6562;
+  --accent: #eadbb5;
+  --accent-foreground: #5c4314;
+  --destructive: #b3321b;
+  --destructive-foreground: #ffffff;
+  --positive: #1b7550;
+  --warning: #8a5600;
+  --border: rgb(154 122 53 / 0.28);
+  --input: rgb(154 122 53 / 0.55);
+  --ring: #9a7a35;
+  --chart-1: #0f4a50;
+  --chart-2: #9a7a35;
+  --chart-3: #b3321b;
+  --chart-4: #1b7550;
+  --chart-5: #5b7fa6;
+  --radius: 0.125rem;
+  --sidebar: #fbf6ea;
+  --sidebar-foreground: #0f3a3f;
+  --sidebar-primary: #0f4a50;
+  --sidebar-primary-foreground: #fbf6ea;
+  --sidebar-accent: #eadbb5;
+  --sidebar-accent-foreground: #5c4314;
+  --sidebar-border: rgb(154 122 53 / 0.45);
+  --sidebar-ring: #9a7a35;
+
+  --warning-band: #f6dfd3;
+  --warning-band-foreground: #4a160b;
+  --warning-band-accent: #b3321b;
+
+  /* Terrazzo: five sparse speckle grids at prime-ish sizes, so the floor never visibly repeats. */
+  --mahal-tz1: rgb(15 58 63 / 0.07);
+  --mahal-tz2: rgb(154 122 53 / 0.16);
+  --mahal-tz3: rgb(179 50 27 / 0.06);
+  --paper:
+    radial-gradient(circle at 22% 31%, var(--mahal-tz1) 0 1.1px, transparent 1.7px),
+    radial-gradient(circle at 71% 64%, var(--mahal-tz2) 0 1.4px, transparent 2px),
+    radial-gradient(circle at 47% 12%, var(--mahal-tz3) 0 0.9px, transparent 1.4px),
+    radial-gradient(circle at 83% 22%, var(--mahal-tz2) 0 0.8px, transparent 1.3px),
+    radial-gradient(circle at 12% 78%, var(--mahal-tz1) 0 1.6px, transparent 2.2px);
+  --engraving: transparent;
+  --glass: #fbf6ea;
+  --glass-strong: #fbf6ea;
+  --glass-border: rgb(154 122 53 / 0.45);
+  --glass-highlight: transparent;
+
+  --grad-primary: linear-gradient(135deg, #17575d, #0f3a3f);
+  --grad-primary-soft: linear-gradient(#efe4c8, #efe4c8);
+  --grad-success: linear-gradient(135deg, #1f8a5e, #1b7550);
+  --grad-success-soft: linear-gradient(#dcebdc, #dcebdc);
+  --grad-danger: linear-gradient(135deg, #c43d22, #a52c16);
+  --grad-danger-soft: linear-gradient(#f6dcd3, #f6dcd3);
+  --grad-info: linear-gradient(135deg, #2f7a86, #1f5f69);
+  --grad-warning: linear-gradient(135deg, #b07a1a, #8a5600);
+  --grad-surface: linear-gradient(#fbf6ea, #fbf6ea);
+  --coin: linear-gradient(#0f3a3f, #0f3a3f);
+  --coin-ink: #f6eedd;
+  --register: linear-gradient(90deg, #9a7a35, #b8964c);
+  --thread: linear-gradient(90deg, #9a7a35, #b8964c);
+
+  --shadow-tint: 15 58 63;
+  --scrim: rgb(12 31 34 / 0.45);
+  --shadow-card: none;
+  --shadow-float: 0 24px 48px -24px rgb(15 58 63 / 0.45);
+  --shadow-primary: none;
+  --shadow-danger: none;
+  --shadow-success: none;
+
+  --note-100: linear-gradient(135deg, #e3eeea, #d6e6e1);
+  --note-100-ink: #0f3a3f;
+  --note-500: linear-gradient(135deg, #eaf0dc, #dde7cb);
+  --note-500-ink: #1f4a2a;
+  --note-2000: linear-gradient(135deg, #f6e0d6, #efd0c2);
+  --note-2000-ink: #6e1f10;
+  --note-200: linear-gradient(135deg, #f6ebcd, #efdfb4);
+  --note-200-ink: #5c4314;
+  --note-10: linear-gradient(135deg, #efe3d2, #e6d5bd);
+  --note-10-ink: #4d3217;
+  --note-50: linear-gradient(135deg, #dcebee, #cde2e6);
+  --note-50-ink: #0d4450;
+  --note-20: linear-gradient(135deg, #e9eed5, #dde5bf);
+  --note-20-ink: #3d4a0e;
+
+  /* The deco kit: gold for lines, a darker gold for gold-coloured text (4.5:1 on the ivory). */
+  --mahal-gold: #9a7a35;
+  --mahal-gold-text: #7a5a1c;
+  --mahal-gline: rgb(154 122 53 / 0.45);
+  --mahal-hair: rgb(154 122 53 / 0.22);
+  --mahal-unlit: rgb(154 122 53 / 0.24);
+  --mahal-needle: #0f3a3f;
+  --mahal-btn: #0f3a3f;
+  --mahal-btn-ink: #f6eedd;
+  --mahal-notch: polygon(
+    7px 0,
+    calc(100% - 7px) 0,
+    calc(100% - 7px) 7px,
+    100% 7px,
+    100% calc(100% - 7px),
+    calc(100% - 7px) calc(100% - 7px),
+    calc(100% - 7px) 100%,
+    7px 100%,
+    7px calc(100% - 7px),
+    0 calc(100% - 7px),
+    0 7px,
+    7px 7px
+  );
+  --mahal-chamfer: polygon(
+    10px 0,
+    calc(100% - 10px) 0,
+    100% 50%,
+    calc(100% - 10px) 100%,
+    10px 100%,
+    0 50%
+  );
+}
+
+html.dark[data-visual-theme='mahal'] {
+  --background: #0c1f22;
+  --foreground: #f3ead6;
+  --card: #112a2e;
+  --card-foreground: #f3ead6;
+  --popover: #143236;
+  --popover-foreground: #f3ead6;
+  --primary: #d6b46a;
+  --primary-foreground: #0c1f22;
+  --secondary: #173539;
+  --secondary-foreground: #f3ead6;
+  --muted: #173539;
+  --muted-foreground: #b5b09b;
+  --accent: #1f4044;
+  --accent-foreground: #f3ead6;
+  --destructive: #ff8266;
+  --destructive-foreground: #2a0c05;
+  --positive: #6fd3a3;
+  --warning: #f2b84f;
+  --border: rgb(214 180 106 / 0.2);
+  --input: rgb(214 180 106 / 0.45);
+  --ring: #d6b46a;
+  --chart-1: #d6b46a;
+  --chart-2: #6fd3a3;
+  --chart-3: #ff8266;
+  --chart-4: #7fc4cf;
+  --chart-5: #c9a6e8;
+  --sidebar: #112a2e;
+  --sidebar-foreground: #f3ead6;
+  --sidebar-primary: #d6b46a;
+  --sidebar-primary-foreground: #0c1f22;
+  --sidebar-accent: #1f4044;
+  --sidebar-accent-foreground: #f3ead6;
+  --sidebar-border: rgb(214 180 106 / 0.42);
+  --sidebar-ring: #d6b46a;
+
+  --warning-band: #3a1a12;
+  --warning-band-foreground: #ffe1d8;
+  --warning-band-accent: #ff8266;
+
+  --mahal-tz1: rgb(243 234 214 / 0.05);
+  --mahal-tz2: rgb(214 180 106 / 0.12);
+  --mahal-tz3: rgb(111 211 163 / 0.06);
+  --glass: #112a2e;
+  --glass-strong: #112a2e;
+  --glass-border: rgb(214 180 106 / 0.42);
+
+  /* Call sites put white text on --grad-primary, so dark mode's gilt becomes a deep bronze. */
+  --grad-primary: linear-gradient(135deg, #8a6a28, #6b5018);
+  --grad-primary-soft: linear-gradient(#1f4044, #1f4044);
+  --grad-success-soft: linear-gradient(#123a2c, #123a2c);
+  --grad-danger-soft: linear-gradient(#3a1a12, #3a1a12);
+  --grad-surface: linear-gradient(#112a2e, #112a2e);
+  --coin: linear-gradient(#d6b46a, #d6b46a);
+  --coin-ink: #0c1f22;
+  --register: linear-gradient(90deg, #b8964c, #d6b46a);
+  --thread: linear-gradient(90deg, #b8964c, #d6b46a);
+
+  --shadow-tint: 0 0 0;
+  --scrim: rgb(2 8 9 / 0.65);
+  --shadow-float: 0 24px 48px -20px rgb(0 0 0 / 0.8);
+
+  --note-100: linear-gradient(135deg, #16393d, #123134);
+  --note-100-ink: #d4efea;
+  --note-500: linear-gradient(135deg, #1c3a2a, #163122);
+  --note-500-ink: #dcecd2;
+  --note-2000: linear-gradient(135deg, #43231b, #371c16);
+  --note-2000-ink: #ffd9cd;
+  --note-200: linear-gradient(135deg, #3d3218, #322913);
+  --note-200-ink: #f6e2ae;
+  --note-10: linear-gradient(135deg, #3a2c1f, #2e2318);
+  --note-10-ink: #f2dcc2;
+  --note-50: linear-gradient(135deg, #133a44, #0f3038);
+  --note-50-ink: #c8eef5;
+  --note-20: linear-gradient(135deg, #313a17, #283012);
+  --note-20-ink: #e8f0b8;
+
+  --mahal-gold: #d6b46a;
+  --mahal-gold-text: #d6b46a;
+  --mahal-gline: rgb(214 180 106 / 0.42);
+  --mahal-hair: rgb(214 180 106 / 0.16);
+  --mahal-unlit: rgb(214 180 106 / 0.2);
+  --mahal-needle: #f3ead6;
+  --mahal-btn: #d6b46a;
+  --mahal-btn-ink: #0c1f22;
+}
+
+/* On true black the speckle is gone (base.css) — the gold keylines alone separate the panels. */
+html.dark.amoled[data-visual-theme='mahal'] {
+  --card: #0d2326;
+  --popover: #10292c;
+  --glass: #0d2326;
+  --glass-strong: #050f10;
+}
+
+/* ── Floor, type and browser surfaces ── */
+html[data-visual-theme='mahal'] {
+  caret-color: var(--mahal-gold);
+  accent-color: var(--mahal-gold);
+  scrollbar-color: var(--mahal-gline) transparent;
+}
+html[data-visual-theme='mahal'] body {
+  background-size:
+    37px 41px,
+    53px 47px,
+    29px 33px,
+    61px 59px,
+    83px 79px;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+html[data-visual-theme='mahal'] ::selection {
+  background: var(--mahal-gold);
+  color: var(--background);
+}
+html[data-visual-theme='mahal'] :focus-visible {
+  outline-color: var(--mahal-gold);
+}
+/* Limelight is a single-weight display face: never let a bold class fake it. */
+html[data-visual-theme='mahal'] h1,
+html[data-visual-theme='mahal'] .font-heading,
+html[data-visual-theme='mahal'] main h2 {
+  font-family: var(--ff-heading);
+  font-weight: 400;
+  font-synthesis: none;
+  letter-spacing: 0.01em;
+}
+html[data-visual-theme='mahal'] main h2 {
+  font-size: 1.125rem;
+}
+html[data-visual-theme='mahal'] .font-money {
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+/* ── Panels: stepped-notch corners, a gold outline that follows the steps ── */
+html[data-visual-theme='mahal'] {
+  /* The eight short gold strokes that trace the notches (the border draws the straight runs). */
+  --mahal-steps:
+    linear-gradient(var(--mahal-gline), var(--mahal-gline)) left 7px top 0 / 1px 8px no-repeat,
+    linear-gradient(var(--mahal-gline), var(--mahal-gline)) left 0 top 7px / 8px 1px no-repeat,
+    linear-gradient(var(--mahal-gline), var(--mahal-gline)) right 7px top 0 / 1px 8px no-repeat,
+    linear-gradient(var(--mahal-gline), var(--mahal-gline)) right 0 top 7px / 8px 1px no-repeat,
+    linear-gradient(var(--mahal-gline), var(--mahal-gline)) left 7px bottom 0 / 1px 8px no-repeat,
+    linear-gradient(var(--mahal-gline), var(--mahal-gline)) left 0 bottom 7px / 8px 1px no-repeat,
+    linear-gradient(var(--mahal-gline), var(--mahal-gline)) right 7px bottom 0 / 1px 8px no-repeat,
+    linear-gradient(var(--mahal-gline), var(--mahal-gline)) right 0 bottom 7px / 8px 1px no-repeat;
+}
+html[data-visual-theme='mahal'] .card-elevated,
+html[data-visual-theme='mahal'] .bg-warning-band {
+  border: 1px solid var(--mahal-gline);
+  border-radius: 0;
+  box-shadow: none;
+  clip-path: var(--mahal-notch);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='mahal'] .card-elevated {
+  background: var(--mahal-steps), var(--card);
+  background-origin: border-box;
+}
+html[data-visual-theme='mahal'] .bg-warning-band {
+  background: var(--mahal-steps), var(--warning-band);
+  background-origin: border-box;
+  border-color: color-mix(in srgb, var(--warning-band-accent) 55%, transparent);
+}
+
+/* Account tiles: the panel plus an inset keyline, the number set under a porthole-calm label. */
+html[data-visual-theme='mahal'] .note-tile {
+  border: 1px solid var(--mahal-gline);
+  border-radius: 0;
+  box-shadow: none;
+  clip-path: var(--mahal-notch);
+  padding: 14px 16px;
+  outline: 1px solid var(--mahal-hair);
+  outline-offset: -6px;
+}
+html[data-visual-theme='mahal'] .note-tile:focus-visible {
+  outline: 2px solid var(--mahal-gold);
+  outline-offset: -4px;
+}
+html[data-visual-theme='mahal'] .note-tile::after {
+  display: block;
+  content: '';
+  position: absolute;
+  inset: -1px;
+  width: auto;
+  opacity: 1;
+  background: var(--mahal-steps);
+  -webkit-mask: none;
+  mask: none;
+}
+html[data-visual-theme='mahal'] .note-tile .font-money {
+  font-size: 1.0625rem;
+}
+
+/* Portholes: an account's chip is a round window in its type's tint. */
+html[data-visual-theme='mahal'] .note-chip {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--mahal-gline);
+  box-shadow:
+    inset 0 0 0 3px var(--card),
+    inset 0 0 0 4px var(--mahal-hair);
+}
+
+/* ── Buttons: elongated with chamfered ends, lettered like a marquee ── */
+html[data-visual-theme='mahal'] .shadow-glow-primary,
+html[data-visual-theme='mahal'] .shadow-glow-success,
+html[data-visual-theme='mahal'] .shadow-glow-danger {
+  box-shadow: none;
+}
+html[data-visual-theme='mahal']
+  :is(button, a, [role='button']).bg-grad-primary:not(
+    .size-6,
+    .size-7,
+    .size-8,
+    .size-9,
+    .size-10,
+    .rounded-full.aspect-square
+  ) {
+  border-radius: 0;
+  clip-path: var(--mahal-chamfer);
+  padding-left: max(1.25rem, 18px);
+  padding-right: max(1.25rem, 18px);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+html[data-visual-theme='mahal'] :is(button, a, [role='button']).bg-grad-primary:focus-visible {
+  outline: 1.5px solid currentColor;
+  outline-offset: -5px;
+}
+html[data-visual-theme='mahal'] [data-slot='button'].bg-grad-primary {
+  border-color: transparent;
+}
+/* Outlined icon buttons are gold-ringed portholes. */
+html[data-visual-theme='mahal'] [data-slot='button'][class*='glass-border'] {
+  border-color: var(--mahal-gline);
+  background: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='mahal'] [data-slot='button'][class*='glass-border']:hover {
+  background: var(--muted);
+}
+html[data-visual-theme='mahal'] [data-slot='button'][class*='glass-border'].bg-grad-primary {
+  background-image: var(--grad-primary);
+  border-color: var(--mahal-gold);
+}
+/* Segmented controls: a band between two gold rules, the choice a chamfered plate. */
+html[data-visual-theme='mahal'] [role='group'].bg-muted.rounded-full {
+  border-radius: 0;
+  background: transparent;
+  border-top: 1px solid var(--mahal-gline);
+  border-bottom: 1px solid var(--mahal-gline);
+}
+html[data-visual-theme='mahal'] [role='group'].bg-muted.rounded-full > button {
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+/* ── Inputs ── */
+html[data-visual-theme='mahal'] [data-slot='input'],
+html[data-visual-theme='mahal'] [data-slot='textarea'],
+html[data-visual-theme='mahal'] [data-slot='select-trigger'] {
+  border-radius: 0;
+  border-color: var(--mahal-gline);
+  background-color: var(--card);
+}
+html[data-visual-theme='mahal'] [data-slot='input']:focus-visible,
+html[data-visual-theme='mahal'] [data-slot='textarea']:focus-visible,
+html[data-visual-theme='mahal'] [data-slot='select-trigger']:focus-visible {
+  border-color: var(--mahal-gold);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--mahal-gold) 28%, transparent);
+}
+html[data-visual-theme='mahal'] [data-slot='label'] {
+  letter-spacing: 0.04em;
+}
+
+/* ── Dialogs, popovers, menus: a gold frame with an inset keyline ── */
+html[data-visual-theme='mahal'] [data-slot='dialog-content'],
+html[data-visual-theme='mahal'] [data-slot='alert-dialog-content'],
+html[data-visual-theme='mahal'] [data-slot='popover-content'],
+html[data-visual-theme='mahal'] [data-slot='select-content'],
+html[data-visual-theme='mahal'] [data-slot='dropdown-menu-content'] {
+  border-radius: 0;
+  box-shadow:
+    0 0 0 1px var(--mahal-gold),
+    inset 0 0 0 4px var(--popover),
+    inset 0 0 0 5px var(--mahal-hair),
+    var(--shadow-float);
+}
+html[data-visual-theme='mahal'] [data-slot='dialog-content'],
+html[data-visual-theme='mahal'] [data-slot='alert-dialog-content'] {
+  padding: 1.25rem;
+}
+html[data-visual-theme='mahal'] [data-slot='dialog-title'],
+html[data-visual-theme='mahal'] [data-slot='alert-dialog-title'] {
+  font-size: 1.125rem;
+  line-height: 1.2;
+}
+html[data-visual-theme='mahal'] [data-slot='dialog-overlay'],
+html[data-visual-theme='mahal'] [data-slot='alert-dialog-overlay'] {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+/* ── Progress: a stepped gilt register — the bar is a row of tiles, lit as it fills ── */
+html[data-visual-theme='mahal'] [role='progressbar'] {
+  height: 7px;
+  border-radius: 0;
+  background: var(--mahal-unlit);
+  -webkit-mask: repeating-linear-gradient(90deg, #000 0 8px, transparent 8px 10px);
+  mask: repeating-linear-gradient(90deg, #000 0 8px, transparent 8px 10px);
+}
+html[data-visual-theme='mahal'] [role='progressbar'] > div {
+  border-radius: 0;
+}
+html[data-visual-theme='mahal'] .thread-fill {
+  -webkit-mask: repeating-linear-gradient(90deg, #000 0 8px, transparent 8px 10px);
+  mask: repeating-linear-gradient(90deg, #000 0 8px, transparent 8px 10px);
+}
+
+/* ── Number pad: digits set loose between double gold rules, the amount in Limelight ── */
+html[data-visual-theme='mahal'] .bg-grad-surface.min-h-16 {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+}
+html[data-visual-theme='mahal'] .bg-grad-surface.min-h-16 > .font-money {
+  font-family: var(--ff-heading);
+  font-weight: 400;
+  font-synthesis: none;
+  font-size: 2.75rem;
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+}
+html[data-visual-theme='mahal'] .grid-cols-3:has(> button.h-14) {
+  gap: 0;
+  padding: 4px 0;
+  border-top: 3px double var(--mahal-gline);
+  border-bottom: 3px double var(--mahal-gline);
+}
+html[data-visual-theme='mahal'] .grid-cols-3 > button.h-14 {
+  height: 3.25rem;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  font-size: 1.6rem;
+  font-weight: 300;
+}
+html[data-visual-theme='mahal'] .grid-cols-3 > button.h-14:active {
+  background: transparent;
+  color: var(--mahal-gold);
+}
+
+/* ── The hero: an arched proscenium on stepped shoulders, the sunburst in the arch ── */
+html[data-visual-theme='mahal'] .note-card {
+  background: var(--mahal-steps), var(--card);
+  background-origin: border-box;
+  border: 1px solid var(--mahal-gline);
+  border-radius: 0;
+  box-shadow: none;
+  clip-path: var(--mahal-notch);
+  padding: 22px 22px 26px;
+  outline: 1px solid var(--mahal-hair);
+  outline-offset: -9px;
+}
+html[data-visual-theme='mahal'] .note-card-body {
+  padding-right: 0;
+}
+html[data-visual-theme='mahal'] .hero-fig {
+  font-family: var(--ff-heading);
+  font-weight: 400;
+  font-synthesis: none;
+  letter-spacing: 0.01em;
+  line-height: 1.05;
+  font-size: clamp(3rem, 15vw, 4rem);
+  animation: mahal-rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.2s backwards;
+}
+/* The bar's job is done by the sunburst; the bar stays for screen readers only. */
+html[data-visual-theme='mahal'] .note-card:has(.mahal-sunburst) .hero-bar {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+html[data-visual-theme='mahal'] .hero-budget {
+  margin-top: 0.75rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--mahal-hair);
+}
+
+html[data-visual-theme='mahal'] .mahal-sunburst svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.mahal-sunburst .mahal-pf {
+  fill: var(--card);
+}
+.mahal-sunburst .mahal-pk {
+  fill: none;
+  stroke: var(--mahal-gold);
+  stroke-width: 1.25;
+}
+.mahal-sunburst .mahal-pk2 {
+  fill: none;
+  stroke: var(--mahal-gline);
+  stroke-width: 1;
+}
+.mahal-sunburst .mahal-hl {
+  fill: none;
+  stroke: var(--mahal-hair);
+  stroke-width: 1;
+}
+.mahal-sunburst .mahal-base {
+  fill: none;
+  stroke: var(--mahal-gline);
+  stroke-width: 1;
+}
+.mahal-sunburst .mahal-marq {
+  font-family: var(--ff-sans);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  fill: var(--mahal-gold-text);
+}
+.mahal-sunburst .mahal-hub {
+  font-family: var(--ff-heading);
+  font-size: 27px;
+  fill: var(--foreground);
+}
+.mahal-sunburst .mahal-ray {
+  stroke: var(--mahal-unlit);
+  stroke-linecap: round;
+  transform-box: view-box;
+  transform: rotate(var(--a));
+  animation: mahal-fan 1.1s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--i) * 22ms) backwards;
+}
+.mahal-sunburst .mahal-ray[data-lit] {
+  stroke: var(--mahal-gold);
+}
+.mahal-sunburst[data-hot] .mahal-ray[data-lit] {
+  stroke: var(--destructive);
+}
+.mahal-sunburst .mahal-ndl {
+  transform-box: view-box;
+  transform: rotate(var(--a));
+  animation: mahal-fan 1.3s cubic-bezier(0.16, 1, 0.3, 1) 0.45s backwards;
+}
+.mahal-sunburst .mahal-ndl line {
+  stroke: var(--mahal-needle);
+  stroke-width: 1.25;
+  stroke-linecap: round;
+}
+.mahal-sunburst .mahal-ndl path {
+  fill: var(--mahal-needle);
+}
+@keyframes mahal-fan {
+  from {
+    transform: rotate(0deg);
+    opacity: 0;
+  }
+}
+@keyframes mahal-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* Phone: the card itself becomes the proscenium — the arch is its top edge, the shoulders step
+   out to the card's own sides, and the frame runs on down around the content. */
+@media (max-width: 639.98px) {
+  html[data-visual-theme='mahal'] .note-card:has(> .mahal-sunburst) {
+    container-type: inline-size;
+    overflow: visible;
+    clip-path: none;
+    border: 0;
+    outline: 0;
+    background: none;
+    padding: 0 0 26px;
+  }
+  /* The frame below the shoulders: outer gold rule on three sides, inner keyline 6 units in. */
+  html[data-visual-theme='mahal'] .note-card:has(> .mahal-sunburst)::before {
+    content: '';
+    position: absolute;
+    top: calc(100cqw * 196 / 350);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 1.25px solid var(--mahal-gold);
+    border-top: 0;
+    background:
+      linear-gradient(var(--mahal-gline), var(--mahal-gline)) left calc(100cqw * 6 / 350 - 1px) top
+        calc(100cqw * 6 / 350) / 1px calc(100% - 100cqw * 12 / 350) no-repeat,
+      linear-gradient(var(--mahal-gline), var(--mahal-gline)) right calc(100cqw * 6 / 350 - 1px) top
+        calc(100cqw * 6 / 350) / 1px calc(100% - 100cqw * 12 / 350) no-repeat,
+      linear-gradient(var(--mahal-gline), var(--mahal-gline)) left calc(100cqw * 6 / 350 - 1px)
+        bottom calc(100cqw * 6 / 350 - 1px) / calc(100% - 100cqw * 12 / 350 + 2px) 1px no-repeat,
+      var(--card);
+    pointer-events: none;
+  }
+  html[data-visual-theme='mahal'] .note-card:has(> .mahal-sunburst) > .mahal-sunburst {
+    position: relative;
+    z-index: 1;
+  }
+  html[data-visual-theme='mahal'] .note-card:has(> .mahal-sunburst) > .note-card-body {
+    margin-top: calc(100cqw * -54 / 350);
+    padding: 0 26px;
+    text-align: center;
+  }
+}
+
+/* Wider: a framed panel with the gauge set in it (centred; on desktop beside the figure). */
+@media (min-width: 640px) {
+  html[data-visual-theme='mahal'] .mahal-sunburst {
+    max-width: 330px;
+    margin: -8px auto -24px;
+  }
+  html[data-visual-theme='mahal'] .mahal-sunburst :is(.mahal-pf, .mahal-pk, .mahal-pk2) {
+    display: none;
+  }
+}
+@media (min-width: 1024px) {
+  html[data-visual-theme='mahal'] .note-card {
+    padding: 30px 34px 34px;
+  }
+  html[data-visual-theme='mahal'] .mahal-sunburst {
+    position: absolute;
+    top: 24px;
+    right: 40px;
+    width: 340px;
+    margin: 0;
+  }
+}
+
+/* ── Chrome: a deco frieze for a tab bar, the active tab marked by a gilt ziggurat ── */
+html[data-visual-theme='mahal'] .glass-chrome {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='mahal'] [data-slot='page-header'].glass-chrome {
+  background-color: var(--background);
+  border-bottom-color: var(--mahal-gline);
+}
+html[data-visual-theme='mahal'] [data-slot='tab-bar'] {
+  background: var(--card);
+  border-top: 3px double var(--mahal-gold);
+  box-shadow: none;
+  padding-top: 0.6rem;
+}
+html[data-visual-theme='mahal'] [data-slot='tab'] {
+  position: relative;
+  gap: 0.3rem;
+  border-radius: 0;
+}
+html[data-visual-theme='mahal'] [data-slot='tab'] > span:last-child {
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+html[data-visual-theme='mahal'] [data-slot='tab'][aria-current='page'] {
+  color: var(--mahal-gold-text);
+}
+html[data-visual-theme='mahal'] [data-slot='tab'][aria-current='page'] > span:last-child {
+  color: var(--foreground);
+}
+html[data-visual-theme='mahal'] [data-slot='tab'][aria-current='page']::before {
+  content: '';
+  position: absolute;
+  top: calc(-0.6rem - 3px - 9px);
+  left: 50%;
+  width: 40px;
+  height: 9px;
+  margin-left: -20px;
+  background: var(--mahal-gold);
+  clip-path: polygon(
+    0 100%,
+    0 70%,
+    18% 70%,
+    18% 38%,
+    34% 38%,
+    34% 0,
+    66% 0,
+    66% 38%,
+    82% 38%,
+    82% 70%,
+    100% 70%,
+    100% 100%
+  );
+}
+/* The add button: a peacock porthole with a double ring. */
+html[data-visual-theme='mahal'] .bg-coin {
+  color: var(--coin-ink);
+  box-shadow:
+    inset 0 0 0 4px var(--mahal-btn),
+    inset 0 0 0 5px var(--mahal-btn-ink);
+}
+html[data-visual-theme='mahal'] [data-slot='fab'] {
+  box-shadow:
+    inset 0 0 0 4px var(--mahal-btn),
+    inset 0 0 0 5px var(--mahal-btn-ink),
+    0 0 0 4px var(--background),
+    0 0 0 5px var(--mahal-gline);
+}
+html[data-visual-theme='mahal'] [data-slot='sidebar'] {
+  background: var(--card);
+  border-right: 3px double var(--mahal-gold);
+}
+html[data-visual-theme='mahal'] [data-slot='sidebar'] > p {
+  color: var(--mahal-gold-text);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+}
+html[data-visual-theme='mahal'] [data-slot='sidebar'] [data-slot='nav-item'] {
+  position: relative;
+  border-radius: 0;
+  background: transparent;
+  font-weight: 400;
+}
+html[data-visual-theme='mahal'] [data-slot='sidebar'] [data-slot='nav-item'] svg {
+  color: var(--mahal-gold);
+}
+html[data-visual-theme='mahal'] [data-slot='sidebar'] [data-slot='nav-item'][aria-current='page'] {
+  background: transparent;
+  color: var(--foreground);
+  font-weight: 600;
+}
+html[data-visual-theme='mahal']
+  [data-slot='sidebar']
+  [data-slot='nav-item'][aria-current='page']::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 9px;
+  bottom: 9px;
+  width: 5px;
+  background: var(--mahal-gold);
+  clip-path: polygon(0 0, 40% 0, 40% 20%, 100% 20%, 100% 80%, 40% 80%, 40% 100%, 0 100%);
+}
+html[data-visual-theme='mahal'] [data-slot='sidebar'] [data-slot='add-button'] {
+  border-radius: 0;
+  clip-path: var(--mahal-chamfer);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+html[data-visual-theme='mahal'] [data-slot='brand-mark'] {
+  font-family: var(--ff-heading);
+  font-weight: 400;
+}
+html[data-visual-theme='mahal'] [data-slot='sidebar'] .font-heading {
+  font-size: 1.4rem;
+  letter-spacing: 0.01em;
+}
+
+/* ── Toasts ── */
+html[data-visual-theme='mahal'] [data-sonner-toaster] {
+  --normal-bg: var(--popover);
+  --normal-border: var(--mahal-gold);
+  --border-radius: 0;
+}
+html[data-visual-theme='mahal'] [data-sonner-toaster] [data-sonner-toast] {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow:
+    inset 0 0 0 4px var(--popover),
+    inset 0 0 0 5px var(--mahal-hair),
+    var(--shadow-float);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-visual-theme='mahal'] .hero-fig,
+  .mahal-sunburst .mahal-ray,
+  .mahal-sunburst .mahal-ndl {
+    animation: none;
+  }
+}
+
+/* Date lines in the ledger: small gold capitals centred between two rules, not a display title. */
+html[data-visual-theme='mahal'] main h2.text-xs {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-inline: 0.25rem;
+  font-family: var(--ff-sans);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--mahal-gold-text);
+}
+html[data-visual-theme='mahal'] main h2.text-xs::before,
+html[data-visual-theme='mahal'] main h2.text-xs::after {
+  content: '';
+  flex: 1;
+  border-top: 1px solid var(--mahal-gline);
+}
+/* The empty pad shows a muted 0: Jost, so it reads as a placeholder, not a deco glyph. */
+html[data-visual-theme='mahal'] .bg-grad-surface.min-h-16 > .font-money.text-muted-foreground {
+  font-family: var(--ff-sans);
+  font-weight: 300;
+}

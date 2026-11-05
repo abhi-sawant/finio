@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en" data-mode="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Finio theme 6 — Parchi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Martian+Mono:wdth,wght@75..112.5,400..800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:#17171b}
+body{font-family:ui-sans-serif,-apple-system,"Segoe UI",system-ui,sans-serif;color:#e9e9ef;background:#17171b;min-height:100vh;padding:28px 32px 72px}
+.stage-h{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;max-width:1700px;margin:0 auto 28px}
+.stage-h a{color:#9a9aa8;font-size:13px;text-decoration:none}.stage-h a:hover{color:#fff}
+.stage-h h1{font-size:28px;font-weight:600;letter-spacing:-.01em;margin-top:6px}
+.stage-h p{color:#a9a9b6;font-size:15px;margin-top:4px;max-width:60ch}
+.seg{display:inline-flex;background:#26262d;border-radius:999px;padding:3px}
+.seg button{font:inherit;font-size:13px;color:#b9b9c6;background:none;border:0;border-radius:999px;padding:7px 16px;cursor:pointer}
+.seg button[aria-pressed=true]{background:#e9e9ef;color:#17171b}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1px;background:#2a2a32;border:1px solid #2a2a32;border-radius:12px;overflow:hidden;max-width:1700px;margin:0 auto 40px}
+.notes div{background:#1d1d23;padding:14px 16px}
+.notes b{display:block;font-size:12px;font-weight:600;color:#fff;margin-bottom:4px}
+.notes span{font-size:13px;color:#a9a9b6;line-height:1.5}
+.row{display:flex;flex-wrap:wrap;gap:36px 32px;max-width:1700px;margin:0 auto;align-items:flex-start}
+.slot{margin:0}
+figcaption{color:#9a9aa8;font-size:13px;margin:12px 4px 0}
+h2.sec{max-width:1700px;margin:48px auto 18px;font-size:13px;font-weight:600;color:#9a9aa8}
+.phone{width:390px;height:844px;border-radius:48px;padding:0;background:#000;box-shadow:0 0 0 9px #26262d,0 30px 60px -20px #000;overflow:hidden;position:relative}
+.desk{width:1240px;height:780px;border-radius:14px;overflow:hidden;box-shadow:0 0 0 1px #2e2e36,0 30px 60px -20px #000;position:relative}
+.screen{position:relative;width:100%;height:100%;overflow:hidden}
+.sb{position:absolute;top:0;left:0;right:0;height:44px;padding:14px 30px 0;display:flex;justify-content:space-between;font-size:15px;font-weight:600;z-index:30;pointer-events:none}
+.sb-r{display:flex;gap:6px;align-items:center}
+.ic{flex:none;display:block}
+.screen button{font:inherit;color:inherit;cursor:pointer}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* ---------- theme ---------- */
+
+.app{--counter:#e3ddcf;--paper:#f7f4ec;--paper2:#efeadd;--ink:#23211c;--mut:#686254;--rule:#a59d8a;--faint:#ddd6c6;
+  --acc:#c8242b;--on-acc:#fbf7ef;--pos:#2e6a3d;--neg:#c8242b;--warn:#8f5c08;--slotc:#2b2925;--band:rgb(90 70 30 / .035);--shade:rgb(60 45 20 / .22);
+  background:var(--counter);color:var(--ink);font-family:'Martian Mono',ui-monospace,'SF Mono',Menlo,monospace;font-stretch:87.5%;font-weight:400;font-size:12px;line-height:1.4;font-variant-numeric:tabular-nums;caret-color:var(--acc)}
+html[data-mode=dark] .app{--counter:#0b0d13;--paper:#181c27;--paper2:#141822;--ink:#dfe6f5;--mut:#909bb4;--rule:#4a5470;--faint:#2a3142;
+  --acc:#ff7a6e;--on-acc:#130c0e;--pos:#7fcf9a;--neg:#ff7a6e;--warn:#e8b45a;--slotc:#000;--band:rgb(150 180 255 / .03);--shade:rgb(0 0 0 / .6)}
+.app ::selection{background:var(--acc);color:var(--on-acc)}
+.app :focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.app .ic{flex:none}
+.app .pg{position:absolute;inset:44px 0 70px;padding:4px 16px;overflow:hidden}
+.app .pg.home{bottom:72px}
+
+/* header */
+.hd{display:flex;align-items:center;gap:8px;padding:6px 0 10px}
+.hd .ti{flex:1;min-width:0}
+.hd h1{font-size:15px;font-weight:700;font-stretch:112.5%;text-transform:uppercase;letter-spacing:.02em;display:inline-block;transform:scaleY(1.35);transform-origin:0 60%}
+.hd h1.who{font-size:17px}
+.hd p{font-size:10.5px;font-stretch:75%;color:var(--mut);display:flex;gap:6px;align-items:center;margin-top:5px;text-transform:uppercase;letter-spacing:.04em}
+.hd .rt{display:flex;gap:6px}
+.ib{width:36px;height:36px;display:grid;place-items:center;border:1.5px solid var(--ink);background:var(--paper);color:var(--ink)}
+
+/* the slip: torn sawtooth top + bottom, thermal banding */
+.sl{filter:drop-shadow(0 1.5px 1px var(--shade));margin:0 0 8px}
+.slip{padding:13px 14px 12px;color:var(--ink);
+  background:linear-gradient(90deg,transparent 0 31%,var(--band) 31% 33%,transparent 33% 64%,var(--band) 64% 65%,transparent 65% 88%,var(--band) 88% 91%,transparent 91%),
+    repeating-linear-gradient(90deg,transparent 0 3px,var(--band) 3px 4px),var(--paper);
+  -webkit-mask:conic-gradient(from 135deg at top,#0000,#000 1deg 89deg,#0000 90deg) top/10px 51% repeat-x,conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) bottom/10px 51% repeat-x;
+          mask:conic-gradient(from 135deg at top,#0000,#000 1deg 89deg,#0000 90deg) top/10px 51% repeat-x,conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) bottom/10px 51% repeat-x}
+.dr{height:1.5px;margin:7px 0;background:repeating-linear-gradient(90deg,var(--rule) 0 5px,transparent 5px 9px)}
+.eq{height:5px;margin:6px 0 4px;background:repeating-linear-gradient(90deg,var(--ink) 0 7px,transparent 7px 10px) top/100% 1.5px no-repeat,repeating-linear-gradient(90deg,var(--ink) 0 7px,transparent 7px 10px) bottom/100% 1.5px no-repeat}
+.no{font-style:normal;font-stretch:75%;font-size:10px;color:var(--mut);margin-right:7px;flex:none}
+.li{display:flex;align-items:baseline;gap:0;font-size:11.5px;text-transform:uppercase;padding:1.5px 0}
+.li span{font-stretch:75%;letter-spacing:.03em;display:flex;align-items:baseline}
+.li i{flex:1;min-width:14px;margin:0 6px;border-bottom:2px dotted var(--rule);transform:translateY(-3px)}
+.li b{font-weight:600;font-size:13.5px;font-stretch:100%;white-space:nowrap}
+.li.tot{padding-top:3px}.li.tot span{font-weight:700}.li.tot b{font-size:17px;font-weight:800;font-stretch:112.5%}
+.li.b span{font-weight:700}
+.thx{text-align:center;font-size:9.5px;font-stretch:75%;letter-spacing:.16em;text-transform:uppercase;color:var(--mut);margin-top:6px}
+
+/* section heads */
+.sh{display:flex;justify-content:space-between;align-items:baseline}
+.sh h2{font-size:11.5px;font-weight:700;font-stretch:112.5%;letter-spacing:.06em;text-transform:uppercase}
+.sh a{font-size:10.5px;font-stretch:75%;font-weight:600;color:var(--acc);text-transform:uppercase;letter-spacing:.06em;border-bottom:1.5px solid currentColor}
+
+/* hero */
+.feedw{position:relative;padding-top:4px;margin:0 0 4px}
+.mouth{position:absolute;top:0;left:-6px;right:-6px;height:6px;background:var(--slotc);z-index:3;box-shadow:0 1px 0 rgb(255 255 255 / .25)}
+.mouth::after{content:'';position:absolute;left:10px;right:10px;top:2px;height:1px;background:rgb(255 255 255 / .18)}
+.clip{overflow:hidden;padding:0 0 6px}
+.feed{animation:feed 1.5s steps(14,jump-end) .25s backwards}
+@keyframes feed{from{transform:translateY(-100%)}}
+.feed .sl{margin:0}
+.hero .slip{padding-top:14px}
+.lab{font-size:11px;font-stretch:75%;letter-spacing:.12em;text-transform:uppercase;color:var(--mut)}
+.dh{font-size:40px;font-weight:800;font-stretch:112.5%;line-height:1;letter-spacing:-.02em;display:flex;align-items:flex-start;height:72px;margin:6px 0 0;transform:scaleY(1.65);transform-origin:0 0;white-space:nowrap}
+.dh .r{font-size:.5em;font-weight:600;margin:.12em .12em 0 0}
+.sub{font-size:11.5px;font-stretch:75%;text-transform:uppercase;letter-spacing:.03em;margin-bottom:2px}
+.mt{position:relative;height:10px;margin:8px 0 4px;background:repeating-linear-gradient(90deg,var(--faint) 0 4px,transparent 4px 6px)}
+.mt i{position:absolute;left:0;top:0;bottom:0;background:repeating-linear-gradient(90deg,var(--ink) 0 4px,transparent 4px 6px)}
+.mt.w i{background:repeating-linear-gradient(90deg,var(--acc) 0 4px,transparent 4px 6px)}
+.mt u{position:absolute;top:-4px;bottom:-4px;width:2px;margin-left:-1px;background:var(--acc)}
+.mt u span{position:absolute;bottom:100%;left:4px;font-size:9px;font-stretch:75%;letter-spacing:.1em;text-transform:uppercase;color:var(--acc);font-weight:600;line-height:1;transform:translateY(4px)}
+.mlab{display:flex;justify-content:space-between;font-size:10.5px;font-stretch:75%;letter-spacing:.04em;text-transform:uppercase;color:var(--mut);margin-top:6px}
+.mlab span:first-child{color:var(--ink)}
+.ok{color:var(--pos);font-style:normal;font-weight:600}
+.bcr{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-top:2px}
+.bc{color:var(--ink);display:block}
+.ts{text-align:right;font-stretch:75%;text-transform:uppercase;letter-spacing:.05em;line-height:1.35}
+.ts b{display:block;font-size:11px;font-weight:700}.ts span{font-size:9.5px;color:var(--mut)}
+
+/* due */
+.due{display:flex;gap:8px;align-items:center;margin:6px 0 10px;padding:8px 10px;border:1.5px dashed var(--acc);color:var(--ink);font-size:10.5px;font-stretch:75%;text-transform:uppercase;letter-spacing:0;line-height:1.45;background:color-mix(in srgb,var(--acc) 6%,transparent)}
+.due .ic{color:var(--acc);margin-top:1px}
+.due b{font-size:11.5px;font-stretch:100%;color:var(--acc)}
+
+/* rows */
+.tx{padding:5px 0}
+.l1{display:flex;align-items:baseline}
+.l1 .nm{font-size:12.5px;font-weight:600;font-stretch:75%;text-transform:uppercase;letter-spacing:.02em;display:flex;align-items:center;gap:5px;min-width:0}
+.l1 .nm .ic{color:var(--mut)}
+.l1 i{flex:1;min-width:10px;margin:0 6px;border-bottom:2px dotted var(--rule);transform:translateY(-3px)}
+.l1 .a{font-size:14px;font-weight:600;white-space:nowrap}
+.a.inc{color:var(--pos)}.a.neg{color:var(--neg)}
+.l2{font-size:10.5px;font-stretch:75%;color:var(--mut);text-transform:uppercase;letter-spacing:.03em;margin-top:1px}
+.ac .l2{padding-left:21px}
+.tg{display:inline-block;padding:0 4px;border:1px solid currentColor;line-height:1.35;font-weight:600}
+.tg.e{color:var(--pos)}.tg.d{color:var(--warn)}
+.sl.last{margin-bottom:0}
+
+/* tab bar: perforated strip */
+.tabs{position:absolute;left:0;right:0;bottom:0;height:70px;background:var(--paper);display:flex;justify-content:space-around;align-items:flex-start;padding:14px 6px 0;border-top:1.5px dashed var(--rule)}
+.tabs::before{content:'';position:absolute;left:0;right:0;top:4px;height:6px;background:radial-gradient(circle at 5px 3px,var(--counter) 1.6px,transparent 2.1px) 0 0/10px 6px repeat-x}
+.tabs.f{padding-right:76px;justify-content:space-between}
+.tabs.f span{min-width:0;padding:5px 4px 4px}
+.tabs span{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:9.5px;font-stretch:75%;letter-spacing:.04em;text-transform:uppercase;color:var(--mut);padding:5px 5px 4px;min-width:58px}
+.tabs span.on{background:var(--ink);color:var(--paper);font-weight:700}
+.fab{position:absolute;right:14px;bottom:12px;width:52px;height:52px;background:var(--acc);color:var(--on-acc);display:grid;place-items:center;z-index:5;box-shadow:0 0 0 3px var(--counter),0 0 0 4.5px var(--acc)}
+.fab:active,.cta button:active{animation:jog .28s steps(4,end)}
+@keyframes jog{25%{transform:translateY(3px)}50%{transform:translateY(-1px)}75%{transform:translateY(1px)}}
+
+/* txns */
+.tseg{display:grid;grid-template-columns:repeat(4,1fr);border:1.5px solid var(--ink);background:var(--paper)}
+.tseg.s3{grid-template-columns:repeat(3,1fr)}
+.tseg span{text-align:center;padding:7px 0;font-size:11px;font-stretch:75%;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
+.tseg span+span{border-left:1.5px solid var(--ink)}
+.tseg span.on{background:var(--ink);color:var(--paper);font-weight:700}
+.mo{display:flex;align-items:center;justify-content:space-between;margin:10px 0 8px}
+.mo b{font-size:13px;font-weight:700;font-stretch:112.5%;text-transform:uppercase;letter-spacing:.05em}
+.mo .ib{width:32px;height:32px}
+.dl{display:flex;justify-content:space-between;font-size:10.5px;font-stretch:75%;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);padding:2px 0 3px}
+.dl span:first-child{color:var(--ink);font-weight:700;font-stretch:100%}
+.tl .tx{padding:4px 0 6px}
+
+/* add */
+.amts .slip{padding:14px 14px 10px}
+.amt{display:flex;flex-direction:column;align-items:flex-end}
+.amt .lab{align-self:flex-start}
+.amt .dh{font-size:40px;height:68px;transform-origin:100% 0}
+.caret{display:inline-block;width:14px;height:.8em;margin:.1em 0 0 6px;background:var(--acc);animation:bl 1s steps(1) infinite}
+@keyframes bl{50%{opacity:0}}
+.np{display:grid;grid-template-columns:repeat(3,1fr);border:1.5px solid var(--ink);background:var(--paper);margin:2px 0 10px}
+.np span{height:46px;display:grid;place-items:center;font-size:20px;font-weight:500;font-stretch:100%;border-right:1px solid var(--faint);border-bottom:1px solid var(--faint)}
+.np span:nth-child(3n){border-right:0}.np span:nth-last-child(-n+3){border-bottom:0}
+.np span:active{background:var(--ink);color:var(--paper)}
+.fl{display:flex;align-items:baseline;flex-wrap:wrap;gap:0 6px;background:var(--paper);border:1.5px solid var(--ink);padding:8px 10px 7px;margin-bottom:12px}
+.fl small{font-size:10.5px;font-stretch:75%;letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}
+.fl i{flex:1;border-bottom:2px dotted var(--rule);transform:translateY(-3px)}
+.fl b{font-size:13px;font-weight:700;text-transform:uppercase}
+.fl .ic{align-self:center}
+.fl em{flex-basis:100%;text-align:right;font-style:normal;font-size:10px;font-stretch:75%;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);padding-right:20px}
+.cg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}
+.cg span{display:flex;flex-direction:column;align-items:center;gap:6px;padding:9px 2px 7px;background:var(--paper);border:1px solid var(--faint);font-size:9.5px;font-stretch:75%;letter-spacing:.03em;text-transform:uppercase;color:var(--mut)}
+.cg span .ic{color:var(--ink)}
+.cg span.on{background:var(--ink);border-color:var(--ink);color:var(--paper);font-weight:700}.cg span.on .ic{color:var(--paper)}
+.cta{position:absolute;left:0;right:0;bottom:0;padding:12px 16px 30px;background:var(--counter);border-top:1.5px dashed var(--rule)}
+.cta button{width:100%;height:52px;border:0;border-radius:0;background:var(--acc);color:var(--on-acc);font-family:inherit;font-size:13px;font-weight:700;font-stretch:112.5%;letter-spacing:.08em;text-transform:uppercase}
+
+/* budgets: the itemised bill */
+.bill .slip{padding:16px 14px 14px}
+.bhd{display:flex;justify-content:space-between;align-items:baseline;text-transform:uppercase}
+.bhd b{font-size:12px;font-weight:700;font-stretch:100%;letter-spacing:.03em}.bhd span{font-size:10px;font-stretch:75%;color:var(--mut);letter-spacing:.06em}
+.bcol,.bn{display:grid;grid-template-columns:1fr 76px 76px 76px;align-items:baseline}
+.bcol{font-size:9.5px;font-stretch:75%;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-top:6px}
+.bcol span:not(:first-child),.bn>*:not(:first-child){text-align:right}
+.bu{padding:4px 0 3px}
+.bt{display:flex;align-items:baseline}
+.bt h3{flex:1;font-size:12.5px;font-weight:700;font-stretch:75%;text-transform:uppercase;letter-spacing:.03em}
+.pc{font-size:18px;font-weight:800;font-stretch:112.5%;display:inline-block;transform:scaleY(1.35);transform-origin:100% 80%}
+.pc.w{color:var(--acc)}
+.bn{font-size:12.5px;font-weight:500;margin-top:2px}.bn b{font-weight:700}
+.bs{display:flex;align-items:center;gap:10px;margin-top:2px}
+.bs .mt{flex:1;margin:6px 0}
+.bs>span{font-size:10px;font-stretch:75%;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;min-width:78px;text-align:center}
+.nl{background:var(--acc);color:var(--on-acc);font-weight:800;padding:3px 6px}
+.bs .ok{padding:2px 0}
+
+/* desktop */
+.sd{position:absolute;left:0;top:0;bottom:0;width:224px;background:var(--paper);padding:28px 22px;display:flex;flex-direction:column;gap:1px;filter:drop-shadow(1px 0 1px var(--shade));
+  -webkit-mask:conic-gradient(from 225deg at right,#0000,#000 1deg 89deg,#0000 90deg) 0 0/100% 10px repeat-y;mask:conic-gradient(from 225deg at right,#0000,#000 1deg 89deg,#0000 90deg) 0 0/100% 10px repeat-y}
+.logo{margin-bottom:22px}
+.logo span{display:block;font-size:24px;font-weight:800;font-stretch:112.5%;text-transform:uppercase;letter-spacing:.04em;transform:scaleY(1.6);transform-origin:0 0;height:40px}
+.logo small{font-size:9.5px;font-stretch:75%;letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
+.addb{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--acc);color:var(--on-acc);font-weight:700;font-stretch:100%;font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;padding:11px 0;margin-bottom:18px}
+.ni{display:flex;align-items:center;gap:10px;padding:7px 8px;font-size:12px;font-stretch:87.5%;text-transform:uppercase;letter-spacing:.03em;color:var(--mut)}
+.ni.on{background:var(--ink);color:var(--paper);font-weight:700}
+.ni.t{padding:4px 8px;font-size:11px;font-stretch:75%}
+.gl{font-size:10px;font-stretch:75%;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);margin:16px 0 4px;padding:0 8px 6px;background:repeating-linear-gradient(90deg,var(--rule) 0 5px,transparent 5px 9px) bottom/100% 1.5px no-repeat}
+.mn{position:absolute;left:224px;right:0;top:0;bottom:0;padding:16px 44px 0 40px;overflow:hidden}
+.mn .hd{padding-top:0}
+.feedw.wide .slip{padding:16px 22px 16px}
+.hw{display:grid;grid-template-columns:auto 1fr;gap:0 48px;align-items:start}
+.hw .dh{font-size:48px;height:82px}
+.hw .sub{margin-bottom:10px}
+.hw .hr{padding-top:4px}
+.hw .mt{margin-top:16px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:0 24px;align-items:start}
+.gi{padding:3px 0}.gi .mt{margin:4px 0 6px}
+.gi .li span{font-weight:600}
+.mn .due{margin:4px 0 10px}
+
+</style>
+</head>
+<body>
+<header class="stage-h">
+  <div><a href="index.html">← All themes</a><h1>6 · Parchi</h1><p>The thermal receipt. Finio as the slip that curls out of a kirana-store billing printer — for people who trust a figure most when it is printed, itemised and totalled.</p></div>
+  <div class="seg" role="group" aria-label="Colour mode"><button aria-pressed="true" data-m="light">Light</button><button aria-pressed="false" data-m="dark">Dark</button></div>
+</header>
+<section class="notes"><div><b>Shape</b><span>Square everything, zero radius. Money sits on torn receipt strips with sawtooth top and bottom edges, laid on a darker counter. The tab bar is a perforated paper strip; the FAB is a square red print key docked into it.</span></div><div><b>Type</b><span>Martian Mono throughout, riding its width axis: 75% condensed for line items, 112.5% wide and bold for totals, which print double-height (scaleY 1.65) like a thermal head.</span></div><div><b>Density</b><span>Dense like a bill — numbered line items, dotted leaders, dashed rules between sections and a double rule under every total. Figures stay 14px+ so they scan.</span></div><div><b>Motion</b><span>The hero slip feeds out of a printer slot once, line by line (steps() timing). Supporting: the add key and CTA give a short paper-jog on press; the caret is a blinking print block.</span></div><div><b>Voice</b><span>Receipt idioms in the gaps: line numbers, SUBTOTAL, BAL C/F, END OF SLIP, “THANK YOU · KEPT ON THIS DEVICE”. Product labels print as-is in capitals.</span></div><div><b>Signature</b><span>The torn slip with its barcode and printed time stamp (15 OCT 2026 · 09:41, day 15 of 31) — and Budgets as an itemised bill whose NEAR LIMIT prints as an inverted red block.</span></div></section>
+<div class="row"><figure class="slot"><div class="phone"><div class="screen app"><div class="sb"><span>9:41</span><span class="sb-r"><svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.5" y="5" width="3" height="6" rx="1"/><rect x="9" y="2.5" width="3" height="8.5" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none" stroke="currentColor"><rect x=".5" y=".5" width="21" height="11" rx="3.5" opacity=".5"/><rect x="2" y="2" width="16" height="8" rx="2" fill="currentColor" stroke="none"/><path d="M23 4v4" stroke-linecap="round" opacity=".5"/></svg></span></div>
+<div class="pg home">
+  <header class="hd"><div class="ti"><h1 class="who">Asha</h1><p><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Kept only on this device</p></div><div class="rt"><span class="ib"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="ib"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M4 6h9M19 6h1M4 12h3M13 12h7M4 18h11M21 18h-1"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg></span></div></header>
+  <div class="feedw"><div class="mouth"></div><div class="clip"><div class="feed"><div class="sl hero"><div class="slip"><div class="lab">Safe to spend today</div><div class="dh"><span class="r">₹</span>1,562</div><p class="sub">₹25,000 left this month · 16 days to go</p><div class="li "><span>Spent</span><i></i><b>₹15,000 / ₹40,000</b></div><div class="mt"><i style="width:38%"></i><u style="left:48%"><span>Today</span></u></div><div class="mlab"><span>38% used · <em class="ok">Under pace</em></span><span>Day 15/31</span></div><div class="dr"></div><div class="bcr"><svg class="bc" viewBox="0 0 112 30" width="150" height="30" preserveAspectRatio="none" shape-rendering="crispEdges" fill="currentColor" aria-hidden="true"><rect x="0" width="1" height="30"/><rect x="2" width="1" height="30"/><rect x="4" width="2" height="30"/><rect x="8" width="3" height="30"/><rect x="13" width="2" height="30"/><rect x="16" width="1" height="30"/><rect x="18" width="1" height="30"/><rect x="21" width="1" height="30"/><rect x="24" width="2" height="30"/><rect x="27" width="1" height="30"/><rect x="29" width="2" height="30"/><rect x="33" width="1" height="30"/><rect x="36" width="1" height="30"/><rect x="38" width="3" height="30"/><rect x="43" width="2" height="30"/><rect x="46" width="1" height="30"/><rect x="48" width="3" height="30"/><rect x="53" width="1" height="30"/><rect x="55" width="2" height="30"/><rect x="58" width="1" height="30"/><rect x="60" width="1" height="30"/><rect x="62" width="1" height="30"/><rect x="64" width="3" height="30"/><rect x="68" width="1" height="30"/><rect x="71" width="1" height="30"/><rect x="74" width="1" height="30"/><rect x="77" width="1" height="30"/><rect x="79" width="3" height="30"/><rect x="84" width="2" height="30"/><rect x="87" width="1" height="30"/><rect x="89" width="3" height="30"/><rect x="94" width="1" height="30"/><rect x="96" width="1" height="30"/><rect x="99" width="1" height="30"/><rect x="102" width="3" height="30"/><rect x="106" width="1" height="30"/><rect x="109" width="1" height="30"/><rect x="111" width="1" height="30"/></svg><div class="ts"><b>15 OCT 2026 · 09:41</b><span>Day 15 of 31 · Slip 015</span></div></div></div></div></div></div></div>
+  <div class="due"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M12 3 2 20h20z"/><path d="M12 10v4M12 17h.01"/></svg><span>Credit Card payment of <b>₹1,925</b> is due in 3 days</span></div>
+  <div class="sl "><div class="slip"><div class="sh"><h2>Where it sits</h2><a>See all</a></div><div class="dr"></div><div class="tx ac"><div class="l1"><em class="no">01</em><span class="nm">HDFC Checking</span><i></i><b class="a">₹1,11,925</b></div><div class="l2">Bank account</div></div><div class="tx ac"><div class="l1"><em class="no">02</em><span class="nm">Savings</span><i></i><b class="a">₹40,075</b></div><div class="l2">Savings</div></div><div class="tx ac"><div class="l1"><em class="no">03</em><span class="nm">Credit Card</span><i></i><b class="a neg">−₹1,925</b></div><div class="l2">Credit card</div></div><div class="dr"></div><div class="li tot"><span>Total balance</span><i></i><b>₹1,50,075</b></div><div class="eq"></div></div></div>
+  <div class="sl last"><div class="slip"><div class="sh"><h2>Latest</h2><a>See all</a></div><div class="dr"></div><div class="tx"><div class="l1"><span class="nm">Monthly rent<svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg></span><i></i><b class="a">−₹15,000</b></div><div class="l2">Housing · HDFC Checking · <span class="tg e">Essential</span></div></div></div></div>
+</div>
+<span class="fab" aria-label="Add transaction"><svg class="ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M12 5v14M5 12h14"/></svg></span><nav class="tabs f"><span class="on"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Home</span><span><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M3 7a2 2 0 0 1 2-2h13v4"/><path d="M3 7v11a2 2 0 0 0 2 2h14a1 1 0 0 0 1-1v-9a1 1 0 0 0-1-1H5a2 2 0 0 1-2-2z"/><circle cx="16.5" cy="14.5" r="1"/></svg>Accounts</span><span><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M7 4 3 8l4 4"/><path d="M3 8h14"/><path d="m17 20 4-4-4-4"/><path d="M21 16H7"/></svg>Transactions</span><span><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>Analytics</span><span><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M4 6h9M19 6h1M4 12h3M13 12h7M4 18h11M21 18h-1"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>Settings</span></nav></div></div><figcaption>Home</figcaption></figure><figure class="slot"><div class="phone"><div class="screen app"><div class="sb"><span>9:41</span><span class="sb-r"><svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.5" y="5" width="3" height="6" rx="1"/><rect x="9" y="2.5" width="3" height="8.5" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none" stroke="currentColor"><rect x=".5" y=".5" width="21" height="11" rx="3.5" opacity=".5"/><rect x="2" y="2" width="16" height="8" rx="2" fill="currentColor" stroke="none"/><path d="M23 4v4" stroke-linecap="round" opacity=".5"/></svg></span></div>
+<div class="pg">
+  <header class="hd"><div class="ti"><h1>Transactions</h1></div><div class="rt"><span class="ib"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></span><span class="ib"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></span></div></header>
+  <div class="tseg"><span class="on">All</span><span>Expense</span><span>Income</span><span>Transfer</span></div>
+  <div class="mo"><span class="ib"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="m15 6-6 6 6 6"/></svg></span><b>October 2026</b><span class="ib"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="m9 6 6 6-6 6"/></svg></span></div>
+  <div class="sl tl"><div class="slip"><div class="dl"><span>Fri, 2 Oct</span><span>2 items</span></div><div class="tx"><div class="l1"><span class="nm">Salary</span><i></i><b class="a inc">+₹85,000</b></div><div class="l2">Income · HDFC Checking</div></div><div class="tx"><div class="l1"><span class="nm">Monthly rent<svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg></span><i></i><b class="a">−₹15,000</b></div><div class="l2">Housing · HDFC Checking · <span class="tg e">Essential</span></div></div><div class="dr"></div><div class="dl"><span>Sun, 27 Sep</span><span>1 item</span></div><div class="tx"><div class="l1"><span class="nm">Lunch with friends</span><i></i><b class="a">−₹275</b></div><div class="l2">Food · HDFC Checking · <span class="tg d">Discretionary</span></div></div><div class="dr"></div><div class="dl"><span>Thu, 24 Sep</span><span>1 item</span></div><div class="tx"><div class="l1"><span class="nm">Groceries</span><i></i><b class="a">−₹2,000</b></div><div class="l2">Food · HDFC Checking · <span class="tg e">Essential</span></div></div><div class="dr"></div><div class="dl"><span>Tue, 22 Sep</span><span>1 item</span></div><div class="tx"><div class="l1"><span class="nm">Cab rides</span><i></i><b class="a">−₹450</b></div><div class="l2">Transport · HDFC Checking</div></div><div class="eq"></div><p class="thx">5 items · end of slip</p></div></div>
+</div>
+<span class="fab" aria-label="Add transaction"><svg class="ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M12 5v14M5 12h14"/></svg></span><nav class="tabs f"><span><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Home</span><span><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M3 7a2 2 0 0 1 2-2h13v4"/><path d="M3 7v11a2 2 0 0 0 2 2h14a1 1 0 0 0 1-1v-9a1 1 0 0 0-1-1H5a2 2 0 0 1-2-2z"/><circle cx="16.5" cy="14.5" r="1"/></svg>Accounts</span><span class="on"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M7 4 3 8l4 4"/><path d="M3 8h14"/><path d="m17 20 4-4-4-4"/><path d="M21 16H7"/></svg>Transactions</span><span><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>Analytics</span><span><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M4 6h9M19 6h1M4 12h3M13 12h7M4 18h11M21 18h-1"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>Settings</span></nav></div></div><figcaption>Transactions</figcaption></figure><figure class="slot"><div class="phone"><div class="screen app"><div class="sb"><span>9:41</span><span class="sb-r"><svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.5" y="5" width="3" height="6" rx="1"/><rect x="9" y="2.5" width="3" height="8.5" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none" stroke="currentColor"><rect x=".5" y=".5" width="21" height="11" rx="3.5" opacity=".5"/><rect x="2" y="2" width="16" height="8" rx="2" fill="currentColor" stroke="none"/><path d="M23 4v4" stroke-linecap="round" opacity=".5"/></svg></span></div>
+<div class="pg">
+  <header class="hd"><span class="ib"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M19 12H5M12 19l-7-7 7-7"/></svg></span><div class="ti"><h1>Add transaction</h1></div><div class="rt"></div></header>
+  <div class="tseg s3"><span class="on">Expense</span><span>Income</span><span>Transfer</span></div>
+  <div class="sl amts"><div class="slip"><div class="amt"><span class="lab">Amount</span><div class="dh"><span class="r">₹</span>2,450<i class="caret"></i></div></div></div></div>
+  <div class="np"><span>7</span><span>8</span><span>9</span><span>4</span><span>5</span><span>6</span><span>1</span><span>2</span><span>3</span><span>.</span><span>0</span><span><svg class="ic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M20 5H9l-7 7 7 7h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2z"/><path d="m18 9-6 6M12 9l6 6"/></svg></span></div>
+  <div class="fl"><small>Account</small><i></i><b>HDFC Checking</b><svg class="ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="m6 9 6 6 6-6"/></svg><em>Bank account</em></div>
+  <div class="sh"><h2>Category</h2><a>Split</a></div>
+  <div class="cg"><span class="on"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M3 2v7a3 3 0 0 0 3 3v10M9 2v7M6 2v7"/><path d="M19 2c-2 2-3 4.5-3 7s1 3 3 3v10"/></svg>Food</span><span><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M5 17H3v-5l2-5h14l2 5v5h-2"/><circle cx="7.5" cy="17" r="2"/><circle cx="16.5" cy="17" r="2"/><path d="M3 12h18"/></svg>Transport</span><span><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M5 8h14l1 13H4z"/><path d="M8 8a4 4 0 0 1 8 0"/></svg>Shopping</span><span><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 3v18M17 3v18M3 8h4M17 8h4M3 16h4M17 16h4M3 12h18"/></svg>Entertainment</span><span><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>Utilities</span><span><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M12 21s-8-5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 6-8 11-8 11z"/></svg>Healthcare</span><span><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M3 5a2 2 0 0 1 2-2h6v17H5a2 2 0 0 0-2 2z"/><path d="M21 5a2 2 0 0 0-2-2h-6v17h6a2 2 0 0 1 2 2z"/></svg>Education</span><span><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9 21v-6h6v6"/></svg>Housing</span></div>
+</div>
+<div class="cta"><button>Add transaction</button></div></div></div><figcaption>Add transaction</figcaption></figure><figure class="slot"><div class="phone"><div class="screen app"><div class="sb"><span>9:41</span><span class="sb-r"><svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.5" y="5" width="3" height="6" rx="1"/><rect x="9" y="2.5" width="3" height="8.5" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none" stroke="currentColor"><rect x=".5" y=".5" width="21" height="11" rx="3.5" opacity=".5"/><rect x="2" y="2" width="16" height="8" rx="2" fill="currentColor" stroke="none"/><path d="M23 4v4" stroke-linecap="round" opacity=".5"/></svg></span></div>
+<div class="pg">
+  <header class="hd"><span class="ib"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M19 12H5M12 19l-7-7 7-7"/></svg></span><div class="ti"><h1>Budgets</h1></div><div class="rt"><span class="ib"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="ib"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M12 5v14M5 12h14"/></svg></span></div></header>
+  <div class="sl bill"><div class="slip"><div class="bhd"><b>Monthly · October 2026</b><span>4 budgets</span></div><div class="eq"></div>
+    <div class="bcol"><span>Item</span><span>Spent</span><span>Limit</span><span>Left</span></div><div class="dr"></div>
+    <section class="bu">
+      <div class="bt"><em class="no">01</em><h3>Overall expenses</h3><b class="pc">38%</b></div>
+      <div class="bn"><span></span><span>₹15,000</span><span>₹40,000</span><b>₹25,000</b></div>
+      <div class="bs"><div class="mt"><i style="width:38%"></i></div><span class="ok">On track</span></div>
+    </section><div class="dr"></div><section class="bu">
+      <div class="bt"><em class="no">02</em><h3>Housing</h3><b class="pc w">94%</b></div>
+      <div class="bn"><span></span><span>₹15,000</span><span>₹16,000</span><b>₹1,000</b></div>
+      <div class="bs"><div class="mt w"><i style="width:94%"></i></div><span class="nl">Near limit</span></div>
+    </section><div class="dr"></div><section class="bu">
+      <div class="bt"><em class="no">03</em><h3>Food</h3><b class="pc">0%</b></div>
+      <div class="bn"><span></span><span>₹0</span><span>₹8,000</span><b>₹8,000</b></div>
+      <div class="bs"><div class="mt"><i style="width:0%"></i></div><span class="ok">On track</span></div>
+    </section><div class="dr"></div><section class="bu">
+      <div class="bt"><em class="no">04</em><h3>Shopping</h3><b class="pc">0%</b></div>
+      <div class="bn"><span></span><span>₹0</span><span>₹3,000</span><b>₹3,000</b></div>
+      <div class="bs"><div class="mt"><i style="width:0%"></i></div><span class="ok">On track</span></div>
+    </section>
+    <div class="eq"></div><p class="thx">Left = subtotal per budget · end of bill</p></div></div>
+</div>
+<nav class="tabs"><span><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Home</span><span><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M3 7a2 2 0 0 1 2-2h13v4"/><path d="M3 7v11a2 2 0 0 0 2 2h14a1 1 0 0 0 1-1v-9a1 1 0 0 0-1-1H5a2 2 0 0 1-2-2z"/><circle cx="16.5" cy="14.5" r="1"/></svg>Accounts</span><span><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M7 4 3 8l4 4"/><path d="M3 8h14"/><path d="m17 20 4-4-4-4"/><path d="M21 16H7"/></svg>Transactions</span><span><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>Analytics</span><span class="on"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M4 6h9M19 6h1M4 12h3M13 12h7M4 18h11M21 18h-1"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>Settings</span></nav></div></div><figcaption>Budgets</figcaption></figure></div>
+<h2 class="sec">Desktop · sidebar layout</h2>
+<div class="row"><figure class="slot"><div class="desk"><div class="screen app">
+<aside class="sd">
+  <div class="logo"><span>Finio</span><small>Personal bill book</small></div>
+  <span class="addb"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M12 5v14M5 12h14"/></svg>Add transaction</span>
+  <span class="ni on"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Home</span><span class="ni"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M3 7a2 2 0 0 1 2-2h13v4"/><path d="M3 7v11a2 2 0 0 0 2 2h14a1 1 0 0 0 1-1v-9a1 1 0 0 0-1-1H5a2 2 0 0 1-2-2z"/><circle cx="16.5" cy="14.5" r="1"/></svg>Accounts</span><span class="ni"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M7 4 3 8l4 4"/><path d="M3 8h14"/><path d="m17 20 4-4-4-4"/><path d="M21 16H7"/></svg>Transactions</span><span class="ni"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>Analytics</span><span class="ni"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M4 6h9M19 6h1M4 12h3M13 12h7M4 18h11M21 18h-1"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>Settings</span>
+  <div class="gl">Tools</div>
+  <span class="ni t">Budgets</span><span class="ni t">Recurring</span><span class="ni t">Goals</span><span class="ni t">Debts</span><span class="ni t">Loans</span><span class="ni t">Merchants</span><span class="ni t">Year in review</span>
+</aside>
+<main class="mn">
+  <header class="hd"><div class="ti"><h1 class="who">Asha</h1><p><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Kept only on this device</p></div><div class="rt"><span class="ib"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="ib"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M4 6h9M19 6h1M4 12h3M13 12h7M4 18h11M21 18h-1"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg></span></div></header>
+  <div class="feedw wide"><div class="mouth"></div><div class="clip"><div class="feed"><div class="sl hero"><div class="slip"><div class="hw"><div><div class="lab">Safe to spend today</div><div class="dh"><span class="r">₹</span>1,562</div><p class="sub">₹25,000 left this month · 16 days to go</p><div class="bcr"><svg class="bc" viewBox="0 0 112 30" width="150" height="30" preserveAspectRatio="none" shape-rendering="crispEdges" fill="currentColor" aria-hidden="true"><rect x="0" width="1" height="30"/><rect x="2" width="1" height="30"/><rect x="4" width="2" height="30"/><rect x="8" width="3" height="30"/><rect x="13" width="2" height="30"/><rect x="16" width="1" height="30"/><rect x="18" width="1" height="30"/><rect x="21" width="1" height="30"/><rect x="24" width="2" height="30"/><rect x="27" width="1" height="30"/><rect x="29" width="2" height="30"/><rect x="33" width="1" height="30"/><rect x="36" width="1" height="30"/><rect x="38" width="3" height="30"/><rect x="43" width="2" height="30"/><rect x="46" width="1" height="30"/><rect x="48" width="3" height="30"/><rect x="53" width="1" height="30"/><rect x="55" width="2" height="30"/><rect x="58" width="1" height="30"/><rect x="60" width="1" height="30"/><rect x="62" width="1" height="30"/><rect x="64" width="3" height="30"/><rect x="68" width="1" height="30"/><rect x="71" width="1" height="30"/><rect x="74" width="1" height="30"/><rect x="77" width="1" height="30"/><rect x="79" width="3" height="30"/><rect x="84" width="2" height="30"/><rect x="87" width="1" height="30"/><rect x="89" width="3" height="30"/><rect x="94" width="1" height="30"/><rect x="96" width="1" height="30"/><rect x="99" width="1" height="30"/><rect x="102" width="3" height="30"/><rect x="106" width="1" height="30"/><rect x="109" width="1" height="30"/><rect x="111" width="1" height="30"/></svg><div class="ts"><b>15 OCT 2026 · 09:41</b><span>Day 15 of 31 · Slip 015</span></div></div></div>
+       <div class="hr"><div class="li "><span>Spent</span><i></i><b>₹15,000</b></div><div class="li "><span>Of budget</span><i></i><b>₹40,000</b></div><div class="dr"></div><div class="li b"><span>Bal c/f</span><i></i><b>₹25,000</b></div><div class="eq"></div><div class="mt"><i style="width:38%"></i><u style="left:48%"><span>Today</span></u></div><div class="mlab"><span>38% used · <em class="ok">Under pace</em></span><span>Day 15/31</span></div></div></div></div></div></div></div></div>
+  <div class="due"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M12 3 2 20h20z"/><path d="M12 10v4M12 17h.01"/></svg><span>Credit Card payment of <b>₹1,925</b> is due in 3 days</span></div>
+  <div class="cols">
+    <div>
+      <div class="sl "><div class="slip"><div class="sh"><h2>Where it sits</h2><a>See all</a></div><div class="dr"></div><div class="tx ac"><div class="l1"><em class="no">01</em><span class="nm">HDFC Checking</span><i></i><b class="a">₹1,11,925</b></div><div class="l2">Bank account</div></div><div class="tx ac"><div class="l1"><em class="no">02</em><span class="nm">Savings</span><i></i><b class="a">₹40,075</b></div><div class="l2">Savings</div></div><div class="tx ac"><div class="l1"><em class="no">03</em><span class="nm">Credit Card</span><i></i><b class="a neg">−₹1,925</b></div><div class="l2">Credit card</div></div><div class="dr"></div><div class="li tot"><span>Total balance</span><i></i><b>₹1,50,075</b></div><div class="eq"></div></div></div>
+      <div class="sl "><div class="slip"><div class="sh"><h2>Savings goals</h2><a>See all</a></div><div class="dr"></div><div class="gi"><div class="li "><span><em class="no">01</em>Emergency Fund</span><i></i><b>₹20,000 / ₹1,00,000</b></div><div class="mt"><i style="width:20%"></i></div></div><div class="gi"><div class="li "><span><em class="no">02</em>Vacation Fund</span><i></i><b>₹0 / ₹60,000</b></div><div class="mt"><i style="width:0%"></i></div></div></div></div>
+    </div>
+    <div>
+      <div class="sl "><div class="slip"><div class="sh"><h2>Latest</h2><a>See all</a></div><div class="dr"></div><div class="tx"><div class="l1"><span class="nm">Salary</span><i></i><b class="a inc">+₹85,000</b></div><div class="l2">Income · HDFC Checking</div></div><div class="tx"><div class="l1"><span class="nm">Monthly rent<svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg></span><i></i><b class="a">−₹15,000</b></div><div class="l2">Housing · HDFC Checking · <span class="tg e">Essential</span></div></div><div class="tx"><div class="l1"><span class="nm">Lunch with friends</span><i></i><b class="a">−₹275</b></div><div class="l2">Food · HDFC Checking · <span class="tg d">Discretionary</span></div></div><div class="tx"><div class="l1"><span class="nm">Groceries</span><i></i><b class="a">−₹2,000</b></div><div class="l2">Food · HDFC Checking · <span class="tg e">Essential</span></div></div><div class="tx"><div class="l1"><span class="nm">Cab rides</span><i></i><b class="a">−₹450</b></div><div class="l2">Transport · HDFC Checking</div></div><div class="eq"></div><p class="thx">Thank you · kept on this device</p></div></div>
+    </div>
+  </div>
+</main></div></div><figcaption>Home, 1240 × 780</figcaption></figure></div>
+<script>
+document.querySelectorAll('.seg button').forEach(function(b){b.addEventListener('click',function(){
+  document.documentElement.dataset.mode=b.dataset.m;
+  document.querySelectorAll('.seg button').forEach(function(x){x.setAttribute('aria-pressed',String(x===b))});
+});});
+</script>
+</body>
+</html>

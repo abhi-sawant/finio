@@ -80,10 +80,11 @@ fun AppShell(navController: NavHostController, graph: NavGraph, navigator: Finio
                         .windowInsetsPadding(WindowInsets.navigationBars)
                         .padding(
                             end = 16.dp,
-                            bottom = if (com.slowatcoding.finio.ui.theme.FinioTheme.visual.let {
-                                it == com.slowatcoding.finio.ui.theme.VisualTheme.Gulal ||
+                            bottom = com.slowatcoding.finio.ui.theme.FinioTheme.visual.let {
+                                if (it == com.slowatcoding.finio.ui.theme.VisualTheme.Gulal ||
                                     it == com.slowatcoding.finio.ui.theme.VisualTheme.Bagh
-                            }) 106.dp else 88.dp,
+                                ) 106.dp else com.slowatcoding.finio.ui.theme.kits.kitFor(it)?.fabBottom ?: 88.dp
+                            },
                         ),
                 )
             }

@@ -1,0 +1,817 @@
+/*
+ * Khel — the 8-bit handheld. A four-shade pea-green LCD by day, a CRT night palette (with faint
+ * scanlines on the page field only) after dark. No radii anywhere: panels are RPG text boxes —
+ * a stepped 3px outer border with notched corners and a second inner line — keys and buttons sit
+ * on a pixel base and drop when pressed. Pixelify Sans for words, VT323 for every figure, Silkscreen
+ * only for tiny HUD tags. Signature: budgets as segmented HP bars with a pixel heart (red, hatched
+ * and blinking near the limit), a spinning pixel coin for add, a chunky pixel number pad.
+ */
+
+/* VT323 for figures. Its glyphs sit small in the em, so both faces are size-adjusted: a 14px row
+   amount draws at ~21px VT323 (below ~20px its 0 reads like a 6). `Khel Figures` is digits and ₹
+   only, so it can lead --ff-sans and turn every figure in running text into VT323 while the words
+   stay Pixelify Sans; `Khel Money` is the whole face for `.font-money`. */
+@font-face {
+  font-family: 'Khel Figures';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('../../node_modules/@fontsource/vt323/files/vt323-latin-400-normal.woff2')
+    format('woff2');
+  unicode-range: U+0030-0039;
+  size-adjust: 150%;
+}
+@font-face {
+  font-family: 'Khel Figures';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('../../node_modules/@fontsource/vt323/files/vt323-latin-ext-400-normal.woff2')
+    format('woff2');
+  unicode-range: U+20B9;
+  size-adjust: 150%;
+}
+@font-face {
+  font-family: 'Khel Money';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('../../node_modules/@fontsource/vt323/files/vt323-latin-400-normal.woff2')
+    format('woff2');
+  unicode-range: U+0000-00FF, U+2000-206F, U+2212;
+  size-adjust: 150%;
+}
+@font-face {
+  font-family: 'Khel Money';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('../../node_modules/@fontsource/vt323/files/vt323-latin-ext-400-normal.woff2')
+    format('woff2');
+  unicode-range: U+20A0-20C0;
+  size-adjust: 150%;
+}
+
+html[data-visual-theme='khel'] {
+  --ff-heading: 'Pixelify Sans Variable', system-ui, sans-serif;
+  --ff-money: 'Khel Money', 'VT323', 'Khel Figures', 'Pixelify Sans Variable', monospace;
+  --ff-sans: 'Khel Figures', 'Pixelify Sans Variable', system-ui, sans-serif;
+  --ff-hud: 'Silkscreen', 'Pixelify Sans Variable', monospace;
+
+  /* The LCD: lightest #e0efbe, light #9bbc0f, dark #306230, darkest #0f380f, + one danger shade. */
+  --k-line: #0f380f;
+  --k-line2: #306230;
+  --k-hl: #9bbc0f;
+  --k-hl-ink: #0f380f;
+  --k-fill: #0f380f;
+  --k-empty: #9bbc0f;
+  --k-cta: #0f380f;
+  --k-cta-ink: #e0efbe;
+  --k-grid: rgb(15 56 15 / 0.045);
+  --k-coin: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14' shape-rendering='crispEdges'%3E%3Cpath fill='%239bbc0f' d='M4 0h6v1h-6zM2 1h10v1h-10zM1 2h12v1h-12zM1 3h12v1h-12zM0 4h14v1h-14zM0 5h14v1h-14zM0 6h14v1h-14zM0 7h14v1h-14zM0 8h14v1h-14zM0 9h14v1h-14zM1 10h12v1h-12zM1 11h12v1h-12zM2 12h10v1h-10zM4 13h6v1h-6z'/%3E%3Cpath fill='%23e0efbe' d='M3 2h2v1h-2zM2 3h1v1h-1zM2 4h1v1h-1z'/%3E%3Cpath fill='%230f380f' d='M4 0h6v1h-6zM2 1h2v1h-2zM10 1h2v1h-2zM1 2h1v1h-1zM12 2h1v1h-1zM1 3h1v1h-1zM12 3h1v1h-1zM0 4h1v1h-1zM13 4h1v1h-1zM0 5h1v1h-1zM13 5h1v1h-1zM0 6h1v1h-1zM13 6h1v1h-1zM0 7h1v1h-1zM13 7h1v1h-1zM0 8h1v1h-1zM13 8h1v1h-1zM0 9h1v1h-1zM13 9h1v1h-1zM1 10h1v1h-1zM12 10h1v1h-1zM1 11h1v1h-1zM12 11h1v1h-1zM2 12h2v1h-2zM10 12h2v1h-2zM4 13h6v1h-6z'/%3E%3C/svg%3E");
+  --k-heart: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath d='M1 1h2v1h-2zM4 1h2v1h-2zM0 2h7v1h-7zM0 3h7v1h-7zM1 4h5v1h-5zM2 5h3v1h-3zM3 6h1v1h-1z'/%3E%3C/svg%3E");
+  --k-cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath d='M0 0h1v1h-1zM0 1h2v1h-2zM0 2h3v1h-3zM0 3h4v1h-4zM0 4h3v1h-3zM0 5h2v1h-2zM0 6h1v1h-1z'/%3E%3C/svg%3E");
+
+  --background: #e0efbe;
+  --foreground: #0f380f;
+  --card: #e0efbe;
+  --card-foreground: #0f380f;
+  --popover: #e0efbe;
+  --popover-foreground: #0f380f;
+  --primary: #0f380f;
+  --primary-foreground: #e0efbe;
+  --secondary: #cfe39a;
+  --secondary-foreground: #0f380f;
+  --muted: #cfe39a;
+  --muted-foreground: #306230;
+  --accent: #9bbc0f;
+  --accent-foreground: #0f380f;
+  --destructive: #a01641;
+  --destructive-foreground: #ffffff;
+  --positive: #306230;
+  --warning: #5c5a00;
+  --border: #9bbc0f;
+  --input: #306230;
+  --ring: #306230;
+  --chart-1: #0f380f;
+  --chart-2: #8bac0f;
+  --chart-3: #a01641;
+  --chart-4: #4f6bd8;
+  --chart-5: #b07a00;
+  --radius: 0rem;
+  --sidebar: #e0efbe;
+  --sidebar-foreground: #0f380f;
+  --sidebar-primary: #0f380f;
+  --sidebar-primary-foreground: #e0efbe;
+  --sidebar-accent: #9bbc0f;
+  --sidebar-accent-foreground: #0f380f;
+  --sidebar-border: #0f380f;
+  --sidebar-ring: #306230;
+
+  --warning-band: #0f380f;
+  --warning-band-foreground: #e0efbe;
+  --warning-band-accent: #9bbc0f;
+
+  --paper: none;
+  --engraving: transparent;
+  --glass: #e0efbe;
+  --glass-strong: #e0efbe;
+  --glass-border: #0f380f;
+  --glass-highlight: transparent;
+
+  --grad-primary: linear-gradient(#0f380f, #0f380f);
+  --grad-primary-soft: linear-gradient(#cfe39a, #cfe39a);
+  --grad-success: linear-gradient(#306230, #306230);
+  --grad-success-soft: linear-gradient(#cfe39a, #cfe39a);
+  --grad-danger: linear-gradient(#a01641, #a01641);
+  --grad-danger-soft: linear-gradient(#ecc6cc, #ecc6cc);
+  --grad-info: linear-gradient(#306230, #306230);
+  --grad-warning: linear-gradient(#7a6a00, #7a6a00);
+  --grad-surface: linear-gradient(#e0efbe, #e0efbe);
+  --coin: var(--k-coin);
+  --coin-ink: #0f380f;
+  --register: #0f380f;
+  --thread: #0f380f;
+
+  --shadow-tint: 15 56 15;
+  --scrim: rgb(15 56 15 / 0.45);
+  --shadow-card: none;
+  --shadow-float: 0 6px 0 0 rgb(15 56 15 / 0.35);
+  --shadow-primary: none;
+  --shadow-danger: none;
+  --shadow-success: none;
+
+  --note-100: linear-gradient(#cfe39a, #cfe39a);
+  --note-100-ink: #0f380f;
+  --note-500: linear-gradient(#bcd77a, #bcd77a);
+  --note-500-ink: #0f380f;
+  --note-2000: linear-gradient(#ecc6cc, #ecc6cc);
+  --note-2000-ink: #6b0f2c;
+  --note-200: linear-gradient(#e2e6a0, #e2e6a0);
+  --note-200-ink: #3d3a00;
+  --note-10: linear-gradient(#d6e8a8, #d6e8a8);
+  --note-10-ink: #0f380f;
+  --note-50: linear-gradient(#c4dfa0, #c4dfa0);
+  --note-50-ink: #0f380f;
+  --note-20: linear-gradient(#b5d06a, #b5d06a);
+  --note-20-ink: #0f380f;
+
+  /* The RPG text box: stepped outer line (notched corners), panel gap, inner line. */
+  --k-box:
+    0 -3px 0 0 var(--k-line), 0 3px 0 0 var(--k-line), -3px 0 0 0 var(--k-line),
+    3px 0 0 0 var(--k-line), inset 0 0 0 3px var(--card), inset 0 0 0 5px var(--k-line2);
+  --k-box-sm:
+    0 -2px 0 0 var(--k-line), 0 2px 0 0 var(--k-line), -2px 0 0 0 var(--k-line),
+    2px 0 0 0 var(--k-line);
+}
+
+html.dark[data-visual-theme='khel'] {
+  /* CRT night: ink cream on deep indigo, phosphor green fills, gold coin. */
+  --k-line: #f6edd3;
+  --k-line2: #4f6bd8;
+  --k-hl: #3a4fb8;
+  --k-hl-ink: #f6edd3;
+  --k-fill: #7be36f;
+  --k-empty: #2c2760;
+  --k-cta: #ffcf3f;
+  --k-cta-ink: #0d0b1e;
+  --k-grid: transparent;
+  --k-coin: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14' shape-rendering='crispEdges'%3E%3Cpath fill='%23ffcf3f' d='M4 0h6v1h-6zM2 1h10v1h-10zM1 2h12v1h-12zM1 3h12v1h-12zM0 4h14v1h-14zM0 5h14v1h-14zM0 6h14v1h-14zM0 7h14v1h-14zM0 8h14v1h-14zM0 9h14v1h-14zM1 10h12v1h-12zM1 11h12v1h-12zM2 12h10v1h-10zM4 13h6v1h-6z'/%3E%3Cpath fill='%23fff6c8' d='M3 2h2v1h-2zM2 3h1v1h-1zM2 4h1v1h-1z'/%3E%3Cpath fill='%235a3a00' d='M4 0h6v1h-6zM2 1h2v1h-2zM10 1h2v1h-2zM1 2h1v1h-1zM12 2h1v1h-1zM1 3h1v1h-1zM12 3h1v1h-1zM0 4h1v1h-1zM13 4h1v1h-1zM0 5h1v1h-1zM13 5h1v1h-1zM0 6h1v1h-1zM13 6h1v1h-1zM0 7h1v1h-1zM13 7h1v1h-1zM0 8h1v1h-1zM13 8h1v1h-1zM0 9h1v1h-1zM13 9h1v1h-1zM1 10h1v1h-1zM12 10h1v1h-1zM1 11h1v1h-1zM12 11h1v1h-1zM2 12h2v1h-2zM10 12h2v1h-2zM4 13h6v1h-6z'/%3E%3C/svg%3E");
+
+  --background: #0d0b1e;
+  --foreground: #f6edd3;
+  --card: #18143a;
+  --card-foreground: #f6edd3;
+  --popover: #18143a;
+  --popover-foreground: #f6edd3;
+  --primary: #ffcf3f;
+  --primary-foreground: #0d0b1e;
+  --secondary: #2c2760;
+  --secondary-foreground: #f6edd3;
+  --muted: #2c2760;
+  --muted-foreground: #bdb5e2;
+  --accent: #3a4fb8;
+  --accent-foreground: #f6edd3;
+  --destructive: #ff5c72;
+  --destructive-foreground: #0d0b1e;
+  --positive: #7be36f;
+  --warning: #ffcf3f;
+  --border: #3a3478;
+  --input: #4f6bd8;
+  --ring: #4f6bd8;
+  --chart-1: #7be36f;
+  --chart-2: #ffcf3f;
+  --chart-3: #ff5c72;
+  --chart-4: #6f8cff;
+  --chart-5: #c58bff;
+  --sidebar: #18143a;
+  --sidebar-foreground: #f6edd3;
+  --sidebar-primary: #ffcf3f;
+  --sidebar-primary-foreground: #0d0b1e;
+  --sidebar-accent: #3a4fb8;
+  --sidebar-accent-foreground: #f6edd3;
+  --sidebar-border: #f6edd3;
+  --sidebar-ring: #4f6bd8;
+
+  --warning-band: #2a1430;
+  --warning-band-foreground: #f6edd3;
+  --warning-band-accent: #ff5c72;
+
+  --glass: #18143a;
+  --glass-strong: #18143a;
+  --glass-border: #f6edd3;
+
+  /* Deep enough for white text: call sites hardcode text-white on bg-grad-primary. */
+  --grad-primary: linear-gradient(#3a4fb8, #3a4fb8);
+  --grad-primary-soft: linear-gradient(#2c2760, #2c2760);
+  --grad-success: linear-gradient(#2b6e27, #2b6e27);
+  --grad-success-soft: linear-gradient(#1c3a2a, #1c3a2a);
+  --grad-danger: linear-gradient(#b02a44, #b02a44);
+  --grad-danger-soft: linear-gradient(#3a1630, #3a1630);
+  --grad-info: linear-gradient(#3a4fb8, #3a4fb8);
+  --grad-warning: linear-gradient(#a8780a, #a8780a);
+  --grad-surface: linear-gradient(#18143a, #18143a);
+  --coin-ink: #5a3a00;
+  --register: #7be36f;
+  --thread: #7be36f;
+
+  --shadow-tint: 0 0 0;
+  --scrim: rgb(5 4 14 / 0.7);
+  --shadow-float: 0 6px 0 0 rgb(0 0 0 / 0.6);
+
+  --note-100: linear-gradient(#2c2760, #2c2760);
+  --note-100-ink: #f6edd3;
+  --note-500: linear-gradient(#1c3a2a, #1c3a2a);
+  --note-500-ink: #c4f7b8;
+  --note-2000: linear-gradient(#3a1630, #3a1630);
+  --note-2000-ink: #ffc8d0;
+  --note-200: linear-gradient(#3a3010, #3a3010);
+  --note-200-ink: #ffe49a;
+  --note-10: linear-gradient(#2a2350, #2a2350);
+  --note-10-ink: #e8dcff;
+  --note-50: linear-gradient(#16304a, #16304a);
+  --note-50-ink: #c4e2ff;
+  --note-20: linear-gradient(#263a16, #263a16);
+  --note-20-ink: #dcf5a8;
+}
+
+/* ── The field: an LCD pixel grid by day, CRT scanlines by night (behind content, never on text) ── */
+html[data-visual-theme='khel'] body {
+  background-image:
+    linear-gradient(var(--k-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--k-grid) 1px, transparent 1px);
+  background-size: 3px 3px;
+  background-attachment: scroll;
+}
+html.dark[data-visual-theme='khel'] body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgb(0 0 0 / 0.22) 0 1px, transparent 1px 3px);
+}
+html.dark.amoled[data-visual-theme='khel'] body::after {
+  background: repeating-linear-gradient(0deg, rgb(255 255 255 / 0.035) 0 1px, transparent 1px 3px);
+}
+
+/* ── Browser surfaces ── */
+html[data-visual-theme='khel'] {
+  caret-color: var(--foreground);
+  accent-color: var(--k-line2);
+  scrollbar-color: var(--k-line2) transparent;
+}
+html[data-visual-theme='khel'] ::selection {
+  background: var(--k-hl);
+  color: var(--k-hl-ink);
+}
+html[data-visual-theme='khel'] :focus-visible {
+  outline: 3px solid var(--k-line2);
+  outline-offset: 3px;
+}
+
+/* ── Type: pixel titles unsmoothed, VT323 figures ── */
+html[data-visual-theme='khel'] h1,
+html[data-visual-theme='khel'] h2,
+html[data-visual-theme='khel'] h3 {
+  letter-spacing: 0;
+}
+html[data-visual-theme='khel'] h1 {
+  font-weight: 700;
+  -webkit-font-smoothing: none;
+}
+html[data-visual-theme='khel'] .font-money {
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  -webkit-font-smoothing: none;
+}
+html[data-visual-theme='khel'] .font-heading {
+  letter-spacing: 0;
+}
+
+/* ── Shape: nothing is round ── */
+html[data-visual-theme='khel'] [class*='rounded'] {
+  border-radius: 0;
+}
+/* Lucide strokes squared off so the app's icons sit closer to the pixel grid. */
+html[data-visual-theme='khel'] svg.lucide {
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+  shape-rendering: crispEdges;
+}
+html[data-visual-theme='khel'] .shadow-glow-primary,
+html[data-visual-theme='khel'] .shadow-glow-success,
+html[data-visual-theme='khel'] .shadow-glow-danger {
+  box-shadow: none;
+}
+html[data-visual-theme='khel'] .glass-chrome {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+/* Panels are text boxes. The outer line is a box-shadow, so it never shifts layout. */
+html[data-visual-theme='khel'] .card-elevated {
+  background-color: var(--card);
+  border-color: transparent;
+  box-shadow: var(--k-box);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='khel'] .card-elevated.divide-y > :not(:last-child),
+html[data-visual-theme='khel'] .card-elevated .divide-y > :not(:last-child) {
+  border-bottom-style: dashed;
+  border-bottom-color: var(--k-line2);
+}
+html[data-visual-theme='khel'] .bg-warning-band {
+  box-shadow: var(--k-box-sm);
+}
+html[data-visual-theme='khel'] .bg-grad-surface {
+  box-shadow: var(--k-box);
+  border-color: transparent;
+}
+
+/* ── Hero: the score box ── */
+html[data-visual-theme='khel'] .note-card {
+  background-image: none;
+  background-color: var(--card);
+  border: 0;
+  box-shadow: var(--k-box);
+  overflow: visible;
+}
+html[data-visual-theme='khel'] .note-card-body {
+  padding-right: 0;
+}
+/* The label shares its row with the Day n/N tag. */
+html[data-visual-theme='khel'] .note-card-body > p:first-child {
+  padding-right: 6rem;
+}
+html[data-visual-theme='khel'] .hero-fig {
+  font-size: 3.25rem;
+  line-height: 1;
+  letter-spacing: 0;
+}
+html[data-visual-theme='khel'] .khel-hud {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-family: var(--ff-hud);
+  font-size: 11px;
+  line-height: 1;
+  white-space: nowrap;
+  padding: 5px 7px 4px;
+  background: var(--foreground);
+  color: var(--background);
+  -webkit-font-smoothing: none;
+}
+@media (min-width: 1024px) {
+  html[data-visual-theme='khel'] .hero-fig {
+    font-size: 3.75rem;
+  }
+}
+
+/* ── Accounts as inventory slots ── */
+html[data-visual-theme='khel'] .note-tile {
+  border: 0;
+  box-shadow:
+    var(--k-box-sm),
+    inset 0 -4px 0 0 var(--k-hl);
+}
+html[data-visual-theme='khel'] .note-tile:active {
+  transform: translateY(2px);
+}
+html[data-visual-theme='khel'] .note-chip {
+  box-shadow: inset 0 0 0 2px var(--k-line2);
+}
+
+/* ── Budgets: segmented HP bars with a pixel heart ── */
+html[data-visual-theme='khel'] [role='progressbar'] {
+  position: relative;
+  overflow: visible;
+  height: 16px;
+  margin-left: 24px;
+  padding: 2px;
+  background-color: var(--card);
+  background-image: linear-gradient(var(--k-empty), var(--k-empty));
+  background-clip: content-box;
+  box-shadow: var(--k-box-sm);
+}
+/* 20 segments: the gaps are drawn over both the fill and the empty track. */
+html[data-visual-theme='khel'] [role='progressbar']::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0 calc(5% - 2px),
+    var(--card) calc(5% - 2px) 5%
+  );
+}
+html[data-visual-theme='khel'] [role='progressbar']::before {
+  content: '';
+  position: absolute;
+  left: -24px;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  margin-top: -8px;
+  background: var(--foreground);
+  -webkit-mask: var(--k-heart) center / 100% 100% no-repeat;
+  mask: var(--k-heart) center / 100% 100% no-repeat;
+}
+html[data-visual-theme='khel'] [role='progressbar'] > div {
+  transition: width 0.6s steps(10);
+}
+/* Near or over the limit: the heart turns red, the empty segments hatch. */
+html[data-visual-theme='khel'] [role='progressbar']:has(> [style*='--destructive']),
+html[data-visual-theme='khel'] [role='progressbar']:has(> [style*='--warning']) {
+  background-image: repeating-linear-gradient(
+    135deg,
+    var(--destructive) 0 2px,
+    var(--k-empty) 2px 5px
+  );
+}
+html[data-visual-theme='khel'] [role='progressbar']:has(> [style*='--destructive'])::before,
+html[data-visual-theme='khel'] [role='progressbar']:has(> [style*='--warning'])::before {
+  background: var(--destructive);
+}
+/* …and it blinks from 90% used. */
+html[data-visual-theme='khel'] [role='progressbar']:has(> [style*='--destructive'])::before,
+html[data-visual-theme='khel']
+  [role='progressbar']:is(
+    [aria-valuenow='90'],
+    [aria-valuenow='91'],
+    [aria-valuenow='92'],
+    [aria-valuenow='93'],
+    [aria-valuenow='94'],
+    [aria-valuenow='95'],
+    [aria-valuenow='96'],
+    [aria-valuenow='97'],
+    [aria-valuenow='98'],
+    [aria-valuenow='99'],
+    [aria-valuenow='100']
+  )::before {
+  animation: khel-blink 0.8s steps(1) infinite;
+}
+/* Goals and other "toward a target" bars: the same segments, no heart. */
+html[data-visual-theme='khel'] .thread-fill {
+  background-image: none;
+  background-color: var(--k-fill);
+  -webkit-mask: none;
+  mask: none;
+}
+html[data-visual-theme='khel'] :has(> .thread-fill) {
+  position: relative;
+  padding: 2px;
+  background-color: var(--card);
+  background-image: linear-gradient(var(--k-empty), var(--k-empty));
+  background-clip: content-box;
+  box-shadow: var(--k-box-sm);
+  height: 12px;
+}
+html[data-visual-theme='khel'] :has(> .thread-fill)::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0 calc(5% - 2px),
+    var(--card) calc(5% - 2px) 5%
+  );
+}
+
+/* ── Controls ── */
+html[data-visual-theme='khel'] [data-slot='button'] {
+  font-weight: 700;
+  -webkit-font-smoothing: none;
+  transition: none;
+}
+html[data-visual-theme='khel'] [data-slot='button'].bg-grad-primary {
+  background: var(--k-cta);
+  color: var(--k-cta-ink);
+  border-color: transparent;
+  box-shadow:
+    0 -3px 0 0 var(--k-cta),
+    0 3px 0 0 var(--k-cta),
+    -3px 0 0 0 var(--k-cta),
+    3px 0 0 0 var(--k-cta),
+    0 7px 0 0 var(--k-line2);
+}
+html[data-visual-theme='khel'] [data-slot='button'].bg-grad-primary:active {
+  transform: translateY(2px);
+  box-shadow:
+    0 -3px 0 0 var(--k-cta),
+    0 3px 0 0 var(--k-cta),
+    -3px 0 0 0 var(--k-cta),
+    3px 0 0 0 var(--k-cta),
+    0 5px 0 0 var(--k-line2);
+}
+html[data-visual-theme='khel'] [data-slot='button'][class*='glass-border'] {
+  background: var(--card);
+  border-color: transparent;
+  backdrop-filter: none;
+  box-shadow:
+    var(--k-box-sm),
+    0 5px 0 0 var(--k-line);
+}
+html[data-visual-theme='khel'] [data-slot='button'][class*='glass-border'].bg-grad-primary {
+  background: var(--k-hl);
+  color: var(--k-hl-ink);
+}
+html[data-visual-theme='khel'] [data-slot='button'][class*='glass-border']:active {
+  transform: translateY(2px);
+  box-shadow:
+    var(--k-box-sm),
+    0 3px 0 0 var(--k-line);
+}
+html[data-visual-theme='khel'] [data-slot='input'],
+html[data-visual-theme='khel'] [data-slot='textarea'],
+html[data-visual-theme='khel'] [data-slot='select-trigger'],
+html[data-visual-theme='khel'] [data-slot='popover-trigger'][class*='border'] {
+  border: 2px solid var(--k-line);
+  background-color: var(--card);
+  box-shadow: none;
+}
+html[data-visual-theme='khel'] [data-slot='input']:focus-visible,
+html[data-visual-theme='khel'] [data-slot='textarea']:focus-visible {
+  outline: 3px solid var(--k-line2);
+  outline-offset: 2px;
+}
+html[data-visual-theme='khel'] [role='switch'] {
+  box-shadow: var(--k-box-sm);
+}
+html[data-visual-theme='khel'] [role='switch'][aria-checked='true'] {
+  background: var(--k-fill);
+}
+html[data-visual-theme='khel'] [role='switch'] > span {
+  box-shadow: none;
+  background: var(--foreground);
+}
+html[data-visual-theme='khel'] [role='switch'][aria-checked='true'] > span {
+  background: var(--card);
+}
+html[data-visual-theme='khel'] [data-slot='checkbox'] {
+  border: 2px solid var(--k-line);
+}
+
+/* Segmented controls (type picker, period tabs): the current one is inked with a blinking cursor. */
+html[data-visual-theme='khel'] [role='group'].bg-muted,
+html[data-visual-theme='khel'] [role='tablist'].bg-muted {
+  background: transparent;
+  gap: 6px;
+  padding: 3px;
+}
+html[data-visual-theme='khel'] [role='group'] > [aria-pressed='true'],
+html[data-visual-theme='khel'] [role='tablist'] > [aria-selected='true'] {
+  position: relative;
+  background: var(--foreground);
+  color: var(--background);
+  font-weight: 700;
+  box-shadow: none;
+}
+html[data-visual-theme='khel'] [role='group'] > [aria-pressed='true']::before,
+html[data-visual-theme='khel'] [role='tablist'] > [aria-selected='true']::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  margin-top: -6px;
+  background: currentColor;
+  -webkit-mask: var(--k-cursor) center / 100% 100% no-repeat;
+  mask: var(--k-cursor) center / 100% 100% no-repeat;
+  animation: khel-blink 1s steps(1) infinite;
+}
+
+/* Category tiles: the picked one is a highlighted slot with the cursor. */
+html[data-visual-theme='khel'] [data-selected='true'] {
+  position: relative;
+  background: var(--k-hl);
+  color: var(--k-hl-ink);
+  border-color: transparent;
+  box-shadow: var(--k-box-sm);
+}
+html[data-visual-theme='khel'] [data-selected='true']::before {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 10px;
+  width: 10px;
+  height: 10px;
+  background: currentColor;
+  -webkit-mask: var(--k-cursor) center / 100% 100% no-repeat;
+  mask: var(--k-cursor) center / 100% 100% no-repeat;
+  animation: khel-blink 1s steps(1) infinite;
+}
+
+/* ── The number pad: chunky keys on a pixel base, a 2px press ── */
+html[data-visual-theme='khel'] .space-y-2 > .grid.grid-cols-3 {
+  gap: 12px 14px;
+  padding: 2px 4px 8px;
+}
+html[data-visual-theme='khel'] .space-y-2 > .grid.grid-cols-3 > button {
+  height: 3.25rem;
+  border: 0;
+  background: var(--card);
+  color: var(--foreground);
+  font-family: var(--ff-money);
+  font-size: 1.5rem;
+  font-weight: 400;
+  -webkit-font-smoothing: none;
+  box-shadow:
+    var(--k-box-sm),
+    0 5px 0 0 var(--k-line),
+    inset 0 -3px 0 0 var(--k-hl);
+  transition: none;
+}
+html[data-visual-theme='khel'] .space-y-2 > .grid.grid-cols-3 > button:active {
+  transform: translateY(2px);
+  background: var(--k-hl);
+  color: var(--k-hl-ink);
+  box-shadow:
+    var(--k-box-sm),
+    0 3px 0 0 var(--k-line);
+}
+
+/* ── Dialogs, popovers, menus, toasts ── */
+html[data-visual-theme='khel'] [data-slot='dialog-content'],
+html[data-visual-theme='khel'] [data-slot='alert-dialog-content'],
+html[data-visual-theme='khel'] [data-slot='popover-content'],
+html[data-visual-theme='khel'] [data-slot='select-content'],
+html[data-visual-theme='khel'] [data-slot='dropdown-menu-content'],
+html[data-visual-theme='khel'] [data-slot='dropdown-menu-sub-content'] {
+  background-color: var(--popover);
+  box-shadow:
+    var(--k-box),
+    0 9px 0 0 rgb(var(--shadow-tint) / 0.35);
+}
+html[data-visual-theme='khel'] [data-slot='dialog-title'],
+html[data-visual-theme='khel'] [data-slot='alert-dialog-title'] {
+  font-weight: 700;
+  -webkit-font-smoothing: none;
+}
+html[data-visual-theme='khel'] [data-slot='select-item'][data-highlighted],
+html[data-visual-theme='khel'] [data-slot='dropdown-menu-item'][data-highlighted] {
+  background: var(--foreground);
+  color: var(--background);
+}
+html[data-visual-theme='khel'] [data-sonner-toaster] {
+  --normal-bg: var(--popover);
+  --normal-border: transparent;
+  --normal-text: var(--foreground);
+  --border-radius: 0;
+}
+html[data-visual-theme='khel'] [data-sonner-toaster] [data-sonner-toast] {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: var(--k-box);
+}
+
+/* ── Chrome: a handheld's button strip, a coin for add ── */
+html[data-visual-theme='khel'] [data-slot='page-header'].glass-chrome {
+  background-color: var(--background);
+  border-bottom-color: transparent;
+  box-shadow: 0 3px 0 0 var(--k-line2);
+}
+html[data-visual-theme='khel'] [data-slot='page-header'] h1 {
+  font-size: 1.625rem;
+  line-height: 1.15;
+}
+html[data-visual-theme='khel'] [data-slot='tab-bar'] {
+  background: var(--card);
+  border-top: 0;
+  padding-top: 9px;
+  box-shadow:
+    0 -3px 0 0 var(--k-line),
+    0 -6px 0 0 var(--card),
+    0 -8px 0 0 var(--k-line2);
+}
+html[data-visual-theme='khel'] [data-slot='tab'] {
+  color: var(--muted-foreground);
+  gap: 3px;
+  padding: 5px 2px 4px;
+  margin: 0 2px;
+}
+html[data-visual-theme='khel'] [data-slot='tab'][aria-current='page'] {
+  background: var(--foreground);
+  color: var(--background);
+}
+html[data-visual-theme='khel'] [data-slot='tab'][aria-current='page'] span {
+  font-weight: 700;
+}
+html[data-visual-theme='khel'] [data-slot='fab'],
+html[data-visual-theme='khel'] [data-slot='brand-mark'] {
+  background: var(--k-coin) center / 100% 100% no-repeat;
+  color: var(--coin-ink);
+  box-shadow: none;
+  image-rendering: pixelated;
+}
+html[data-visual-theme='khel'] [data-slot='fab'] {
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 6rem) !important;
+  filter: drop-shadow(0 4px 0 var(--k-line));
+  animation: khel-spin 6s steps(1) infinite;
+}
+html[data-visual-theme='khel'] [data-slot='fab']:active {
+  animation: none;
+  transform: translateY(2px);
+  filter: drop-shadow(0 2px 0 var(--k-line));
+}
+html[data-visual-theme='khel'] [data-slot='brand-mark'] {
+  font-size: 1.125rem;
+  -webkit-font-smoothing: none;
+}
+html[data-visual-theme='khel'] [data-slot='sidebar'] {
+  background: var(--card);
+  border-right: 0;
+  box-shadow:
+    3px 0 0 0 var(--k-line),
+    6px 0 0 0 var(--card),
+    8px 0 0 0 var(--k-line2);
+}
+html[data-visual-theme='khel'] [data-slot='sidebar'] [data-slot='nav-item'] {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  color: var(--muted-foreground);
+}
+html[data-visual-theme='khel'] [data-slot='sidebar'] [data-slot='nav-item']:hover {
+  color: var(--foreground);
+}
+html[data-visual-theme='khel'] [data-slot='sidebar'] [data-slot='nav-item'][aria-current='page'] {
+  background: var(--foreground);
+  color: var(--background);
+  font-weight: 700;
+}
+html[data-visual-theme='khel'] [data-slot='sidebar'] [data-slot='add-button'] {
+  margin: 3px 3px 1.25rem;
+  background: var(--k-cta);
+  color: var(--k-cta-ink);
+  font-weight: 700;
+  box-shadow:
+    0 -3px 0 0 var(--k-cta),
+    0 3px 0 0 var(--k-cta),
+    -3px 0 0 0 var(--k-cta),
+    3px 0 0 0 var(--k-cta),
+    0 7px 0 0 var(--k-line2);
+}
+html[data-visual-theme='khel'] [data-slot='sidebar'] [data-slot='add-button']:active {
+  transform: translateY(2px);
+}
+
+/* ── Motion: stepped, never eased ── */
+@keyframes khel-blink {
+  70% {
+    opacity: 0;
+  }
+}
+@keyframes khel-spin {
+  0% {
+    transform: scaleX(1);
+  }
+  /* A quick four-frame turn every 6s; the coin is face-on (and easy to tap) the rest of the time. */
+  86% {
+    transform: scaleX(0.64);
+  }
+  89% {
+    transform: scaleX(0.14);
+  }
+  92% {
+    transform: scaleX(0.64);
+  }
+  95% {
+    transform: scaleX(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-visual-theme='khel'] [data-slot='fab'],
+  html[data-visual-theme='khel'] [role='progressbar']::before,
+  html[data-visual-theme='khel'] [role='group'] > [aria-pressed='true']::before,
+  html[data-visual-theme='khel'] [role='tablist'] > [aria-selected='true']::before,
+  html[data-visual-theme='khel'] [data-selected='true']::before {
+    animation: none;
+  }
+  html[data-visual-theme='khel'] [role='progressbar'] > div {
+    transition: none;
+  }
+}

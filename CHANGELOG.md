@@ -3,6 +3,25 @@
 Finio follows [Semantic Versioning](https://semver.org). The repo-root `VERSION` file is the single
 source of truth for both clients; see "Releasing" in [CLAUDE.md](CLAUDE.md).
 
+## Unreleased
+
+### Added
+
+- **Five more visual themes, ten in all.** **Parchi** is a kirana billing receipt (torn paper,
+  monospaced line items, a double-height total and a barcode under the hero); **Mahal** is Bombay Art
+  Deco (peacock teal and gold, stepped frames, a sunburst over your figure that shows spending
+  against the month); **Ganak** is a pocket calculator (putty plastic, rubber keys, the hero figure
+  in seven-segment LCD digits, budgets as segment bar graphs); **Akhbaar** is the morning paper
+  (newsprint, headline figures, halftone pace charts, one masthead red); **Khel** is an 8-bit
+  handheld (pixel type, health-bar budgets, a coin to add). Each has hand-tuned light and dark
+  palettes and works with AMOLED. The Style picker now lays the themes out two to a row on wider
+  screens. Android has the same ten themes.
+
+### Changed
+
+- **Slightly larger install** again: the new themes bring their own fonts (each loaded only once its
+  theme is used on the web).
+
 ## 3.1.0 — 2026-11-04
 
 ### Added

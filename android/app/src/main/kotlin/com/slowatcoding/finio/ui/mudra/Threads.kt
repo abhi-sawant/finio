@@ -152,7 +152,7 @@ fun BudgetProgressBar(percent: Float, isOver: Boolean, okColor: Color, modifier:
 private fun Modifier.gulalOutline(): Modifier =
     if (FinioTheme.visual == com.slowatcoding.finio.ui.theme.VisualTheme.Gulal) {
         border(2.dp, FinioTheme.colors.foreground, FinioShapes.full)
-    } else this
+    } else com.slowatcoding.finio.ui.theme.kits.kitFor(FinioTheme.visual)?.let { then(it.progressDecoration()) } ?: this
 
 private fun Modifier.progressSemantics(percent: Float, valueText: String?) = semantics {
     progressBarRangeInfo = ProgressBarRangeInfo(percent.coerceIn(0f, 100f), 0f..100f)

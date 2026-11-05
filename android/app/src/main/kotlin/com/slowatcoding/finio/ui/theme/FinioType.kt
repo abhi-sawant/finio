@@ -138,6 +138,7 @@ fun typeScaleFor(visual: VisualTheme): FinioTypeScale = when (visual) {
     VisualTheme.Gulal -> gulalScale
     VisualTheme.Shunya -> shunyaScale
     VisualTheme.Bagh -> baghScale
+    else -> com.slowatcoding.finio.ui.theme.kits.kitFor(visual)?.type ?: MudraTypeScale
 }
 
 private val khataScale = FinioTypeScale(

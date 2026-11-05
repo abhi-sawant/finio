@@ -208,7 +208,8 @@ entry) — a screen that deletes its own entity just calls `nav.back()`.
 
 ## Visual themes
 
-Five worlds — Mudra (default), Khata, Gulal, Shunya, Bagh — ported from `web/src/themes/*.css`
+Ten worlds — Mudra (default), Khata, Gulal, Shunya, Bagh, Parchi, Mahal, Ganak, Akhbaar, Khel —
+ported from `web/src/themes/*.css`
 (see [web/CLAUDE.md](../web/CLAUDE.md) for what each one is). Picker: Settings → Profile & preferences
 → Style (`VisualThemePicker`); Light/dark/system is the separate **Mode** row.
 
@@ -225,12 +226,20 @@ Five worlds — Mudra (default), Khata, Gulal, Shunya, Bagh — ported from `web
   tiles). Everything else must come from the palette/spec/scales so a new theme is data, not `if`s.
   The pieces that belong to one theme (`BurstBadge`, `MonthLine`, `SunArc`, `GoalPlant`, `HeroFigure`
   in `mudra/ThemeExtras.kt`) draw nothing in the others, so call sites place them unconditionally.
+- **Round-two themes are kits.** Parchi, Mahal, Ganak, Akhbaar and Khel each live in one
+  `ui/theme/kits/<Name>Kit.kt` implementing `ThemeKit` (palette, type and shape scales, coin, FAB lift,
+  progress track, hero surface/figure/scene/footer, tab bar). The shared files ask `kitFor(visual)` in
+  their `else` branch, so a new theme is a new kit plus an enum entry — no new `when` arms. Prefer this
+  pattern for any future theme; the round-one themes still use the `when`s.
 - **Outlines** go through `Modifier.themeBorder(shape)` (`FinioSpec.borderWidth`: Gulal 2.5dp, Bagh 0,
   others 1dp) — not a hand-written `border(1.dp, glassBorder)`.
 - **Keep `gradPrimary` deep enough for white text** in every theme and mode (the palette test checks
   the primary pair); call sites hardcode white on it.
 - **Fonts** are variable TTFs in `res/font/` (Source Serif 4, Source Sans 3, Bricolage Grotesque,
-  Geist, Gabarito, Figtree — about 2.6 MB together; Source Serif 4 is the bulk). Only the weight axis
+  Geist, Gabarito, Figtree — about 2.6 MB together; Source Serif 4 is the bulk). Round-two fonts are
+  prefixed with their theme (`parchi_martian_mono`, `mahal_limelight`, `mahal_jost`, `ganak_archivo`,
+  `akhbaar_oswald`, `akhbaar_newsreader`, `khel_pixelify_sans`, `khel_vt323`, `khel_silkscreen` —
+  about 1.9 MB more). Limelight and Jost have no ₹, so Mahal sets the rupee sign in Figtree. Only the weight axis
   is driven; opsz/wdth stay at their defaults. A subsetted font would shrink the APK.
 - **Compromises.** Khata's tick pattern is a budget-bar fill only (goal bars keep the windowed solid ink
   thread); Gulal/Bagh's floating tab bar lifts the coin to 106dp; the Bagh hills sit under the hero

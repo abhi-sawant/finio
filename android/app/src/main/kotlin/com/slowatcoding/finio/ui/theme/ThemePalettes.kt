@@ -31,6 +31,10 @@ class ThemePalette(val colors: FinioColors, val brushes: FinioBrushes, val shado
 
 fun finioPalette(visual: VisualTheme, dark: Boolean, amoled: Boolean): ThemePalette {
     val black = dark && amoled
+    com.slowatcoding.finio.ui.theme.kits.kitFor(visual)?.let { kit ->
+        val p = kit.palette(dark)
+        return if (black) p.amoled() else p
+    }
     return when (visual) {
         VisualTheme.Mudra -> ThemePalette(
             colors = if (black) AmoledFinioColors else if (dark) DarkFinioColors else LightFinioColors,

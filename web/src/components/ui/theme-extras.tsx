@@ -133,3 +133,10 @@ export function GoalPlant({ percent, className }: { percent: number; className?:
     </svg>
   );
 }
+
+// Round two — one file per theme in ./extras, each hidden by `.only-<theme>` like the pieces above.
+export { ParchiSlip } from './extras/parchi';
+export { MahalSunburst } from './extras/mahal';
+export { GanakDisplay } from './extras/ganak';
+export { AkhbaarPace } from './extras/akhbaar';
+export { KhelHud } from './extras/khel';

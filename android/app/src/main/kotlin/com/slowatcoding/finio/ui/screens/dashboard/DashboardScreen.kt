@@ -298,7 +298,11 @@ private fun Hero(data: DashboardData, money: MoneyFormatter, hasAccounts: Boolea
             { BurstBadge("${jsRound(heroOverall.percent)}%") }
         } else null,
         scene = if (heroOverall != null) {
-            { SunArc(data.periodElapsed) }
+            {
+                SunArc(data.periodElapsed)
+                com.slowatcoding.finio.ui.theme.kits.kitFor(FinioTheme.visual)
+                    ?.HeroScene(data.periodElapsed, heroOverall.percent.toFloat(), heroOverall.isOver)
+            }
         } else null,
     ) {
         // Read inside the card: Gulal re-inks its hero, which only shows through its own scope.
@@ -345,7 +349,8 @@ private fun Hero(data: DashboardData, money: MoneyFormatter, hasAccounts: Boolea
             if (overall.spent > 0) {
                 MonthLine(data.periodElapsed, overall.percent.toFloat(), Modifier.padding(top = 20.dp))
                 // Shunya replaces the bar with its month line (which draws nothing in other themes).
-                if (FinioTheme.visual != com.slowatcoding.finio.ui.theme.VisualTheme.Shunya) RegisterBar(
+                val kit = com.slowatcoding.finio.ui.theme.kits.kitFor(FinioTheme.visual)
+                if (FinioTheme.visual != com.slowatcoding.finio.ui.theme.VisualTheme.Shunya && kit?.replacesHeroBar != true) RegisterBar(
                     percent = overall.percent.toFloat(),
                     isOver = overall.isOver,
                     modifier = Modifier.padding(top = 12.dp),
@@ -357,6 +362,8 @@ private fun Hero(data: DashboardData, money: MoneyFormatter, hasAccounts: Boolea
                     style = FinioType.caption,
                     color = colors.mutedForeground,
                 )
+                // A round-two theme's own piece under the bar (Parchi's barcode, Akhbaar's halftone pace).
+                kit?.HeroFooter(data.periodElapsed, overall.percent.toFloat(), overall.isOver, data.daysLeftInPeriod)
             }
         } else {
             Text(if (data.trackerMode) "Spent this month" else "Total balance", style = FinioType.bodyMedium, color = colors.mutedForeground)

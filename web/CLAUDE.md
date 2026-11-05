@@ -221,7 +221,7 @@ page.
   - Fonts: Instrument Sans for everything people read or type; **Familjen Grotesk** (the banknote
     numeral) for `h1` page titles, dialog titles (`font-heading`) and headline money (`.font-money`).
     Row amounts stay Instrument Sans.
-- **Visual themes** (Mudra default + Khata, Gulal, Shunya, Bagh) — chosen in Settings → Profile &
+- **Visual themes** (Mudra default + Khata, Gulal, Shunya, Bagh, Parchi, Mahal, Ganak, Akhbaar, Khel) — chosen in Settings → Profile &
   preferences → Style. The choice lives in [`useVisualThemeStore`](src/store/useVisualThemeStore.ts)
   (`finio-visual-theme`), **not** in `Settings`: settings travel in every backup, so a field there
   would change the backup contract, and a look is a per-device preference anyway. `ThemeProvider`
@@ -241,10 +241,14 @@ page.
     [`ui/theme-extras.tsx`](src/components/ui/theme-extras.tsx)) are always in the DOM and hidden by
     `.only-<theme>`; add a new one there rather than checking the theme in a page. The hero figure
     carries `hero-fig` (+ `data-whole` when it is whole rupees) and the budget bar `hero-bar` so a
-    theme can restyle or replace them.
+    theme can restyle or replace them. Round-two themes keep their piece in
+    [`ui/extras/<theme>.tsx`](src/components/ui/extras) (re-exported from `theme-extras.tsx`):
+    `ParchiSlip`, `MahalSunburst`, `GanakDisplay` (which stands in for `.hero-fig`, kept visually
+    hidden for screen readers), `AkhbaarPace`, `KhelHud`.
   - AMOLED is not Mudra-only: `html.dark.amoled[data-visual-theme]` forces a true-black field on any
     theme. Adding a theme means: a `src/themes/<name>.css`, an entry in `VISUAL_THEMES` /
-    `THEME_COLORS`, the id in the `index.html` pre-paint script, and its font in `index.css`.
+    `THEME_COLORS`, the id in the `index.html` pre-paint script (a regex), its `.only-<name>` pair in
+    `themes/base.css`, and its font in `index.css`.
   - The Android app mirrors every theme (`android/.../ui/theme/ThemePalettes.kt`); change both together.
 - **Tailwind CSS v4** — configured via `@tailwindcss/vite` plugin (no `tailwind.config.js`; directives in `index.css`).
 - **shadcn/ui** with `base-nova` style, using `@base-ui/react` under the hood. Add new components with `npx shadcn@latest add <component>`.
