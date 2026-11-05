@@ -44,7 +44,7 @@
           try {
             var vt = JSON.parse(localStorage.getItem('finio-visual-theme') || 'null');
             vt = vt && vt.state && vt.state.visualTheme;
-            if (vt === 'khata' || vt === 'gulal' || vt === 'shunya' || vt === 'bagh') d.dataset.visualTheme = vt;
+            if (/^(khata|gulal|shunya|bagh|parchi|mahal|ganak|akhbaar|khel)$/.test(vt)) d.dataset.visualTheme = vt;
           } catch (e) {}
           var standalone = navigator.standalone === true ||
             matchMedia('(display-mode: standalone)').matches ||

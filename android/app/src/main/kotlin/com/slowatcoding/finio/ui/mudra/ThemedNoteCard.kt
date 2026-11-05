@@ -62,6 +62,7 @@ internal fun ThemedNoteCard(
     val shape = FinioShapes.note
     val wide = LocalConfiguration.current.screenWidthDp >= 1024
     val dark = colors.isDark
+    val kit = com.slowatcoding.finio.ui.theme.kits.kitFor(visual)
 
     val container = when (visual) {
         VisualTheme.Khata -> Modifier
@@ -92,13 +93,13 @@ internal fun ThemedNoteCard(
                     }
                 }
             }
-        else -> Modifier
+        else -> kit?.heroContainer(shape) ?: Modifier
     }
 
     val padding = when (visual) {
         VisualTheme.Shunya -> PaddingValues(0.dp, 12.dp, 0.dp, 8.dp)
         VisualTheme.Bagh -> PaddingValues(22.dp, 12.dp, 22.dp, 92.dp)
-        else -> if (wide) PaddingValues(32.dp, 28.dp, 32.dp, 36.dp) else PaddingValues(22.dp, 22.dp, 22.dp, 28.dp)
+        else -> if (kit != null) kit.heroPadding(wide) else if (wide) PaddingValues(32.dp, 28.dp, 32.dp, 36.dp) else PaddingValues(22.dp, 22.dp, 22.dp, 28.dp)
     }
 
     val inner: @Composable () -> Unit = {

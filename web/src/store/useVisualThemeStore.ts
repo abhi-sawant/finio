@@ -1,7 +1,17 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
-export type VisualTheme = 'mudra' | 'khata' | 'gulal' | 'shunya' | 'bagh';
+export type VisualTheme =
+  | 'mudra'
+  | 'khata'
+  | 'gulal'
+  | 'shunya'
+  | 'bagh'
+  | 'parchi'
+  | 'mahal'
+  | 'ganak'
+  | 'akhbaar'
+  | 'khel';
 
 export const DEFAULT_VISUAL_THEME: VisualTheme = 'mudra';
 
@@ -51,6 +61,42 @@ export const VISUAL_THEMES: readonly {
     swatch: ['#e6efdc', '#16301f', '#3a7a36', '#f4b21b'],
     swatchDark: ['#0e1a12', '#e9f3e0', '#7fcf7a', '#ffc83d'],
   },
+  {
+    value: 'parchi',
+    label: 'Parchi',
+    tagline:
+      'The kirana receipt. Torn paper, mono line items, double-height totals, one receipt red.',
+    swatch: ['#f7f4ec', '#23211c', '#c8242b', '#2e6a3d'],
+    swatchDark: ['#11131a', '#dfe6f5', '#ff7a6e', '#7fcf9a'],
+  },
+  {
+    value: 'mahal',
+    label: 'Mahal',
+    tagline: 'Bombay Art Deco. Peacock teal and gold, stepped frames, a sunburst over your figure.',
+    swatch: ['#f4ecdc', '#0f3a3f', '#9a7a35', '#1b7550'],
+    swatchDark: ['#0c1f22', '#f3ead6', '#d6b46a', '#6fd3a3'],
+  },
+  {
+    value: 'ganak',
+    label: 'Ganak',
+    tagline: 'The pocket calculator. Putty plastic, rubber keys and an LCD window.',
+    swatch: ['#e7e1d3', '#24211b', '#d4541d', '#b9c3a3'],
+    swatchDark: ['#16171a', '#ebe7dc', '#ff7a3d', '#5ef2c4'],
+  },
+  {
+    value: 'akhbaar',
+    label: 'Akhbaar',
+    tagline: 'The morning paper. Newsprint, headline figures, halftone charts, one masthead red.',
+    swatch: ['#f2efe6', '#151515', '#c4161c', '#1e6a3b'],
+    swatchDark: ['#17181b', '#ece8dc', '#ff6259', '#6fcf8f'],
+  },
+  {
+    value: 'khel',
+    label: 'Khel',
+    tagline: 'An 8-bit handheld. Pixel type, health-bar budgets and a coin to add.',
+    swatch: ['#e0efbe', '#0f380f', '#9bbc0f', '#a01641'],
+    swatchDark: ['#0d0b1e', '#f6edd3', '#ffcf3f', '#ff5c72'],
+  },
 ];
 
 const VALID = new Set<string>(VISUAL_THEMES.map((t) => t.value));
@@ -66,6 +112,11 @@ export const THEME_COLORS: Record<VisualTheme, { light: string; dark: string }> 
   gulal: { light: '#ffe14d', dark: '#1c1233' },
   shunya: { light: '#fcfcfa', dark: '#0a0a0b' },
   bagh: { light: '#e6efdc', dark: '#0e1a12' },
+  parchi: { light: '#e3ddcf', dark: '#0b0d13' },
+  mahal: { light: '#f4ecdc', dark: '#0c1f22' },
+  ganak: { light: '#e7e1d3', dark: '#16171a' },
+  akhbaar: { light: '#f2efe6', dark: '#17181b' },
+  khel: { light: '#e0efbe', dark: '#0d0b1e' },
 };
 
 interface VisualThemeStore {

@@ -33,7 +33,11 @@ export function VisualThemePicker() {
       <p className="text-muted-foreground mb-3 text-xs">
         How Finio looks and feels — shape, type, density, not just colour
       </p>
-      <div role="radiogroup" aria-labelledby="visual-theme-label" className="grid gap-2">
+      <div
+        role="radiogroup"
+        aria-labelledby="visual-theme-label"
+        className="grid gap-2 sm:grid-cols-2"
+      >
         {VISUAL_THEMES.map((t) => {
           const selected = t.value === visualTheme;
           return (

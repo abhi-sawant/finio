@@ -42,6 +42,33 @@ enum class VisualTheme(
         "bagh", "Bagh", "A kitchen garden. Leaf corners, soft and tactile; goals grow as plants.",
         listOf(Color(0xFFE6EFDC), Color(0xFF16301F), Color(0xFF3A7A36), Color(0xFFF4B21B)),
         listOf(Color(0xFF0E1A12), Color(0xFFE9F3E0), Color(0xFF7FCF7A), Color(0xFFFFC83D)),
+    ),
+
+    // Round two — each is one ThemeKit in ui/theme/kits/.
+    Parchi(
+        "parchi", "Parchi", "The kirana receipt. Torn paper, mono line items, double-height totals, one receipt red.",
+        listOf(Color(0xFFF7F4EC), Color(0xFF23211C), Color(0xFFC8242B), Color(0xFF2E6A3D)),
+        listOf(Color(0xFF11131A), Color(0xFFDFE6F5), Color(0xFFFF7A6E), Color(0xFF7FCF9A)),
+    ),
+    Mahal(
+        "mahal", "Mahal", "Bombay Art Deco. Peacock teal and gold, stepped frames, a sunburst over your figure.",
+        listOf(Color(0xFFF4ECDC), Color(0xFF0F3A3F), Color(0xFF9A7A35), Color(0xFF1B7550)),
+        listOf(Color(0xFF0C1F22), Color(0xFFF3EAD6), Color(0xFFD6B46A), Color(0xFF6FD3A3)),
+    ),
+    Ganak(
+        "ganak", "Ganak", "The pocket calculator. Putty plastic, rubber keys and an LCD window.",
+        listOf(Color(0xFFE7E1D3), Color(0xFF24211B), Color(0xFFD4541D), Color(0xFFB9C3A3)),
+        listOf(Color(0xFF16171A), Color(0xFFEBE7DC), Color(0xFFFF7A3D), Color(0xFF5EF2C4)),
+    ),
+    Akhbaar(
+        "akhbaar", "Akhbaar", "The morning paper. Newsprint, headline figures, halftone charts, one masthead red.",
+        listOf(Color(0xFFF2EFE6), Color(0xFF151515), Color(0xFFC4161C), Color(0xFF1E6A3B)),
+        listOf(Color(0xFF17181B), Color(0xFFECE8DC), Color(0xFFFF6259), Color(0xFF6FCF8F)),
+    ),
+    Khel(
+        "khel", "Khel", "An 8-bit handheld. Pixel type, health-bar budgets and a coin to add.",
+        listOf(Color(0xFFE0EFBE), Color(0xFF0F380F), Color(0xFF9BBC0F), Color(0xFFA01641)),
+        listOf(Color(0xFF0D0B1E), Color(0xFFF6EDD3), Color(0xFFFFCF3F), Color(0xFFFF5C72)),
     );
 
     companion object {

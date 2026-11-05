@@ -6,9 +6,15 @@ import * as khata from './khata.mjs';
 import * as gulal from './gulal.mjs';
 import * as shunya from './shunya.mjs';
 import * as bagh from './bagh.mjs';
+import { existsSync } from 'node:fs';
 
-const out = join(dirname(fileURLToPath(import.meta.url)), '..');
-const themes = [khata, gulal, shunya, bagh];
+const here = dirname(fileURLToPath(import.meta.url));
+const out = join(here, '..');
+// Round two: loaded only if present, so one theme can be built while the others are in progress.
+const NEXT = ['parchi', 'mahal', 'ganak', 'akhbaar', 'khel'];
+const next = [];
+for (const slug of NEXT) if (existsSync(join(here, `${slug}.mjs`))) next.push(await import(`./${slug}.mjs`));
+const themes = [khata, gulal, shunya, bagh, ...next];
 
 for (const t of themes) {
   const html = page({ ...t.meta, css: t.css, screens: t.screens });
@@ -42,15 +48,20 @@ h1{font-size:32px;font-weight:600;letter-spacing:-.015em}
 h2{font-size:21px;font-weight:600;letter-spacing:-.01em}
 em{font-style:normal;font-size:12px;background:#e9e9ef;color:#17171b;border-radius:99px;padding:1px 9px;font-weight:600}
 p{color:#a9a9b6;font-size:14px;line-height:1.55;margin-top:8px}
+h2.rd{font-size:13px;font-weight:600;color:#9a9aa8;margin:44px 0 14px}
 </style></head><body><div class="w">
 <h1>Finio themes</h1>
-<p class="lead">Five themes, five personalities — shape, type, density, motion and voice change, not just colour. Mudra stays the default. Open any prototype: each has a light/dark toggle and shows Home, Transactions, Add, Budgets and the desktop layout on identical data.</p>
+<p class="lead">Ten themes, ten personalities — shape, type, density, motion and voice change, not just colour. Mudra stays the default. Open any prototype: each has a light/dark toggle and shows Home, Transactions, Add, Budgets and the desktop layout on identical data.</p>
 <div class="grid">
 <a class="card def" href="../../web/public/landing/desktop-light.webp"><img src="../../web/public/landing/desktop-light.webp" alt="Mudra desktop home"><div><div class="cn"><span class="n">1</span><h2>Mudra</h2><em>Default · shipped</em></div><p>Banknote security printing. Frosted glass over lavender-mint-peach note paper, guilloche engraving, a colour-shift thread, denomination-tinted accounts. Luxe, calm and ornamental; one lavender accent.</p></div></a>
-${card(2, khata.meta.name, 'The accountant’s ledger. Celadon columnar paper, blue-black ink, red margin rule. Compact, ruled, serif; rupees and paise in split columns.', khata.meta.swatch, khata.meta.swatchDark, 'khata.html')}
-${card(3, gulal.meta.name, 'Holi-powder pop. Sticker-bright, hard-shadowed, chunky; a colour per category and a price-tag burst on your budget.', gulal.meta.swatch, gulal.meta.swatchDark, 'gulal.html')}
-${card(4, shunya.meta.name, 'Zero. No cards, no fills, almost no colour. Light-weight numerals, hairlines, air — and a month line that shows pace.', shunya.meta.swatch, shunya.meta.swatchDark, 'shunya.html')}
-${card(5, bagh.meta.name, 'A kitchen garden. Leaf-cornered, soft and tactile; goals grow as plants, the hero sun tracks the month.', bagh.meta.swatch, bagh.meta.swatchDark, 'bagh.html')}
+${card(2, khata.meta.name, 'The accountant’s ledger. Celadon columnar paper, blue-black ink, red margin rule. Compact, ruled, serif; rupees and paise in split columns.', khata.meta.swatch, khata.meta.swatchDark, 'khata.html', 'Shipped')}
+${card(3, gulal.meta.name, 'Holi-powder pop. Sticker-bright, hard-shadowed, chunky; a colour per category and a price-tag burst on your budget.', gulal.meta.swatch, gulal.meta.swatchDark, 'gulal.html', 'Shipped')}
+${card(4, shunya.meta.name, 'Zero. No cards, no fills, almost no colour. Light-weight numerals, hairlines, air — and a month line that shows pace.', shunya.meta.swatch, shunya.meta.swatchDark, 'shunya.html', 'Shipped')}
+${card(5, bagh.meta.name, 'A kitchen garden. Leaf-cornered, soft and tactile; goals grow as plants, the hero sun tracks the month.', bagh.meta.swatch, bagh.meta.swatchDark, 'bagh.html', 'Shipped')}
+</div>
+<h2 class="rd">New · round two</h2>
+<div class="grid">
+${next.map((t) => card(t.meta.num, t.meta.name, t.meta.blurb, t.meta.swatch, t.meta.swatchDark, `${t.meta.slug}.html`, 'Prototype')).join('')}
 </div></div></body></html>`;
 writeFileSync(join(out, 'index.html'), index);
 console.log('built', themes.map((t) => t.meta.slug).join(', '));

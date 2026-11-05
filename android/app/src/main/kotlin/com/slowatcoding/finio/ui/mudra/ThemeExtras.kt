@@ -237,11 +237,13 @@ fun HeroFigure(
 ) {
     val colors = FinioTheme.colors
     val visual = FinioTheme.visual
+    val kit = com.slowatcoding.finio.ui.theme.kits.kitFor(visual)
+    if (kit != null && kit.HeroFigure(text, style, color, whole, modifier)) return
     val scale = when (visual) {
         VisualTheme.Shunya -> 1.75f
         VisualTheme.Gulal -> 1.6f
         VisualTheme.Bagh -> 1.3f
-        else -> 1f
+        else -> kit?.heroFigureScale ?: 1f
     }
     val sized = if (scale == 1f) style else style.copy(fontSize = style.fontSize * scale, lineHeight = style.lineHeight * scale)
     if (visual == VisualTheme.Khata) {
@@ -283,4 +285,5 @@ fun progressTrackHeight(): Dp = when (FinioTheme.visual) {
     VisualTheme.Khata, VisualTheme.Bagh -> 14.dp
     VisualTheme.Shunya -> 3.dp
     VisualTheme.Mudra -> 8.dp
+    else -> com.slowatcoding.finio.ui.theme.kits.kitFor(FinioTheme.visual)?.progressTrackHeight ?: 8.dp
 }

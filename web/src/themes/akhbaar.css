@@ -1,0 +1,963 @@
+/*
+ * Akhbaar — the morning broadsheet. Newsprint and black ink with one masthead red. No cards and no
+ * radii: structure is the newspaper grid — column rules, gutters, a heavy-and-thin double rule
+ * under every header and 2px section rules. Oswald sets the headlines and the banner figure,
+ * Newsreader every row, table and amount. The hero's signature is the halftone pace chart
+ * (AkhbaarPace, ui/extras/akhbaar.tsx): budget used against month gone, a red rule for today.
+ * Dark is a hand-tuned night edition, not an inversion.
+ */
+html[data-visual-theme='akhbaar'] {
+  --ff-heading: 'Oswald Variable', 'Arial Narrow', sans-serif;
+  --ff-money: 'Oswald Variable', 'Arial Narrow', sans-serif;
+  --ff-sans: 'Newsreader Variable', Georgia, serif;
+
+  --akh-red: #c4161c;
+  --akh-on-red: #f7f4ec;
+  --akh-dot: #151515;
+  --akh-dot-light: rgb(21 21 21 / 0.42);
+  --akh-track: rgb(21 21 21 / 0.16);
+
+  --background: #f2efe6;
+  --foreground: #151515;
+  --card: #f2efe6;
+  --card-foreground: #151515;
+  --popover: #f8f6ef;
+  --popover-foreground: #151515;
+  --primary: #c4161c;
+  --primary-foreground: #f7f4ec;
+  --secondary: #e7e3d7;
+  --secondary-foreground: #151515;
+  --muted: #e7e3d7;
+  --muted-foreground: #57534a;
+  --accent: #e7e3d7;
+  --accent-foreground: #151515;
+  --destructive: #c4161c;
+  --destructive-foreground: #f7f4ec;
+  --positive: #1e6a3b;
+  --warning: #8a5600;
+  --border: #cbc5b5;
+  --input: #8f8a7c;
+  --ring: #c4161c;
+  --chart-1: #151515;
+  --chart-2: #c4161c;
+  --chart-3: #1e6a3b;
+  --chart-4: #8a5600;
+  --chart-5: #6b675d;
+  --radius: 0rem;
+  --sidebar: #f2efe6;
+  --sidebar-foreground: #151515;
+  --sidebar-primary: #c4161c;
+  --sidebar-primary-foreground: #f7f4ec;
+  --sidebar-accent: #e7e3d7;
+  --sidebar-accent-foreground: #151515;
+  --sidebar-border: #151515;
+  --sidebar-ring: #c4161c;
+
+  --warning-band: #f6e4dc;
+  --warning-band-foreground: #4a0d0f;
+  --warning-band-accent: #c4161c;
+
+  --paper: none;
+  --engraving: transparent;
+  --glass: transparent;
+  --glass-strong: #f2efe6;
+  --glass-border: #cbc5b5;
+  --glass-highlight: transparent;
+
+  /* The filled action is black ink in the day edition — white text reads on it at 18:1. */
+  --grad-primary: linear-gradient(#151515, #151515);
+  --grad-primary-soft: linear-gradient(#e7e3d7, #e7e3d7);
+  --grad-success: linear-gradient(#1e6a3b, #1e6a3b);
+  --grad-success-soft: linear-gradient(#e1ecdf, #e1ecdf);
+  --grad-danger: linear-gradient(#c4161c, #c4161c);
+  --grad-danger-soft: linear-gradient(#f6e4dc, #f6e4dc);
+  --grad-info: linear-gradient(#151515, #151515);
+  --grad-warning: linear-gradient(#8a5600, #8a5600);
+  --grad-surface: linear-gradient(#f2efe6, #f2efe6);
+  --coin: linear-gradient(#151515, #151515);
+  --coin-ink: #f2efe6;
+  --register: #151515;
+  --thread: linear-gradient(#151515, #151515);
+
+  --shadow-tint: 21 21 21;
+  --scrim: rgb(21 21 21 / 0.35);
+  --shadow-card: none;
+  --shadow-float: none;
+  --shadow-primary: none;
+  --shadow-danger: none;
+  --shadow-success: none;
+
+  /* Accounts are set like the markets table: no tint, black ink; what is owed runs in red. */
+  --note-100: linear-gradient(transparent, transparent);
+  --note-100-ink: #151515;
+  --note-500: linear-gradient(transparent, transparent);
+  --note-500-ink: #151515;
+  --note-2000: linear-gradient(transparent, transparent);
+  --note-2000-ink: #c4161c;
+  --note-200: linear-gradient(transparent, transparent);
+  --note-200-ink: #151515;
+  --note-10: linear-gradient(transparent, transparent);
+  --note-10-ink: #151515;
+  --note-50: linear-gradient(transparent, transparent);
+  --note-50-ink: #151515;
+  --note-20: linear-gradient(transparent, transparent);
+  --note-20-ink: #151515;
+}
+
+html.dark[data-visual-theme='akhbaar'] {
+  --akh-red: #ff6259;
+  --akh-on-red: #17181b;
+  --akh-dot: #ece8dc;
+  --akh-dot-light: rgb(236 232 220 / 0.4);
+  --akh-track: rgb(236 232 220 / 0.14);
+
+  --background: #17181b;
+  --foreground: #ece8dc;
+  --card: #17181b;
+  --card-foreground: #ece8dc;
+  --popover: #202125;
+  --popover-foreground: #ece8dc;
+  --primary: #ff6259;
+  --primary-foreground: #17181b;
+  --secondary: #24252a;
+  --secondary-foreground: #ece8dc;
+  --muted: #24252a;
+  --muted-foreground: #a8a397;
+  --accent: #26272c;
+  --accent-foreground: #ece8dc;
+  --destructive: #ff6259;
+  --destructive-foreground: #17181b;
+  --positive: #6fcf8f;
+  --warning: #e8b04a;
+  --border: #3a3b41;
+  --input: #64656c;
+  --ring: #ff6259;
+  --chart-1: #ece8dc;
+  --chart-2: #ff6259;
+  --chart-3: #6fcf8f;
+  --chart-4: #e8b04a;
+  --chart-5: #a8a397;
+  --sidebar: #17181b;
+  --sidebar-foreground: #ece8dc;
+  --sidebar-primary: #ff6259;
+  --sidebar-primary-foreground: #17181b;
+  --sidebar-accent: #26272c;
+  --sidebar-accent-foreground: #ece8dc;
+  --sidebar-border: #ece8dc;
+  --sidebar-ring: #ff6259;
+
+  --warning-band: #2c1918;
+  --warning-band-foreground: #ffe1dc;
+  --warning-band-accent: #ff6259;
+
+  --glass: transparent;
+  --glass-strong: #17181b;
+  --glass-border: #3a3b41;
+
+  /* Cream ink can't carry white text, so the night edition's filled action is the masthead red. */
+  --grad-primary: linear-gradient(#b3141a, #b3141a);
+  --grad-primary-soft: linear-gradient(#24252a, #24252a);
+  --grad-success: linear-gradient(#1e6a3b, #1e6a3b);
+  --grad-success-soft: linear-gradient(#16261c, #16261c);
+  --grad-danger: linear-gradient(#b3141a, #b3141a);
+  --grad-danger-soft: linear-gradient(#2c1918, #2c1918);
+  --grad-info: linear-gradient(#b3141a, #b3141a);
+  --grad-warning: linear-gradient(#8a5600, #8a5600);
+  --grad-surface: linear-gradient(#17181b, #17181b);
+  --coin: linear-gradient(#ece8dc, #ece8dc);
+  --coin-ink: #17181b;
+  --register: #ece8dc;
+  --thread: linear-gradient(#ece8dc, #ece8dc);
+
+  --shadow-tint: 0 0 0;
+  --scrim: rgb(0 0 0 / 0.6);
+
+  --note-100-ink: #ece8dc;
+  --note-500-ink: #ece8dc;
+  --note-2000-ink: #ff6259;
+  --note-200-ink: #ece8dc;
+  --note-10-ink: #ece8dc;
+  --note-50-ink: #ece8dc;
+  --note-20-ink: #ece8dc;
+}
+
+/* ── Browser surfaces: red caret, red selection, ink scrollbar ── */
+html[data-visual-theme='akhbaar'] {
+  caret-color: var(--akh-red);
+  accent-color: var(--akh-red);
+  scrollbar-color: color-mix(in srgb, var(--foreground) 45%, transparent) transparent;
+}
+html[data-visual-theme='akhbaar'] body {
+  font-optical-sizing: auto;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+html[data-visual-theme='akhbaar'] ::selection {
+  background: var(--akh-red);
+  color: var(--akh-on-red);
+}
+html[data-visual-theme='akhbaar'] :focus-visible {
+  outline: 2px solid var(--akh-red);
+  outline-offset: 2px;
+}
+
+/* ── Type: Oswald headlines, Newsreader for reading ── */
+html[data-visual-theme='akhbaar'] h1 {
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+html[data-visual-theme='akhbaar'] .font-money {
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+html[data-visual-theme='akhbaar'] [data-slot='label'] {
+  font-family: var(--ff-heading);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted-foreground);
+}
+html[data-visual-theme='akhbaar'] [data-slot='dialog-title'],
+html[data-visual-theme='akhbaar'] [data-slot='alert-dialog-title'] {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+/* Section heads: Oswald caps on a 2px rule, the "See all" set as an italic link. */
+html[data-visual-theme='akhbaar'] main h2.text-base {
+  font-family: var(--ff-heading);
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+html[data-visual-theme='akhbaar'] main div.flex:has(> h2.text-base),
+html[data-visual-theme='akhbaar'] main h2.text-base.mb-3 {
+  border-top: 2px solid var(--foreground);
+  padding-top: 0.25rem;
+}
+html[data-visual-theme='akhbaar'] main div:has(> h2.text-base) > button.text-primary {
+  color: var(--foreground);
+  font-size: 0.8125rem;
+  font-style: italic;
+  font-weight: 400;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+/* Day headings in the transaction list: a dateline with a rule run out to the margin. */
+html[data-visual-theme='akhbaar'] main section > h2.text-xs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-inline-start: 0;
+  font-family: var(--ff-heading);
+  font-size: 0.71875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+}
+html[data-visual-theme='akhbaar'] main section > h2.text-xs::after {
+  content: '';
+  flex: 1;
+  border-top: 1px solid var(--foreground);
+}
+
+/* ── Shape: nothing is round, nothing floats, nothing is frosted ── */
+html[data-visual-theme='akhbaar'] .rounded-full,
+html[data-visual-theme='akhbaar'] .rounded-lg,
+html[data-visual-theme='akhbaar'] .rounded-md,
+html[data-visual-theme='akhbaar'] .rounded-sm,
+html[data-visual-theme='akhbaar'] .rounded-xl {
+  border-radius: 0;
+}
+html[data-visual-theme='akhbaar'] .card-elevated {
+  background-color: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='akhbaar'] .card-elevated:not(.p-0) {
+  padding-left: 0;
+  padding-right: 0;
+}
+html[data-visual-theme='akhbaar'] .glass-chrome {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='akhbaar'] .shadow-glow-primary,
+html[data-visual-theme='akhbaar'] .shadow-glow-success,
+html[data-visual-theme='akhbaar'] .shadow-glow-danger,
+html[data-visual-theme='akhbaar'] .shadow-sm,
+html[data-visual-theme='akhbaar'] .shadow-md,
+html[data-visual-theme='akhbaar'] .shadow-lg {
+  box-shadow: none;
+}
+html[data-visual-theme='akhbaar'] .bg-coin {
+  color: var(--coin-ink);
+  box-shadow: none;
+}
+
+/* Filled actions are set like a slug of display type. */
+html[data-visual-theme='akhbaar'] :is(button, a).bg-grad-primary {
+  font-family: var(--ff-heading);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+/* Header icon buttons lose their outline; the glyph is the control. */
+html[data-visual-theme='akhbaar'] [data-slot='button'][class*='glass-border'] {
+  border-color: transparent;
+  background: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='akhbaar'] [data-slot='button'][class*='glass-border']:hover {
+  background: var(--muted);
+}
+
+/* Inputs: a field on a rule, not a box. */
+html[data-visual-theme='akhbaar']
+  :is([data-slot='input'], [data-slot='textarea'], [data-slot='select-trigger']) {
+  background: transparent;
+  border-color: transparent transparent var(--foreground);
+  border-radius: 0;
+}
+html[data-visual-theme='akhbaar']
+  :is([data-slot='input'], [data-slot='textarea'], [data-slot='select-trigger']):focus-visible {
+  border-bottom-color: var(--akh-red);
+  border-bottom-width: 2px;
+}
+
+/* Segmented controls (type pickers): a ruled strip of caps, the current one underscored in red. */
+html[data-visual-theme='akhbaar'] .bg-muted.p-1:has(> button[aria-pressed]) {
+  gap: 0;
+  padding: 0;
+  background: transparent;
+  border-bottom: 1px solid var(--foreground);
+}
+html[data-visual-theme='akhbaar'] .bg-muted.p-1:has(> button[aria-pressed]) > button {
+  position: relative;
+  background: none;
+  box-shadow: none;
+  color: var(--muted-foreground);
+  font-family: var(--ff-heading);
+  font-size: 0.78rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+html[data-visual-theme='akhbaar'] .bg-muted.p-1:has(> button[aria-pressed]) > button + button {
+  border-left: 1px solid var(--border);
+}
+html[data-visual-theme='akhbaar']
+  .bg-muted.p-1:has(> button[aria-pressed])
+  > button[aria-pressed='true'] {
+  color: var(--foreground);
+}
+html[data-visual-theme='akhbaar']
+  .bg-muted.p-1:has(> button[aria-pressed])
+  > button[aria-pressed='true']::after {
+  content: '';
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  bottom: -1px;
+  height: 3px;
+  background: var(--akh-red);
+}
+/* Filter chips: boxed caps, the chosen one in reverse. */
+html[data-visual-theme='akhbaar'] button[aria-pressed].rounded-full.text-xs {
+  font-family: var(--ff-heading);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+/* ── Progress: halftone. Any fill (ink, warning, over) is printed through a dot screen. ── */
+html[data-visual-theme='akhbaar'] [role='progressbar'] {
+  height: 0.75rem;
+  border-radius: 0;
+  background: radial-gradient(circle, var(--akh-track) 0.6px, transparent 0.9px) 0 0 / 4px 4px;
+  border-bottom: 1px solid var(--foreground);
+}
+html[data-visual-theme='akhbaar'] [role='progressbar'] > div,
+html[data-visual-theme='akhbaar'] .thread-fill {
+  border-radius: 0;
+  -webkit-mask: radial-gradient(circle, #000 1.35px, transparent 1.7px) 0 0 / 4px 4px;
+  mask: radial-gradient(circle, #000 1.35px, transparent 1.7px) 0 0 / 4px 4px;
+}
+html[data-visual-theme='akhbaar'] .bg-muted.overflow-hidden:has(> .thread-fill) {
+  background: radial-gradient(circle, var(--akh-track) 0.6px, transparent 0.9px) 0 0 / 4px 4px;
+  border-bottom: 1px solid var(--foreground);
+}
+
+/* ── Hero: the lead story. A banner figure inked in, the headline under it, a deck, a byline. ── */
+html[data-visual-theme='akhbaar'] .note-card {
+  background-image: none;
+  background-color: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0.75rem 0 0;
+  overflow: visible;
+}
+html[data-visual-theme='akhbaar'] .note-card-body {
+  display: flex;
+  flex-direction: column;
+  padding-right: 0;
+}
+html[data-visual-theme='akhbaar'] .note-card-body > * {
+  align-self: stretch;
+}
+html[data-visual-theme='akhbaar'] .note-card-body > button {
+  align-self: flex-start;
+  margin-left: 0;
+  padding-left: 0;
+  font-style: italic;
+  font-weight: 400;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+/* The figure leads; the label becomes the headline set beneath it. */
+html[data-visual-theme='akhbaar'] .hero-fig {
+  order: -1;
+  align-self: flex-start;
+  margin: 0 0 0 -2px;
+  font-size: clamp(3.75rem, 19vw, 4.75rem);
+  font-weight: 600;
+  line-height: 0.92;
+  letter-spacing: -0.01em;
+  animation: akhbaar-ink 0.95s cubic-bezier(0.2, 0.75, 0.3, 1) 0.12s backwards;
+}
+html[data-visual-theme='akhbaar'] .note-card-body > p:first-child {
+  font-family: var(--ff-heading);
+  color: var(--foreground);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.035em;
+}
+html[data-visual-theme='akhbaar'] .note-card-body:has(> .hero-fig) > p:first-child {
+  margin-top: 0.25rem;
+  font-size: 1.3125rem;
+  line-height: 1.1;
+}
+html[data-visual-theme='akhbaar'] .note-card-body > p.text-balance {
+  margin-top: 0.25rem;
+  font-size: 1.0625rem;
+  font-style: italic;
+  line-height: 1.25;
+}
+html[data-visual-theme='akhbaar'] .hero-bar {
+  display: none;
+}
+html[data-visual-theme='akhbaar'] .hero-budget {
+  margin-top: 0.375rem;
+  padding-bottom: 0.5625rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.65625rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+}
+@keyframes akhbaar-ink {
+  0% {
+    clip-path: inset(-12% 100% -12% 0);
+    filter: blur(2.4px);
+  }
+  58% {
+    clip-path: inset(-12% 0 -12% 0);
+    filter: blur(1px);
+  }
+  100% {
+    clip-path: inset(-12% 0 -12% 0);
+    filter: blur(0);
+  }
+}
+
+/* The halftone pace chart. */
+html[data-visual-theme='akhbaar'] .akh-pace {
+  margin-top: 0.625rem;
+  max-width: 32rem;
+}
+html[data-visual-theme='akhbaar'] .akh-pace-row {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr 2.75rem;
+  align-items: center;
+  gap: 0.625rem;
+  margin-bottom: 0.3rem;
+}
+html[data-visual-theme='akhbaar'] .akh-pace-label {
+  font-family: var(--ff-heading);
+  font-size: 0.71875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+html[data-visual-theme='akhbaar'] .akh-pace-row b {
+  font-family: var(--ff-heading);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  text-align: right;
+}
+html[data-visual-theme='akhbaar'] .akh-pace-bar {
+  position: relative;
+  height: 14px;
+  border-bottom: 1px solid var(--foreground);
+  background: radial-gradient(circle, var(--akh-track) 0.6px, transparent 0.9px) 0 0 / 4px 4px;
+}
+html[data-visual-theme='akhbaar'] .akh-dots {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: radial-gradient(circle, var(--akh-dot) 1.4px, transparent 1.7px) 0 0 / 4px 4px;
+  -webkit-mask-image: linear-gradient(90deg, #000 70%, rgb(0 0 0 / 0.5));
+  mask-image: linear-gradient(90deg, #000 70%, rgb(0 0 0 / 0.5));
+  animation: akhbaar-dots 0.9s steps(14, end) 0.75s backwards;
+}
+html[data-visual-theme='akhbaar'] .akh-dots-light {
+  background-image: radial-gradient(circle, var(--akh-dot-light) 0.95px, transparent 1.25px);
+}
+html[data-visual-theme='akhbaar'] .akh-pace-bar u {
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--akh-red);
+}
+html[data-visual-theme='akhbaar'] .akh-pace-caption {
+  margin-top: 0.125rem;
+  font-size: 0.8125rem;
+  font-style: italic;
+  color: var(--muted-foreground);
+}
+@keyframes akhbaar-dots {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+}
+@media (min-width: 1024px) {
+  html[data-visual-theme='akhbaar'] .hero-fig {
+    font-size: 6.5rem;
+  }
+  html[data-visual-theme='akhbaar'] .note-card-body:has(> .hero-fig) > p:first-child {
+    font-size: 1.625rem;
+  }
+  html[data-visual-theme='akhbaar'] .note-card-body > p.text-balance {
+    font-size: 1.1875rem;
+  }
+  html[data-visual-theme='akhbaar'] .akh-pace {
+    margin-top: 1.25rem;
+  }
+  html[data-visual-theme='akhbaar'] .akh-pace-bar {
+    height: 28px;
+  }
+  html[data-visual-theme='akhbaar'] .akh-pace-row {
+    margin-bottom: 0.625rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-visual-theme='akhbaar'] .hero-fig,
+  html[data-visual-theme='akhbaar'] .akh-dots {
+    animation: none;
+  }
+}
+
+/* The breaking strip: the one alert, between two red rules, its call to action in a red slug. */
+html[data-visual-theme='akhbaar'] main > button.bg-warning-band {
+  background: transparent;
+  border: 0;
+  border-top: 1px solid var(--akh-red);
+  border-bottom: 1px solid var(--akh-red);
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0 0 0 0.5rem;
+}
+html[data-visual-theme='akhbaar'] main > button.bg-warning-band .text-warning-band-foreground {
+  color: var(--foreground);
+}
+html[data-visual-theme='akhbaar'] main > button.bg-warning-band > div > span:last-child {
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  padding: 0 0.75rem;
+  background: var(--akh-red);
+  color: var(--akh-on-red);
+  font-family: var(--ff-heading);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+html[data-visual-theme='akhbaar'] main > button.bg-warning-band > div {
+  min-height: 2.75rem;
+  align-items: stretch;
+}
+html[data-visual-theme='akhbaar'] main > button.bg-warning-band > div > :is(svg, div) {
+  align-self: center;
+}
+
+/* Accounts: the markets table. Tiles become ruled columns, black ink, owed in red. */
+html[data-visual-theme='akhbaar'] .note-tile {
+  min-height: 92px;
+  padding: 0.25rem 0.875rem 0.5rem;
+  border: 0;
+  border-left: 1px solid var(--border);
+  border-radius: 0;
+  box-shadow: none;
+}
+html[data-visual-theme='akhbaar'] .note-tile:first-child {
+  border-left: 0;
+  padding-left: 0;
+}
+html[data-visual-theme='akhbaar'] .note-tile:active {
+  transform: none;
+  background-color: var(--muted);
+}
+html[data-visual-theme='akhbaar'] .note-tile .font-money {
+  font-family: var(--ff-sans);
+  font-size: 1.0625rem;
+  font-weight: 600;
+}
+html[data-visual-theme='akhbaar'] .note-tile > span:nth-of-type(2) {
+  font-style: italic;
+}
+/* A list row's account chip is a small halftone block in the row's ink. */
+html[data-visual-theme='akhbaar'] .note-chip {
+  border-radius: 0;
+  background: radial-gradient(circle, currentColor 0.9px, transparent 1.2px) 0 0 / 3px 3px;
+  border: 1px solid currentColor;
+}
+
+/* Category picker: a ruled grid of briefs, the chosen one underscored in red. */
+html[data-visual-theme='akhbaar'] .grid.grid-cols-4:has(> button[data-selected]) {
+  gap: 0;
+  padding: 0;
+  border-top: 1px solid var(--foreground);
+}
+html[data-visual-theme='akhbaar'] .grid-cols-4 > button[data-selected] {
+  position: relative;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  background-color: transparent;
+  box-shadow: none;
+  padding: 0.625rem 0.25rem 0.5625rem;
+}
+html[data-visual-theme='akhbaar'] .grid-cols-4 > button[data-selected]:not(:nth-child(4n + 1)) {
+  border-left: 1px solid var(--border);
+}
+html[data-visual-theme='akhbaar'] .grid-cols-4 > button[data-selected] > span {
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+}
+html[data-visual-theme='akhbaar'] .grid-cols-4 > button[data-selected='true'] > span {
+  color: var(--foreground);
+  font-weight: 600;
+}
+html[data-visual-theme='akhbaar'] .grid-cols-4 > button[data-selected='true']::after {
+  content: '';
+  position: absolute;
+  left: 22%;
+  right: 22%;
+  bottom: -1px;
+  height: 3px;
+  background: var(--akh-red);
+}
+html[data-visual-theme='akhbaar'] .bg-warning-band {
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* Desktop: the second column sits behind a column rule. */
+@media (min-width: 1024px) {
+  html[data-visual-theme='akhbaar'] main section.lg\:col-start-2 {
+    position: relative;
+  }
+  html[data-visual-theme='akhbaar'] main section.lg\:col-start-2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -1rem;
+    border-left: 1px solid var(--border);
+  }
+}
+
+/* ── Add transaction: a banner amount and a ruled number pad ── */
+html[data-visual-theme='akhbaar'] .bg-grad-surface.min-h-16 {
+  background: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+html[data-visual-theme='akhbaar'] .bg-grad-surface.min-h-16 > .text-3xl {
+  font-size: 4.25rem;
+  line-height: 1;
+}
+html[data-visual-theme='akhbaar'] .bg-grad-surface.min-h-16 > .text-2xl {
+  font-size: 2.75rem;
+  line-height: 1;
+}
+html[data-visual-theme='akhbaar'] .bg-grad-surface.min-h-16 + .grid {
+  gap: 0;
+  border-top: 1px solid var(--foreground);
+  border-bottom: 1px solid var(--foreground);
+}
+html[data-visual-theme='akhbaar'] .bg-grad-surface.min-h-16 + .grid > button {
+  height: 3.125rem;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  box-shadow: none;
+  font-family: var(--ff-heading);
+  font-size: 1.5625rem;
+  font-weight: 500;
+}
+html[data-visual-theme='akhbaar'] .bg-grad-surface.min-h-16 + .grid > button:nth-child(3n + 2) {
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+}
+html[data-visual-theme='akhbaar']
+  .bg-grad-surface.min-h-16
+  + .grid
+  > button:nth-last-child(-n + 3) {
+  border-bottom: 0;
+}
+html[data-visual-theme='akhbaar'] .bg-grad-surface.min-h-16 + .grid > button:active {
+  transform: none;
+  background: var(--akh-red);
+  color: var(--akh-on-red);
+}
+html[data-visual-theme='akhbaar'] .bg-grad-surface.min-h-16 + .grid > button:active svg,
+html[data-visual-theme='akhbaar'] .bg-grad-surface.min-h-16 + .grid > button:active span {
+  color: inherit;
+}
+
+/* ── Overlays: square, ink-ruled, flat ── */
+html[data-visual-theme='akhbaar']
+  :is(
+    [data-slot='dialog-content'],
+    [data-slot='alert-dialog-content'],
+    [data-slot='popover-content'],
+    [data-slot='select-content'],
+    [data-slot='dropdown-menu-content']
+  ) {
+  border-radius: 0;
+  border: 1px solid var(--foreground);
+  box-shadow: 4px 4px 0 color-mix(in srgb, var(--foreground) 18%, transparent);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='akhbaar'] [data-slot='dialog-header'] {
+  border-bottom: 3px solid var(--foreground);
+  padding-bottom: 0.5rem;
+}
+
+/* ── Chrome ── */
+/* Page headers: heavy rule, then a thin one — the masthead's double rule. */
+html[data-visual-theme='akhbaar'] [data-slot='page-header'] {
+  background: var(--background);
+  border-bottom: 3px solid var(--foreground);
+}
+html[data-visual-theme='akhbaar'] [data-slot='page-header']::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  border-bottom: 1px solid var(--foreground);
+}
+html[data-visual-theme='akhbaar'] [data-slot='page-header'] h1 {
+  font-size: 1.75rem;
+  line-height: 1.1;
+}
+html[data-visual-theme='akhbaar'] [data-slot='page-header'] h1 + p {
+  font-style: italic;
+}
+html[data-visual-theme='akhbaar'] main {
+  padding-top: 0.875rem;
+}
+
+html[data-visual-theme='akhbaar'] [data-slot='tab-bar'] {
+  background: var(--background);
+  border-top: 1px solid var(--foreground);
+  box-shadow: none;
+}
+html[data-visual-theme='akhbaar'] [data-slot='tab-bar']::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 2px;
+  border-top: 1px solid var(--foreground);
+}
+html[data-visual-theme='akhbaar'] [data-slot='tab'] {
+  position: relative;
+  color: var(--muted-foreground);
+}
+html[data-visual-theme='akhbaar'] [data-slot='tab'] span {
+  font-family: var(--ff-heading);
+  font-size: 0.625rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+html[data-visual-theme='akhbaar'] [data-slot='tab'] svg {
+  stroke-width: 1.6;
+}
+html[data-visual-theme='akhbaar'] [data-slot='tab'][aria-current='page'] {
+  color: var(--akh-red);
+}
+html[data-visual-theme='akhbaar'] [data-slot='tab'][aria-current='page']::before {
+  content: '';
+  position: absolute;
+  top: calc(-0.5rem + 3px);
+  left: 14%;
+  right: 14%;
+  height: 4px;
+  background: var(--akh-red);
+}
+html[data-visual-theme='akhbaar'] [data-slot='fab'] {
+  border-radius: 0;
+  width: 3.25rem;
+  height: 3.25rem;
+  box-shadow: 0 0 0 3px var(--background);
+}
+
+html[data-visual-theme='akhbaar'] [data-slot='sidebar'] {
+  background: var(--background);
+  border-right: 1px solid var(--foreground);
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+html[data-visual-theme='akhbaar'] [data-slot='sidebar']::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: calc(15rem - 5px);
+  border-right: 1px solid var(--foreground);
+  pointer-events: none;
+}
+/* The flag: "Finio" in blackletter over the masthead's red double rule. */
+html[data-visual-theme='akhbaar'] [data-slot='sidebar'] > div:first-child {
+  position: relative;
+  margin-bottom: 1.5rem;
+  padding: 0 0 0.75rem;
+  border-bottom: 3px solid var(--akh-red);
+}
+html[data-visual-theme='akhbaar'] [data-slot='sidebar'] > div:first-child::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  border-bottom: 1px solid var(--akh-red);
+}
+html[data-visual-theme='akhbaar'] [data-slot='brand-mark'] {
+  display: none;
+}
+html[data-visual-theme='akhbaar'] [data-slot='brand-mark'] + span {
+  font-family: 'UnifrakturMaguntia', var(--ff-heading);
+  font-size: 2.75rem;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.01em;
+}
+html[data-visual-theme='akhbaar'] [data-slot='sidebar'] [data-slot='add-button'] {
+  background: var(--foreground);
+  color: var(--background);
+  border-radius: 0;
+  box-shadow: none;
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
+  font-family: var(--ff-heading);
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+html[data-visual-theme='akhbaar'] [data-slot='sidebar'] nav {
+  gap: 0;
+}
+html[data-visual-theme='akhbaar'] [data-slot='sidebar'] [data-slot='nav-item'] {
+  position: relative;
+  background: transparent;
+  border-radius: 0;
+  border-bottom: 1px solid var(--border);
+  padding: 0.5rem 0 0.5rem 0.625rem;
+  color: var(--muted-foreground);
+  font-family: var(--ff-heading);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+html[data-visual-theme='akhbaar'] [data-slot='sidebar'] [data-slot='nav-item']:hover {
+  color: var(--foreground);
+}
+html[data-visual-theme='akhbaar']
+  [data-slot='sidebar']
+  [data-slot='nav-item'][aria-current='page'] {
+  background: transparent;
+  color: var(--akh-red);
+}
+html[data-visual-theme='akhbaar']
+  [data-slot='sidebar']
+  [data-slot='nav-item'][aria-current='page']::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.375rem;
+  bottom: 0.375rem;
+  width: 3px;
+  background: var(--akh-red);
+}
+/* Tools: a heading on a 2px rule, then plain briefs. */
+html[data-visual-theme='akhbaar'] [data-slot='sidebar'] > p {
+  margin-top: 1.25rem;
+  padding: 0.3rem 0 0.25rem;
+  border-top: 2px solid var(--foreground);
+  color: var(--foreground);
+  font-family: var(--ff-heading);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+html[data-visual-theme='akhbaar'] [data-slot='sidebar'] nav:last-of-type [data-slot='nav-item'] {
+  border-bottom: 0;
+  padding: 0.25rem 0 0.25rem 0.625rem;
+  color: var(--foreground);
+  font-family: var(--ff-sans);
+  font-size: 0.875rem;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+}
+html[data-visual-theme='akhbaar']
+  [data-slot='sidebar']
+  nav:last-of-type
+  [data-slot='nav-item']
+  svg {
+  display: none;
+}
+html[data-visual-theme='akhbaar']
+  [data-slot='sidebar']
+  nav:last-of-type
+  [data-slot='nav-item'][aria-current='page'] {
+  color: var(--akh-red);
+}
+
+/* ── Toasts ── */
+html[data-visual-theme='akhbaar'] [data-sonner-toaster] {
+  --normal-bg: var(--popover);
+  --normal-border: var(--foreground);
+  --border-radius: 0;
+}
+html[data-visual-theme='akhbaar'] [data-sonner-toaster] [data-sonner-toast] {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: none;
+}

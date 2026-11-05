@@ -64,6 +64,8 @@ fun FinioTabBar(active: FinioTab?, onSelect: (FinioTab) -> Unit, modifier: Modif
         VisualTheme.Gulal -> GulalBar(active, onSelect, modifier)
         VisualTheme.Shunya -> ShunyaBar(active, onSelect, modifier)
         VisualTheme.Bagh -> BaghBar(active, onSelect, modifier)
+        else -> com.slowatcoding.finio.ui.theme.kits.kitFor(FinioTheme.visual)?.TabBar(active, onSelect, modifier)
+            ?: MudraBar(active, onSelect, modifier)
     }
 }
 
@@ -116,7 +118,7 @@ private fun TabItem(tab: FinioTab, selected: Boolean, onClick: () -> Unit, modif
 }
 
 @Composable
-private fun Modifier.tabClickable(selected: Boolean, onClick: () -> Unit): Modifier = this
+internal fun Modifier.tabClickable(selected: Boolean, onClick: () -> Unit): Modifier = this
     .clickable(
         interactionSource = remember { MutableInteractionSource() },
         indication = null,
@@ -129,7 +131,7 @@ private fun Modifier.tabClickable(selected: Boolean, onClick: () -> Unit): Modif
 
 /** One tab cell for the themed bars: [icon] optional, a [label], coloured by [tint]. */
 @Composable
-private fun ThemedTab(
+internal fun ThemedTab(
     tab: FinioTab,
     selected: Boolean,
     onClick: () -> Unit,

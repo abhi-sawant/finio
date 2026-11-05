@@ -46,6 +46,7 @@ fun shapeScaleFor(visual: VisualTheme): FinioShapeScale = when (visual) {
     VisualTheme.Gulal -> GulalShapeScale
     VisualTheme.Shunya -> ShunyaShapeScale
     VisualTheme.Bagh -> BaghShapeScale
+    else -> com.slowatcoding.finio.ui.theme.kits.kitFor(visual)?.shapes ?: MudraShapeScale
 }
 
 // Khata: nothing is round — pills and circles become 3dp squares, cards 2dp.

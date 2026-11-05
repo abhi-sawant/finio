@@ -1,5 +1,6 @@
 /*
- * Shared plumbing for the alternative visual themes (khata, gulal, shunya, bagh).
+ * Shared plumbing for the alternative visual themes (khata, gulal, shunya, bagh, and round two:
+ * parchi, mahal, ganak, akhbaar, khel).
  *
  * Mudra is the default and lives in src/index.css with no attribute. A theme is active when
  * <html data-visual-theme="…"> is set (ThemeProvider; index.html does it before first paint).
@@ -15,13 +16,23 @@
 .only-khata,
 .only-gulal,
 .only-shunya,
-.only-bagh {
+.only-bagh,
+.only-parchi,
+.only-mahal,
+.only-ganak,
+.only-akhbaar,
+.only-khel {
   display: none;
 }
 html[data-visual-theme='khata'] .only-khata,
 html[data-visual-theme='gulal'] .only-gulal,
 html[data-visual-theme='shunya'] .only-shunya,
-html[data-visual-theme='bagh'] .only-bagh {
+html[data-visual-theme='bagh'] .only-bagh,
+html[data-visual-theme='parchi'] .only-parchi,
+html[data-visual-theme='mahal'] .only-mahal,
+html[data-visual-theme='ganak'] .only-ganak,
+html[data-visual-theme='akhbaar'] .only-akhbaar,
+html[data-visual-theme='khel'] .only-khel {
   display: block;
 }
 
