@@ -169,7 +169,7 @@ export function ProfileSection() {
         </div>
 
         <Dialog open={showMonthStartPicker} onOpenChange={setShowMonthStartPicker}>
-          <DialogContent className="bg-card top-1/3 mx-auto w-11/12 sm:max-w-sm">
+          <DialogContent className="bg-card mx-auto w-11/12 sm:max-w-sm">
             <DialogHeader>
               <DialogTitle>Month starts on</DialogTitle>
               <DialogDescription>

@@ -269,6 +269,16 @@ Enums: `AccountType`, `TransactionType` (expense/income/transfer), `RecurrenceFr
   touches `window.location`, so the URL is intact when the gate lifts. A `history.replaceState`
   that strips query params from a top-level effect is the one realistic way to break this — do
   param cleanup inside a route component. The same applies to the onboarding gate.
+- **The unhide PIN is subject to the same rule too.** Tapping the eye to *hide* amounts is free;
+  *revealing* them needs a PIN (`requestToggleHideAmounts()` is the only entry point — never call
+  `updateSettings({ hideAmounts: false })` from UI). Its config (`UnhidePinConfig`: own PIN hash, or
+  `source: 'applock'` which verifies against the app lock's PIN live, plus `autoHideOnExit` and an optional `biometricCredentialId` — biometrics are the first prompt, the PIN is always the fallback) lives in
+  [`useUnhidePinStore`](web/src/store/useUnhidePinStore.ts) (`finio-unhide-pin`), **never in
+  `Settings`**, so it cannot travel in a backup. `hideAmounts` itself *is* a Settings field, so
+  `importData` keeps it hidden while a PIN protects the device (a restore may hide, never reveal). An
+  `applock`-sourced config stops being valid when the app lock is turned off (`isUnhideProtected`)
+  and the user is walked through setup again. Auto-hide runs on page hide / app background and on
+  cold start. Like the lock it is a privacy gate, not encryption.
 - **The backup passphrase is subject to the same rule as the PIN,** and for a sharper reason: key
   material inside the payload it protects defeats the point. `BackupCryptoConfig` lives in
   [`useBackupCryptoStore`](web/src/store/useBackupCryptoStore.ts) (`finio-backup-crypto`), and the

@@ -44,7 +44,10 @@ fun SettingsCategoryScreen(nav: FinioNavigator, category: String) {
             "account" -> CloudAccountSection(nav)
             "backup" -> BackupSection(nav)
             "profile" -> ProfileSection()
-            "security" -> AppLockSection()
+            "security" -> {
+                AppLockSection()
+                UnhidePinSection()
+            }
             "notifications" -> NotificationsSection()
         }
     }

@@ -219,6 +219,29 @@ data class Settings(
     val notifyDailyLog: Boolean = true,
 )
 
+/**
+ * "Unhide amounts" PIN. Deliberately *not* in [Settings] (same reason as [AppLockConfig]); port of
+ * web `UnhidePinConfig`. [source] is [UNHIDE_SOURCE_OWN] or [UNHIDE_SOURCE_APPLOCK] — strings, not
+ * an enum, so R8 needs no extra keep rule. For `applock`, salt/hash/iterations are empty and the
+ * app lock's PIN is verified instead.
+ */
+@Serializable
+data class UnhidePinConfig(
+    val source: String,
+    val salt: String,
+    val hash: String,
+    val iterations: Int,
+    val pinLength: Int,
+    val autoHideOnExit: Boolean,
+    /** Android: marker [UNHIDE_BIOMETRIC_MARKER] when biometrics are the first way to reveal amounts (web: WebAuthn rawId). */
+    val biometricCredentialId: String? = null,
+    val createdAt: String,
+)
+
+const val UNHIDE_BIOMETRIC_MARKER = "android-biometric"
+const val UNHIDE_SOURCE_OWN = "own"
+const val UNHIDE_SOURCE_APPLOCK = "applock"
+
 /** App lock. Deliberately *not* in [Settings]: settings travel in every backup. */
 @Serializable
 data class AppLockConfig(

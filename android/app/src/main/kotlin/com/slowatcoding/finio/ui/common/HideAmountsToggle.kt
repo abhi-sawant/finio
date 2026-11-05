@@ -3,6 +3,7 @@ package com.slowatcoding.finio.ui.common
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import com.slowatcoding.finio.di.appContainer
 import com.slowatcoding.finio.ui.components.HeaderIconButton
 import com.slowatcoding.finio.ui.icons.LucideIcons
 
@@ -12,13 +13,12 @@ import com.slowatcoding.finio.ui.icons.LucideIcons
  */
 @Composable
 fun HideAmountsToggle(modifier: Modifier = Modifier) {
-    val store = financeStore()
     val state by collectFinanceState()
     val hidden = state.settings.hideAmounts
     HeaderIconButton(
         icon = if (hidden) LucideIcons.EyeOff else LucideIcons.Eye,
         contentDescription = if (hidden) "Show amounts" else "Hide amounts",
-        onClick = { store.updateSettings { it.copy(hideAmounts = !it.hideAmounts) } },
+        onClick = appContainer()::requestToggleHideAmounts,
         modifier = modifier,
         pressed = hidden,
     )

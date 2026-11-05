@@ -19,6 +19,7 @@ import com.slowatcoding.finio.platform.lock.SecureWindowEffect
 import com.slowatcoding.finio.platform.lock.findActivity
 import com.slowatcoding.finio.ui.common.PageLoader
 import com.slowatcoding.finio.ui.components.ConfirmHost
+import com.slowatcoding.finio.ui.screens.settings.UnhidePinDialogs
 import com.slowatcoding.finio.ui.components.FinioToastHost
 import com.slowatcoding.finio.ui.components.UpdateDialog
 import com.slowatcoding.finio.ui.mudra.PaperBackground
@@ -77,6 +78,8 @@ fun FinioRoot(container: AppContainer) {
                         finance.settings.onboardedAt == null -> OnboardingScreen()
                         else -> screenState.SaveableStateProvider(SHELL_STATE_KEY) {
                             AppShell(navController, graph, navigator)
+                            // Same reason as the update dialog: only ever above the app, never the lock.
+                            UnhidePinDialogs()
                             // Inside this branch so it can never draw over the lock screen.
                             val update by container.availableUpdate.collectAsStateWithLifecycle()
                             update?.let { release ->

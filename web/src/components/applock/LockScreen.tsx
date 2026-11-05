@@ -195,7 +195,7 @@ export function LockScreen() {
         </div>
 
         <Dialog open={showForgot} onOpenChange={setShowForgot}>
-          <DialogContent className="bg-card top-1/3 mx-auto max-h-[70vh] w-11/12 overflow-y-auto rounded-md sm:max-w-md">
+          <DialogContent className="bg-card mx-auto w-11/12 rounded-md sm:max-w-md">
             <DialogHeader>
               <DialogTitle>Forgot your PIN?</DialogTitle>
               <DialogDescription>

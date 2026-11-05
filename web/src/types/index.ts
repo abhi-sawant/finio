@@ -255,6 +255,37 @@ export interface AppLockConfig {
 }
 
 /**
+ * "Unhide amounts" PIN configuration.
+ *
+ * Deliberately *not* part of `Settings`, for the same reason as `AppLockConfig`: settings travel
+ * in every backup, so a PIN hash (or the auto-hide preference of another device) there would
+ * leave the device. It lives in its own `finio-unhide-pin` store. Hiding amounts never asks for
+ * it; only revealing them does.
+ *
+ * Like the app lock this is a screen-privacy gate, not encryption.
+ */
+export interface UnhidePinConfig {
+  /**
+   * `own` — a PIN chosen just for this, hashed below. `applock` — verify against the app lock's
+   * PIN at the time of asking (salt/hash/iterations are empty), so changing that PIN keeps both
+   * in step. An `applock` config stops being valid the moment the app lock is turned off.
+   */
+  source: 'own' | 'applock';
+  salt: string;
+  hash: string;
+  iterations: number;
+  pinLength: number;
+  /** Hide amounts again whenever the app is left / on a cold start. */
+  autoHideOnExit: boolean;
+  /**
+   * base64url WebAuthn rawId (Android: a marker) when biometrics are the *first* way to reveal
+   * amounts; the PIN stays one tap away. Absent on configs saved before this existed.
+   */
+  biometricCredentialId?: string | null;
+  createdAt: string;
+}
+
+/**
  * Cloud backup encryption configuration.
  *
  * Deliberately *not* part of `Settings`, for the same reason as `AppLockConfig`: `services/backup.ts`

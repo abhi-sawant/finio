@@ -156,7 +156,7 @@ export function CloudAccountSection() {
           }
         }}
       >
-        <DialogContent className="bg-card top-1/3 mx-auto w-11/12 sm:max-w-sm">
+        <DialogContent className="bg-card mx-auto w-11/12 sm:max-w-sm">
           <DialogHeader>
             <DialogTitle>Change password</DialogTitle>
             <DialogDescription>Sign in on other devices again after this.</DialogDescription>
@@ -210,7 +210,7 @@ export function CloudAccountSection() {
           if (!open) setDeleteAccountPassword('');
         }}
       >
-        <DialogContent className="bg-card top-1/3 mx-auto w-11/12 sm:max-w-sm">
+        <DialogContent className="bg-card mx-auto w-11/12 sm:max-w-sm">
           <DialogHeader>
             <DialogTitle>Delete cloud account?</DialogTitle>
             <DialogDescription>

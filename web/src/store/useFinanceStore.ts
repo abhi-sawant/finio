@@ -1,3 +1,6 @@
+import { useUnhidePinStore } from '@/store/useUnhidePinStore';
+import { useAppLockStore } from '@/store/useAppLockStore';
+import { isUnhideProtected } from '@/utils/unhidePin';
 import { startOfDay } from 'date-fns';
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
@@ -1446,7 +1449,17 @@ export const useFinanceStore = create<FinanceStore>()(
               next.transactions,
             ),
             settings: data.settings
-              ? dropLegacyCurrency({ ...state.settings, ...data.settings })
+              ? {
+                  ...dropLegacyCurrency({ ...state.settings, ...data.settings }),
+                  // A backup must not be a way round the unhide PIN: while one protects this
+                  // device, restoring cannot flip amounts back to visible.
+                  ...(isUnhideProtected(
+                    useUnhidePinStore.getState().config,
+                    useAppLockStore.getState().config,
+                  )
+                    ? { hideAmounts: state.settings.hideAmounts || data.settings.hideAmounts }
+                    : {}),
+                }
               : state.settings,
           };
         });

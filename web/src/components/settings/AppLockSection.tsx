@@ -265,7 +265,7 @@ export function AppLockSection() {
       )}
 
       <Dialog open={showAutoLockPicker} onOpenChange={setShowAutoLockPicker}>
-        <DialogContent className="bg-card top-1/3 mx-auto w-11/12 sm:max-w-sm">
+        <DialogContent className="bg-card mx-auto w-11/12 sm:max-w-sm">
           <DialogHeader>
             <DialogTitle>Auto-lock</DialogTitle>
             <DialogDescription>
@@ -299,7 +299,6 @@ export function AppLockSection() {
       <SecretDialogShell
         open={lockDialog !== null}
         onOpenChange={(open) => !open && closeLockDialog()}
-        className="max-h-[80vh] overflow-y-auto"
         title={
           lockDialog === 'disable'
             ? 'Turn off app lock'

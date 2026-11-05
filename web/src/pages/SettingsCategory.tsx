@@ -8,13 +8,22 @@ import { CloudAccountSection } from '@/components/settings/CloudAccountSection';
 import { BackupSection } from '@/components/settings/BackupSection';
 import { ProfileSection } from '@/components/settings/ProfileSection';
 import { AppLockSection } from '@/components/settings/AppLockSection';
+import { UnhidePinSection } from '@/components/settings/UnhidePinSection';
 import { NotificationsSection } from '@/components/settings/NotificationsSection';
 
 const categories: Record<string, { title: string; body: ReactNode }> = {
   account: { title: 'Cloud account', body: <CloudAccountSection /> },
   backup: { title: 'Backup & data', body: <BackupSection /> },
   profile: { title: 'Profile & preferences', body: <ProfileSection /> },
-  security: { title: 'Security', body: <AppLockSection /> },
+  security: {
+    title: 'Security',
+    body: (
+      <div className="space-y-4">
+        <AppLockSection />
+        <UnhidePinSection />
+      </div>
+    ),
+  },
   notifications: { title: 'Notifications', body: <NotificationsSection /> },
 };
 

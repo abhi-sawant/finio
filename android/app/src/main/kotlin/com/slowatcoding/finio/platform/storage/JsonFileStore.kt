@@ -41,6 +41,7 @@ import java.nio.file.StandardCopyOption
 object StoreFiles {
     const val FINANCE = "finio-storage.json"
     const val LOCK = "finio-lock.json"
+    const val UNHIDE_PIN = "finio-unhide-pin.json"
     const val BACKUP_CRYPTO = "finio-backup-crypto.json"
     const val AUTH = "finio-auth.json"
     const val LOCK_BACKGROUNDED_AT = "finio-lock-bg.json"
