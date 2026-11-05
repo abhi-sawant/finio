@@ -3,7 +3,7 @@
 Finio follows [Semantic Versioning](https://semver.org). The repo-root `VERSION` file is the single
 source of truth for both clients; see "Releasing" in [CLAUDE.md](CLAUDE.md).
 
-## Unreleased
+## 3.2.0 — 2026-11-05
 
 ### Added
 
