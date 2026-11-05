@@ -207,7 +207,7 @@ export function NotificationsSection() {
       )}
 
       <Dialog open={showLeadDaysPicker} onOpenChange={setShowLeadDaysPicker}>
-        <DialogContent className="bg-card top-1/3 mx-auto w-11/12 sm:max-w-sm">
+        <DialogContent className="bg-card mx-auto w-11/12 sm:max-w-sm">
           <DialogHeader>
             <DialogTitle>Remind me</DialogTitle>
             <DialogDescription>

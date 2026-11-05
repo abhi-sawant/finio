@@ -337,6 +337,10 @@ class FinanceStore(
     private val _state = MutableStateFlow(initial)
     private val _isHydrated = MutableStateFlow(false)
 
+    /** True while the unhide PIN is active; wired by the app container (the store knows nothing of PINs). */
+    @Volatile
+    var keepAmountsHidden: () -> Boolean = { false }
+
     val state: StateFlow<FinanceState> = _state.asStateFlow()
     val isHydrated: StateFlow<Boolean> = _isHydrated.asStateFlow()
 
@@ -1389,7 +1393,10 @@ class FinanceStore(
         val txs = next.transactions.balanceTxs()
         // `{...state.settings, ...data.settings}`: a validated backup never carries
         // `onboardedAt`, so this device's own value survives.
-        val settings = data.settings?.let { it.copy(onboardedAt = it.onboardedAt ?: s.settings.onboardedAt) } ?: s.settings
+        var settings = data.settings?.let { it.copy(onboardedAt = it.onboardedAt ?: s.settings.onboardedAt) } ?: s.settings
+        // A backup must not be a way round the unhide PIN: while one protects this device,
+        // restoring can hide amounts but never reveal them.
+        if (keepAmountsHidden()) settings = settings.copy(hideAmounts = s.settings.hideAmounts || settings.hideAmounts)
         publish(
             next.copy(
                 netWorthSnapshots = dedupeSnapshotsByPeriod(next.netWorthSnapshots),

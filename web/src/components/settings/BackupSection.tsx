@@ -662,7 +662,7 @@ export function BackupSection() {
         )}
 
         <Dialog open={showFolderSetupInfo} onOpenChange={setShowFolderSetupInfo}>
-          <DialogContent className="bg-card top-1/3 mx-auto w-11/12">
+          <DialogContent className="bg-card mx-auto w-11/12">
             <DialogHeader>
               <DialogTitle>Set up backup folder</DialogTitle>
               <DialogDescription>
@@ -722,7 +722,7 @@ export function BackupSection() {
 
       {/* Import dry-run preview */}
       <Dialog open={preview !== null} onOpenChange={(open) => !open && setPreview(null)}>
-        <DialogContent className="bg-card mx-auto max-h-[70vh] w-11/12 overflow-y-auto sm:max-w-md">
+        <DialogContent className="bg-card mx-auto w-11/12 sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Review import</DialogTitle>
             <DialogDescription className="truncate">
@@ -816,7 +816,7 @@ export function BackupSection() {
 
       {/* Backup history */}
       <Dialog open={showBackupHistory} onOpenChange={setShowBackupHistory}>
-        <DialogContent className="bg-card mx-auto max-h-[70vh] w-11/12 overflow-y-auto sm:max-w-md">
+        <DialogContent className="bg-card mx-auto w-11/12 sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Backup history</DialogTitle>
             <DialogDescription>Every backup version stored on the server.</DialogDescription>

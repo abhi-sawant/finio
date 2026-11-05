@@ -43,7 +43,7 @@ android/
 │   └── com.slowatcoding.finio.core
 │       ├── model/      Model.kt (every domain type, wire names), FinioJson
 │       ├── store/      FinanceStore (all actions, atomic), Persistence (encode/decodePersisted, v1→v19
-│       │               migrations), Balance, Recurring, AppLockState, AuthState, BackupCryptoState
+│       │               migrations), Balance, Recurring, AppLockState, UnhidePinState, AuthState, BackupCryptoState
 │       ├── calc/       Calculations, Analytics, Forecast, Insights, Merchants, NetWorth
 │       ├── period/     Period (financial months, monthStartDay), DateExtras
 │       ├── loan/ deposit/ rules/ (JsRegex) importing/ (ImportValidation)
@@ -149,7 +149,7 @@ Headline figures use `FinioType.money`/`displayMoney` (Familjen Grotesk); row am
 **Header.** `FinioScreen(header = { … }) { body }` (`ui/components/PageShell.kt`).
 Tab pages: `PageTitle("Accounts")` + trailing actions. Sub-pages: `BackButton(nav)`,
 `ScreenTitle("Budgets")`, then a trailing action or `HeaderIconSpacer()` to keep the title centred.
-Data-bearing pages put `HideAmountsToggle()` in the header. Header buttons are `HeaderIconButton`.
+Data-bearing pages put `HideAmountsToggle()` in the header; it calls `AppContainer.requestToggleHideAmounts()` (hiding free, revealing needs the unhide PIN — `UnhidePinState`, `finio-unhide-pin.json`, dialogs hosted once in `FinioRoot`; `FinanceStore.keepAmountsHidden` stops an import from revealing). Header buttons are `HeaderIconButton`.
 `FinioMain` already pads 160dp at the bottom so content clears the tab bar and coin.
 `FinioScreen` ends its scroller at the keyboard (imePadding) and treats the floating header as
 off-screen when bringing a focused field into view; a screen that floats its own sticky footer

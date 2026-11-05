@@ -7,6 +7,15 @@ source of truth for both clients; see "Releasing" in [CLAUDE.md](CLAUDE.md).
 
 ### Added
 
+- **Hidden amounts now need a PIN to show again.** Hiding is still one tap; revealing asks for a
+  PIN. The first time you tap the eye you set one (enter + confirm), or reuse your app lock PIN, and
+  choose whether amounts hide automatically when you leave the app (on by default; also in
+  Settings → Security). Wrong guesses get the same cooldown as the app lock, and restoring a backup
+  can no longer un-hide amounts while a PIN is set. The PIN is device-local and never in a backup.
+  Biometrics go first: tapping the eye opens the fingerprint/face prompt straight away, and
+  "Use PIN" (or a cancelled prompt) opens the keypad. Opt in from the setup dialog or Settings →
+  Security. (web + Android)
+
 - **Five more visual themes, ten in all.** **Parchi** is a kirana billing receipt (torn paper,
   monospaced line items, a double-height total and a barcode under the hero); **Mahal** is Bombay Art
   Deco (peacock teal and gold, stepped frames, a sunburst over your figure that shows spending

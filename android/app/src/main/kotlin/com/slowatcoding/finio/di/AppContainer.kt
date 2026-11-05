@@ -22,6 +22,9 @@ import com.slowatcoding.finio.core.store.BackupCryptoState
 import com.slowatcoding.finio.core.store.FinanceStore
 import com.slowatcoding.finio.core.store.PersistedAppLock
 import com.slowatcoding.finio.core.store.PersistedAuth
+import com.slowatcoding.finio.core.store.PersistedUnhidePin
+import com.slowatcoding.finio.core.store.UnhidePinState
+import com.slowatcoding.finio.core.store.isUnhideProtected
 import com.slowatcoding.finio.core.store.PersistedBackupCrypto
 import com.slowatcoding.finio.core.store.decodePersisted
 import com.slowatcoding.finio.core.update.ReleaseInfo
@@ -100,14 +103,16 @@ class AppContainer(private val app: Application) {
 
     private val financeFile = JsonFileStore(dir, StoreFiles.FINANCE)
     private val lockFile = JsonFileStore(dir, StoreFiles.LOCK)
+    private val unhideFile = JsonFileStore(dir, StoreFiles.UNHIDE_PIN)
     private val authFile = JsonFileStore(dir, StoreFiles.AUTH)
     private val backupCryptoFile = JsonFileStore(dir, StoreFiles.BACKUP_CRYPTO)
 
     private val financeWriter = DebouncedJsonWriter(financeFile, scope)
     private val lockWriter = DebouncedJsonWriter(lockFile, scope, delayMs = 0)
+    private val unhideWriter = DebouncedJsonWriter(unhideFile, scope, delayMs = 0)
     private val authWriter = DebouncedJsonWriter(authFile, scope, delayMs = 0)
     private val backupCryptoWriter = DebouncedJsonWriter(backupCryptoFile, scope, delayMs = 0)
-    private val writers = listOf(financeWriter, lockWriter, authWriter, backupCryptoWriter)
+    private val writers = listOf(financeWriter, lockWriter, unhideWriter, authWriter, backupCryptoWriter)
 
     /** `finio-lock-bg` — when the app was last backgrounded (see [onBackground]). */
     val backgroundedAt = BackgroundedAtStore(dir)
@@ -127,6 +132,39 @@ class AppContainer(private val app: Application) {
             backgroundedAt.clear()
         },
     )
+
+    /**
+     * The PIN that guards revealing amounts (web `useUnhidePinStore`) — never part of a backup.
+     * Its `hideAmounts` companion lives in `Settings`, so a restore is told to keep amounts hidden
+     * while this is active.
+     */
+    val unhidePin = UnhidePinState(
+        persist = { p -> unhideWriter.schedule { PlatformJson.encodeToString(PersistedUnhidePin.serializer(), p) } },
+    )
+
+    /** Which unhide prompt is open, if any; hosted once in `FinioRoot` (web `useUnhidePinStore.dialog`). */
+    val unhideDialog = MutableStateFlow<UnhideDialogRequest?>(null)
+
+    /** True when revealing amounts needs a PIN right now. */
+    fun isUnhideProtected(): Boolean = isUnhideProtected(unhidePin.current.config, appLock.current.config)
+
+    /** Flips `hideAmounts` with no PIN check — only for hiding, and for after a PIN. */
+    fun setAmountsHidden(hidden: Boolean) {
+        financeStore.updateSettings { it.copy(hideAmounts = hidden) }
+    }
+
+    /**
+     * The eye button's single entry point (web `requestToggleHideAmounts`). Hiding is free once a
+     * PIN exists; revealing needs it; with no usable PIN either direction opens setup first.
+     */
+    fun requestToggleHideAmounts() {
+        val hidden = financeStore.current.settings.hideAmounts
+        when {
+            !isUnhideProtected() -> unhideDialog.value = UnhideDialogRequest(UnhideDialogKind.Setup, UnhideIntent.Toggle)
+            hidden -> unhideDialog.value = UnhideDialogRequest(UnhideDialogKind.Verify, UnhideIntent.Toggle)
+            else -> setAmountsHidden(true)
+        }
+    }
 
     /** Cloud account session (web `useAuthStore`). */
     val auth = AuthState(
@@ -170,6 +208,8 @@ class AppContainer(private val app: Application) {
         // Small files, read synchronously: the lock decision must be made before the first frame.
         auth.hydrate(authFile.read(PersistedAuth.serializer()))
         backupCrypto.hydrate(backupCryptoFile.read(PersistedBackupCrypto.serializer()))
+        unhidePin.hydrate(unhideFile.read(PersistedUnhidePin.serializer()))
+        financeStore.keepAmountsHidden = ::isUnhideProtected
         appLock.hydrate(
             persisted = lockFile.read(PersistedAppLock.serializer()),
             backgroundedAt = backgroundedAt.read(),
@@ -180,6 +220,9 @@ class AppContainer(private val app: Application) {
             val text = withContext(Dispatchers.IO) { financeFile.readText() }
             val state = if (text != null) withContext(Dispatchers.Default) { decodePersisted(text) } else null
             if (state != null) financeStore.replaceState(state)
+            // A killed process never got to say it was backgrounded, so "hide on exit" is also
+            // applied on a cold start — before `setHydrated`, so no frame shows the amounts.
+            if (unhidePin.current.config?.autoHideOnExit == true) setAmountsHidden(true)
             financeStore.setHydrated(true)
             // Persist every change from here on (the hydrated value itself is skipped).
             financeStore.state.drop(1).collect {
@@ -199,6 +242,7 @@ class AppContainer(private val app: Application) {
     // ---- Lifecycle (web useAutoLock + Layout's visibility listener) -------------------------
 
     private fun onBackground() {
+        if (unhidePin.current.config?.autoHideOnExit == true) setAmountsHidden(true)
         val lockState = appLock.current
         val config = lockState.config
         if (config?.enabled != true) {

@@ -8,6 +8,8 @@ import { ConfirmProvider } from '@/components/ui/confirm';
 import { useFinanceStore } from '@/store/useFinanceStore';
 import { useAppLockStore } from '@/store/useAppLockStore';
 import { useAutoLock } from '@/hooks/useAutoLock';
+import { useAutoHide } from '@/hooks/useAutoHide';
+import { UnhidePinDialogs } from '@/components/UnhidePinDialogs';
 
 const Onboarding = lazy(() =>
   import('@/components/onboarding/Onboarding').then((m) => ({ default: m.Onboarding })),
@@ -182,6 +184,7 @@ export default function App() {
   // Here rather than in AppRoutes: AppRoutes is inside <Suspense>, and a suspending lazy route
   // would tear down the visibility listener while its chunk loads. App never suspends.
   useAutoLock();
+  useAutoHide();
 
   return (
     <ErrorBoundary>
@@ -190,6 +193,7 @@ export default function App() {
           <Suspense fallback={<PageLoader />}>
             <AppRoutes />
           </Suspense>
+          <UnhidePinDialogs />
           <Toaster
             position="top-center"
             theme={theme}

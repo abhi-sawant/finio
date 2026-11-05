@@ -87,6 +87,7 @@ src/
 ├── sw/sw.ts                  # Hand-written service worker (own TS project — see PWA below)
 ├── hooks/
 │   ├── useAutoLock.ts        # visibilitychange/pagehide → re-lock after the grace window
+│   ├── useAutoHide.ts        # hide amounts on page hide / cold start when the unhide PIN opts in
 │   └── useLongPress.ts       # Pointer-based long-press (transaction rows, template FAB)
 ├── store/
 │   ├── useFinanceStore.ts    # All finance data + actions (Zustand + localStorage)
@@ -94,6 +95,7 @@ src/
 │   ├── recurring.ts          # Pure recurring planner (planRecurring, nextDueDate, previewBackfill)
 │   ├── useAuthStore.ts       # Token, user profile, lastBackupAt (Zustand + localStorage)
 │   ├── useAppLockStore.ts    # PIN hash, auto-lock delay, isLocked (key `finio-lock`)
+│   ├── useUnhidePinStore.ts  # PIN guarding "show amounts" + auto-hide-on-exit (key `finio-unhide-pin`)
 │   └── useBackupCryptoStore.ts # Backup passphrase config + in-memory session key
 ├── services/
 │   ├── api.ts                # Typed fetch wrapper, Bearer token injection
