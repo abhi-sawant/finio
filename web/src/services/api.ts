@@ -1,8 +1,26 @@
+import { useAuthStore } from '@/store/useAuthStore';
+
 const BASE_URL = import.meta.env.VITE_API_URL ?? 'https://api.finio.slowatcoding.com';
 
 interface ApiFetchOptions extends Omit<RequestInit, 'headers'> {
   token?: string;
   headers?: Record<string, string>;
+}
+
+/** An API failure that carries the HTTP status, so callers can tell an expired session (401)
+ *  from a flaky connection or a server error. */
+export class ApiError extends Error {
+  status: number;
+  constructor(message: string, status: number) {
+    super(message);
+    this.name = 'ApiError';
+    this.status = status;
+  }
+}
+
+/** True for a rejected/expired login — the token is no longer accepted by the server. */
+export function isSessionExpiredError(err: unknown): boolean {
+  return err instanceof ApiError && err.status === 401;
 }
 
 async function apiFetch<T = unknown>(path: string, options?: ApiFetchOptions): Promise<T> {
@@ -19,7 +37,7 @@ async function apiFetch<T = unknown>(path: string, options?: ApiFetchOptions): P
   try {
     data = await res.json();
   } catch {
-    if (!res.ok) throw new Error(`Request failed (${res.status})`);
+    if (!res.ok) throw new ApiError(`Request failed (${res.status})`, res.status);
     data = {};
   }
 
@@ -31,7 +49,12 @@ async function apiFetch<T = unknown>(path: string, options?: ApiFetchOptions): P
       typeof (data as Record<string, unknown>).error === 'string'
         ? (data as { error: string }).error
         : `Request failed (${res.status})`;
-    throw new Error(message);
+    // A 401 on a request that carried our token means the session is gone (expired, or revoked by
+    // a password change elsewhere). Flag it so background backups stop failing silently.
+    if (res.status === 401 && token && useAuthStore.getState().token === token) {
+      useAuthStore.getState().markSessionExpired();
+    }
+    throw new ApiError(message, res.status);
   }
   return data as T;
 }

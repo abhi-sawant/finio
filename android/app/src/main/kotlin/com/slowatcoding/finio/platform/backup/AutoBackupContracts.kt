@@ -41,6 +41,12 @@ interface CloudBackupSession {
 
     suspend fun setLastBackupAt(iso: String)
 
+    /** True once the server has rejected the stored token (401) and the user hasn't signed in again. */
+    suspend fun isSessionExpired(): Boolean
+
+    /** Flag the login as expired so the UI can ask the user to sign in again. */
+    suspend fun markSessionExpired()
+
     /**
      * E2EE state. [CloudEncryption.Ready] only when a session key is cached in memory AND was
      * derived for the configured salt (web `hasUsableSessionKey`).

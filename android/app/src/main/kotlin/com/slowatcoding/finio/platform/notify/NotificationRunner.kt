@@ -125,6 +125,25 @@ object NotificationRunner {
         return show(context, entry)
     }
 
+    /**
+     * Cloud backup stopped because the login expired. Fixed id, so it replaces itself rather than
+     * stacking on every worker run. Tapping it opens Settings, where the sign-in prompt lives.
+     */
+    fun showSessionExpired(context: Context): Boolean {
+        if (!NotificationPermission.isGranted(context)) return false
+        NotificationChannels.ensure(context)
+        val entry = ScheduledNotification(
+            id = "backup:session-expired",
+            kind = NotificationKind.Bill, // default-importance channel: the Daily one is silent
+            fireAt = System.currentTimeMillis(),
+            expiresAt = System.currentTimeMillis() + 7 * 24 * 60 * 60 * 1000L,
+            title = context.getString(R.string.notify_session_expired_title),
+            body = context.getString(R.string.notify_session_expired_body),
+            url = "/settings",
+        )
+        return show(context, entry)
+    }
+
     /** Remove every Finio reminder from the shade (reminders turned off / data reset). */
     fun cancelAllShown(context: Context) = NotificationManagerCompat.from(context).cancelAll()
 

@@ -131,6 +131,7 @@ fun DashboardScreen(nav: FinioNavigator) {
                 Text(
                     when {
                         !auth.isSignedIn -> "Kept only on this device"
+                        auth.sessionExpired -> "Cloud backup paused · sign in again"
                         lastBackup != null -> "Kept on this device · backed up ${formatDistanceToNow(lastBackup)}"
                         else -> "Kept on this device · cloud backup on"
                     },

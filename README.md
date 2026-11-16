@@ -308,7 +308,7 @@ only adds user accounts and cloud backup storage.
 | Tests             | Vitest (node environment)                                                                          |
 | PWA               | vite-plugin-pwa with `injectManifest` + a hand-written Workbox service worker                      |
 | Backend           | PHP 8 + Composer                                                                                   |
-| Auth              | firebase/php-jwt (30-day tokens, revocable via a `token_version` counter)                          |
+| Auth              | firebase/php-jwt (1-year tokens, revocable via a `token_version` counter)                          |
 | Rate limiting     | Custom file-based fixed-window limiter (no Redis/APCu dependency)                                  |
 | Email             | PHPMailer over SMTP                                                                                |
 | Database          | MySQL                                                                                              |
@@ -693,11 +693,11 @@ The backup body is opaque to the server. With encryption enabled the client uplo
 `{v, enc, kdf, iterations, salt, iv, ciphertext}` envelope instead of the finance payload — no
 backend change was needed, and older plaintext backups remain restorable.
 
-**JWT sessions.** Access tokens are valid for 30 days, but a stateless JWT can't be revoked on its
+**JWT sessions.** Access tokens are valid for 1 year, but a stateless JWT can't be revoked on its
 own — so every token also carries a `tv` (token version) claim, checked against the user's
 `token_version` column on every authenticated request. Changing your password (via `PUT /user/me`)
 or completing a password reset bumps that column, which instantly invalidates every session issued
-before it, independent of the 30-day expiry.
+before it, independent of the 1-year expiry.
 
 **Rate limiting.** Every route above enforces a fixed-window limit via a small file-based counter
 (no Redis/APCu required, which matters on shared hosting) — exceeding it returns `429` with a

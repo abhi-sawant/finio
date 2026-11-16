@@ -477,6 +477,15 @@ fun BackupSection(nav: FinioNavigator) {
     // ---- Cloud backup ------------------------------------------------------------------------
     if (token != null) {
         FinioCard(contentPadding = PaddingValues(0.dp)) {
+            if (auth.sessionExpired) {
+                SettingsRow(
+                    LucideIcons.AlertTriangle,
+                    "Session expired — backups paused",
+                    subtitle = "Tap to sign in again and resume cloud backup",
+                    onClick = { nav.navigate(Routes.Login) },
+                )
+                FinioDivider()
+            }
             SettingsRow(
                 LucideIcons.CloudUpload,
                 if (backingUp) "Backing up…" else "Back up to cloud",

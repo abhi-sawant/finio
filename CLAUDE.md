@@ -331,7 +331,7 @@ Enums: `AccountType`, `TransactionType` (expense/income/transfer), `RecurrenceFr
   be revoked on its own, so every token carries a `tv` claim, and `AuthMiddleware::handle()` checks
   it against the user's current `token_version` column on **every** request — a password
   change/reset bumps that column (see `UserController::update()`, `AuthController::resetPassword()`),
-  which instantly invalidates every token issued before it, even ones nowhere near their 30-day
+  which instantly invalidates every token issued before it, even ones nowhere near their 1-year
   `access_expiry`. A deleted user has no row left to match, which invalidates theirs too.
 - **Every backend route needs a rate-limit bucket, or it's unprotected.** `RateLimitMiddleware`
   isn't automatic — it's explicitly wired per-route in `backend/public/index.php` via the `$rl(...)`

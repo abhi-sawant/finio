@@ -24,7 +24,7 @@ return [
     // in the cPanel Terminal.
     'jwt' => [
         'secret'         => 'CHANGE_THIS_TO_A_VERY_LONG_RANDOM_STRING',
-        'access_expiry'  => 30 * 24 * 60 * 60,   // 30 days in seconds
+        'access_expiry'  => 365 * 24 * 60 * 60,  // 1 year in seconds
         'refresh_expiry' => 90 * 24 * 60 * 60,   // 90 days in seconds (not used yet)
     ],
 

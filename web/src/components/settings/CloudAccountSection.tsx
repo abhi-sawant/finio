@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { ChevronRight, User, LogIn, LogOut, KeyRound, UserX } from 'lucide-react';
+import { AlertTriangle, ChevronRight, User, LogIn, LogOut, KeyRound, UserX } from 'lucide-react';
 import { toast } from 'sonner';
 import { getErrorMessage } from '@/utils/errors';
 import { useAuthStore } from '@/store/useAuthStore';
@@ -25,6 +25,7 @@ export function CloudAccountSection() {
   const user = useAuthStore((s) => s.user);
   const clearAuth = useAuthStore((s) => s.clearAuth);
   const setAuth = useAuthStore((s) => s.setAuth);
+  const sessionExpired = useAuthStore((s) => s.sessionExpired);
 
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [currentPassword, setCurrentPassword] = useState('');
@@ -105,6 +106,21 @@ export function CloudAccountSection() {
                 <p className="text-muted-foreground truncate text-xs">{user.email}</p>
               </div>
             </div>
+            {sessionExpired && (
+              <button
+                onClick={() => navigate('/login')}
+                className="hover:bg-muted/50 flex w-full items-center gap-3 p-4 transition-colors"
+              >
+                <AlertTriangle size={18} className="text-warning shrink-0" aria-hidden="true" />
+                <div className="flex-1 text-left">
+                  <p className="text-sm font-medium">Session expired — backups paused</p>
+                  <p className="text-muted-foreground text-xs">
+                    Tap to sign in again and resume cloud backup
+                  </p>
+                </div>
+                <ChevronRight size={16} className="text-muted-foreground" />
+              </button>
+            )}
             <button
               onClick={() => setShowChangePassword(true)}
               className="hover:bg-muted/50 flex w-full items-center gap-3 p-4 transition-colors"

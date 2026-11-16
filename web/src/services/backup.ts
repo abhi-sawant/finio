@@ -1,7 +1,7 @@
 import { useFinanceStore } from '@/store/useFinanceStore';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useBackupCryptoStore } from '@/store/useBackupCryptoStore';
-import { api } from './api';
+import { api, ApiError } from './api';
 import {
   getSavedDirectoryHandle,
   hasWritePermission,
@@ -285,8 +285,11 @@ export async function autoLocalBackupIfNeeded(): Promise<void> {
 export async function autoBackupIfNeeded(): Promise<void> {
   if (backupInProgress) return;
 
-  const { token, lastBackupAt } = useAuthStore.getState();
+  const { token, lastBackupAt, sessionExpired } = useAuthStore.getState();
   if (!token) return;
+  // The server already rejected this login — don't keep hitting it, but do let the caller
+  // surface it: a backup that quietly never runs is the worst failure mode.
+  if (sessionExpired) throw new ApiError('Session expired', 401);
 
   // Encryption is on but no session key is cached (e.g. a fresh app launch) — there's no user
   // present to prompt for the passphrase, so skip silently and let the Settings "locked" banner

@@ -461,6 +461,10 @@ class AppContainer(private val app: Application) {
 
         override suspend fun setLastBackupAt(iso: String) = auth.setLastBackupAt(iso)
 
+        override suspend fun isSessionExpired(): Boolean = auth.current.sessionExpired
+
+        override suspend fun markSessionExpired() = auth.markSessionExpired()
+
         override suspend fun encryption(): CloudEncryption {
             val config = backupCrypto.current.config
             if (config == null || !config.enabled) return CloudEncryption.Off

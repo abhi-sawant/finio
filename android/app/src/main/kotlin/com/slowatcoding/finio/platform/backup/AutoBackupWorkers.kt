@@ -8,7 +8,9 @@ import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import com.slowatcoding.finio.platform.api.ApiException
 import com.slowatcoding.finio.platform.api.FinioApi
+import com.slowatcoding.finio.platform.notify.NotificationRunner
 import java.util.concurrent.TimeUnit
 
 /**
@@ -33,7 +35,11 @@ class CloudAutoBackupWorker(context: Context, params: WorkerParameters) : Corout
         val host = applicationContext as? AutoBackupHost ?: return Result.success()
         val source = host.backupDataSource() ?: return Result.success()
         val session = host.cloudBackupSession() ?: return Result.success()
-        runCatching { AutoBackup.autoBackupIfNeeded(source, session, FinioApi()) }
+        val failure = runCatching { AutoBackup.autoBackupIfNeeded(source, session, FinioApi()) }.exceptionOrNull()
+        if (failure is ApiException && failure.status == 401) {
+            // Nobody is looking at the app — a notification is the only way this gets noticed.
+            NotificationRunner.showSessionExpired(applicationContext)
+        }
         return Result.success()
     }
 }

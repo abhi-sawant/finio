@@ -17,17 +17,20 @@ data class PersistedAuth(
     val token: String? = null,
     val user: AuthUser? = null,
     val lastBackupAt: String? = null,
+    /** The server rejected the token (401): cloud backups can't run until the user signs in again. */
+    val sessionExpired: Boolean = false,
 )
 
 data class AuthUiState(
     val token: String? = null,
     val user: AuthUser? = null,
     val lastBackupAt: String? = null,
+    val sessionExpired: Boolean = false,
     /** True once storage has been read (the web's `loadAuth` on rehydrate). */
     val isLoaded: Boolean = false,
 ) {
     val isSignedIn: Boolean get() = !token.isNullOrEmpty()
-    fun persisted() = PersistedAuth(token, user, lastBackupAt)
+    fun persisted() = PersistedAuth(token, user, lastBackupAt, sessionExpired)
 }
 
 class AuthState(private val persist: (PersistedAuth) -> Unit = {}) {
@@ -47,16 +50,18 @@ class AuthState(private val persist: (PersistedAuth) -> Unit = {}) {
     fun hydrate(persisted: PersistedAuth?) {
         synchronized(lock) {
             val p = persisted ?: PersistedAuth()
-            _state.value = AuthUiState(p.token, p.user, p.lastBackupAt)
+            _state.value = AuthUiState(p.token, p.user, p.lastBackupAt, p.sessionExpired)
         }
         loadAuth()
     }
 
     fun loadAuth() = update { it.copy(isLoaded = true) }
 
-    fun setAuth(token: String, user: AuthUser) = update { it.copy(token = token, user = user) }
+    fun setAuth(token: String, user: AuthUser) = update { it.copy(token = token, user = user, sessionExpired = false) }
 
-    fun clearAuth() = update { it.copy(token = null, user = null, lastBackupAt = null) }
+    fun clearAuth() = update { it.copy(token = null, user = null, lastBackupAt = null, sessionExpired = false) }
+
+    fun markSessionExpired() = update { it.copy(sessionExpired = true) }
 
     fun setLastBackupAt(date: String) = update { it.copy(lastBackupAt = date) }
 }

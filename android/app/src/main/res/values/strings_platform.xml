@@ -11,6 +11,8 @@
     <string name="notify_channel_daily">Daily log reminder</string>
     <string name="notify_channel_daily_desc">An evening nudge on days nothing was logged</string>
     <string name="notify_test_title">Reminders are on</string>
+    <string name="notify_session_expired_title">Cloud backup stopped</string>
+    <string name="notify_session_expired_body">Your Finio session expired. Sign in again to resume automatic backups.</string>
     <string name="notify_test_body">This is how Finio will remind you about bills, budgets and card dues.</string>
 
     <!-- Launcher shortcuts (mirror the PWA manifest's `shortcuts`). -->

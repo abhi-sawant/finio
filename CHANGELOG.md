@@ -3,6 +3,24 @@
 Finio follows [Semantic Versioning](https://semver.org). The repo-root `VERSION` file is the single
 source of truth for both clients; see "Releasing" in [CLAUDE.md](CLAUDE.md).
 
+## 3.2.1 — 2026-11-16
+
+### Fixed
+
+- **Cloud backups no longer stop silently when your login expires.** If the server rejects your
+  session, Finio now says so instead of quietly skipping every backup: a toast on web, a
+  "Session expired — backups paused" row in Settings (both clients), a note under your name on the
+  Android dashboard, and an Android notification when the background backup hits it. Sign in again
+  to resume. (web + Android)
+
+### Changed
+
+- **You stay signed in for a year instead of 30 days.** Changing or resetting your password still
+  signs out every other device straight away. Self-hosters: set `access_expiry` in `config.php`
+  (the example now defaults to one year); tokens already issued keep their old expiry.
+
+The backup format has not changed.
+
 ## 3.2.0 — 2026-11-05
 
 ### Added

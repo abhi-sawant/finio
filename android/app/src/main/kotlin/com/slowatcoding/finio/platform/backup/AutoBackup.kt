@@ -7,6 +7,7 @@ import com.slowatcoding.finio.core.crypto.encryptJson
 import com.slowatcoding.finio.core.crypto.packEnvelope
 import com.slowatcoding.finio.core.format.todayKey
 import com.slowatcoding.finio.core.js.toIso
+import com.slowatcoding.finio.platform.api.ApiException
 import com.slowatcoding.finio.platform.api.FinioApi
 import com.slowatcoding.finio.platform.files.BackupFolder
 import com.slowatcoding.finio.platform.files.MAX_LOCAL_BACKUPS
@@ -94,7 +95,14 @@ object AutoBackup {
                 EnvelopeJson.encodeToString(BackupEnvelope.serializer(), envelope)
             }
         }
-        api.uploadBackup(token, body)
+        try {
+            api.uploadBackup(token, body)
+        } catch (e: ApiException) {
+            // A 401 means the login is gone (expired, or revoked by a password change). Flag it so
+            // backups don't keep failing silently — the UI and the worker both surface it.
+            if (e.status == 401) session.markSessionExpired()
+            throw e
+        }
         val stamp = now.toIso()
         session.setLastBackupAt(stamp)
         return stamp
@@ -113,6 +121,9 @@ object AutoBackup {
         if (!backupInProgress.compareAndSet(false, true)) return false
         try {
             val token = session.token()
+            // Already rejected once: don't hammer the server, but throw so the caller can tell
+            // the user instead of the backup quietly never running.
+            if (token != null && session.isSessionExpired()) throw ApiException("Session expired", 401)
             val run = shouldRunCloudBackup(
                 hasToken = token != null,
                 encryptionLocked = token != null && session.encryption() is CloudEncryption.Locked,

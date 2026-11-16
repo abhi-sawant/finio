@@ -7,6 +7,7 @@ import { useFinanceStore } from '@/store/useFinanceStore';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useLongPress } from '@/hooks/useLongPress';
 import { formatCurrency } from '@/utils/formatters';
+import { isSessionExpiredError } from '@/services/api';
 import { autoBackupIfNeeded, autoLocalBackupIfNeeded } from '@/services/backup';
 import { refreshNotificationSchedule, runDueNotifications } from '@/services/notifications';
 import { Popover, PopoverContent } from '@/components/ui/popover';
@@ -113,9 +114,19 @@ export function Layout() {
   // Trigger an auto cloud backup (24h cadence) once both stores are ready.
   useEffect(() => {
     if (!isHydrated || !isAuthLoaded) return;
-    autoBackupIfNeeded().catch(() => {
-      /* silent: handled by toast inside service */
+    autoBackupIfNeeded().catch((err) => {
+      // Other failures (offline, server hiccup) are retried next launch. An expired login never
+      // heals on its own, so tell the user instead of letting backups silently stop.
+      if (isSessionExpiredError(err)) {
+        toast.error('Cloud backup stopped — your session expired', {
+          id: 'session-expired',
+          description: 'Sign in again to resume automatic backups.',
+          duration: Infinity,
+          action: { label: 'Sign in', onClick: () => navigate('/login') },
+        });
+      }
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- run once when stores are ready
   }, [isHydrated, isAuthLoaded]);
 
   // Trigger a local auto-backup download (once per day) for non-logged-in users.
