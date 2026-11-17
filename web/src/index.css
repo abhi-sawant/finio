@@ -22,6 +22,36 @@
 @import '@fontsource-variable/pixelify-sans';
 @import '@fontsource/silkscreen';
 @import '@fontsource/vt323';
+@import '@fontsource-variable/anek-latin/wdth.css';
+@import '@fontsource-variable/overpass';
+@import '@fontsource-variable/overpass-mono';
+@import '@fontsource-variable/azeret-mono';
+@import '@fontsource-variable/sofia-sans-semi-condensed';
+@import '@fontsource/rozha-one';
+@import '@fontsource/hind/400.css';
+@import '@fontsource/hind/500.css';
+@import '@fontsource/hind/600.css';
+@import '@fontsource/hind/700.css';
+@import '@fontsource-variable/kumbh-sans';
+@import '@fontsource-variable/big-shoulders-display';
+@import '@fontsource/barlow/400.css';
+@import '@fontsource/barlow/500.css';
+@import '@fontsource/barlow/600.css';
+@import '@fontsource/barlow/700.css';
+@import '@fontsource/barlow-semi-condensed/500.css';
+@import '@fontsource/barlow-semi-condensed/600.css';
+@import '@fontsource/barlow-semi-condensed/700.css';
+@import '@fontsource-variable/darker-grotesque';
+@import '@fontsource-variable/hanken-grotesk';
+@import '@fontsource/young-serif';
+@import '@fontsource-variable/public-sans';
+@import '@fontsource/courier-prime/400.css';
+@import '@fontsource/courier-prime/700.css';
+@import '@fontsource/michroma';
+@import '@fontsource-variable/lexend';
+@import '@fontsource/kalam/400.css';
+@import '@fontsource/kalam/700.css';
+@import '@fontsource-variable/nunito-sans';
 
 /* Alternative visual themes — each file overrides the tokens below and restyles the shared
    utilities for html[data-visual-theme='…']. Mudra (no attribute) is this file. Unlayered, so they
@@ -36,6 +66,16 @@
 @import './themes/ganak.css';
 @import './themes/akhbaar.css';
 @import './themes/khel.css';
+@import './themes/tareekh.css';
+@import './themes/safar.css';
+@import './themes/naksha.css';
+@import './themes/ajrakh.css';
+@import './themes/kolam.css';
+@import './themes/maidan.css';
+@import './themes/sector.css';
+@import './themes/daak.css';
+@import './themes/sargam.css';
+@import './themes/takhti.css';
 
 @custom-variant dark (&:is(.dark *));
 

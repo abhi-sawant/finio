@@ -1,0 +1,985 @@
+/*
+ * Tareekh — the household wall calendar. White coated paper, black ink, calendar red and postal
+ * blue. Ruled rectangular modules on 1px rules, 0 radii, no shadows, each opened by a small filled
+ * header tab. Anek Latin worked through its width axis: condensed caps for labels, wide ExtraBold
+ * for date numerals and the headline figure. The hero's signature is the budget period drawn as a
+ * real Sunday-first calendar (TareekhExtra, ui/extras/tareekh.tsx): past days dimmed, today ringed
+ * in red once, days ahead carrying the safe-to-spend figure; Sundays in red.
+ */
+html[data-visual-theme='tareekh'] {
+  --ff-heading: 'Anek Latin Variable', 'Arial Narrow', sans-serif;
+  --ff-money: 'Anek Latin Variable', 'Arial Narrow', sans-serif;
+  --ff-sans: 'Anek Latin Variable', 'Arial Narrow', sans-serif;
+
+  --tk-red: #d51f2a;
+  --tk-red-d: #a8131d;
+  --tk-on-red: #ffffff;
+  --tk-red-tint: #fdecee;
+  --tk-blue: #1746b3;
+  --tk-ink: #0c0e12;
+  --tk-line: #0c0e12;
+  --tk-rule: #c3cad5;
+  --tk-tint: #eef1f5;
+
+  --background: #fcfdfe;
+  --foreground: #0c0e12;
+  --card: #fcfdfe;
+  --card-foreground: #0c0e12;
+  --popover: #ffffff;
+  --popover-foreground: #0c0e12;
+  --primary: #d51f2a;
+  --primary-foreground: #ffffff;
+  --secondary: #eef1f5;
+  --secondary-foreground: #0c0e12;
+  --muted: #eef1f5;
+  --muted-foreground: #4a5362;
+  --accent: #eef1f5;
+  --accent-foreground: #0c0e12;
+  --destructive: #d51f2a;
+  --destructive-foreground: #ffffff;
+  --positive: #1746b3;
+  --warning: #8a4b00;
+  --border: #c3cad5;
+  --input: #6b7484;
+  --ring: #1746b3;
+  --chart-1: #0c0e12;
+  --chart-2: #d51f2a;
+  --chart-3: #1746b3;
+  --chart-4: #b45309;
+  --chart-5: #6b7484;
+  --radius: 0rem;
+  --sidebar: #fcfdfe;
+  --sidebar-foreground: #0c0e12;
+  --sidebar-primary: #d51f2a;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #eef1f5;
+  --sidebar-accent-foreground: #0c0e12;
+  --sidebar-border: #0c0e12;
+  --sidebar-ring: #1746b3;
+
+  --warning-band: #fdecee;
+  --warning-band-foreground: #4a0a10;
+  --warning-band-accent: #d51f2a;
+
+  --paper: none;
+  --engraving: transparent;
+  --glass: transparent;
+  --glass-strong: #fcfdfe;
+  --glass-border: #c3cad5;
+  --glass-highlight: transparent;
+
+  --grad-primary: linear-gradient(#d51f2a, #d51f2a);
+  --grad-primary-soft: linear-gradient(#eef1f5, #eef1f5);
+  --grad-success: linear-gradient(#1746b3, #1746b3);
+  --grad-success-soft: linear-gradient(#e6ecfa, #e6ecfa);
+  --grad-danger: linear-gradient(#d51f2a, #d51f2a);
+  --grad-danger-soft: linear-gradient(#fdecee, #fdecee);
+  --grad-info: linear-gradient(#1746b3, #1746b3);
+  --grad-warning: linear-gradient(#8a4b00, #8a4b00);
+  --grad-surface: linear-gradient(#fcfdfe, #fcfdfe);
+  --coin: linear-gradient(#0c0e12, #0c0e12);
+  --coin-ink: #fcfdfe;
+  --register: #0c0e12;
+  --thread: linear-gradient(#d51f2a, #d51f2a);
+
+  --shadow-tint: 12 14 18;
+  --scrim: rgb(12 14 18 / 0.4);
+  --shadow-card: none;
+  --shadow-float: none;
+  --shadow-primary: none;
+  --shadow-danger: none;
+  --shadow-success: none;
+
+  /* Accounts are ruled rows in black ink; what is owed runs in calendar red. */
+  --note-100: linear-gradient(transparent, transparent);
+  --note-100-ink: #0c0e12;
+  --note-500: linear-gradient(transparent, transparent);
+  --note-500-ink: #0c0e12;
+  --note-2000: linear-gradient(transparent, transparent);
+  --note-2000-ink: #d51f2a;
+  --note-200: linear-gradient(transparent, transparent);
+  --note-200-ink: #1746b3;
+  --note-10: linear-gradient(transparent, transparent);
+  --note-10-ink: #0c0e12;
+  --note-50: linear-gradient(transparent, transparent);
+  --note-50-ink: #0c0e12;
+  --note-20: linear-gradient(transparent, transparent);
+  --note-20-ink: #0c0e12;
+}
+
+html.dark[data-visual-theme='tareekh'] {
+  --tk-red: #ff4a4d;
+  --tk-red-d: #c9282f;
+  --tk-on-red: #0a0f1f;
+  --tk-red-tint: #2a1422;
+  --tk-blue: #86acff;
+  --tk-ink: #edefe8;
+  --tk-line: #56628a;
+  --tk-rule: #27314f;
+  --tk-tint: #111931;
+
+  --background: #0a0f1f;
+  --foreground: #edefe8;
+  --card: #0a0f1f;
+  --card-foreground: #edefe8;
+  --popover: #111931;
+  --popover-foreground: #edefe8;
+  --primary: #ff4a4d;
+  --primary-foreground: #0a0f1f;
+  --secondary: #111931;
+  --secondary-foreground: #edefe8;
+  --muted: #111931;
+  --muted-foreground: #9ca7c2;
+  --accent: #172041;
+  --accent-foreground: #edefe8;
+  --destructive: #ff4a4d;
+  --destructive-foreground: #0a0f1f;
+  --positive: #86acff;
+  --warning: #f0b252;
+  --border: #27314f;
+  --input: #56628a;
+  --ring: #86acff;
+  --chart-1: #edefe8;
+  --chart-2: #ff4a4d;
+  --chart-3: #86acff;
+  --chart-4: #f0b252;
+  --chart-5: #9ca7c2;
+  --sidebar: #0a0f1f;
+  --sidebar-foreground: #edefe8;
+  --sidebar-primary: #ff4a4d;
+  --sidebar-primary-foreground: #0a0f1f;
+  --sidebar-accent: #172041;
+  --sidebar-accent-foreground: #edefe8;
+  --sidebar-border: #56628a;
+  --sidebar-ring: #86acff;
+
+  --warning-band: #2a1422;
+  --warning-band-foreground: #ffe1e1;
+  --warning-band-accent: #ff4a4d;
+
+  --glass-strong: #0a0f1f;
+  --glass-border: #27314f;
+
+  /* Deep enough for the white text call sites hardcode. */
+  --grad-primary: linear-gradient(#c9282f, #c9282f);
+  --grad-primary-soft: linear-gradient(#111931, #111931);
+  --grad-success: linear-gradient(#2956c4, #2956c4);
+  --grad-success-soft: linear-gradient(#111d3d, #111d3d);
+  --grad-danger: linear-gradient(#c9282f, #c9282f);
+  --grad-danger-soft: linear-gradient(#2a1422, #2a1422);
+  --grad-info: linear-gradient(#2956c4, #2956c4);
+  --grad-warning: linear-gradient(#8a4b00, #8a4b00);
+  --grad-surface: linear-gradient(#0a0f1f, #0a0f1f);
+  --coin: linear-gradient(#edefe8, #edefe8);
+  --coin-ink: #0a0f1f;
+  --register: #edefe8;
+  --thread: linear-gradient(#ff4a4d, #ff4a4d);
+
+  --shadow-tint: 0 0 0;
+  --scrim: rgb(0 0 0 / 0.6);
+
+  --note-100-ink: #edefe8;
+  --note-500-ink: #edefe8;
+  --note-2000-ink: #ff4a4d;
+  --note-200-ink: #86acff;
+  --note-10-ink: #edefe8;
+  --note-50-ink: #edefe8;
+  --note-20-ink: #edefe8;
+}
+
+html.dark.amoled[data-visual-theme='tareekh'] {
+  --tk-tint: #070b17;
+}
+
+/* ── Browser surfaces ── */
+html[data-visual-theme='tareekh'] {
+  caret-color: var(--tk-red);
+  accent-color: var(--tk-red);
+  scrollbar-color: color-mix(in srgb, var(--foreground) 45%, transparent) transparent;
+}
+html[data-visual-theme='tareekh'] body {
+  font-stretch: 90%;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+html[data-visual-theme='tareekh'] ::selection {
+  background: var(--tk-red);
+  color: var(--tk-on-red);
+}
+html[data-visual-theme='tareekh'] :focus-visible {
+  outline: 2px solid var(--tk-blue);
+  outline-offset: 2px;
+}
+
+/* ── Type: wide ExtraBold numerals, condensed caps for labels ── */
+html[data-visual-theme='tareekh'] h1 {
+  font-weight: 800;
+  font-stretch: 110%;
+  letter-spacing: -0.01em;
+}
+html[data-visual-theme='tareekh'] .font-money {
+  font-weight: 800;
+  font-stretch: 108%;
+  letter-spacing: -0.02em;
+}
+html[data-visual-theme='tareekh'] [data-slot='label'] {
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-stretch: 80%;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted-foreground);
+}
+html[data-visual-theme='tareekh'] [data-slot='dialog-title'],
+html[data-visual-theme='tareekh'] [data-slot='alert-dialog-title'] {
+  font-size: 1.25rem;
+  font-weight: 800;
+  font-stretch: 108%;
+  line-height: 1.1;
+}
+/* Section heads: a small filled tab on the module's rule. */
+html[data-visual-theme='tareekh'] main h2.text-base {
+  display: inline-block;
+  background: var(--foreground);
+  color: var(--background);
+  padding: 0 0.5625rem;
+  font-family: var(--ff-heading);
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-stretch: 80%;
+  line-height: 1.3125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.055em;
+}
+html[data-visual-theme='tareekh'] main div.flex:has(> h2.text-base) {
+  align-items: flex-end;
+  border-bottom: 1px solid var(--tk-line);
+}
+html[data-visual-theme='tareekh'] main div:has(> h2.text-base) > button.text-primary {
+  color: var(--tk-blue);
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-stretch: 80%;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+/* Day headings in the transaction list: a date strip with a rule run out to the margin. */
+html[data-visual-theme='tareekh'] main section > h2.text-xs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-inline-start: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-stretch: 80%;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+html[data-visual-theme='tareekh'] main section > h2.text-xs::after {
+  content: '';
+  flex: 1;
+  border-top: 1px solid var(--tk-line);
+}
+
+/* ── Shape: nothing round, nothing floating ── */
+html[data-visual-theme='tareekh'] .rounded-full,
+html[data-visual-theme='tareekh'] .rounded-lg,
+html[data-visual-theme='tareekh'] .rounded-md,
+html[data-visual-theme='tareekh'] .rounded-sm,
+html[data-visual-theme='tareekh'] .rounded-xl {
+  border-radius: 0;
+}
+html[data-visual-theme='tareekh'] .card-elevated {
+  background-color: transparent;
+  border: 1px solid var(--tk-line);
+  border-radius: 0;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='tareekh'] .glass-chrome {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='tareekh'] .shadow-glow-primary,
+html[data-visual-theme='tareekh'] .shadow-glow-success,
+html[data-visual-theme='tareekh'] .shadow-glow-danger,
+html[data-visual-theme='tareekh'] .shadow-sm,
+html[data-visual-theme='tareekh'] .shadow-md,
+html[data-visual-theme='tareekh'] .shadow-lg {
+  box-shadow: none;
+}
+html[data-visual-theme='tareekh'] .bg-coin {
+  color: var(--coin-ink);
+  box-shadow: none;
+}
+/* Filled actions: red slab with a darker top edge, like a stamped button. */
+html[data-visual-theme='tareekh'] :is(button, a).bg-grad-primary {
+  border: 1px solid var(--tk-line);
+  box-shadow: inset 0 5px 0 var(--tk-red-d);
+  padding-top: 0.3rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+html[data-visual-theme='tareekh'] :is(button, a).bg-grad-primary:active {
+  background-image: linear-gradient(var(--tk-red-d), var(--tk-red-d));
+}
+html[data-visual-theme='tareekh'] [data-slot='button'][class*='glass-border'] {
+  border: 1px solid var(--tk-line);
+  background: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='tareekh'] [data-slot='button'][class*='glass-border']:hover,
+html[data-visual-theme='tareekh'] [data-slot='button'][class*='glass-border']:active {
+  background: var(--foreground);
+  color: var(--background);
+}
+
+/* Inputs: boxed fields on ink rules. */
+html[data-visual-theme='tareekh']
+  :is([data-slot='input'], [data-slot='textarea'], [data-slot='select-trigger']) {
+  background: transparent;
+  border: 1px solid var(--tk-line);
+  border-radius: 0;
+}
+html[data-visual-theme='tareekh']
+  :is([data-slot='input'], [data-slot='textarea'], [data-slot='select-trigger']):focus-visible {
+  border-color: var(--tk-blue);
+  outline-offset: 0;
+}
+
+/* Segmented controls: a ruled strip of caps, the current cell filled with ink. */
+html[data-visual-theme='tareekh'] .bg-muted.p-1:has(> button[aria-pressed]) {
+  gap: 0;
+  padding: 0;
+  background: transparent;
+  border: 1px solid var(--tk-line);
+}
+html[data-visual-theme='tareekh'] .bg-muted.p-1:has(> button[aria-pressed]) > button {
+  background: none;
+  box-shadow: none;
+  color: var(--foreground);
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-stretch: 80%;
+  text-transform: uppercase;
+  letter-spacing: 0.055em;
+}
+html[data-visual-theme='tareekh'] .bg-muted.p-1:has(> button[aria-pressed]) > button + button {
+  border-left: 1px solid var(--tk-line);
+}
+html[data-visual-theme='tareekh']
+  .bg-muted.p-1:has(> button[aria-pressed])
+  > button[aria-pressed='true'] {
+  background: var(--foreground);
+  color: var(--background);
+}
+html[data-visual-theme='tareekh'] button[aria-pressed].rounded-full.text-xs {
+  font-weight: 600;
+  font-stretch: 80%;
+  text-transform: uppercase;
+  letter-spacing: 0.055em;
+}
+
+/* ── Progress: a day-slotted bar — the fill is cut into ruled day slots ── */
+html[data-visual-theme='tareekh'] [role='progressbar'] {
+  position: relative;
+  height: 0.6875rem;
+  border-radius: 0;
+  background: var(--tk-tint);
+  border: 1px solid var(--tk-line);
+}
+html[data-visual-theme='tareekh'] [role='progressbar'] > div,
+html[data-visual-theme='tareekh'] .thread-fill {
+  border-radius: 0;
+}
+html[data-visual-theme='tareekh'] [role='progressbar']::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0 calc(100% / 20 - 1px),
+    var(--background) calc(100% / 20 - 1px) calc(100% / 20)
+  );
+  opacity: 0.75;
+}
+html[data-visual-theme='tareekh'] .bg-muted.overflow-hidden:has(> .thread-fill) {
+  background: var(--tk-tint);
+  border: 1px solid var(--tk-line);
+}
+
+/* ── Hero: a module with a red header tab; the calendar is its signature ── */
+html[data-visual-theme='tareekh'] .note-card {
+  background-image: none;
+  background-color: transparent;
+  border: 1px solid var(--tk-line);
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  overflow: visible;
+}
+html[data-visual-theme='tareekh'] .note-card-body {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+html[data-visual-theme='tareekh'] .note-card-body > * {
+  align-self: stretch;
+  margin-left: 0.625rem;
+  margin-right: 0.625rem;
+}
+html[data-visual-theme='tareekh'] .note-card-body > p:first-child {
+  align-self: flex-start;
+  margin: 0 0 0.25rem;
+  padding: 0 0.5625rem;
+  background: var(--tk-red);
+  color: var(--tk-on-red);
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-stretch: 80%;
+  line-height: 1.3125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.055em;
+}
+html[data-visual-theme='tareekh'] .note-card-body > button {
+  align-self: flex-start;
+  color: var(--tk-blue);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  margin-bottom: 0.5rem;
+}
+html[data-visual-theme='tareekh'] .hero-fig {
+  margin-top: 0;
+  font-size: clamp(3.25rem, 17vw, 4.25rem);
+  font-weight: 800;
+  font-stretch: 108%;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+}
+html[data-visual-theme='tareekh'] .hero-left {
+  font-size: 0.84rem;
+  font-weight: 500;
+  font-stretch: 84%;
+}
+html[data-visual-theme='tareekh'] .hero-bar {
+  height: 0.6875rem;
+}
+html[data-visual-theme='tareekh'] .hero-budget {
+  font-size: 0.8125rem;
+  font-stretch: 84%;
+  margin-bottom: 0.5rem;
+}
+
+/* The calendar. */
+html[data-visual-theme='tareekh'] .tk {
+  margin: 0.5rem 0 0;
+  border-top: 1px solid var(--tk-line);
+}
+/* The hero body's own gutters are not applied: the grid runs rule to rule. */
+html[data-visual-theme='tareekh'] .note-card-body > .tk {
+  margin-left: 0;
+  margin-right: 0;
+}
+html[data-visual-theme='tareekh'] .tk-cal {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-auto-rows: minmax(2.75rem, auto);
+}
+html[data-visual-theme='tareekh'] .tk-wd {
+  grid-row: 1;
+  background: var(--tk-tint);
+  border-bottom: 1px solid var(--tk-line);
+  border-left: 1px solid var(--tk-rule);
+  padding: 0 0.25rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  font-stretch: 80%;
+  line-height: 1.0625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+html[data-visual-theme='tareekh'] .tk-cal > .tk-wd:first-child,
+html[data-visual-theme='tareekh'] .tk-cal > .tk-c:nth-child(7n + 8) {
+  border-left: 0;
+}
+html[data-visual-theme='tareekh'] .tk-cal > .tk-wd {
+  min-height: 0;
+  grid-row: auto;
+}
+html[data-visual-theme='tareekh'] .tk-cal > .tk-wd {
+  height: 1.0625rem;
+}
+html[data-visual-theme='tareekh'] .tk-c {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  padding: 0.25rem 0.1875rem 0.25rem 0.25rem;
+  border-left: 1px solid var(--tk-rule);
+  border-top: 1px solid var(--tk-rule);
+  line-height: 1;
+}
+html[data-visual-theme='tareekh'] .tk-cal > .tk-wd + .tk-wd ~ .tk-c:nth-child(-n + 14) {
+  border-top: 0;
+}
+html[data-visual-theme='tareekh'] .tk-blank {
+  background: var(--tk-tint);
+  opacity: 0.6;
+}
+html[data-visual-theme='tareekh'] .tk-c > b {
+  position: relative;
+  margin-bottom: 0.125rem;
+  font-size: 0.9375rem;
+  font-weight: 800;
+  font-stretch: 112%;
+  line-height: 1;
+}
+html[data-visual-theme='tareekh'] .tk-c.tk-past > b {
+  color: var(--muted-foreground);
+}
+html[data-visual-theme='tareekh'] .tk-sun,
+html[data-visual-theme='tareekh'] .tk-c.tk-sun > b,
+html[data-visual-theme='tareekh'] .tk-c.tk-past.tk-sun > b {
+  color: var(--tk-red);
+}
+html[data-visual-theme='tareekh'] .tk-c.tk-past.tk-sun > b {
+  opacity: 0.8;
+}
+html[data-visual-theme='tareekh'] .tk-mon {
+  position: absolute;
+  right: 0.1875rem;
+  top: 0.3125rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  font-stretch: 78%;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted-foreground);
+}
+html[data-visual-theme='tareekh'] .tk-al {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: clip;
+  white-space: nowrap;
+  font-size: 0.8125rem;
+  font-weight: 400;
+  font-stretch: 76%;
+  color: var(--muted-foreground);
+  animation: tareekh-tick 0.22s ease-out calc(min(var(--i, 1), 20) * 40ms) backwards;
+}
+html[data-visual-theme='tareekh'] .tk-nm {
+  position: absolute;
+  left: 0.25rem;
+  bottom: 0.3125rem;
+  width: 0.5625rem;
+  height: 1px;
+  background: var(--muted-foreground);
+  opacity: 0.7;
+  transform-origin: left;
+  animation: tareekh-grow 0.2s ease-out calc(min(var(--i, 1), 20) * 40ms) backwards;
+}
+html[data-visual-theme='tareekh'] .tk-c.tk-today {
+  background: var(--tk-red-tint);
+}
+html[data-visual-theme='tareekh'] .tk-c.tk-today > b {
+  color: var(--tk-red);
+}
+html[data-visual-theme='tareekh'] .tk-td {
+  margin-top: 0.125rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  font-stretch: 78%;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--tk-red);
+}
+html[data-visual-theme='tareekh'] .tk-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(100% + 0.9375rem);
+  height: calc(100% + 0.6875rem);
+  transform: translate(-50%, -54%);
+  overflow: visible;
+  pointer-events: none;
+}
+html[data-visual-theme='tareekh'] .tk-ring path {
+  fill: none;
+  stroke: var(--tk-red);
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  animation: tareekh-ring 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) 0.7s backwards;
+}
+html[data-visual-theme='tareekh'] .tk-key {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  border-top: 1px solid var(--tk-rule);
+  background: var(--tk-tint);
+  padding: 0 0.5rem;
+  height: 1.375rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  font-stretch: 78%;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted-foreground);
+}
+html[data-visual-theme='tareekh'] .tk-key > span {
+  margin-left: auto;
+  color: var(--foreground);
+}
+html[data-visual-theme='tareekh'] .tk-k {
+  display: inline-block;
+  width: 0.625rem;
+  height: 0.25rem;
+  margin: 0 0.125rem 0 0.5rem;
+  background: var(--tk-red);
+}
+html[data-visual-theme='tareekh'] .tk-k:first-child {
+  margin-left: 0;
+}
+html[data-visual-theme='tareekh'] .tk-k-no {
+  height: 1px;
+  background: var(--muted-foreground);
+}
+/* Long periods: one tick per week. */
+html[data-visual-theme='tareekh'] .tk-strip {
+  display: flex;
+  gap: 1px;
+  height: 1.25rem;
+  padding: 0.25rem 0.625rem;
+}
+html[data-visual-theme='tareekh'] .tk-strip i {
+  flex: 1;
+  background: var(--tk-rule);
+}
+html[data-visual-theme='tareekh'] .tk-strip i.tk-past {
+  background: var(--muted-foreground);
+}
+html[data-visual-theme='tareekh'] .tk-strip i.tk-today {
+  background: var(--tk-red);
+}
+@keyframes tareekh-tick {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+}
+@keyframes tareekh-grow {
+  from {
+    transform: scaleX(0);
+  }
+}
+@keyframes tareekh-ring {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+@media (min-width: 1024px) {
+  html[data-visual-theme='tareekh'] .hero-fig {
+    font-size: 5.5rem;
+  }
+  html[data-visual-theme='tareekh'] .note-card-body {
+    max-width: none;
+    display: grid;
+    grid-template-columns: minmax(18rem, 24rem) minmax(0, 1fr);
+    align-content: start;
+  }
+  html[data-visual-theme='tareekh'] .note-card-body > :not(.tk) {
+    grid-column: 1;
+  }
+  html[data-visual-theme='tareekh'] .note-card-body > .tk {
+    grid-column: 2;
+    grid-row: 1 / span 12;
+    margin-top: 0;
+    border-top: 0;
+    border-left: 1px solid var(--tk-line);
+  }
+  html[data-visual-theme='tareekh'] .tk-cal {
+    grid-auto-rows: minmax(3.75rem, auto);
+  }
+  html[data-visual-theme='tareekh'] .tk-c > b {
+    font-size: 1.375rem;
+  }
+  html[data-visual-theme='tareekh'] .tk-c {
+    padding: 0.4375rem 0.5rem 0.25rem;
+  }
+  html[data-visual-theme='tareekh'] .tk-al {
+    font-size: 0.875rem;
+    font-stretch: 88%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-visual-theme='tareekh'] .tk-al,
+  html[data-visual-theme='tareekh'] .tk-nm,
+  html[data-visual-theme='tareekh'] .tk-ring path {
+    animation: none;
+  }
+}
+
+/* The one alert: a red-ruled strip with a red slab for its call. */
+html[data-visual-theme='tareekh'] main > button.bg-warning-band {
+  background: var(--tk-red-tint);
+  border: 1px solid var(--tk-red);
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0 0.5rem 0 0;
+}
+html[data-visual-theme='tareekh'] main > button.bg-warning-band .text-warning-band-foreground {
+  color: var(--foreground);
+}
+html[data-visual-theme='tareekh'] .bg-warning-band {
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* Accounts: ruled modules, black ink, owed in red. */
+html[data-visual-theme='tareekh'] .note-tile {
+  min-height: 92px;
+  padding: 0.25rem 0.75rem 0.5rem;
+  border: 0;
+  border-left: 1px solid var(--tk-rule);
+  border-radius: 0;
+  box-shadow: none;
+}
+html[data-visual-theme='tareekh'] .note-tile:first-child {
+  border-left: 0;
+}
+html[data-visual-theme='tareekh'] .note-tile:active {
+  transform: none;
+  background-color: var(--muted);
+}
+html[data-visual-theme='tareekh'] .note-tile .font-money {
+  font-size: 1.0625rem;
+  font-weight: 800;
+}
+html[data-visual-theme='tareekh'] .note-chip {
+  border-radius: 0;
+  background: transparent;
+  border: 1px solid currentColor;
+}
+
+/* Category picker: a ruled grid, the chosen cell filled red. */
+html[data-visual-theme='tareekh'] .grid.grid-cols-4:has(> button[data-selected]) {
+  gap: 0;
+  padding: 0;
+  border: 1px solid var(--tk-line);
+}
+html[data-visual-theme='tareekh'] .grid-cols-4 > button[data-selected] {
+  border: 0;
+  border-left: 1px solid var(--tk-rule);
+  border-top: 1px solid var(--tk-rule);
+  background-color: transparent;
+  box-shadow: none;
+  padding: 0.5rem 0.25rem;
+}
+html[data-visual-theme='tareekh'] .grid-cols-4 > button[data-selected]:nth-child(4n + 1) {
+  border-left: 0;
+}
+html[data-visual-theme='tareekh'] .grid-cols-4 > button[data-selected]:nth-child(-n + 4) {
+  border-top: 0;
+}
+html[data-visual-theme='tareekh'] .grid-cols-4 > button[data-selected] > span {
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-stretch: 80%;
+}
+html[data-visual-theme='tareekh'] .grid-cols-4 > button[data-selected='true'] {
+  background-color: var(--tk-red);
+  color: var(--tk-on-red);
+}
+html[data-visual-theme='tareekh'] .grid-cols-4 > button[data-selected='true'] > span,
+html[data-visual-theme='tareekh'] .grid-cols-4 > button[data-selected='true'] svg {
+  color: var(--tk-on-red);
+}
+
+/* ── Add transaction: a wide figure on a tinted slab and a ruled number pad ── */
+html[data-visual-theme='tareekh'] .bg-grad-surface.min-h-16 {
+  background: var(--tk-tint);
+  border: 1px solid var(--tk-line);
+  border-radius: 0;
+  box-shadow: none;
+}
+html[data-visual-theme='tareekh'] .bg-grad-surface.min-h-16 > .text-3xl {
+  font-size: 3.75rem;
+  line-height: 1;
+}
+html[data-visual-theme='tareekh'] .bg-grad-surface.min-h-16 + .grid {
+  gap: 0;
+  border: 1px solid var(--tk-line);
+  margin-top: -1px;
+}
+html[data-visual-theme='tareekh'] .bg-grad-surface.min-h-16 + .grid > button {
+  height: 3.25rem;
+  background: transparent;
+  border: 0;
+  border-top: 1px solid var(--tk-rule);
+  border-left: 1px solid var(--tk-rule);
+  border-radius: 0;
+  box-shadow: none;
+  font-size: 1.6875rem;
+  font-weight: 800;
+  font-stretch: 112%;
+}
+html[data-visual-theme='tareekh'] .bg-grad-surface.min-h-16 + .grid > button:nth-child(3n + 1) {
+  border-left: 0;
+}
+html[data-visual-theme='tareekh'] .bg-grad-surface.min-h-16 + .grid > button:nth-child(-n + 3) {
+  border-top: 0;
+}
+html[data-visual-theme='tareekh'] .bg-grad-surface.min-h-16 + .grid > button:active {
+  transform: none;
+  background: var(--foreground);
+  color: var(--background);
+}
+
+/* ── Overlays: square, ink-ruled, flat ── */
+html[data-visual-theme='tareekh']
+  :is(
+    [data-slot='dialog-content'],
+    [data-slot='alert-dialog-content'],
+    [data-slot='popover-content'],
+    [data-slot='select-content'],
+    [data-slot='dropdown-menu-content']
+  ) {
+  border-radius: 0;
+  border: 1px solid var(--tk-line);
+  box-shadow: 4px 4px 0 color-mix(in srgb, var(--foreground) 18%, transparent);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='tareekh'] [data-slot='dialog-header'] {
+  border-bottom: 2px solid var(--tk-line);
+  padding-bottom: 0.5rem;
+}
+
+/* ── Chrome ── */
+html[data-visual-theme='tareekh'] [data-slot='page-header'] {
+  background: var(--background);
+}
+html[data-visual-theme='tareekh'] [data-slot='page-header'] h1 {
+  font-size: 1.4375rem;
+  line-height: 1;
+}
+
+html[data-visual-theme='tareekh'] [data-slot='tab-bar'] {
+  background: var(--background);
+  border-top: 2px solid var(--tk-line);
+  box-shadow: none;
+}
+html[data-visual-theme='tareekh'] [data-slot='tab'] {
+  position: relative;
+  color: var(--foreground);
+  border-left: 1px solid var(--tk-line);
+}
+html[data-visual-theme='tareekh'] [data-slot='tab']:first-child {
+  border-left: 0;
+}
+html[data-visual-theme='tareekh'] [data-slot='tab'] span {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  font-stretch: 76%;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+html[data-visual-theme='tareekh'] [data-slot='tab'] svg {
+  stroke-width: 1.75;
+}
+html[data-visual-theme='tareekh'] [data-slot='tab'][aria-current='page'] {
+  background: var(--tk-red);
+  color: var(--tk-on-red);
+}
+html[data-visual-theme='tareekh'] [data-slot='fab'] {
+  border-radius: 0;
+  width: 3.25rem;
+  height: 3.25rem;
+  background: var(--tk-red);
+  background-image: none;
+  color: var(--tk-on-red);
+  border: 1px solid var(--tk-line);
+  box-shadow: inset 0 7px 0 var(--tk-red-d);
+  padding-top: 0.4rem;
+}
+
+html[data-visual-theme='tareekh'] [data-slot='sidebar'] {
+  background: var(--background);
+  border-right: 2px solid var(--tk-line);
+}
+html[data-visual-theme='tareekh'] [data-slot='brand-mark'] {
+  border-radius: 0;
+  border: 1px solid var(--tk-line);
+  box-shadow: inset 0 9px 0 var(--tk-red);
+  background: transparent;
+  color: var(--foreground);
+  font-weight: 800;
+  font-stretch: 120%;
+}
+html[data-visual-theme='tareekh'] [data-slot='brand-mark'] + span {
+  font-weight: 800;
+  font-stretch: 120%;
+  letter-spacing: -0.02em;
+}
+html[data-visual-theme='tareekh'] [data-slot='sidebar'] [data-slot='add-button'] {
+  background: var(--tk-red);
+  color: var(--tk-on-red);
+  border: 1px solid var(--tk-line);
+  border-radius: 0;
+  box-shadow: inset 0 5px 0 var(--tk-red-d);
+  padding-top: 0.5rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+html[data-visual-theme='tareekh'] [data-slot='sidebar'] nav {
+  gap: 0;
+  border: 1px solid var(--tk-line);
+}
+html[data-visual-theme='tareekh'] [data-slot='sidebar'] [data-slot='nav-item'] {
+  background: transparent;
+  border-radius: 0;
+  color: var(--foreground);
+  font-weight: 600;
+  font-stretch: 92%;
+}
+html[data-visual-theme='tareekh'] [data-slot='sidebar'] [data-slot='nav-item'] + [data-slot='nav-item'] {
+  border-top: 1px solid var(--tk-line);
+}
+html[data-visual-theme='tareekh'] [data-slot='sidebar'] [data-slot='nav-item'][aria-current='page'] {
+  background: var(--tk-red);
+  color: var(--tk-on-red);
+  font-weight: 800;
+}
+html[data-visual-theme='tareekh'] [data-slot='sidebar'] > p {
+  margin-top: 1rem;
+  padding: 0 0.5625rem;
+  align-self: flex-start;
+  background: var(--foreground);
+  color: var(--background);
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-stretch: 80%;
+  line-height: 1.3125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.055em;
+}
+
+/* ── Toasts ── */
+html[data-visual-theme='tareekh'] [data-sonner-toaster] {
+  --normal-bg: var(--popover);
+  --normal-border: var(--foreground);
+  --border-radius: 0;
+}
+html[data-visual-theme='tareekh'] [data-sonner-toaster] [data-sonner-toast] {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: none;
+}

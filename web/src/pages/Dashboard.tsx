@@ -45,6 +45,7 @@ import {
   MahalSunburst,
   MonthLine,
   ParchiSlip,
+  RoundThreeExtras,
   SunArc,
 } from '@/components/ui/theme-extras';
 import { noteFigureClass } from '@/components/ui/note-figure';
@@ -180,6 +181,26 @@ export default function Dashboard() {
     const span = range.end.getTime() - range.start.getTime();
     return span > 0 ? Math.min(Math.max((Date.now() - range.start.getTime()) / span, 0), 1) : 0;
   }, [overallBudget?.budget.period, monthStartDay]);
+  // What the round-three themes' hero pieces draw from (ui/extras/hero-info.ts).
+  const heroInfo = useMemo(() => {
+    if (!overallBudget) return null;
+    const range = periodRange(overallBudget.budget.period, new Date(), monthStartDay);
+    const totalDays = differenceInCalendarDays(range.end, range.start) + 1;
+    const money = (n: number) => formatCurrency(n, true, hideAmounts);
+    return {
+      elapsed: periodElapsed,
+      spentPercent: overallBudget.percent,
+      isOver: overallBudget.isOver,
+      daysLeft: daysLeftInPeriod,
+      totalDays,
+      dayOfPeriod: Math.min(Math.max(totalDays - daysLeftInPeriod + 1, 1), totalDays),
+      periodStart: range.start,
+      figure: formatCurrency(safePerDay, false, hideAmounts, { precise: false }),
+      spentText: money(overallBudget.spent),
+      limitText: money(overallBudget.limit),
+      remainingText: money(Math.abs(overallBudget.remaining)),
+    };
+  }, [overallBudget, monthStartDay, periodElapsed, daysLeftInPeriod, safePerDay, hideAmounts]);
   const periodLabel = useMemo(() => {
     const range = periodRange('monthly', new Date(), monthStartDay);
     return `${format(range.start, 'd MMM')} – ${format(range.end, 'd MMM')}`;
@@ -325,6 +346,7 @@ export default function Dashboard() {
                   spent={overallBudget.percent}
                   isOver={overallBudget.isOver}
                 />
+                {heroInfo && <RoundThreeExtras slot="scene" info={heroInfo} />}
               </>
             ) : undefined
           }
@@ -344,7 +366,8 @@ export default function Dashboard() {
                 spent={overallBudget.percent}
                 daysLeft={daysLeftInPeriod}
               />
-              <p className="mt-1.5 text-sm text-balance">
+              {heroInfo && <RoundThreeExtras slot="figure" info={heroInfo} />}
+              <p className="hero-left mt-1.5 text-sm text-balance">
                 {overallBudget.isOver
                   ? `Over budget by ${formatCurrency(Math.abs(overallBudget.remaining), false, hideAmounts)}`
                   : `${formatCurrency(overallBudget.remaining, false, hideAmounts)} left this ${BUDGET_PERIOD_NOUN[overallBudget.budget.period]}`}
@@ -386,6 +409,7 @@ export default function Dashboard() {
                     daysLeft={daysLeftInPeriod}
                     spent={overallBudget.percent}
                   />
+                  {heroInfo && <RoundThreeExtras slot="footer" info={heroInfo} />}
                 </>
               )}
             </>

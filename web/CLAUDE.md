@@ -223,7 +223,7 @@ page.
   - Fonts: Instrument Sans for everything people read or type; **Familjen Grotesk** (the banknote
     numeral) for `h1` page titles, dialog titles (`font-heading`) and headline money (`.font-money`).
     Row amounts stay Instrument Sans.
-- **Visual themes** (Mudra default + Khata, Gulal, Shunya, Bagh, Parchi, Mahal, Ganak, Akhbaar, Khel) — chosen in Settings → Profile &
+- **Visual themes** (Mudra default + Khata, Gulal, Shunya, Bagh, Parchi, Mahal, Ganak, Akhbaar, Khel, and round three: Tareekh, Safar, Naksha, Ajrakh, Kolam, Maidan, Sector, Daak, Sargam, Takhti) — chosen in Settings → Profile &
   preferences → Style. The choice lives in [`useVisualThemeStore`](src/store/useVisualThemeStore.ts)
   (`finio-visual-theme`), **not** in `Settings`: settings travel in every backup, so a field there
   would change the backup contract, and a look is a per-device preference anyway. `ThemeProvider`
@@ -247,6 +247,22 @@ page.
     [`ui/extras/<theme>.tsx`](src/components/ui/extras) (re-exported from `theme-extras.tsx`):
     `ParchiSlip`, `MahalSunburst`, `GanakDisplay` (which stands in for `.hero-fig`, kept visually
     hidden for screen readers), `AkhbaarPace`, `KhelHud`.
+  - Round three uses one uniform contract instead of one prop shape per theme: each theme has a
+    `<Theme>Extra` in `ui/extras/<theme>.tsx`, and `RoundThreeExtras` (in `theme-extras.tsx`) renders
+    all ten in the Dashboard hero's three slots — `scene` (backdrop, before the label), `figure`
+    (right after `.hero-fig`, for a piece that stands in for it) and `footer` (after the bar and its
+    caption, only once something is spent). Each gets a `HeroInfo` (`ui/extras/hero-info.ts`:
+    elapsed, spent %, days left, total days, day of period, period start and the pre-formatted money
+    strings, so hide-amounts is honoured) and returns null for the slots it doesn't use. The hero
+    also carries `.hero-left` (the "left this month" line) for themes to restyle. Pieces draw from
+    `info` only — no store reads, and no per-day spend, which the hero doesn't have.
+  - A face without a ₹ glyph (Kumbh Sans, Barlow, Azeret Mono, Sofia Sans, Darker Grotesque,
+    Hanken Grotesk, Young Serif, Courier Prime, Michroma) must be followed in its `--ff-*` stack by
+    one that has it (Instrument Sans, Public Sans, Lexend, Overpass Mono), or the rupee sign falls
+    to an arbitrary system font.
+  - `design-prototypes/themes/src/app-shot.mjs <theme> [port] [routes…]` captures the real app in
+    a theme (light and dark, four phones over desktop Home, on the sample data) into
+    `.impeccable/review/app/`; it needs the dev server running.
   - AMOLED is not Mudra-only: `html.dark.amoled[data-visual-theme]` forces a true-black field on any
     theme. Adding a theme means: a `src/themes/<name>.css`, an entry in `VISUAL_THEMES` /
     `THEME_COLORS`, the id in the `index.html` pre-paint script (a regex), its `.only-<name>` pair in

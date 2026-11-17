@@ -1,0 +1,926 @@
+/*
+ * Sargam — the audio cassette and its J-card. Cool off-white card stock with the five-stripe run
+ * (tangerine, mustard, magenta-red, plum-brown, teal) in light; a brown-black tape deck with
+ * amber-lit keys in dark. Chunky transport keys that drop when pressed, 10–12px label panels with
+ * a double-line frame. Michroma sets titles, legends and the hero figure (its glyphs are wide, so
+ * the figure steps down with length); Lexend sets everything else — and Michroma has no rupee
+ * sign, so the ₹ falls through to Lexend on its own. Signature: the tape window under the hero
+ * (ui/extras/sargam.tsx) and the 12-bar level meter that every progress bar borrows.
+ */
+html[data-visual-theme='sargam'] {
+  --ff-heading: 'Michroma', 'Lexend Variable', sans-serif;
+  --ff-money: 'Michroma', 'Lexend Variable', sans-serif;
+  --ff-sans: 'Lexend Variable', sans-serif;
+
+  --sg-s1: #f26b1d;
+  --sg-s2: #e3aa1e;
+  --sg-s3: #d0214f;
+  --sg-s4: #5c2a3d;
+  --sg-s5: #188078;
+  --sg-line: #3a2315;
+  --sg-rule: #cdc7bc;
+  --sg-well: #dcd9d1;
+  --sg-key: #fbfaf6;
+  --sg-edge: #b3aa9d;
+  --sg-hi: rgb(255 255 255 / 0.95);
+  --sg-act: #f26b1d;
+  --sg-act-d: #b04608;
+  --sg-on-act: #2a150a;
+  --sg-off: #d2cec5;
+  --sg-win: #2a1a12;
+  --sg-winl: #3a2315;
+  --sg-pack: #70493a;
+  --sg-groove: #8d6450;
+  --sg-hub: #f1ece3;
+  --sg-full: rgb(241 236 227 / 0.34);
+  --sg-sw: 5px;
+  --sg-ri: 14px;
+  --sg-run: linear-gradient(
+    180deg,
+    var(--sg-s1) 0 20%,
+    var(--sg-s2) 20% 40%,
+    var(--sg-s3) 40% 60%,
+    var(--sg-s4) 60% 80%,
+    var(--sg-s5) 80% 100%
+  );
+  --sg-run-h: linear-gradient(
+    90deg,
+    var(--sg-s1) 0 20%,
+    var(--sg-s2) 20% 40%,
+    var(--sg-s3) 40% 60%,
+    var(--sg-s4) 60% 80%,
+    var(--sg-s5) 80% 100%
+  );
+
+  --sg-run-hr: linear-gradient(
+    270deg,
+    var(--sg-s1) 0 20%,
+    var(--sg-s2) 20% 40%,
+    var(--sg-s3) 40% 60%,
+    var(--sg-s4) 60% 80%,
+    var(--sg-s5) 80% 100%
+  );
+
+  --background: #ecebe6;
+  --foreground: #3a2315;
+  --card: #f8f7f3;
+  --card-foreground: #3a2315;
+  --popover: #fbfaf6;
+  --popover-foreground: #3a2315;
+  --primary: #b04608;
+  --primary-foreground: #ffffff;
+  --secondary: #e4e1d9;
+  --secondary-foreground: #3a2315;
+  --muted: #e4e1d9;
+  --muted-foreground: #6a564a;
+  --accent: #f6d9c4;
+  --accent-foreground: #3a2315;
+  --destructive: #b51643;
+  --destructive-foreground: #ffffff;
+  --positive: #0d6e63;
+  --warning: #e3aa1e;
+  --border: #cdc7bc;
+  --input: #a89f92;
+  --ring: #f26b1d;
+  --chart-1: #f26b1d;
+  --chart-2: #188078;
+  --chart-3: #d0214f;
+  --chart-4: #e3aa1e;
+  --chart-5: #5c2a3d;
+  --radius: 0.6875rem;
+  --sidebar: #f8f7f3;
+  --sidebar-foreground: #3a2315;
+  --sidebar-primary: #b04608;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f6d9c4;
+  --sidebar-accent-foreground: #3a2315;
+  --sidebar-border: #3a2315;
+  --sidebar-ring: #f26b1d;
+
+  --warning-band: #fbe9c4;
+  --warning-band-foreground: #4a2f00;
+  --warning-band-accent: #e3aa1e;
+
+  --paper: none;
+  --engraving: transparent;
+  --glass: #f8f7f3;
+  --glass-strong: #dcd9d1;
+  --glass-border: #3a2315;
+  --glass-highlight: transparent;
+
+  --grad-primary: linear-gradient(#b04608, #b04608);
+  --grad-primary-soft: linear-gradient(#f6d9c4, #f6d9c4);
+  --grad-success: linear-gradient(#0d6e63, #0d6e63);
+  --grad-success-soft: linear-gradient(#d3ebe6, #d3ebe6);
+  --grad-danger: linear-gradient(#b51643, #b51643);
+  --grad-danger-soft: linear-gradient(#f6d5de, #f6d5de);
+  --grad-info: linear-gradient(#5c2a3d, #5c2a3d);
+  --grad-warning: linear-gradient(#8a5f00, #8a5f00);
+  --grad-surface: linear-gradient(#f8f7f3, #f8f7f3);
+  --coin: linear-gradient(#f26b1d, #f26b1d);
+  --coin-ink: #2a150a;
+  --register: #188078;
+  --thread: linear-gradient(#188078, #188078);
+
+  --shadow-tint: 58 35 21;
+  --scrim: rgb(42 21 10 / 0.45);
+  --shadow-card: none;
+  --shadow-float: none;
+  --shadow-primary: none;
+  --shadow-danger: none;
+  --shadow-success: none;
+
+  /* Account tiles: the cassette's label colours as flat fills. */
+  --note-100: linear-gradient(#f9dcc8, #f9dcc8);
+  --note-100-ink: #5a2208;
+  --note-500: linear-gradient(#e6e2d8, #e6e2d8);
+  --note-500-ink: #3a2315;
+  --note-2000: linear-gradient(#f3c6d2, #f3c6d2);
+  --note-2000-ink: #7d0e2d;
+  --note-200: linear-gradient(#f6e2a8, #f6e2a8);
+  --note-200-ink: #4a3300;
+  --note-10: linear-gradient(#c9e6e1, #c9e6e1);
+  --note-10-ink: #0a463f;
+  --note-50: linear-gradient(#e6d3da, #e6d3da);
+  --note-50-ink: #4a2132;
+  --note-20: linear-gradient(#d8ece6, #d8ece6);
+  --note-20-ink: #0a463f;
+}
+
+html.dark[data-visual-theme='sargam'] {
+  --sg-s1: #ff8a3a;
+  --sg-s2: #f5c443;
+  --sg-s3: #f24a74;
+  --sg-s4: #93506c;
+  --sg-s5: #31b7a8;
+  --sg-line: #5e493c;
+  --sg-rule: #3f3027;
+  --sg-well: #110c09;
+  --sg-key: #35271f;
+  --sg-edge: #090605;
+  --sg-hi: rgb(255 232 200 / 0.12);
+  --sg-act: #ff8a3a;
+  --sg-act-d: #9c450b;
+  --sg-on-act: #24130a;
+  --sg-off: #3e2f26;
+  --sg-win: #0c0806;
+  --sg-winl: #5e493c;
+  --sg-pack: #7d5643;
+  --sg-groove: #9c7059;
+  --sg-hub: #f4eadc;
+  --sg-full: rgb(255 184 77 / 0.5);
+
+  --background: #1a1310;
+  --foreground: #f4eadc;
+  --card: #241a15;
+  --card-foreground: #f4eadc;
+  --popover: #2b1f19;
+  --popover-foreground: #f4eadc;
+  --primary: #ff8a3a;
+  --primary-foreground: #24130a;
+  --secondary: #2f231c;
+  --secondary-foreground: #f4eadc;
+  --muted: #2f231c;
+  --muted-foreground: #bba898;
+  --accent: #3a281d;
+  --accent-foreground: #f4eadc;
+  --destructive: #ff7896;
+  --destructive-foreground: #24130a;
+  --positive: #56d3c0;
+  --warning: #f5c443;
+  --border: #3f3027;
+  --input: #6e5848;
+  --ring: #ffb84d;
+  --chart-1: #ff8a3a;
+  --chart-2: #31b7a8;
+  --chart-3: #f24a74;
+  --chart-4: #f5c443;
+  --chart-5: #c488a3;
+  --sidebar: #241a15;
+  --sidebar-foreground: #f4eadc;
+  --sidebar-primary: #ff8a3a;
+  --sidebar-primary-foreground: #24130a;
+  --sidebar-accent: #3a281d;
+  --sidebar-accent-foreground: #f4eadc;
+  --sidebar-border: #5e493c;
+  --sidebar-ring: #ffb84d;
+
+  --warning-band: #3a2a10;
+  --warning-band-foreground: #ffe9b8;
+  --warning-band-accent: #f5c443;
+
+  --glass: #241a15;
+  --glass-strong: #110c09;
+  --glass-border: #5e493c;
+
+  --grad-primary: linear-gradient(#9c450b, #9c450b);
+  --grad-primary-soft: linear-gradient(#3a281d, #3a281d);
+  --grad-success: linear-gradient(#0d6e63, #0d6e63);
+  --grad-success-soft: linear-gradient(#143832, #143832);
+  --grad-danger: linear-gradient(#a8153f, #a8153f);
+  --grad-danger-soft: linear-gradient(#41202a, #41202a);
+  --grad-info: linear-gradient(#7a3a58, #7a3a58);
+  --grad-warning: linear-gradient(#8a5f00, #8a5f00);
+  --grad-surface: linear-gradient(#241a15, #241a15);
+  --coin: linear-gradient(#ff8a3a, #ff8a3a);
+  --coin-ink: #24130a;
+  --register: #31b7a8;
+  --thread: linear-gradient(#31b7a8, #31b7a8);
+
+  --shadow-tint: 0 0 0;
+  --scrim: rgb(0 0 0 / 0.65);
+
+  --note-100: linear-gradient(#4a2c1a, #4a2c1a);
+  --note-100-ink: #ffc9a3;
+  --note-500: linear-gradient(#35291f, #35291f);
+  --note-500-ink: #eadfce;
+  --note-2000: linear-gradient(#4a2230, #4a2230);
+  --note-2000-ink: #ffb0c4;
+  --note-200: linear-gradient(#463818, #463818);
+  --note-200-ink: #f8dd8a;
+  --note-10: linear-gradient(#173b36, #173b36);
+  --note-10-ink: #9fe6da;
+  --note-50: linear-gradient(#3a2430, #3a2430);
+  --note-50-ink: #e8c3d4;
+  --note-20: linear-gradient(#183a33, #183a33);
+  --note-20-ink: #a9ebdd;
+}
+
+html.dark.amoled[data-visual-theme='sargam'] {
+  --card: #0d0907;
+  --glass: #0d0907;
+  --glass-strong: #000;
+  --sidebar: #0d0907;
+  --sg-well: #000;
+}
+
+/* ── Browser surfaces ── */
+html[data-visual-theme='sargam'] {
+  caret-color: var(--sg-act);
+  accent-color: var(--sg-act);
+  scrollbar-color: color-mix(in srgb, var(--foreground) 40%, transparent) transparent;
+}
+html[data-visual-theme='sargam'] body {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+html[data-visual-theme='sargam'] ::selection {
+  background: var(--sg-act);
+  color: var(--sg-on-act);
+}
+html[data-visual-theme='sargam'] :focus-visible {
+  outline: 2px solid var(--sg-act);
+  outline-offset: 2px;
+}
+
+/* ── Type: Michroma lettering, kept small — it is a wide face ── */
+html[data-visual-theme='sargam'] h1,
+html[data-visual-theme='sargam'] [data-slot='dialog-title'],
+html[data-visual-theme='sargam'] [data-slot='alert-dialog-title'] {
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.15;
+}
+html[data-visual-theme='sargam'] h1 {
+  font-size: 1.125rem;
+}
+html[data-visual-theme='sargam'] [data-slot='dialog-title'],
+html[data-visual-theme='sargam'] [data-slot='alert-dialog-title'] {
+  font-size: 1rem;
+}
+html[data-visual-theme='sargam'] .font-money {
+  font-weight: 400;
+  letter-spacing: 0;
+}
+html[data-visual-theme='sargam'] main h2.text-base,
+html[data-visual-theme='sargam'] main h2.text-lg {
+  font-family: var(--ff-heading);
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+/* Section legends run a double rule out to the margin, like a J-card track divider. */
+html[data-visual-theme='sargam'] main div.flex:has(> h2.text-base)::before {
+  content: none;
+}
+html[data-visual-theme='sargam'] main div.flex:has(> h2.text-base) {
+  align-items: center;
+  gap: 0.625rem;
+}
+html[data-visual-theme='sargam'] main div.flex:has(> h2.text-base) > h2.text-base {
+  order: 0;
+}
+html[data-visual-theme='sargam'] main div.flex:has(> h2.text-base) > h2.text-base::after {
+  content: '';
+  display: inline-block;
+  vertical-align: middle;
+  width: 3rem;
+  height: 5px;
+  margin-left: 0.625rem;
+  border-top: 1px solid var(--sg-line);
+  border-bottom: 1px solid var(--sg-line);
+}
+html[data-visual-theme='sargam'] main div:has(> h2.text-base) > button.text-primary {
+  color: var(--foreground);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: var(--sg-act);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+html[data-visual-theme='sargam'] main section > h2.text-xs {
+  font-family: var(--ff-heading);
+  font-size: 0.65625rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid var(--sg-line);
+  padding-bottom: 0.3rem;
+}
+html[data-visual-theme='sargam'] [data-slot='label'] {
+  font-family: var(--ff-heading);
+  font-size: 0.65625rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--muted-foreground);
+}
+
+/* ── Panels: a label frame with a thin inner line ── */
+html[data-visual-theme='sargam'] .rounded-full:not(.shrink-0):not([data-slot='fab']) {
+  border-radius: 0.5rem;
+}
+html[data-visual-theme='sargam'] .card-elevated {
+  background-color: var(--card);
+  border: 1px solid var(--sg-line);
+  border-radius: 0.6875rem;
+  box-shadow:
+    inset 0 0 0 3px var(--card),
+    inset 0 0 0 4px var(--sg-rule);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='sargam'] .glass-chrome {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='sargam'] .shadow-glow-primary,
+html[data-visual-theme='sargam'] .shadow-glow-success,
+html[data-visual-theme='sargam'] .shadow-glow-danger,
+html[data-visual-theme='sargam'] .shadow-sm,
+html[data-visual-theme='sargam'] .shadow-md,
+html[data-visual-theme='sargam'] .shadow-lg {
+  box-shadow: none;
+}
+
+/* ── Transport keys: a 4px bottom edge, one top highlight, dropping when pressed ── */
+html[data-visual-theme='sargam'] :is(button, a).bg-grad-primary,
+html[data-visual-theme='sargam'] [data-slot='button'].bg-grad-primary {
+  border: 1px solid var(--sg-act-d);
+  border-bottom-width: 4px;
+  border-radius: 0.5625rem;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.3);
+  font-family: var(--ff-heading);
+  font-weight: 400;
+  font-size: 0.78rem;
+  letter-spacing: 0.03em;
+  background-image: var(--grad-primary);
+}
+html[data-visual-theme='sargam'] :is(button, a).bg-grad-primary:active,
+html[data-visual-theme='sargam'] [data-slot='button'].bg-grad-primary:active {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}
+html[data-visual-theme='sargam'] [data-slot='button'][class*='glass-border'] {
+  background: var(--sg-key);
+  border: 1px solid var(--sg-edge);
+  border-bottom-width: 3px;
+  border-radius: 0.5625rem;
+  box-shadow: inset 0 1px 0 var(--sg-hi);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='sargam'] [data-slot='button'][class*='glass-border']:active {
+  transform: translateY(2px);
+  border-bottom-width: 1px;
+}
+html[data-visual-theme='sargam'] .bg-coin {
+  color: var(--coin-ink);
+  box-shadow: none;
+}
+
+/* Inputs: a recessed well. */
+html[data-visual-theme='sargam']
+  :is([data-slot='input'], [data-slot='textarea'], [data-slot='select-trigger']) {
+  background: var(--sg-well);
+  border: 1px solid var(--sg-line);
+  border-radius: 0.5625rem;
+  box-shadow: inset 0 2px 0 rgb(0 0 0 / 0.08);
+}
+html[data-visual-theme='sargam']
+  :is([data-slot='input'], [data-slot='textarea'], [data-slot='select-trigger']):focus-visible {
+  border-color: var(--sg-act);
+  outline-offset: 1px;
+}
+
+/* Segmented controls: a recessed strip of piano keys; the chosen one is pressed and lit. */
+html[data-visual-theme='sargam'] .bg-muted.p-1:has(> button[aria-pressed]) {
+  gap: 4px;
+  padding: 5px 5px 6px;
+  background: var(--sg-well);
+  border: 1px solid var(--sg-line);
+  border-radius: 0.6875rem;
+}
+html[data-visual-theme='sargam'] .bg-muted.p-1:has(> button[aria-pressed]) > button {
+  background: var(--sg-key);
+  color: var(--foreground);
+  border: 1px solid var(--sg-edge);
+  border-bottom-width: 4px;
+  border-radius: 0.4375rem;
+  box-shadow: inset 0 1px 0 var(--sg-hi);
+  font-family: var(--ff-heading);
+  font-size: 0.65625rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+html[data-visual-theme='sargam']
+  .bg-muted.p-1:has(> button[aria-pressed])
+  > button[aria-pressed='true'] {
+  background: var(--sg-act);
+  border-color: var(--sg-act-d);
+  border-bottom-width: 2px;
+  color: var(--sg-on-act);
+  transform: translateY(2px);
+  box-shadow: none;
+}
+html[data-visual-theme='sargam'] button[aria-pressed].rounded-full.text-xs {
+  border-radius: 0.4375rem;
+  border-bottom-width: 3px;
+  font-weight: 500;
+}
+
+/* ── Progress: the 12-bar level meter. The gaps are cut through track and fill alike. ── */
+html[data-visual-theme='sargam'] [role='progressbar'],
+html[data-visual-theme='sargam'] .bg-muted.overflow-hidden:has(> .thread-fill) {
+  height: 0.875rem;
+  border-radius: 0;
+  background: var(--sg-off);
+  -webkit-mask: repeating-linear-gradient(
+    90deg,
+    #000 0 calc(8.3333% - 3px),
+    transparent calc(8.3333% - 3px) 8.3333%
+  );
+  mask: repeating-linear-gradient(
+    90deg,
+    #000 0 calc(8.3333% - 3px),
+    transparent calc(8.3333% - 3px) 8.3333%
+  );
+}
+html[data-visual-theme='sargam'] [role='progressbar'] > div,
+html[data-visual-theme='sargam'] .thread-fill {
+  border-radius: 0;
+  -webkit-mask: none;
+  mask: none;
+}
+
+/* ── Hero: the J-card label with the stripe run turning its corner ── */
+html[data-visual-theme='sargam'] .note-card {
+  --sg-band: calc(var(--sg-sw) * 5);
+  background-color: var(--card);
+  background-image:
+    var(--sg-run-h), var(--sg-run-hr),
+    radial-gradient(
+      circle at 0 100%,
+      transparent 0 var(--sg-ri),
+      var(--sg-s5) var(--sg-ri) calc(var(--sg-ri) + var(--sg-sw)),
+      var(--sg-s4) calc(var(--sg-ri) + var(--sg-sw)) calc(var(--sg-ri) + var(--sg-sw) * 2),
+      var(--sg-s3) calc(var(--sg-ri) + var(--sg-sw) * 2) calc(var(--sg-ri) + var(--sg-sw) * 3),
+      var(--sg-s2) calc(var(--sg-ri) + var(--sg-sw) * 3) calc(var(--sg-ri) + var(--sg-sw) * 4),
+      var(--sg-s1) calc(var(--sg-ri) + var(--sg-sw) * 4) calc(var(--sg-ri) + var(--sg-sw) * 5),
+      var(--card) calc(var(--sg-ri) + var(--sg-sw) * 5)
+    );
+  background-repeat: no-repeat;
+  background-position:
+    0 0,
+    100% 100%,
+    100% 0;
+  background-size:
+    calc(100% - var(--sg-band) - var(--sg-ri)) var(--sg-band),
+    var(--sg-band) calc(100% - var(--sg-band) - var(--sg-ri)),
+    calc(var(--sg-band) + var(--sg-ri)) calc(var(--sg-band) + var(--sg-ri));
+  border: 1.5px solid var(--sg-line);
+  border-radius: 0.75rem;
+  box-shadow: none;
+  padding: calc(var(--sg-band) + 12px) calc(var(--sg-band) + 14px) 14px 18px;
+}
+html[data-visual-theme='sargam'] .note-card::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border: 1px solid var(--sg-rule);
+  border-radius: 0.5rem;
+  pointer-events: none;
+}
+html[data-visual-theme='sargam'] .note-card-body {
+  position: relative;
+  padding-right: 0;
+}
+html[data-visual-theme='sargam'] .note-card-body > p:first-child {
+  font-family: var(--ff-heading);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--foreground);
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--sg-line);
+}
+html[data-visual-theme='sargam'] .hero-fig {
+  --sg-fig: clamp(1.6rem, 10.5vw, 2.5rem);
+  font-size: var(--sg-fig);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  margin-top: 0.75rem;
+  white-space: nowrap;
+}
+html[data-visual-theme='sargam'] .hero-fig[class*='text-[2.25rem]'] {
+  font-size: calc(var(--sg-fig) * 0.82);
+}
+html[data-visual-theme='sargam'] .hero-fig[class*='text-[1.75rem]'] {
+  font-size: calc(var(--sg-fig) * 0.62);
+}
+html[data-visual-theme='sargam'] .hero-left {
+  font-weight: 500;
+  font-size: 0.8125rem;
+  letter-spacing: -0.01em;
+}
+/* The real progress bar stays for assistive tech; the level meter below stands in for it. */
+html[data-visual-theme='sargam'] .hero-bar {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+html[data-visual-theme='sargam'] .hero-budget {
+  font-size: 0.8125rem;
+  margin-top: 0.75rem;
+}
+
+/* ── The cassette deck readout: level meter + tape window ── */
+html[data-visual-theme='sargam'] .sg-deck {
+  margin-top: 0.5rem;
+  max-width: 30rem;
+}
+html[data-visual-theme='sargam'] .sg-mrow {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+html[data-visual-theme='sargam'] .sg-mrow b {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+html[data-visual-theme='sargam'] .sg-meter {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 3px;
+  height: 1rem;
+}
+html[data-visual-theme='sargam'] .sg-meter i {
+  border-radius: 2.5px;
+  background: var(--sg-off);
+}
+html[data-visual-theme='sargam'] .sg-meter i.on.t {
+  background: var(--sg-s5);
+}
+html[data-visual-theme='sargam'] .sg-meter i.on.m {
+  background: var(--sg-s2);
+}
+html[data-visual-theme='sargam'] .sg-meter i.on.r {
+  background: var(--sg-s3);
+}
+html[data-visual-theme='sargam'] .sg-tape {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-top: 0.625rem;
+}
+html[data-visual-theme='sargam'] .sg-win {
+  fill: var(--sg-win);
+  stroke: var(--sg-winl);
+  stroke-width: 1.5;
+}
+html[data-visual-theme='sargam'] .sg-path {
+  fill: none;
+  stroke: var(--sg-groove);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+html[data-visual-theme='sargam'] .sg-roll,
+html[data-visual-theme='sargam'] .sg-hb {
+  fill: var(--sg-hub);
+}
+html[data-visual-theme='sargam'] .sg-hh {
+  fill: var(--sg-win);
+}
+html[data-visual-theme='sargam'] .sg-full {
+  fill: none;
+  stroke: var(--sg-full);
+  stroke-width: 1;
+  stroke-dasharray: 1.5 3.5;
+}
+html[data-visual-theme='sargam'] .sg-pack {
+  fill: var(--sg-pack);
+}
+html[data-visual-theme='sargam'] .sg-groove {
+  fill: none;
+  stroke: var(--sg-groove);
+  stroke-width: 0.75;
+  opacity: 0.7;
+}
+html[data-visual-theme='sargam'] .sg-hub {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: sargam-reel 1.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes sargam-reel {
+  from {
+    transform: rotate(-120deg);
+  }
+  to {
+    transform: rotate(0);
+  }
+}
+@keyframes sargam-idle {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  html[data-visual-theme='sargam'] .sg-hub {
+    animation:
+      sargam-reel 1.4s cubic-bezier(0.16, 1, 0.3, 1) both,
+      sargam-idle 60s linear 1.4s infinite;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-visual-theme='sargam'] .sg-hub {
+    animation: none;
+  }
+}
+html[data-visual-theme='sargam'] .sg-cap {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-top: 0.3rem;
+  font-size: 0.8125rem;
+  color: var(--muted-foreground);
+}
+html[data-visual-theme='sargam'] .sg-cap b {
+  font-weight: 600;
+  color: var(--foreground);
+}
+html[data-visual-theme='sargam'] .sg-cap span:last-child {
+  text-align: right;
+}
+
+/* ── Account tiles: label tiles with a thin rule ── */
+html[data-visual-theme='sargam'] .note-tile {
+  min-height: 92px;
+  padding: 10px 10px 10px 12px;
+  border: 1px solid var(--sg-line);
+  border-radius: 0.5rem;
+  box-shadow: none;
+}
+html[data-visual-theme='sargam'] .note-tile:active {
+  transform: translateY(2px);
+}
+html[data-visual-theme='sargam'] .note-tile .font-money {
+  font-family: var(--ff-sans);
+  font-weight: 600;
+}
+html[data-visual-theme='sargam'] .note-chip {
+  border-radius: 0.3125rem;
+  border: 1px solid currentColor;
+}
+
+/* Category picker: label chips; the chosen one carries a stripe-run underline. */
+html[data-visual-theme='sargam'] .grid-cols-4 > button[data-selected] {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  box-shadow: none;
+}
+html[data-visual-theme='sargam'] .grid-cols-4 > button[data-selected='true'] {
+  border-color: var(--sg-line);
+}
+html[data-visual-theme='sargam'] .grid-cols-4 > button[data-selected='true']::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 8px;
+  background: var(--sg-run-h);
+}
+
+/* Warning strip */
+html[data-visual-theme='sargam'] .bg-warning-band {
+  border: 1px solid var(--sg-line);
+  border-radius: 0.625rem;
+  box-shadow: none;
+}
+
+/* ── Add transaction: a recessed readout and a keypad of chunky keys ── */
+html[data-visual-theme='sargam'] .bg-grad-surface.min-h-16 {
+  background: var(--sg-well);
+  border: 1px solid var(--sg-line);
+  border-radius: 0.6875rem;
+  box-shadow: inset 0 3px 0 rgb(0 0 0 / 0.08);
+}
+html[data-visual-theme='sargam'] .bg-grad-surface.min-h-16 > .text-3xl {
+  font-size: 2.125rem;
+}
+html[data-visual-theme='sargam'] .bg-grad-surface.min-h-16 > .text-2xl {
+  font-size: 1.625rem;
+}
+html[data-visual-theme='sargam'] .bg-grad-surface.min-h-16 + .grid > button {
+  background: var(--sg-key);
+  color: var(--foreground);
+  border: 1px solid var(--sg-edge);
+  border-bottom-width: 5px;
+  border-radius: 0.5625rem;
+  box-shadow: inset 0 1px 0 var(--sg-hi);
+  font-family: var(--ff-heading);
+  font-size: 1.125rem;
+  font-weight: 400;
+}
+html[data-visual-theme='sargam'] .bg-grad-surface.min-h-16 + .grid > button:active {
+  transform: translateY(2px);
+  border-bottom-width: 3px;
+  background: var(--sg-act);
+  color: var(--sg-on-act);
+}
+
+/* ── Overlays ── */
+html[data-visual-theme='sargam']
+  :is(
+    [data-slot='dialog-content'],
+    [data-slot='alert-dialog-content'],
+    [data-slot='popover-content'],
+    [data-slot='select-content'],
+    [data-slot='dropdown-menu-content']
+  ) {
+  background-color: var(--popover);
+  border: 1.5px solid var(--sg-line);
+  border-radius: 0.75rem;
+  box-shadow:
+    inset 0 0 0 3px var(--popover),
+    inset 0 0 0 4px var(--sg-rule),
+    0 4px 0 color-mix(in srgb, var(--foreground) 22%, transparent);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='sargam'] [data-slot='dialog-header'] {
+  border-bottom: 1px solid var(--sg-line);
+  padding-bottom: 0.5rem;
+}
+
+/* ── Chrome ── */
+html[data-visual-theme='sargam'] [data-slot='page-header'] {
+  background: var(--background);
+  border-bottom: 0;
+}
+html[data-visual-theme='sargam'] [data-slot='page-header']::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 8px;
+  background: var(--sg-run-h);
+  border-radius: 2px;
+}
+html[data-visual-theme='sargam'] [data-slot='page-header'].glass-chrome {
+  background: var(--background);
+}
+html[data-visual-theme='sargam'] [data-slot='tab-bar'] {
+  background: var(--sg-well);
+  border-top: 1.5px solid var(--sg-line);
+  box-shadow: inset 0 4px 0 rgb(0 0 0 / 0.07);
+  gap: 5px;
+  padding: 8px 8px 10px;
+}
+html[data-visual-theme='sargam'] [data-slot='tab'] {
+  background: var(--sg-key);
+  color: var(--muted-foreground);
+  border: 1px solid var(--sg-edge);
+  border-bottom-width: 4px;
+  border-radius: 0.5rem;
+  box-shadow: inset 0 1px 0 var(--sg-hi);
+  padding: 6px 2px 4px;
+  gap: 3px;
+}
+html[data-visual-theme='sargam'] [data-slot='tab'] span:not([data-slot='tab-indicator']) {
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+html[data-visual-theme='sargam'] [data-slot='tab'] svg {
+  stroke-width: 1.75;
+}
+html[data-visual-theme='sargam'] [data-slot='tab'][aria-current='page'] {
+  background: var(--sg-act);
+  border-color: var(--sg-act-d);
+  border-bottom-width: 2px;
+  color: var(--sg-on-act);
+  transform: translateY(2px);
+  box-shadow: none;
+}
+html[data-visual-theme='sargam'] [data-slot='fab'] {
+  border: 1.5px solid var(--sg-act-d);
+  box-shadow: 0 3px 0 var(--sg-act-d);
+}
+html[data-visual-theme='sargam'] [data-slot='fab']::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border-radius: 9999px;
+  border: 1.5px solid var(--coin-ink);
+  opacity: 0.5;
+  pointer-events: none;
+}
+html[data-visual-theme='sargam'] [data-slot='fab']:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--sg-act-d);
+}
+
+/* Desktop sidebar: the J-card spine — the stripe run stands down its left edge. */
+html[data-visual-theme='sargam'] [data-slot='sidebar'] {
+  background: var(--card);
+  border-right: 1.5px solid var(--sg-line);
+  padding-left: calc(50px + 0.75rem);
+  overflow-x: hidden;
+}
+html[data-visual-theme='sargam'] [data-slot='sidebar']::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 50px;
+  background: var(--sg-run-h);
+}
+html[data-visual-theme='sargam'] [data-slot='brand-mark'] {
+  border-radius: 0.5625rem;
+  font-size: 0.875rem;
+  box-shadow: none;
+}
+html[data-visual-theme='sargam'] [data-slot='sidebar'] .font-heading {
+  font-weight: 400;
+  font-size: 1.125rem;
+}
+html[data-visual-theme='sargam'] [data-slot='add-button'] {
+  border-radius: 0.5625rem;
+}
+html[data-visual-theme='sargam'] [data-slot='nav-item'] {
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  padding-block: 0.5rem;
+}
+html[data-visual-theme='sargam'] [data-slot='nav-item'][aria-current='page'] {
+  background: var(--sg-act);
+  border-color: var(--sg-act-d);
+  color: var(--sg-on-act);
+  font-weight: 600;
+}
+
+/* ── Toasts ── */
+html[data-visual-theme='sargam'] [data-sonner-toaster] {
+  --normal-bg: var(--popover);
+  --normal-border: var(--sg-line);
+  --border-radius: 0.6875rem;
+}
+html[data-visual-theme='sargam'] [data-sonner-toaster] [data-sonner-toast] {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: 0 3px 0 color-mix(in srgb, var(--foreground) 22%, transparent);
+}
+
+/* Desktop: a roomier hero and a wider figure. */
+@media (min-width: 1024px) {
+  html[data-visual-theme='sargam'] .note-card {
+    --sg-sw: 7px;
+    --sg-ri: 18px;
+  }
+  html[data-visual-theme='sargam'] .hero-fig {
+    --sg-fig: 3.25rem;
+  }
+}

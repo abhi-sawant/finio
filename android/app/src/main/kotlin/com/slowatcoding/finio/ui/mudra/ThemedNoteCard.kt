@@ -127,6 +127,17 @@ internal fun ThemedNoteCard(
             ),
             LocalContentColor provides Ink,
         ) { inner() }
+    } else if (visual == VisualTheme.Sector) {
+        // Sector's hero is a flat yellow enamel block whatever the page mode, so its text is ink on
+        // yellow (the same values the web re-points inside `.note-card`).
+        val ink = Color(0xFF141413)
+        CompositionLocalProvider(
+            LocalFinioColors provides colors.copy(
+                foreground = ink, mutedForeground = Color(0xFF3B2F00), primary = Color(0xFF12358A),
+                destructive = Color(0xFF8F0F0B),
+            ),
+            LocalContentColor provides ink,
+        ) { inner() }
     } else {
         CompositionLocalProvider(LocalContentColor provides colors.foreground) { inner() }
     }

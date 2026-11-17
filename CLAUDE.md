@@ -29,8 +29,8 @@ Shared docs stay at the root: [README.md](README.md) (user/self-hoster facing),
   outputs. A web vitest fails if the committed fixtures are stale, so a logic change forces a
   regeneration — which then fails the Android tests until the port catches up.
 - **Visual themes exist on both clients** (Mudra default, Khata, Gulal, Shunya, Bagh, Parchi, Mahal,
-  Ganak, Akhbaar, Khel; see
-  [web/CLAUDE.md](web/CLAUDE.md) and [android/CLAUDE.md](android/CLAUDE.md)). The choice is a
+  Ganak, Akhbaar, Khel, Tareekh, Safar, Naksha, Ajrakh, Kolam, Maidan, Sector, Daak, Sargam, Takhti;
+  see [web/CLAUDE.md](web/CLAUDE.md) and [android/CLAUDE.md](android/CLAUDE.md)). The choice is a
   per-device preference outside `Settings`, so it is not in the backup contract. A change to a
   theme's palette, type, shape or signature piece goes into both clients.
 - **Every gotcha below applies to both clients** unless it says otherwise. Paths point at the web

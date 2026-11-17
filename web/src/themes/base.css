@@ -1,6 +1,7 @@
 /*
  * Shared plumbing for the alternative visual themes (khata, gulal, shunya, bagh, and round two:
- * parchi, mahal, ganak, akhbaar, khel).
+ * parchi, mahal, ganak, akhbaar, khel, and round three: tareekh, safar, naksha, ajrakh, kolam,
+ * maidan, sector, daak, sargam, takhti).
  *
  * Mudra is the default and lives in src/index.css with no attribute. A theme is active when
  * <html data-visual-theme="…"> is set (ThemeProvider; index.html does it before first paint).
@@ -21,7 +22,17 @@
 .only-mahal,
 .only-ganak,
 .only-akhbaar,
-.only-khel {
+.only-khel,
+.only-tareekh,
+.only-safar,
+.only-naksha,
+.only-ajrakh,
+.only-kolam,
+.only-maidan,
+.only-sector,
+.only-daak,
+.only-sargam,
+.only-takhti {
   display: none;
 }
 html[data-visual-theme='khata'] .only-khata,
@@ -32,7 +43,17 @@ html[data-visual-theme='parchi'] .only-parchi,
 html[data-visual-theme='mahal'] .only-mahal,
 html[data-visual-theme='ganak'] .only-ganak,
 html[data-visual-theme='akhbaar'] .only-akhbaar,
-html[data-visual-theme='khel'] .only-khel {
+html[data-visual-theme='khel'] .only-khel,
+html[data-visual-theme='tareekh'] .only-tareekh,
+html[data-visual-theme='safar'] .only-safar,
+html[data-visual-theme='naksha'] .only-naksha,
+html[data-visual-theme='ajrakh'] .only-ajrakh,
+html[data-visual-theme='kolam'] .only-kolam,
+html[data-visual-theme='maidan'] .only-maidan,
+html[data-visual-theme='sector'] .only-sector,
+html[data-visual-theme='daak'] .only-daak,
+html[data-visual-theme='sargam'] .only-sargam,
+html[data-visual-theme='takhti'] .only-takhti {
   display: block;
 }
 

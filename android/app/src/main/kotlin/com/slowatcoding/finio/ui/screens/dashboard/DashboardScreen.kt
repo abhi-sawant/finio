@@ -293,6 +293,10 @@ private fun jsRound(x: Double): Long = kotlin.math.floor(x + 0.5).toLong()
 @Composable
 private fun Hero(data: DashboardData, money: MoneyFormatter, hasAccounts: Boolean, nav: FinioNavigator, onHow: () -> Unit) {
     val heroOverall = data.overallBudget
+    androidx.compose.runtime.CompositionLocalProvider(
+        com.slowatcoding.finio.ui.theme.kits.LocalHeroPeriod provides
+            com.slowatcoding.finio.ui.theme.kits.HeroPeriod(data.periodTotalDays, data.periodDay),
+    ) {
     NoteCard(
         Modifier.fillMaxWidth(),
         badge = if (heroOverall != null && heroOverall.spent > 0) {
@@ -387,6 +391,7 @@ private fun Hero(data: DashboardData, money: MoneyFormatter, hasAccounts: Boolea
                 Text(if (hasAccounts) "Set a monthly budget" else "Add your first account")
             }
         }
+    }
     }
 }
 

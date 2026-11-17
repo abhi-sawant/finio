@@ -3,6 +3,23 @@
 Finio follows [Semantic Versioning](https://semver.org). The repo-root `VERSION` file is the single
 source of truth for both clients; see "Releasing" in [CLAUDE.md](CLAUDE.md).
 
+## 3.3.0 — 2026-11-17
+
+### Added
+
+- **Ten more visual themes, twenty in all.** **Tareekh** is the household wall calendar (ruled
+  modules, calendar red and postal blue, the month drawn as a real grid with today ringed);
+  **Safar** the railway departures board (split-flap figures, a yellow platform sign by day);
+  **Naksha** a blueprint drawing sheet (budgets drawn to scale with dimension lines);
+  **Ajrakh** block-printed cloth (madder red or indigo vat, progress as a row of stamped blocks);
+  **Kolam** the threshold line drawing (the month as a kolam looped around the days gone);
+  **Maidan** the cricket ground (number plates and a par chart); **Sector** Chandigarh
+  modernism (flush enamel blocks, the month as a row of fins); **Daak** India Post stationery
+  (perforated stamps and a date postmark); **Sargam** the cassette and its J-card (a tape window
+  and level-meter budgets); **Takhti** the writing board (your sum worked out in chalk). Each has
+  hand-tuned light and dark palettes and works with AMOLED. The theme is still a per-device
+  preference, so the backup format has not changed. (web + Android)
+
 ## 3.2.1 — 2026-11-16
 
 ### Fixed

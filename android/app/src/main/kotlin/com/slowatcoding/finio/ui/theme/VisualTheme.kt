@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.Color
 
 /**
  * Which visual world the app is printed in. Mudra is the original and the default; the others
- * mirror the web theme stylesheets (Khata, Gulal, Shunya, Bagh). The id is the string stored on disk and
+ * mirror the web theme stylesheets (web/src/themes/<id>.css). The id is the string stored on disk and
  * is the same one the web keeps under `finio-visual-theme`.
  *
  * A look is a per-device preference, so it lives in its own store (see `VisualThemeStore`), not in
@@ -69,6 +69,58 @@ enum class VisualTheme(
         "khel", "Khel", "An 8-bit handheld. Pixel type, health-bar budgets and a coin to add.",
         listOf(Color(0xFFE0EFBE), Color(0xFF0F380F), Color(0xFF9BBC0F), Color(0xFFA01641)),
         listOf(Color(0xFF0D0B1E), Color(0xFFF6EDD3), Color(0xFFFFCF3F), Color(0xFFFF5C72)),
+    ),
+
+    // Round three — each is one ThemeKit in ui/theme/kits/.
+    Tareekh(
+        "tareekh", "Tareekh", "The household wall calendar. White coated paper, black ink, calendar red and postal blue; the month drawn as a real grid with today ringed and every day ahead carrying its allowance.",
+        listOf(Color(0xFFFCFDFE), Color(0xFF0C0E12), Color(0xFFD51F2A), Color(0xFF1746B3)),
+        listOf(Color(0xFF0A0F1F), Color(0xFFEDEFE8), Color(0xFFFF4A4D), Color(0xFF86ACFF)),
+    ),
+    Safar(
+        "safar", "Safar", "The departures board. Split-flap figures on matte black, signal amber, green and red, coach-blue shell — and a chrome-yellow platform board with heavy black lettering in daylight.",
+        listOf(Color(0xFFD9D8D1), Color(0xFF111213), Color(0xFFF6C400), Color(0xFF1C4A8A)),
+        listOf(Color(0xFF0C0E11), Color(0xFFF2ECDC), Color(0xFFFFB224), Color(0xFF5BD08A)),
+    ),
+    Naksha(
+        "naksha", "Naksha", "The architect’s plan. Prussian-blue cyanotype or tracing paper, 1px linework with crop marks, hatched selections, red-pencil revisions, and every budget dimensioned to scale.",
+        listOf(Color(0xFFF6F9FC), Color(0xFF0D2C6B), Color(0xFF1647A6), Color(0xFFC4271B)),
+        listOf(Color(0xFF12397A), Color(0xFFF4F8FF), Color(0xFFFFE98A), Color(0xFFFF9684)),
+    ),
+    Ajrakh(
+        "ajrakh", "Ajrakh", "Block-printed cloth. Cotton panels on a madder ground by day, an indigo vat by night, printed borders, and budgets stamped out block by block.",
+        listOf(Color(0xFF9A2B1F), Color(0xFF1B2A5C), Color(0xFFE2A419), Color(0xFF2C6A2B)),
+        listOf(Color(0xFF121A4E), Color(0xFFF1E9D6), Color(0xFFE5553E), Color(0xFF93D47C)),
+    ),
+    Kolam(
+        "kolam", "Kolam", "The threshold drawing. Swept stone and red oxide, one monoline weight, dot-row dividers, and the month drawn as a kolam whose line loops every day gone.",
+        listOf(Color(0xFFE3DDD1), Color(0xFF2A1B15), Color(0xFF8F2D1C), Color(0xFF1C6436)),
+        listOf(Color(0xFF651E14), Color(0xFFF8F0E4), Color(0xFFF4C24F), Color(0xFFAEE8C4)),
+    ),
+    Maidan(
+        "maidan", "Maidan", "The cricket ground. Outfield green, a painted-tin scoreboard of black number plates, a worm chart of spend against par, and a red-ball add button.",
+        listOf(Color(0xFF2A7436), Color(0xFF141A16), Color(0xFFB81D24), Color(0xFF1C7230)),
+        listOf(Color(0xFF0D2217), Color(0xFFFFF1CF), Color(0xFFFF5AA8), Color(0xFF5FE07F)),
+    ),
+    Sector(
+        "sector", "Sector", "Concrete and enamel. Flush colour blocks on a jointed grid, one heavy grotesque at poster scale, and accounts drawn as a façade whose bays are sized by their balances.",
+        listOf(Color(0xFFC8C4BA), Color(0xFF141413), Color(0xFFF5C400), Color(0xFF1846B0)),
+        listOf(Color(0xFF161617), Color(0xFFF1EEE7), Color(0xFFEAB700), Color(0xFF2450C0)),
+    ),
+    Daak(
+        "daak", "Daak", "India Post stationery. Inland-letter blue with pillar-box red, accounts as perforated stamps, a struck date postmark on the hero and a carmine rubber stamp on a budget near its limit.",
+        listOf(Color(0xFFC5DCEF), Color(0xFF13213D), Color(0xFFC4201B), Color(0xFF3D5412)),
+        listOf(Color(0xFF0D1730), Color(0xFFD3E4F5), Color(0xFFF0473C), Color(0xFFA9C46A)),
+    ),
+    Sargam(
+        "sargam", "Sargam", "The audio cassette. A five-stripe run that turns the corner of every label, Michroma faceplate lettering, piano-key controls, equaliser-strip budgets and a tape window whose reels show the month.",
+        listOf(Color(0xFFECEBE6), Color(0xFF3A2315), Color(0xFFF26B1D), Color(0xFF188078)),
+        listOf(Color(0xFF1A1310), Color(0xFFF4EADC), Color(0xFFFF8A3A), Color(0xFF31B7A8)),
+    ),
+    Takhti(
+        "takhti", "Takhti", "Blackboard and chalk (whiteboard and marker by day): the hero writes out the real sum, days are tallied in gates of five, and budgets are hand-hatched bars.",
+        listOf(Color(0xFFF4F7F9), Color(0xFF15171C), Color(0xFF1650CF), Color(0xFFCF222E)),
+        listOf(Color(0xFF1D2B25), Color(0xFFF2EFE6), Color(0xFFF7D75E), Color(0xFFFF93A3)),
     );
 
     companion object {

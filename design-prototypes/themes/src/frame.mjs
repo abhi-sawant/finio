@@ -63,6 +63,11 @@ ${css}
 <h2 class="sec">Desktop · sidebar layout</h2>
 <div class="row"><figure class="slot"><div class="desk"><div class="screen app">${screens.desk}</div></div>${cap('Home, 1240 × 780')}</figure></div>
 <script>
+(function(){var h=location.hash.slice(1).split('-');
+// #dark / #light pick the mode; a "-still" suffix jumps every animation to its end (for captures).
+if(h[0]==='dark'||h[0]==='light'){document.documentElement.dataset.mode=h[0];document.querySelectorAll('.seg button').forEach(function(x){x.setAttribute('aria-pressed',String(x.dataset.m===h[0]))});}
+if(h[1]==='still'){var st=document.createElement('style');st.textContent='*,*::before,*::after{animation-duration:.001s!important;animation-delay:0s!important;animation-iteration-count:1!important;transition:none!important}';document.head.appendChild(st);}
+})();
 document.querySelectorAll('.seg button').forEach(function(b){b.addEventListener('click',function(){
   document.documentElement.dataset.mode=b.dataset.m;
   document.querySelectorAll('.seg button').forEach(function(x){x.setAttribute('aria-pressed',String(x===b))});

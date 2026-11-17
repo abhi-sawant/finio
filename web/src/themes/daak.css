@@ -1,0 +1,907 @@
+/*
+ * Daak — India Post stationery. The pale-blue inland letter is the ground (deep ink-navy sorting
+ * office in dark); pillar-box red is the action; accounts are perforated definitive stamps; panels
+ * carry the letter's printed double rule; sections are split by dashed fold lines; fields are a
+ * ruled line. Young Serif sets titles and the hero figure (it has no rupee glyph, so --ff-money
+ * falls through to Public Sans for the sign), Public Sans every row, Courier Prime only the
+ * postmark and dateline stamps. The hero's signature is the double-ring date postmark
+ * (DaakPostmark, ui/extras/daak.tsx), struck once on load. Prototype: design-prototypes/themes/src/daak.mjs
+ */
+html[data-visual-theme='daak'] {
+  --ff-heading: 'Young Serif', 'Public Sans Variable', Georgia, serif;
+  --ff-money: 'Young Serif', 'Public Sans Variable', Georgia, serif;
+  --ff-sans: 'Public Sans Variable', system-ui, sans-serif;
+  --dk-mono: 'Courier Prime', 'Public Sans Variable', 'Courier New', monospace;
+
+  /* theme-private ink */
+  --dk-card: #dbeaf7;
+  --dk-paper: #fbfaf5;
+  --dk-side: #a9cae6;
+  --dk-ink: #13213d;
+  --dk-mut: #35486a;
+  --dk-line: #6f97c0;
+  --dk-fold: rgb(19 33 61 / 0.42);
+  --dk-print: #235089;
+  --dk-red: #c4201b;
+  --dk-redt: #9c1410;
+  --dk-fill: #c4201b;
+  --dk-on-red: #fff8f0;
+  --dk-base: #2a1210;
+  --dk-neg: #9d1230;
+  --dk-pmk: #1c3566;
+  --dk-sp: #fbfaf5;
+  --dk-st: #fbfaf5;
+  --dk-shadow: rgb(19 33 61 / 0.3);
+
+  --background: #c5dcef;
+  --foreground: #13213d;
+  --card: #dbeaf7;
+  --card-foreground: #13213d;
+  --popover: #fbfaf5;
+  --popover-foreground: #13213d;
+  --primary: #9c1410;
+  --primary-foreground: #fff8f0;
+  --secondary: #b4d0e8;
+  --secondary-foreground: #13213d;
+  --muted: #b4d0e8;
+  --muted-foreground: #35486a;
+  --accent: #a9cae6;
+  --accent-foreground: #13213d;
+  --destructive: #9d1230;
+  --destructive-foreground: #fff8f0;
+  --positive: #3d5412;
+  --warning: #6d4300;
+  --border: #6f97c0;
+  --input: #235089;
+  --ring: #c4201b;
+  --chart-1: #235089;
+  --chart-2: #c4201b;
+  --chart-3: #55671f;
+  --chart-4: #8d590b;
+  --chart-5: #663a58;
+  --radius: 0.125rem;
+  --sidebar: #a9cae6;
+  --sidebar-foreground: #13213d;
+  --sidebar-primary: #c4201b;
+  --sidebar-primary-foreground: #fff8f0;
+  --sidebar-accent: #c5dcef;
+  --sidebar-accent-foreground: #13213d;
+  --sidebar-border: #235089;
+  --sidebar-ring: #c4201b;
+
+  --warning-band: #fbfaf5;
+  --warning-band-foreground: #13213d;
+  --warning-band-accent: #9c1410;
+
+  --paper: none;
+  --engraving: transparent;
+  --glass: transparent;
+  --glass-strong: #fbfaf5;
+  --glass-border: #6f97c0;
+  --glass-highlight: transparent;
+
+  --grad-primary: linear-gradient(#c4201b, #c4201b);
+  --grad-primary-soft: linear-gradient(#b4d0e8, #b4d0e8);
+  --grad-success: linear-gradient(#3d5412, #3d5412);
+  --grad-success-soft: linear-gradient(#d9e3c4, #d9e3c4);
+  --grad-danger: linear-gradient(#9d1230, #9d1230);
+  --grad-danger-soft: linear-gradient(#f0d3d6, #f0d3d6);
+  --grad-info: linear-gradient(#235089, #235089);
+  --grad-warning: linear-gradient(#6d4300, #6d4300);
+  --grad-surface: linear-gradient(#dbeaf7, #dbeaf7);
+  --coin: linear-gradient(#235089, #235089);
+  --coin-ink: #fbfaf5;
+  --register: #235089;
+  --thread: linear-gradient(#235089, #235089);
+
+  --shadow-tint: 19 33 61;
+  --scrim: rgb(19 33 61 / 0.45);
+  --shadow-card: none;
+  --shadow-float: none;
+  --shadow-primary: none;
+  --shadow-danger: none;
+  --shadow-success: none;
+
+  /* Accounts are definitive stamps: one ink per denomination, cream lettering. */
+  --note-100: linear-gradient(#663a58, #663a58);
+  --note-100-ink: #fbfaf5;
+  --note-500: linear-gradient(#55671f, #55671f);
+  --note-500-ink: #fbfaf5;
+  --note-2000: linear-gradient(#a3213a, #a3213a);
+  --note-2000-ink: #fbfaf5;
+  --note-200: linear-gradient(#8d590b, #8d590b);
+  --note-200-ink: #fbfaf5;
+  --note-10: linear-gradient(#2c5a86, #2c5a86);
+  --note-10-ink: #fbfaf5;
+  --note-50: linear-gradient(#2d6a66, #2d6a66);
+  --note-50-ink: #fbfaf5;
+  --note-20: linear-gradient(#55671f, #55671f);
+  --note-20-ink: #fbfaf5;
+}
+
+html.dark[data-visual-theme='daak'] {
+  --dk-card: #13213f;
+  --dk-paper: #1b2b50;
+  --dk-side: #091124;
+  --dk-ink: #d3e4f5;
+  --dk-mut: #9ab0d0;
+  --dk-line: #3f5c8c;
+  --dk-fold: rgb(211 228 245 / 0.38);
+  --dk-print: #8fb4e0;
+  --dk-red: #f0473c;
+  --dk-redt: #ff8479;
+  --dk-fill: #b8231c;
+  --dk-on-red: #fff8f0;
+  --dk-base: #4a0f0b;
+  --dk-neg: #ff8a96;
+  --dk-pmk: #bcd7f2;
+  --dk-sp: #cfd7df;
+  --dk-st: #f4f2ea;
+  --dk-shadow: rgb(0 0 0 / 0.5);
+
+  --background: #0d1730;
+  --foreground: #d3e4f5;
+  --card: #13213f;
+  --card-foreground: #d3e4f5;
+  --popover: #1b2b50;
+  --popover-foreground: #d3e4f5;
+  --primary: #ff8479;
+  --primary-foreground: #1c0705;
+  --secondary: #1b2b50;
+  --secondary-foreground: #d3e4f5;
+  --muted: #1b2b50;
+  --muted-foreground: #9ab0d0;
+  --accent: #223660;
+  --accent-foreground: #d3e4f5;
+  --destructive: #ff8a96;
+  --destructive-foreground: #1c0705;
+  --positive: #a9c46a;
+  --warning: #e3b65e;
+  --border: #3f5c8c;
+  --input: #8fb4e0;
+  --ring: #f0473c;
+  --chart-1: #8fb4e0;
+  --chart-2: #f0473c;
+  --chart-3: #a9c46a;
+  --chart-4: #e3b65e;
+  --chart-5: #c995b8;
+  --sidebar: #091124;
+  --sidebar-foreground: #d3e4f5;
+  --sidebar-primary: #f0473c;
+  --sidebar-primary-foreground: #1c0705;
+  --sidebar-accent: #13213f;
+  --sidebar-accent-foreground: #d3e4f5;
+  --sidebar-border: #8fb4e0;
+  --sidebar-ring: #f0473c;
+
+  --warning-band: #1b2b50;
+  --warning-band-foreground: #d3e4f5;
+  --warning-band-accent: #ff8479;
+
+  --glass-strong: #1b2b50;
+  --glass-border: #3f5c8c;
+
+  --grad-primary: linear-gradient(#b8231c, #b8231c);
+  --grad-primary-soft: linear-gradient(#1b2b50, #1b2b50);
+  --grad-success: linear-gradient(#4a5a1b, #4a5a1b);
+  --grad-success-soft: linear-gradient(#1d2c22, #1d2c22);
+  --grad-danger: linear-gradient(#a01b32, #a01b32);
+  --grad-danger-soft: linear-gradient(#3a1a2c, #3a1a2c);
+  --grad-info: linear-gradient(#254c72, #254c72);
+  --grad-warning: linear-gradient(#7a4d09, #7a4d09);
+  --grad-surface: linear-gradient(#13213f, #13213f);
+  --coin: linear-gradient(#8fb4e0, #8fb4e0);
+  --coin-ink: #0d1730;
+  --register: #8fb4e0;
+  --thread: linear-gradient(#8fb4e0, #8fb4e0);
+
+  --shadow-tint: 0 0 0;
+  --scrim: rgb(0 0 0 / 0.6);
+
+  --note-100: linear-gradient(#57314b, #57314b);
+  --note-500: linear-gradient(#4a5a1b, #4a5a1b);
+  --note-2000: linear-gradient(#8f1d33, #8f1d33);
+  --note-200: linear-gradient(#7a4d09, #7a4d09);
+  --note-10: linear-gradient(#254c72, #254c72);
+  --note-50: linear-gradient(#265a57, #265a57);
+  --note-20: linear-gradient(#4a5a1b, #4a5a1b);
+  --note-100-ink: #f4f2ea;
+  --note-500-ink: #f4f2ea;
+  --note-2000-ink: #f4f2ea;
+  --note-200-ink: #f4f2ea;
+  --note-10-ink: #f4f2ea;
+  --note-50-ink: #f4f2ea;
+  --note-20-ink: #f4f2ea;
+}
+
+/* AMOLED: a true-black field; surfaces keep a navy edge so they still read. */
+html.dark.amoled[data-visual-theme='daak'] {
+  --background: #000;
+  --card: #060b18;
+  --dk-card: #060b18;
+  --dk-paper: #0c1530;
+  --dk-side: #000;
+  --popover: #0c1530;
+  --secondary: #0c1530;
+  --muted: #0c1530;
+  --sidebar: #000;
+  --glass-strong: #0c1530;
+  --warning-band: #0c1530;
+}
+
+/* ── Browser surfaces ── */
+html[data-visual-theme='daak'] {
+  caret-color: var(--dk-red);
+  accent-color: var(--dk-red);
+  scrollbar-color: color-mix(in srgb, var(--foreground) 45%, transparent) transparent;
+}
+html[data-visual-theme='daak'] body {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+html[data-visual-theme='daak'] ::selection {
+  background: var(--dk-red);
+  color: var(--dk-on-red);
+}
+html[data-visual-theme='daak'] :focus-visible {
+  outline: 2px solid var(--dk-red);
+  outline-offset: 2px;
+}
+
+/* ── Type ── */
+html[data-visual-theme='daak'] h1 {
+  font-weight: 400;
+  letter-spacing: 0;
+}
+html[data-visual-theme='daak'] .font-money {
+  font-weight: 400;
+  letter-spacing: -0.005em;
+}
+html[data-visual-theme='daak'] [data-slot='label'] {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--muted-foreground);
+}
+html[data-visual-theme='daak'] [data-slot='dialog-title'],
+html[data-visual-theme='daak'] [data-slot='alert-dialog-title'] {
+  font-weight: 400;
+  font-size: 1.25rem;
+}
+/* Section heads sit on a dashed fold line; "See all" is a red underlined link. */
+html[data-visual-theme='daak'] main h2.text-base {
+  font-family: var(--ff-heading);
+  font-weight: 400;
+  font-size: 1.0625rem;
+}
+html[data-visual-theme='daak'] main div.flex:has(> h2.text-base),
+html[data-visual-theme='daak'] main h2.text-base.mb-3 {
+  border-top: 1px dashed var(--dk-fold);
+  padding-top: 0.5rem;
+}
+html[data-visual-theme='daak'] main div:has(> h2.text-base) > button.text-primary {
+  color: var(--dk-redt);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+/* Day headings: a boxed dateline stamp with a fold line run out after it. */
+html[data-visual-theme='daak'] main section > h2.text-xs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-inline-start: 0;
+  font-family: var(--dk-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+html[data-visual-theme='daak'] main section > h2.text-xs::after {
+  content: '';
+  flex: 1;
+  border-top: 1px dashed var(--dk-fold);
+}
+
+/* ── Shape: paper rectangles, printed double rule, no glass ── */
+html[data-visual-theme='daak'] .rounded-full,
+html[data-visual-theme='daak'] .rounded-lg,
+html[data-visual-theme='daak'] .rounded-md,
+html[data-visual-theme='daak'] .rounded-sm,
+html[data-visual-theme='daak'] .rounded-xl {
+  border-radius: 2px;
+}
+html[data-visual-theme='daak'] .card-elevated {
+  background-color: var(--dk-card);
+  border: 1px solid var(--dk-print);
+  border-radius: 2px;
+  box-shadow:
+    inset 0 0 0 3px var(--dk-card),
+    inset 0 0 0 4px var(--dk-line);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='daak'] .glass-chrome {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='daak'] .shadow-glow-primary,
+html[data-visual-theme='daak'] .shadow-glow-success,
+html[data-visual-theme='daak'] .shadow-glow-danger,
+html[data-visual-theme='daak'] .shadow-sm,
+html[data-visual-theme='daak'] .shadow-md,
+html[data-visual-theme='daak'] .shadow-lg {
+  box-shadow: none;
+}
+html[data-visual-theme='daak'] .bg-coin {
+  color: var(--coin-ink);
+  box-shadow: none;
+}
+
+/* Filled actions: pillar-box red with the stationery's inner rule; keys press down 1px. */
+html[data-visual-theme='daak'] :is(button, a).bg-grad-primary {
+  font-weight: 700;
+  border-radius: 2px;
+  box-shadow:
+    inset 0 0 0 3px var(--dk-fill),
+    inset 0 0 0 4px rgb(255 255 255 / 0.45);
+}
+html[data-visual-theme='daak'] [data-slot='button']:active,
+html[data-visual-theme='daak'] :is(button, a).bg-grad-primary:active {
+  transform: translateY(1px);
+}
+html[data-visual-theme='daak'] [data-slot='button'][class*='glass-border'] {
+  background: var(--dk-paper);
+  border: 1px solid var(--dk-print);
+  border-radius: 2px;
+  box-shadow:
+    inset 0 0 0 2px var(--dk-paper),
+    inset 0 0 0 3px var(--dk-line);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+/* Fields: a label above a ruled line. */
+html[data-visual-theme='daak']
+  :is([data-slot='input'], [data-slot='textarea'], [data-slot='select-trigger']) {
+  background: transparent;
+  border-color: transparent transparent var(--dk-ink);
+  border-radius: 0;
+}
+html[data-visual-theme='daak']
+  :is([data-slot='input'], [data-slot='textarea'], [data-slot='select-trigger']):focus-visible {
+  border-bottom-color: var(--dk-red);
+  border-bottom-width: 2px;
+}
+
+/* Segmented controls: a ruled strip, the chosen cell in ink. */
+html[data-visual-theme='daak'] .bg-muted.p-1:has(> button[aria-pressed]) {
+  gap: 0;
+  padding: 0;
+  background: var(--dk-paper);
+  border: 1px solid var(--dk-ink);
+  border-radius: 2px;
+}
+html[data-visual-theme='daak'] .bg-muted.p-1:has(> button[aria-pressed]) > button {
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  color: var(--muted-foreground);
+  font-weight: 600;
+}
+html[data-visual-theme='daak'] .bg-muted.p-1:has(> button[aria-pressed]) > button + button {
+  border-left: 1px solid var(--dk-line);
+}
+html[data-visual-theme='daak']
+  .bg-muted.p-1:has(> button[aria-pressed])
+  > button[aria-pressed='true'] {
+  background: var(--dk-ink);
+  color: var(--background);
+}
+html[data-visual-theme='daak'] button[aria-pressed].rounded-full.text-xs {
+  font-weight: 600;
+}
+
+/* ── Progress: a ruled bar quartered like a form scale. ── */
+html[data-visual-theme='daak'] [role='progressbar'] {
+  position: relative;
+  height: 0.75rem;
+  border-radius: 0;
+  background: var(--dk-paper);
+  border: 1px solid var(--dk-ink);
+}
+html[data-visual-theme='daak'] [role='progressbar'] > div,
+html[data-visual-theme='daak'] .thread-fill {
+  border-radius: 0;
+}
+html[data-visual-theme='daak'] [role='progressbar']::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent calc(100% - 1px), var(--dk-ink) 0) 0 0 / 25% 100%;
+  opacity: 0.55;
+  pointer-events: none;
+}
+html[data-visual-theme='daak'] .bg-muted.overflow-hidden:has(> .thread-fill) {
+  background: var(--dk-paper);
+  border: 1px solid var(--dk-ink);
+  border-radius: 0;
+}
+
+/* ── Hero: the letter-card, with the postmark floated into its corner ── */
+html[data-visual-theme='daak'] .note-card {
+  background-image: none;
+  background-color: var(--dk-card);
+  border: 1px solid var(--dk-print);
+  border-radius: 2px;
+  box-shadow:
+    inset 0 0 0 3px var(--dk-card),
+    inset 0 0 0 4px var(--dk-line);
+  padding: 18px 18px 18px;
+}
+html[data-visual-theme='daak'] .note-card::after,
+html[data-visual-theme='daak'] .note-card-rosette,
+html[data-visual-theme='daak'] .note-card-thread,
+html[data-visual-theme='daak'] .note-card-fibres,
+html[data-visual-theme='daak'] .note-card-microprint,
+html[data-visual-theme='daak'] .note-tile-rosette {
+  display: none;
+}
+/* No pr-20 gutter: the floated postmark narrows the lines beside it instead, and the inline-block
+   figure drops below it when it would not fit, so nothing can ever sit under the stamp. */
+html[data-visual-theme='daak'] .note-card-body {
+  padding-right: 0;
+}
+html[data-visual-theme='daak'] .note-card-body > p:first-child {
+  font-family: var(--ff-heading);
+  font-size: 1rem;
+  line-height: 1.2;
+  color: var(--foreground);
+  font-weight: 400;
+}
+html[data-visual-theme='daak'] .hero-fig {
+  font-size: clamp(2.5rem, 13.5vw, 3.5rem);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  margin-top: 0.375rem;
+  max-width: 100%;
+}
+html[data-visual-theme='daak'] .hero-left {
+  color: var(--muted-foreground);
+}
+html[data-visual-theme='daak'] .hero-bar {
+  clear: right;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--dk-fold);
+}
+html[data-visual-theme='daak'] .hero-bar [role='progressbar'] {
+  height: 0.75rem;
+}
+html[data-visual-theme='daak'] .hero-budget {
+  clear: right;
+  font-size: 0.78rem;
+}
+
+/* The postmark: a float, so text wraps around it and can never run under it. */
+html[data-visual-theme='daak'] .dk-pm {
+  float: right;
+  display: flex;
+  align-items: center;
+  margin: -2px -4px 4px 0.5rem;
+  color: var(--dk-pmk);
+  pointer-events: none;
+  shape-outside: margin-box;
+}
+html[data-visual-theme='daak'] .dk-pm-ring {
+  display: block;
+  width: 6rem;
+  height: 6rem;
+  opacity: 0.88;
+  transform: rotate(-9deg);
+  animation: daak-strike 0.35s cubic-bezier(0.16, 0.84, 0.3, 1) 0.3s backwards;
+}
+html[data-visual-theme='daak'] .dk-pm-waves {
+  display: none;
+  width: 4.5rem;
+  height: 5.5rem;
+  margin-right: -0.5rem;
+  opacity: 0.85;
+}
+html[data-visual-theme='daak'] .dk-pm text {
+  font-family: var(--dk-mono);
+  font-weight: 700;
+}
+@keyframes daak-strike {
+  from {
+    opacity: 0;
+    transform: scale(1.25) rotate(-14deg);
+    filter: blur(1.6px);
+  }
+  to {
+    opacity: 0.88;
+    transform: scale(1) rotate(-9deg);
+    filter: blur(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-visual-theme='daak'] .dk-pm-ring {
+    animation: none;
+  }
+}
+@media (min-width: 1024px) {
+  html[data-visual-theme='daak'] .note-card {
+    padding: 26px 30px 26px;
+  }
+  html[data-visual-theme='daak'] .hero-fig {
+    font-size: 5.25rem;
+  }
+  html[data-visual-theme='daak'] .note-card-body > p:first-child {
+    font-size: 1.25rem;
+  }
+  html[data-visual-theme='daak'] .dk-pm-ring {
+    width: 9.5rem;
+    height: 9.5rem;
+  }
+  html[data-visual-theme='daak'] .dk-pm-waves {
+    display: block;
+  }
+}
+
+/* The notice slip: paper, ruled, the call to action underlined in red. */
+html[data-visual-theme='daak'] main > button.bg-warning-band {
+  background: var(--dk-paper);
+  border: 1px solid var(--dk-line);
+  border-radius: 2px;
+  box-shadow: none;
+}
+html[data-visual-theme='daak'] .bg-warning-band {
+  border-radius: 2px;
+  box-shadow: none;
+}
+html[data-visual-theme='daak'] main > button.bg-warning-band > div > span:last-child {
+  color: var(--dk-redt);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ── Accounts: perforated definitive stamps. The paper margin is a border; the punched edge is
+   a mask of holes centred on every side. ── */
+html[data-visual-theme='daak'] .note-tile,
+html[data-visual-theme='daak'] .note-chip {
+  --t: 8px;
+  --h: 2.3px;
+  border: 5px solid var(--dk-sp);
+  border-radius: 0;
+  box-shadow: none;
+  -webkit-mask:
+    linear-gradient(#000 0 0) center / calc(100% - var(--t)) calc(100% - var(--t)) no-repeat,
+    radial-gradient(circle, transparent var(--h), #000 calc(var(--h) + 0.6px)) calc(var(--t) / -2)
+      calc(var(--t) / -2) / var(--t) var(--t) round;
+  mask:
+    linear-gradient(#000 0 0) center / calc(100% - var(--t)) calc(100% - var(--t)) no-repeat,
+    radial-gradient(circle, transparent var(--h), #000 calc(var(--h) + 0.6px)) calc(var(--t) / -2)
+      calc(var(--t) / -2) / var(--t) var(--t) round;
+}
+html[data-visual-theme='daak'] .note-tile {
+  min-height: 104px;
+  padding: 0.5rem 0.5rem 0.4rem;
+}
+html[data-visual-theme='daak'] .note-tile::after {
+  inset: 0;
+  right: auto;
+  width: auto;
+  background: none;
+  opacity: 1;
+  -webkit-mask: none;
+  mask: none;
+  border: 1px solid rgb(255 255 255 / 0.5);
+  z-index: 0;
+}
+html[data-visual-theme='daak'] .note-tile:active {
+  transform: translateY(1px);
+}
+html[data-visual-theme='daak'] .note-tile .font-money {
+  font-family: var(--ff-money);
+  font-size: 1.0625rem;
+}
+html[data-visual-theme='daak'] .note-chip {
+  --t: 5px;
+  --h: 1.2px;
+  border-width: 2.5px;
+  width: 32px;
+  height: 24px;
+}
+html[data-visual-theme='daak'] .note-chip::after {
+  display: none;
+}
+
+/* Category picker: each choice a small stamp; the chosen one is ringed in red. */
+html[data-visual-theme='daak'] .grid.grid-cols-4:has(> button[data-selected]) {
+  gap: 0.5rem 0.375rem;
+}
+html[data-visual-theme='daak'] .grid-cols-4 > button[data-selected] {
+  --t: 7px;
+  --h: 1.9px;
+  border: 0;
+  border-radius: 0;
+  background-color: var(--dk-paper);
+  box-shadow: none;
+  -webkit-mask:
+    linear-gradient(#000 0 0) center / calc(100% - var(--t)) calc(100% - var(--t)) no-repeat,
+    radial-gradient(circle, transparent var(--h), #000 calc(var(--h) + 0.6px)) calc(var(--t) / -2)
+      calc(var(--t) / -2) / var(--t) var(--t) round;
+  mask:
+    linear-gradient(#000 0 0) center / calc(100% - var(--t)) calc(100% - var(--t)) no-repeat,
+    radial-gradient(circle, transparent var(--h), #000 calc(var(--h) + 0.6px)) calc(var(--t) / -2)
+      calc(var(--t) / -2) / var(--t) var(--t) round;
+}
+html[data-visual-theme='daak'] .grid-cols-4 > button[data-selected] > span {
+  color: var(--dk-mut);
+}
+html[data-visual-theme='daak'] .grid-cols-4 > button[data-selected='true'] {
+  box-shadow: inset 0 0 0 3px var(--dk-red);
+}
+html[data-visual-theme='daak'] .grid-cols-4 > button[data-selected='true'] > span {
+  color: var(--dk-ink);
+  font-weight: 700;
+}
+
+/* ── Budgets: "Near limit" / "Over budget" become a tilted rubber stamp ── */
+html[data-visual-theme='daak'] span[class*='bg-warning/15'],
+html[data-visual-theme='daak'] span[class*='bg-warning-band'][class*='text-warning-band-accent'] {
+  background: transparent;
+  color: var(--dk-neg);
+  font-family: var(--dk-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 2px solid var(--dk-neg);
+  outline: 1px solid var(--dk-neg);
+  outline-offset: 2px;
+  border-radius: 2px;
+  padding: 0.25rem 0.5rem 0.125rem;
+  margin: 0 0.25rem;
+  transform: rotate(4deg);
+  opacity: 0.92;
+}
+html[data-visual-theme='daak'] span[class*='bg-warning-band'][class*='text-warning-band-accent'] {
+  transform: rotate(-3deg);
+}
+html[data-visual-theme='daak'] span[class*='bg-positive/10'] {
+  background: transparent;
+  border-radius: 2px;
+  font-weight: 600;
+}
+
+/* ── Add transaction: a ruled amount and printed keys ── */
+html[data-visual-theme='daak'] .bg-grad-surface.min-h-16 {
+  background: none;
+  border: 0;
+  border-bottom: 2px solid var(--dk-ink);
+  border-radius: 0;
+  box-shadow: none;
+}
+html[data-visual-theme='daak'] .bg-grad-surface.min-h-16 > .text-3xl {
+  font-size: 3.25rem;
+  line-height: 1.1;
+}
+html[data-visual-theme='daak'] .bg-grad-surface.min-h-16 + .grid > button {
+  background: var(--dk-paper);
+  border: 1px solid var(--dk-print);
+  border-radius: 2px;
+  box-shadow:
+    inset 0 0 0 3px var(--dk-paper),
+    inset 0 0 0 4px var(--dk-line);
+  font-family: var(--ff-heading);
+  font-weight: 400;
+}
+html[data-visual-theme='daak'] .bg-grad-surface.min-h-16 + .grid > button:active {
+  transform: translateY(1px);
+  background: var(--dk-card);
+}
+
+/* ── Overlays ── */
+html[data-visual-theme='daak']
+  :is(
+    [data-slot='dialog-content'],
+    [data-slot='alert-dialog-content'],
+    [data-slot='popover-content'],
+    [data-slot='select-content'],
+    [data-slot='dropdown-menu-content']
+  ) {
+  background-color: var(--dk-paper);
+  border-radius: 2px;
+  border: 1px solid var(--dk-print);
+  box-shadow:
+    inset 0 0 0 3px var(--dk-paper),
+    inset 0 0 0 4px var(--dk-line),
+    3px 3px 0 var(--dk-shadow);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='daak'] [data-slot='dialog-header'] {
+  border-bottom: 1px dashed var(--dk-fold);
+  padding-bottom: 0.5rem;
+}
+
+/* ── Chrome ── */
+html[data-visual-theme='daak'] [data-slot='page-header'] {
+  background: var(--background);
+  border-bottom: 1px dashed var(--dk-fold);
+}
+html[data-visual-theme='daak'] [data-slot='page-header'] h1 {
+  font-size: 1.65rem;
+  line-height: 1.15;
+}
+
+/* The tab bar is a strip of paper with a perforated top edge. */
+html[data-visual-theme='daak'] [data-slot='tab-bar'] {
+  background: var(--dk-paper);
+  border-top: 0;
+  box-shadow: none;
+  padding-top: 4px;
+  -webkit-mask:
+    linear-gradient(#000 0 0) 0 4px / 100% 100% no-repeat,
+    radial-gradient(circle, transparent 2.4px, #000 3px) -4px -4px / 8px 8px round no-repeat;
+  mask:
+    linear-gradient(#000 0 0) 0 4px / 100% 100% no-repeat,
+    radial-gradient(circle, transparent 2.4px, #000 3px) -4px -4px / 8px 8px round no-repeat;
+}
+html[data-visual-theme='daak'] [data-slot='tab'] {
+  position: relative;
+  color: var(--muted-foreground);
+}
+html[data-visual-theme='daak'] [data-slot='tab'] span {
+  font-size: 0.65625rem;
+  font-weight: 500;
+}
+html[data-visual-theme='daak'] [data-slot='tab'] svg {
+  stroke-width: 1.6;
+}
+html[data-visual-theme='daak'] [data-slot='tab'][aria-current='page'] {
+  color: var(--dk-redt);
+}
+html[data-visual-theme='daak'] [data-slot='tab'][aria-current='page'] span {
+  font-weight: 700;
+}
+html[data-visual-theme='daak'] [data-slot='tab'][aria-current='page']::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  margin-left: -2.5px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* The FAB is a pillar box. */
+html[data-visual-theme='daak'] [data-slot='fab'] {
+  width: 3.25rem;
+  height: 3.875rem;
+  border-radius: 26px 26px 2px 2px;
+  background: var(--dk-fill);
+  color: #fff;
+  box-shadow:
+    inset 0 -6px 0 var(--dk-base),
+    0 8px 14px -6px var(--dk-shadow);
+}
+html[data-visual-theme='daak'] [data-slot='fab']::before {
+  content: '';
+  position: absolute;
+  left: 5px;
+  right: 5px;
+  top: 15px;
+  border-top: 2px solid rgb(0 0 0 / 0.22);
+}
+html[data-visual-theme='daak'] [data-slot='fab'] > * {
+  position: relative;
+}
+
+/* Desktop sidebar: the address panel. */
+html[data-visual-theme='daak'] [data-slot='sidebar'] {
+  background: var(--dk-side);
+  border-right: 1px solid var(--dk-print);
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+html[data-visual-theme='daak'] [data-slot='sidebar']::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: calc(15rem - 4px);
+  border-right: 1px solid var(--dk-line);
+  pointer-events: none;
+}
+html[data-visual-theme='daak'] [data-slot='brand-mark'] {
+  --t: 6px;
+  --h: 1.6px;
+  border: 4px solid var(--dk-sp);
+  border-radius: 0;
+  background: var(--dk-fill);
+  color: #fff;
+  box-shadow: none;
+  -webkit-mask:
+    linear-gradient(#000 0 0) center / calc(100% - var(--t)) calc(100% - var(--t)) no-repeat,
+    radial-gradient(circle, transparent var(--h), #000 calc(var(--h) + 0.6px)) calc(var(--t) / -2)
+      calc(var(--t) / -2) / var(--t) var(--t) round;
+  mask:
+    linear-gradient(#000 0 0) center / calc(100% - var(--t)) calc(100% - var(--t)) no-repeat,
+    radial-gradient(circle, transparent var(--h), #000 calc(var(--h) + 0.6px)) calc(var(--t) / -2)
+      calc(var(--t) / -2) / var(--t) var(--t) round;
+}
+html[data-visual-theme='daak'] [data-slot='brand-mark'] + span {
+  font-family: var(--ff-heading);
+  font-size: 1.6rem;
+  font-weight: 400;
+}
+html[data-visual-theme='daak'] [data-slot='sidebar'] [data-slot='add-button'] {
+  background: var(--dk-fill);
+  color: #fff;
+  border-radius: 2px;
+  font-weight: 700;
+  box-shadow:
+    inset 0 0 0 3px var(--dk-fill),
+    inset 0 0 0 4px rgb(255 255 255 / 0.45);
+}
+html[data-visual-theme='daak'] [data-slot='sidebar'] nav {
+  gap: 0;
+}
+html[data-visual-theme='daak'] [data-slot='sidebar'] [data-slot='nav-item'] {
+  position: relative;
+  background: transparent;
+  border-radius: 0;
+  border-bottom: 1px solid var(--dk-print);
+  padding-top: 0.55rem;
+  padding-bottom: 0.55rem;
+  color: var(--foreground);
+  font-weight: 500;
+}
+html[data-visual-theme='daak'] [data-slot='sidebar'] [data-slot='nav-item']:hover {
+  background: color-mix(in srgb, var(--dk-paper) 55%, transparent);
+}
+html[data-visual-theme='daak'] [data-slot='sidebar'] [data-slot='nav-item'][aria-current='page'] {
+  background: transparent;
+  color: var(--dk-redt);
+  font-weight: 700;
+}
+html[data-visual-theme='daak']
+  [data-slot='sidebar']
+  [data-slot='nav-item'][aria-current='page']::after {
+  content: '';
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  margin-top: -3px;
+  border-radius: 50%;
+  background: currentColor;
+}
+html[data-visual-theme='daak'] [data-slot='sidebar'] > p {
+  font-family: var(--ff-heading);
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--foreground);
+}
+html[data-visual-theme='daak'] [data-slot='sidebar'] nav:last-of-type [data-slot='nav-item'] {
+  border-bottom: 1px dashed var(--dk-fold);
+  font-weight: 400;
+}
+
+/* ── Toasts ── */
+html[data-visual-theme='daak'] [data-sonner-toaster] {
+  --normal-bg: var(--dk-paper);
+  --normal-border: var(--dk-print);
+  --border-radius: 2px;
+}
+html[data-visual-theme='daak'] [data-sonner-toaster] [data-sonner-toast] {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: 3px 3px 0 var(--dk-shadow);
+}
