@@ -39,14 +39,6 @@ val FamiljenGrotesk = FontFamily(
 
 // ── Faces for the alternative visual themes (web: the web theme stylesheets). Variable fonts; the weight axis
 // is driven by FontVariation, any other axis (opsz, wdth) stays at its default. ──
-val SourceSerif4 = FontFamily(
-    variable(R.font.source_serif_4, 400), variable(R.font.source_serif_4, 500),
-    variable(R.font.source_serif_4, 600), variable(R.font.source_serif_4, 700),
-)
-val SourceSans3 = FontFamily(
-    variable(R.font.source_sans_3, 400), variable(R.font.source_sans_3, 500),
-    variable(R.font.source_sans_3, 600), variable(R.font.source_sans_3, 700),
-)
 val BricolageGrotesque = FontFamily(
     variable(R.font.bricolage_grotesque, 400), variable(R.font.bricolage_grotesque, 500),
     variable(R.font.bricolage_grotesque, 600), variable(R.font.bricolage_grotesque, 700),
@@ -134,17 +126,12 @@ val MudraTypeScale = FinioTypeScale(FamiljenGrotesk, FamiljenGrotesk, Instrument
 
 fun typeScaleFor(visual: VisualTheme): FinioTypeScale = when (visual) {
     VisualTheme.Mudra -> MudraTypeScale
-    VisualTheme.Khata -> khataScale
     VisualTheme.Gulal -> gulalScale
     VisualTheme.Shunya -> shunyaScale
     VisualTheme.Bagh -> baghScale
     else -> com.slowatcoding.finio.ui.theme.kits.kitFor(visual)?.type ?: MudraTypeScale
 }
 
-private val khataScale = FinioTypeScale(
-    SourceSerif4, SourceSerif4, SourceSans3,
-    displayWeight = 700, pageTitleWeight = 700, screenTitleWeight = 700, headlineWeight = 700, moneyWeight = 600,
-)
 private val gulalScale = FinioTypeScale(
     BricolageGrotesque, BricolageGrotesque, BricolageGrotesque,
     displayWeight = 800, displayTracking = -0.04f, pageTitleWeight = 800, screenTitleWeight = 800,

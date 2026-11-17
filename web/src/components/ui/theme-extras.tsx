@@ -134,48 +134,13 @@ export function GoalPlant({ percent, className }: { percent: number; className?:
   );
 }
 
-// Round two — one file per theme in ./extras, each hidden by `.only-<theme>` like the pieces above.
-export { ParchiSlip } from './extras/parchi';
-export { MahalSunburst } from './extras/mahal';
-export { GanakDisplay } from './extras/ganak';
-export { AkhbaarPace } from './extras/akhbaar';
-export { KhelHud } from './extras/khel';
-
-// Round three — one `<Theme>Extra` per theme, rendered in the hero's scene, figure and footer
-// slots (see ./extras/hero-info.ts); `RoundThreeExtras` places all ten at once.
+// Naksha's pieces live in ./extras/naksha, rendered in the hero's scene, figure and footer slots
+// (see ./extras/hero-info.ts).
 import type { HeroExtraProps } from './extras/hero-info';
-import { TareekhExtra } from './extras/tareekh';
-import { SafarExtra } from './extras/safar';
 import { NakshaExtra } from './extras/naksha';
-import { AjrakhExtra } from './extras/ajrakh';
-import { KolamExtra } from './extras/kolam';
-import { MaidanExtra } from './extras/maidan';
-import { SectorExtra } from './extras/sector';
-import { DaakExtra } from './extras/daak';
-import { SargamExtra } from './extras/sargam';
-import { TakhtiExtra } from './extras/takhti';
 
 export type { HeroInfo } from './extras/hero-info';
 
-const ROUND_THREE = [
-  TareekhExtra,
-  SafarExtra,
-  NakshaExtra,
-  AjrakhExtra,
-  KolamExtra,
-  MaidanExtra,
-  SectorExtra,
-  DaakExtra,
-  SargamExtra,
-  TakhtiExtra,
-];
-
-export function RoundThreeExtras(props: HeroExtraProps) {
-  return (
-    <>
-      {ROUND_THREE.map((Extra) => (
-        <Extra key={Extra.name} {...props} />
-      ))}
-    </>
-  );
+export function HeroThemeExtras(props: HeroExtraProps) {
+  return <NakshaExtra {...props} />;
 }

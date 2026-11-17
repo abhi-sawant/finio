@@ -208,8 +208,7 @@ entry) — a screen that deletes its own entity just calls `nav.back()`.
 
 ## Visual themes
 
-Twenty worlds — Mudra (default), Khata, Gulal, Shunya, Bagh, Parchi, Mahal, Ganak, Akhbaar, Khel, Tareekh,
-Safar, Naksha, Ajrakh, Kolam, Maidan, Sector, Daak, Sargam, Takhti —
+Five worlds — Mudra (default), Gulal, Shunya, Bagh, Naksha —
 ported from `web/src/themes/*.css`
 (see [web/CLAUDE.md](../web/CLAUDE.md) for what each one is). Picker: Settings → Profile & preferences
 → Style (`VisualThemePicker`); Light/dark/system is the separate **Mode** row.
@@ -227,11 +226,14 @@ ported from `web/src/themes/*.css`
   tiles). Everything else must come from the palette/spec/scales so a new theme is data, not `if`s.
   The pieces that belong to one theme (`BurstBadge`, `MonthLine`, `SunArc`, `GoalPlant`, `HeroFigure`
   in `mudra/ThemeExtras.kt`) draw nothing in the others, so call sites place them unconditionally.
-- **Round-two and round-three themes are kits.** Parchi, Mahal, Ganak, Akhbaar, Khel and the ten of round three each live in one
-  `ui/theme/kits/<Name>Kit.kt` implementing `ThemeKit` (palette, type and shape scales, coin, FAB lift,
-  progress track, hero surface/figure/scene/footer, tab bar). The shared files ask `kitFor(visual)` in
-  their `else` branch, so a new theme is a new kit plus an enum entry — no new `when` arms. Prefer this
-  pattern for any future theme; the round-one themes still use the `when`s.
+- **Naksha is a kit.** It lives in `ui/theme/kits/NakshaKit.kt` implementing `ThemeKit` (palette, type and
+  shape scales, coin, FAB lift, progress track, hero surface/figure/scene/footer, tab bar). The shared files
+  ask `kitFor(visual)` in their `else` branch, so a new theme is a new kit plus an enum entry — no new `when`
+  arms. Prefer this pattern for any future theme; Gulal, Shunya and Bagh still use the `when`s.
+- **Retired themes fall back to Mudra.** `VisualTheme.fromId` returns Mudra for any id it doesn't know, and
+  `VisualThemeStore.load()` also rewrites a stale stored id, so a user who was wearing a removed theme
+  (Khata, Parchi, Mahal, Ganak, Akhbaar, Khel, Tareekh, Safar, Ajrakh, Kolam, Maidan, Sector, Daak, Sargam,
+  Takhti) opens on Mudra. Mirrors the web store's v2 `migrate`.
 - **Day counters read `LocalHeroPeriod`.** The kit hero hooks only receive `elapsed` and `daysLeft`, which
   cannot tell a 28-day month from a 31-day one near its end. `DashboardScreen.Hero` therefore provides
   `LocalHeroPeriod` (`kits/HeroPeriod.kt`: `totalDays`, `dayOfPeriod`, from `DashboardData.periodTotalDays` /
@@ -242,31 +244,15 @@ ported from `web/src/themes/*.css`
   others 1dp) — not a hand-written `border(1.dp, glassBorder)`.
 - **Keep `gradPrimary` deep enough for white text** in every theme and mode (the palette test checks
   the primary pair); call sites hardcode white on it.
-- **Fonts** are variable TTFs in `res/font/` (Source Serif 4, Source Sans 3, Bricolage Grotesque,
-  Geist, Gabarito, Figtree — about 2.6 MB together; Source Serif 4 is the bulk). Round-two fonts are
-  prefixed with their theme (`parchi_martian_mono`, `mahal_limelight`, `mahal_jost`, `ganak_archivo`,
-  `akhbaar_oswald`, `akhbaar_newsreader`, `khel_pixelify_sans`, `khel_vt323`, `khel_silkscreen` —
-  about 1.9 MB more; round three adds about 6 MB of full Google-Fonts TTFs, prefixed the same way:
-  `tareekh_anek_latin`, `safar_overpass*`, `naksha_azeret_mono`/`naksha_sofia_sans`, `ajrakh_rozha_one`/`ajrakh_hind_*`,
-  `kolam_kumbh_sans`, `maidan_big_shoulders`/`maidan_barlow_*`/`maidan_barlow_sc_*`, `sector_darker_grotesque`/
-  `sector_hanken_grotesk`, `daak_young_serif`/`daak_public_sans`/`daak_courier_prime_*`, `sargam_michroma`/`sargam_lexend`,
-  `takhti_kalam_*`/`takhti_nunito_sans`; variable ones are driven on weight (Anek Latin also on width)).
-  A `FontFamily` cannot fall back per glyph, so where a face has no ₹ (Azeret Mono, Sofia Sans, Kumbh Sans,
-  Barlow, Darker Grotesque, Hanken Grotesk, Young Serif, Courier Prime, Michroma) the rupee sign resolves
-  through the system font, except where a kit splits it into a ₹-capable face at one call site (Sector's and
-  Daak's and Sargam's hero figures). The web falls back to Instrument Sans, Public Sans, Lexend or Overpass Mono. Limelight and Jost have no ₹, so Mahal sets the rupee sign in Figtree. Only the weight axis
-  is driven; opsz/wdth stay at their defaults. A subsetted font would shrink the APK.
-- **Compromises.** Khata's tick pattern is a budget-bar fill only (goal bars keep the windowed solid ink
-  thread); Gulal/Bagh's floating tab bar lifts the coin to 106dp; the Bagh hills sit under the hero
+- **Fonts** are variable TTFs in `res/font/` (Bricolage Grotesque, Geist, Gabarito, Figtree, plus Naksha's
+  `naksha_azeret_mono` and `naksha_sofia_sans`); the weight axis is driven by `FontVariation`, opsz/wdth stay at
+  their defaults. A `FontFamily` cannot fall back per glyph, so where a face has no ₹ (Azeret Mono, Sofia Sans)
+  the rupee sign resolves through the system font; the web falls back to Instrument Sans or Overpass Mono.
+  A subsetted font would shrink the APK.
+- **Compromises.** Gulal/Bagh's floating tab bar lifts the coin to 106dp; the Bagh hills sit under the hero
   content rather than behind the budget bar; `FinioRadius` follows the theme but a few picker cells
   still use it for their own corner shapes.
-- **Round-three gaps** (what the shared files give a kit no hook for): Daak's perforated account tiles, rubber-stamp
-  "Near limit" badges and dashed fold lines; Maidan's grass page headers (header ink is not overridable);
-  Tareekh's red "Safe to spend today" tab and per-day allowance in the calendar cells (the footer gets no
-  figure); Takhti's written-out sum (limit/spent/remaining text is not passed to the kit); Naksha's drafting
-  grid and corner crop marks; Ajrakh's page-header lozenge band and, in light mode, cotton panels (panels are
-  indigo so `foreground` clears 7:1 on both ground and card). Progress-bar decorations paint their segment
-  gaps in the card colour, so on a non-card surface the gaps are off-colour.
+- **Naksha gaps** (what the shared files give a kit no hook for): the drafting grid and corner crop marks.
 - Not verified on a device yet — no emulator was available when this was ported. Run the debug build
   through each theme (light and dark, phone and tablet) before shipping.
 

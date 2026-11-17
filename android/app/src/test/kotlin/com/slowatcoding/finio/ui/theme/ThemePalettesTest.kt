@@ -27,6 +27,14 @@ class ThemePalettesTest {
     }
 
     @Test
+    fun `only the five kept themes exist and retired ids fall back to Mudra`() {
+        assertEquals(listOf("mudra", "gulal", "shunya", "bagh", "naksha"), VisualTheme.entries.map { it.id })
+        for (id in listOf("khata", "parchi", "mahal", "ganak", "akhbaar", "khel", "tareekh", "safar", "ajrakh", "kolam", "maidan", "sector", "daak", "sargam", "takhti")) {
+            assertEquals(VisualTheme.Mudra, VisualTheme.fromId(id))
+        }
+    }
+
+    @Test
     fun `every theme in both modes carries its own spec`() {
         for ((v, dark) in combos) {
             val p = finioPalette(v, dark, amoled = false)

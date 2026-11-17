@@ -223,8 +223,7 @@ private fun DrawScope.plant(stage: Int, soil: Color, seed: Color, stem: Color, l
 }
 
 /**
- * The hero figure, set the way the active theme sets it: Khata puts it on a ledger rule with a
- * paise column behind a red divider; Shunya and Gulal run it much larger; the rest use [style] as is.
+ * The hero figure, set the way the active theme sets it: Shunya and Gulal run it much larger; the rest use [style] as is.
  * [whole] says the figure is whole rupees (so ".00" can be shown without inventing anything).
  */
 @Composable
@@ -246,43 +245,14 @@ fun HeroFigure(
         else -> kit?.heroFigureScale ?: 1f
     }
     val sized = if (scale == 1f) style else style.copy(fontSize = style.fontSize * scale, lineHeight = style.lineHeight * scale)
-    if (visual == VisualTheme.Khata) {
-        val ink = colors.foreground
-        Row(
-            modifier
-                .drawBehind {
-                    drawLine(ink, Offset(0f, 0.5.dp.toPx()), Offset(size.width, 0.5.dp.toPx()), 1.dp.toPx())
-                    drawLine(ink, Offset(0f, size.height - 3.5.dp.toPx()), Offset(size.width, size.height - 3.5.dp.toPx()), 1.dp.toPx())
-                    drawLine(ink, Offset(0f, size.height - 0.5.dp.toPx()), Offset(size.width, size.height - 0.5.dp.toPx()), 1.dp.toPx())
-                }
-                .padding(top = 2.dp, bottom = 4.dp, end = 6.dp),
-            verticalAlignment = Alignment.Bottom,
-        ) {
-            Text(text, style = sized, color = color, maxLines = 1, softWrap = false)
-            if (whole) {
-                val paiseStyle = style.copy(fontSize = style.fontSize * 0.42f, lineHeight = style.fontSize * 0.5f, fontWeight = FontWeight.Normal)
-                Text(
-                    "00",
-                    Modifier
-                        .padding(start = 6.dp, bottom = 6.dp)
-                        .drawBehind { drawLine(Color(0xFFB8322A).let { if (colors.isDark) Color(0xFFFF7B6C) else it }, Offset(0f, 0f), Offset(0f, size.height), 1.5.dp.toPx()) }
-                        .padding(start = 6.dp),
-                    style = paiseStyle,
-                    color = colors.mutedForeground,
-                    maxLines = 1,
-                )
-            }
-        }
-    } else {
-        Text(text, modifier, style = sized, color = color, maxLines = 1, softWrap = false)
-    }
+    Text(text, modifier, style = sized, color = color, maxLines = 1, softWrap = false)
 }
 
 /** A progress track's height in this theme (Mudra 8dp). */
 @Composable
 fun progressTrackHeight(): Dp = when (FinioTheme.visual) {
     VisualTheme.Gulal -> 18.dp
-    VisualTheme.Khata, VisualTheme.Bagh -> 14.dp
+    VisualTheme.Bagh -> 14.dp
     VisualTheme.Shunya -> 3.dp
     VisualTheme.Mudra -> 8.dp
     else -> com.slowatcoding.finio.ui.theme.kits.kitFor(FinioTheme.visual)?.progressTrackHeight ?: 8.dp

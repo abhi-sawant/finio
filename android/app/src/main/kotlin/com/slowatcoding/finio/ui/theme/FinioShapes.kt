@@ -42,15 +42,12 @@ val MudraShapeScale = FinioShapeScale(22.dp)
 
 fun shapeScaleFor(visual: VisualTheme): FinioShapeScale = when (visual) {
     VisualTheme.Mudra -> MudraShapeScale
-    VisualTheme.Khata -> KhataShapeScale
     VisualTheme.Gulal -> GulalShapeScale
     VisualTheme.Shunya -> ShunyaShapeScale
     VisualTheme.Bagh -> BaghShapeScale
     else -> com.slowatcoding.finio.ui.theme.kits.kitFor(visual)?.shapes ?: MudraShapeScale
 }
 
-// Khata: nothing is round — pills and circles become 3dp squares, cards 2dp.
-private val KhataShapeScale = FinioShapeScale(base = 4.dp, full = RoundedCornerShape(3.dp))
 private val GulalShapeScale = FinioShapeScale(base = 24.dp)
 private val ShunyaShapeScale = FinioShapeScale(base = 14.dp)
 private val BaghShapeScale = FinioShapeScale(base = 24.dp, leafTight = 10.dp)

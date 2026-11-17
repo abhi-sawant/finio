@@ -1,5 +1,5 @@
 /**
- * What a round-three theme's hero piece is given. One component per theme
+ * What a theme's hero piece is given. One component per theme
  * (`extras/<theme>.tsx`, `<Theme>Extra`) is rendered in three places inside the Dashboard hero,
  * and returns null for the slots it does not use:
  *

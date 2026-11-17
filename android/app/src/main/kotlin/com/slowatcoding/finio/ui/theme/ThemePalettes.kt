@@ -44,7 +44,6 @@ fun finioPalette(visual: VisualTheme, dark: Boolean, amoled: Boolean): ThemePale
         )
         else -> {
             val p = when (visual) {
-                VisualTheme.Khata -> if (dark) KhataDark else KhataLight
                 VisualTheme.Gulal -> if (dark) GulalDark else GulalLight
                 VisualTheme.Shunya -> if (dark) ShunyaDark else ShunyaLight
                 else -> if (dark) BaghDark else BaghLight
@@ -144,70 +143,6 @@ private fun hard(color: Color, d: Float) = listOf(CssShadow(x = d.dp, y = d.dp, 
 
 private fun notes(vararg tints: Triple<Denomination, Pair<Long, Long>, Long>) =
     tints.associate { (d, bg, ink) -> d to NoteStyle(c(bg.first), c(bg.second), c(ink)) }
-
-// ───────────────────────────── Khata ─────────────────────────────
-
-private val KhataNotesLight = notes(
-    Triple(Denomination.Rs100, 0xD4E0F2L to 0xC3D3ECL, 0x14234AL),
-    Triple(Denomination.Rs500, 0xDBE8CCL to 0xCBDCB8L, 0x1F4A2AL),
-    Triple(Denomination.Rs2000, 0xF3D9D5L to 0xECC3BDL, 0x8A1D16L),
-    Triple(Denomination.Rs200, 0xF3E6BDL to 0xEAD69AL, 0x5C4300L),
-    Triple(Denomination.Rs10, 0xEBDCC7L to 0xDFC8AAL, 0x4D3217L),
-    Triple(Denomination.Rs50, 0xD2E8ECL to 0xBDDDE3L, 0x0D4F60L),
-    Triple(Denomination.Rs20, 0xE2ECC2L to 0xD3E2A4L, 0x485A0CL),
-)
-private val KhataNotesDark = notes(
-    Triple(Denomination.Rs100, 0x263A63L to 0x1D2D4FL, 0xD6E2FFL),
-    Triple(Denomination.Rs500, 0x2A4332L to 0x213627L, 0xDCECD2L),
-    Triple(Denomination.Rs2000, 0x4A2622L to 0x3A1C19L, 0xFFD8D2L),
-    Triple(Denomination.Rs200, 0x4A3D12L to 0x3A300DL, 0xFFE9A8L),
-    Triple(Denomination.Rs10, 0x3D2E1EL to 0x2F2317L, 0xF2DCC2L),
-    Triple(Denomination.Rs50, 0x1C424AL to 0x15333AL, 0xC8EEF5L),
-    Triple(Denomination.Rs20, 0x3A4818L to 0x2E3A12L, 0xE8F5B8L),
-)
-
-private val KhataLight = ThemePalette(
-    colors = colorsOf(
-        false, 0xE3ECD9, 0x14234A, 0xEEF4E6, 0xF3F8EC, 0x14234A, 0xF3F7EC, 0xD5E2CA, 0xD5E2CA, 0x46556E,
-        0xCDDBC1, 0x14234A, 0xB8322A, 0xFFFFFF, 0x1B6A42, 0x8A5A00,
-        border = c(0xB4C9AB), input = rgba(20, 35, 74, 0.45f),
-        charts = listOf(0x14234A, 0xB8322A, 0x8A5A00, 0x1B6A42, 0x3D6AA8),
-        warningBand = 0xF6E0DC, warningBandFg = 0x5A1410, warningBandAccent = 0xB8322A,
-        glass = c(0xEEF4E6), glassStrong = c(0xEEF4E6), glassBorder = rgba(20, 35, 74, 0.5f),
-        shadowTint = Color(20, 35, 74), scrim = rgba(14, 24, 52, 0.35f),
-    ),
-    brushes = brushesOf(
-        solid(0x14234A), solid(0xD5E2CA), solid(0x1B6A42), solid(0xD2E8D6), solid(0xB8322A), solid(0xF2D6D2),
-        solid(0x3D6AA8), solid(0x8A5A00), solid(0xEEF4E6), solid(0xB8322A), ticks(0x14234A, 7f, 2f), solid(0x14234A),
-    ),
-    shadows = shadowsOf(
-        card = emptyList(), float = listOf(CssShadow(y = 14.dp, blur = 28.dp, spread = (-14).dp, color = rgba(20, 35, 74, 0.5f))),
-        glow = emptyList(), coin = listOf(CssShadow(y = 8.dp, blur = 16.dp, spread = (-8).dp, color = rgba(10, 20, 50, 0.55f))),
-        tile = emptyList(), tabBar = emptyList(), tint = Color(20, 35, 74),
-    ),
-    spec = FinioSpec(VisualTheme.Khata, 1.dp, KhataNotesLight),
-)
-
-private val KhataDark = ThemePalette(
-    colors = colorsOf(
-        true, 0x0F1B17, 0xE4EEDE, 0x15241F, 0x1A2C26, 0xA9BDF5, 0x0F1B17, 0x1D3029, 0x1D3029, 0x9DB2A4,
-        0x24392F, 0xE4EEDE, 0xFF7B6C, 0x1A0E0C, 0x6FD79D, 0xF0C15A,
-        border = c(0x2A4036), input = rgba(228, 238, 222, 0.35f),
-        charts = listOf(0xA9BDF5, 0xFF7B6C, 0xF0C15A, 0x6FD79D, 0x7FB0E8),
-        warningBand = 0x3A1B17, warningBandFg = 0xFFE2DC, warningBandAccent = 0xFF7B6C,
-        glass = c(0x15241F), glassStrong = c(0x15241F), glassBorder = rgba(228, 238, 222, 0.4f),
-        shadowTint = Color(0, 0, 0), scrim = rgba(3, 8, 6, 0.6f),
-    ),
-    brushes = brushesOf(
-        solid(0x34508F), solid(0x1D3029), solid(0x1E7A4C), solid(0x173A2B), solid(0xB8322A), solid(0x3A1B17),
-        solid(0x3D6AA8), solid(0x8A5A00), solid(0x15241F), solid(0xFF7B6C), ticks(0xE4EEDE, 7f, 2f), solid(0xE4EEDE),
-    ),
-    shadows = shadowsOf(
-        card = emptyList(), float = listOf(CssShadow(y = 14.dp, blur = 28.dp, spread = (-14).dp, color = rgba(0, 0, 0, 0.8f))),
-        glow = emptyList(), coin = emptyList(), tile = emptyList(), tabBar = emptyList(), tint = Color(0, 0, 0),
-    ),
-    spec = FinioSpec(VisualTheme.Khata, 1.dp, KhataNotesDark),
-)
 
 // ───────────────────────────── Gulal ─────────────────────────────
 

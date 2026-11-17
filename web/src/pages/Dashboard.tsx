@@ -37,15 +37,10 @@ import { accountDisplayValue, isDepositAccount } from '@/utils/deposit';
 import { BudgetProgressBar } from '@/components/budgets/BudgetHealthBadge';
 import { NoteCard } from '@/components/ui/note-card';
 import {
-  AkhbaarPace,
   BurstBadge,
-  GanakDisplay,
   GoalPlant,
-  KhelHud,
-  MahalSunburst,
   MonthLine,
-  ParchiSlip,
-  RoundThreeExtras,
+  HeroThemeExtras,
   SunArc,
 } from '@/components/ui/theme-extras';
 import { noteFigureClass } from '@/components/ui/note-figure';
@@ -181,7 +176,7 @@ export default function Dashboard() {
     const span = range.end.getTime() - range.start.getTime();
     return span > 0 ? Math.min(Math.max((Date.now() - range.start.getTime()) / span, 0), 1) : 0;
   }, [overallBudget?.budget.period, monthStartDay]);
-  // What the round-three themes' hero pieces draw from (ui/extras/hero-info.ts).
+  // What Naksha's hero pieces draw from (ui/extras/hero-info.ts).
   const heroInfo = useMemo(() => {
     if (!overallBudget) return null;
     const range = periodRange(overallBudget.budget.period, new Date(), monthStartDay);
@@ -341,12 +336,7 @@ export default function Dashboard() {
             overallBudget ? (
               <>
                 <SunArc elapsed={periodElapsed} />
-                <MahalSunburst
-                  elapsed={periodElapsed}
-                  spent={overallBudget.percent}
-                  isOver={overallBudget.isOver}
-                />
-                {heroInfo && <RoundThreeExtras slot="scene" info={heroInfo} />}
+                {heroInfo && <HeroThemeExtras slot="scene" info={heroInfo} />}
               </>
             ) : undefined
           }
@@ -360,13 +350,7 @@ export default function Dashboard() {
               >
                 {formatCurrency(safePerDay, false, hideAmounts, { precise: false })}
               </p>
-              <GanakDisplay
-                text={formatCurrency(safePerDay, false, hideAmounts, { precise: false })}
-                elapsed={periodElapsed}
-                spent={overallBudget.percent}
-                daysLeft={daysLeftInPeriod}
-              />
-              {heroInfo && <RoundThreeExtras slot="figure" info={heroInfo} />}
+              {heroInfo && <HeroThemeExtras slot="figure" info={heroInfo} />}
               <p className="hero-left mt-1.5 text-sm text-balance">
                 {overallBudget.isOver
                   ? `Over budget by ${formatCurrency(Math.abs(overallBudget.remaining), false, hideAmounts)}`
@@ -402,14 +386,7 @@ export default function Dashboard() {
                     Spent {formatCurrency(overallBudget.spent, true, hideAmounts)} of{' '}
                     {formatCurrency(overallBudget.limit, true, hideAmounts)}
                   </p>
-                  <AkhbaarPace elapsed={periodElapsed} spent={overallBudget.percent} />
-                  <ParchiSlip elapsed={periodElapsed} daysLeft={daysLeftInPeriod} />
-                  <KhelHud
-                    elapsed={periodElapsed}
-                    daysLeft={daysLeftInPeriod}
-                    spent={overallBudget.percent}
-                  />
-                  {heroInfo && <RoundThreeExtras slot="footer" info={heroInfo} />}
+                  {heroInfo && <HeroThemeExtras slot="footer" info={heroInfo} />}
                 </>
               )}
             </>

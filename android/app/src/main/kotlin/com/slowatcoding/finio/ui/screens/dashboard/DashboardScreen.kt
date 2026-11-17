@@ -367,7 +367,7 @@ private fun Hero(data: DashboardData, money: MoneyFormatter, hasAccounts: Boolea
                     style = FinioType.caption,
                     color = colors.mutedForeground,
                 )
-                // A round-two theme's own piece under the bar (Parchi's barcode, Akhbaar's halftone pace).
+                // A theme kit's own piece under the bar.
                 kit?.HeroFooter(data.periodElapsed, overall.percent.toFloat(), overall.isOver, data.daysLeftInPeriod)
             }
         } else {

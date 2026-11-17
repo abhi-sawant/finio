@@ -3,6 +3,17 @@
 Finio follows [Semantic Versioning](https://semver.org). The repo-root `VERSION` file is the single
 source of truth for both clients; see "Releasing" in [CLAUDE.md](CLAUDE.md).
 
+## 3.3.1 — 2026-11-17
+
+### Removed
+
+- **Fifteen visual themes.** Finio now ships five: **Mudra** (default), **Gulal**, **Shunya**,
+  **Bagh** and **Naksha**. Khata, Parchi, Mahal, Ganak, Akhbaar, Khel, Tareekh, Safar, Ajrakh,
+  Kolam, Maidan, Sector, Daak, Sargam and Takhti are gone from both the PWA and the Android app.
+  Anyone who was wearing one is moved to **Mudra** automatically on the next launch; nothing else
+  about their data or settings changes (the theme was never part of a backup). The unused font
+  files went with them, so the web bundle and the APK are noticeably smaller.
+
 ## 3.3.0 — 2026-11-17
 
 ### Added

@@ -51,7 +51,6 @@ import com.slowatcoding.finio.ui.theme.cssShadow
  *
  * - **Mudra** — strong glass, a glass-border hairline, the lavender lift shadow; icon, a 16×4dp
  *   gradient pill (invisible when inactive) and a 12sp label, primary when active.
- * - **Khata** — a full-width ink bar; the active tab is a red index tab.
  * - **Gulal** — a floating ink pill; the active tab is a yellow chip.
  * - **Shunya** — text only, a hairline above, a dot under the current page.
  * - **Bagh** — a floating sheet with leaf corners; the active tab is a soft pebble.
@@ -60,7 +59,6 @@ import com.slowatcoding.finio.ui.theme.cssShadow
 fun FinioTabBar(active: FinioTab?, onSelect: (FinioTab) -> Unit, modifier: Modifier = Modifier) {
     when (FinioTheme.visual) {
         VisualTheme.Mudra -> MudraBar(active, onSelect, modifier)
-        VisualTheme.Khata -> KhataBar(active, onSelect, modifier)
         VisualTheme.Gulal -> GulalBar(active, onSelect, modifier)
         VisualTheme.Shunya -> ShunyaBar(active, onSelect, modifier)
         VisualTheme.Bagh -> BaghBar(active, onSelect, modifier)
@@ -153,31 +151,6 @@ internal fun ThemedTab(
         Row(m.padding(horizontal = 14.dp, vertical = 10.dp), Arrangement.spacedBy(6.dp, Alignment.CenterHorizontally), Alignment.CenterVertically) { content() }
     } else {
         Column(m.padding(horizontal = 4.dp, vertical = 6.dp), Arrangement.spacedBy(3.dp), Alignment.CenterHorizontally) { content() }
-    }
-}
-
-// ─────────────────────────────── Khata ───────────────────────────────
-
-@Composable
-private fun KhataBar(active: FinioTab?, onSelect: (FinioTab) -> Unit, modifier: Modifier) {
-    val dark = FinioTheme.colors.isDark
-    val bar = if (dark) Color(0xFF09110E) else Color(0xFF14234A)
-    val text = Color(0xFFE8F0E0)
-    val red = if (dark) Color(0xFFFF7B6C) else Color(0xFFB8322A)
-    val redInk = if (dark) Color(0xFF1A0E0C) else Color.White
-    Row(
-        modifier.fillMaxWidth().background(bar).windowInsetsPadding(WindowInsets.navigationBars),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        FinioTab.entries.forEach { tab ->
-            val selected = tab == active
-            ThemedTab(
-                tab, selected, { onSelect(tab) }, Modifier.weight(1f),
-                tint = if (selected) redInk else text.copy(alpha = 0.82f),
-                shape = RectangleShape,
-                background = if (selected) red else Color.Transparent,
-            )
-        }
     }
 }
 

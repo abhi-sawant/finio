@@ -42,7 +42,6 @@ private val hillFront = PathParser().parsePathString("M0 40C60 22 130 28 190 40S
  * The hero surface for every theme but Mudra (web: `.note-card` in the theme stylesheets). Each world keeps
  * the same job — the one figure per money screen — and paints it its own way:
  *
- * - **Khata** — a ledger sheet: paper fill, an ink outline and a double rule at the foot.
  * - **Gulal** — a pink sticker, hard shadow, a hair of tilt; its inside stays dark ink in both
  *   modes, and [badge] (the "% used" burst) is stamped on its corner.
  * - **Shunya** — nothing: no fill, no outline, just the figure and whatever [scene] draws.
@@ -65,14 +64,6 @@ internal fun ThemedNoteCard(
     val kit = com.slowatcoding.finio.ui.theme.kits.kitFor(visual)
 
     val container = when (visual) {
-        VisualTheme.Khata -> Modifier
-            .clip(shape)
-            .background(colors.card)
-            .border(1.dp, colors.foreground.copy(alpha = 0.55f), shape)
-            .drawBehind {
-                val y = size.height - 3.dp.toPx()
-                drawLine(colors.foreground, androidx.compose.ui.geometry.Offset(0f, y), androidx.compose.ui.geometry.Offset(size.width, y), 1.dp.toPx())
-            }
         VisualTheme.Gulal -> Modifier
             .rotate(-0.6f)
             .cssShadow(shape, listOf(CssShadow(x = 6.dp, y = 6.dp, color = if (dark) Color(0xFFFFE14D) else Ink)))
@@ -126,17 +117,6 @@ internal fun ThemedNoteCard(
                 destructive = Color(0xFF8A0A32), card = Color.White,
             ),
             LocalContentColor provides Ink,
-        ) { inner() }
-    } else if (visual == VisualTheme.Sector) {
-        // Sector's hero is a flat yellow enamel block whatever the page mode, so its text is ink on
-        // yellow (the same values the web re-points inside `.note-card`).
-        val ink = Color(0xFF141413)
-        CompositionLocalProvider(
-            LocalFinioColors provides colors.copy(
-                foreground = ink, mutedForeground = Color(0xFF3B2F00), primary = Color(0xFF12358A),
-                destructive = Color(0xFF8F0F0B),
-            ),
-            LocalContentColor provides ink,
         ) { inner() }
     } else {
         CompositionLocalProvider(LocalContentColor provides colors.foreground) { inner() }

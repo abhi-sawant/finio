@@ -48,11 +48,10 @@ fun Coin(modifier: Modifier = Modifier, size: Dp = 56.dp, content: @Composable B
     val visual = FinioTheme.visual
     val dark = FinioTheme.colors.isDark
     val kit = com.slowatcoding.finio.ui.theme.kits.kitFor(visual)
-    // Each world's add button: Mudra's lavender coin, Khata's red stamp, Gulal's cobalt sticker,
+    // Each world's add button: Mudra's lavender coin, Gulal's cobalt sticker,
     // Shunya's ink dot, Bagh's gold leaf.
     val ink = when (visual) {
         VisualTheme.Mudra -> CoinInk
-        VisualTheme.Khata -> if (dark) Color(0xFF1A0E0C) else Color.White
         VisualTheme.Gulal -> Color.White
         VisualTheme.Shunya -> if (dark) Color(0xFF0A0A0B) else Color(0xFFFCFCFA)
         VisualTheme.Bagh -> Color(0xFF16301F)
@@ -69,7 +68,6 @@ fun Coin(modifier: Modifier = Modifier, size: Dp = 56.dp, content: @Composable B
                 .cssInsetShadow(shape, shadows.coin)
                 .then(
                     if (visual == VisualTheme.Gulal) Modifier.border(2.5.dp, Color(0xFF1B1230), shape)
-                    else if (visual == VisualTheme.Khata) Modifier.border(1.dp, FinioTheme.colors.foreground, shape)
                     else kit?.coinDecoration(shape) ?: Modifier,
                 ),
             contentAlignment = Alignment.Center,
