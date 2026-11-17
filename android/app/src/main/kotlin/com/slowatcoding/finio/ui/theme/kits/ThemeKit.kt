@@ -72,12 +72,22 @@ interface ThemeKit {
     @Composable fun TabBar(active: FinioTab?, onSelect: (FinioTab) -> Unit, modifier: Modifier)
 }
 
-/** The kit for a round-two theme, or null for Mudra and the round-one themes. */
+/** The kit for a round-two or round-three theme, or null for Mudra and the round-one themes. */
 fun kitFor(visual: VisualTheme): ThemeKit? = when (visual) {
     VisualTheme.Parchi -> ParchiKit
     VisualTheme.Mahal -> MahalKit
     VisualTheme.Ganak -> GanakKit
     VisualTheme.Akhbaar -> AkhbaarKit
     VisualTheme.Khel -> KhelKit
+    VisualTheme.Tareekh -> TareekhKit
+    VisualTheme.Safar -> SafarKit
+    VisualTheme.Naksha -> NakshaKit
+    VisualTheme.Ajrakh -> AjrakhKit
+    VisualTheme.Kolam -> KolamKit
+    VisualTheme.Maidan -> MaidanKit
+    VisualTheme.Sector -> SectorKit
+    VisualTheme.Daak -> DaakKit
+    VisualTheme.Sargam -> SargamKit
+    VisualTheme.Takhti -> TakhtiKit
     else -> null
 }

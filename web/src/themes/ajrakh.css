@@ -1,0 +1,913 @@
+/*
+ * Ajrakh — block-printed cloth. Madder-red patterned ground with cotton-white panels and indigo ink
+ * by day; an indigo vat with resist-white ink and madder accents by night. Pattern tiles (jaal,
+ * medallion, lozenge band) live in the ground, header band, panel top edges and tab bar — never
+ * under text. Every panel is a printed double line with an off-register second colour. Rozha One
+ * sets titles and the hero figure (its missing rupee sign falls through to Hind), Hind everything
+ * else. Signature: the stamped row (ui/extras/ajrakh.tsx) — 20 block motifs, each 5% of the budget.
+ * Prototype: design-prototypes/themes/src/ajrakh.mjs.
+ */
+html[data-visual-theme='ajrakh'] {
+  --ff-heading: 'Rozha One', 'Hind', serif;
+  --ff-money: 'Rozha One', 'Hind', serif;
+  --ff-sans: 'Hind', system-ui, sans-serif;
+
+  --ajr-ground: #9a2b1f;
+  --ajr-on-g: #f8f0df;
+  --ajr-on-g-mut: #f3d3c5;
+  --ajr-g-line: rgb(248 240 223 / 0.55);
+  --ajr-panel: #f7f0e1;
+  --ajr-ink: #1b2a5c;
+  --ajr-mut: #4d5273;
+  --ajr-line: #241a17;
+  --ajr-line2: rgb(154 43 31 / 0.5);
+  --ajr-mis: #e2a419;
+  --ajr-hair: rgb(27 42 92 / 0.17);
+  --ajr-resist: rgb(27 42 92 / 0.36);
+  --ajr-dye: #1b2a5c;
+  --ajr-on-dye: #f8f0df;
+  --ajr-dye-press: #111c42;
+  --ajr-key-press: #e6dcc4;
+  --ajr-tur: #e2a419;
+  --ajr-on-tur: #241a17;
+  --ajr-stamp: #1b2a5c;
+  --ajr-stamp-mis: #cf4a34;
+  --ajr-hot: #c62812;
+  --ajr-hot-mis: #241a17;
+
+  --ajr-p-jaal: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'18'%20height%3D'18'%20viewBox%3D'0%200%2018%2018'%3E%3Cpath%20d%3D'M9%201.5%2016.5%209%209%2016.5%201.5%209Z'%20fill%3D'none'%20stroke%3D'%237d1e15'%20stroke-width%3D'1.3'%2F%3E%3Cpath%20d%3D'M9%206.4%2011.6%209%209%2011.6%206.4%209Z'%20fill%3D'%237d1e15'%2F%3E%3Cg%20fill%3D'rgba(248%2C240%2C223%2C.5)'%3E%3Ccircle%20cx%3D'0'%20cy%3D'0'%20r%3D'1.3'%2F%3E%3Ccircle%20cx%3D'18'%20cy%3D'0'%20r%3D'1.3'%2F%3E%3Ccircle%20cx%3D'0'%20cy%3D'18'%20r%3D'1.3'%2F%3E%3Ccircle%20cx%3D'18'%20cy%3D'18'%20r%3D'1.3'%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
+  --ajr-p-med: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'24'%20height%3D'24'%20viewBox%3D'0%200%2024%2024'%3E%3Ccircle%20cx%3D'12'%20cy%3D'12'%20r%3D'10'%20fill%3D'none'%20stroke%3D'rgba(247%2C240%2C225%2C.8)'%20stroke-width%3D'1.3'%2F%3E%3Cpath%20d%3D'M12.00%204.40L13.99%207.20L17.37%206.63L16.80%2010.01L19.60%2012.00L16.80%2013.99L17.37%2017.37L13.99%2016.80L12.00%2019.60L10.01%2016.80L6.63%2017.37L7.20%2013.99L4.40%2012.00L7.20%2010.01L6.63%206.63L10.01%207.20Z'%20fill%3D'%23cf4a34'%2F%3E%3Ccircle%20cx%3D'12'%20cy%3D'12'%20r%3D'1.7'%20fill%3D'%231b2a5c'%2F%3E%3Cg%20fill%3D'rgba(247%2C240%2C225%2C.8)'%3E%3Ccircle%20cx%3D'0'%20cy%3D'0'%20r%3D'1.7'%2F%3E%3Ccircle%20cx%3D'24'%20cy%3D'0'%20r%3D'1.7'%2F%3E%3Ccircle%20cx%3D'0'%20cy%3D'24'%20r%3D'1.7'%2F%3E%3Ccircle%20cx%3D'24'%20cy%3D'24'%20r%3D'1.7'%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
+  --ajr-p-band: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'20'%20height%3D'10'%20viewBox%3D'0%200%2020%2010'%3E%3Crect%20width%3D'20'%20height%3D'10'%20fill%3D'%23f7f0e1'%2F%3E%3Cpath%20d%3D'M0%20.75H20M0%209.25H20'%20stroke%3D'%23241a17'%20stroke-width%3D'1'%2F%3E%3Cpath%20d%3D'M4.5%205%2010%202.6%2015.5%205%2010%207.4Z'%20fill%3D'%231b2a5c'%2F%3E%3Cg%20fill%3D'%239a2b1f'%3E%3Ccircle%20cx%3D'0'%20cy%3D'5'%20r%3D'1.2'%2F%3E%3Ccircle%20cx%3D'20'%20cy%3D'5'%20r%3D'1.2'%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
+  --ajr-p-vband: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'10'%20height%3D'20'%20viewBox%3D'0%200%2010%2020'%3E%3Crect%20width%3D'10'%20height%3D'20'%20fill%3D'%23f7f0e1'%2F%3E%3Cpath%20d%3D'M.75%200V20M9.25%200V20'%20stroke%3D'%23241a17'%20stroke-width%3D'1'%2F%3E%3Cpath%20d%3D'M5%204.5%207.4%2010%205%2015.5%202.6%2010Z'%20fill%3D'%231b2a5c'%2F%3E%3Cg%20fill%3D'%239a2b1f'%3E%3Ccircle%20cx%3D'5'%20cy%3D'0'%20r%3D'1.2'%2F%3E%3Ccircle%20cx%3D'5'%20cy%3D'20'%20r%3D'1.2'%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
+  --ajr-m-fill: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'16'%20height%3D'16'%20viewBox%3D'0%200%2016%2016'%3E%3Cpath%20fill-rule%3D'evenodd'%20d%3D'M8.00%200.30L10.10%202.92L13.44%202.56L13.08%205.90L15.70%208.00L13.08%2010.10L13.44%2013.44L10.10%2013.08L8.00%2015.70L5.90%2013.08L2.56%2013.44L2.92%2010.10L0.30%208.00L2.92%205.90L2.56%202.56L5.90%202.92ZM8%206.2%209.8%208%208%209.8%206.2%208Z'%2F%3E%3C%2Fsvg%3E");
+  --ajr-m-out: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'16'%20height%3D'16'%20viewBox%3D'0%200%2016%2016'%3E%3Cpath%20d%3D'M8.00%200.90L9.95%203.29L13.02%202.98L12.71%206.05L15.10%208.00L12.71%209.95L13.02%2013.02L9.95%2012.71L8.00%2015.10L6.05%2012.71L2.98%2013.02L3.29%209.95L0.90%208.00L3.29%206.05L2.98%202.98L6.05%203.29Z'%20fill%3D'none'%20stroke%3D'%23000'%20stroke-width%3D'1.1'%2F%3E%3C%2Fsvg%3E");
+
+  --background: #9a2b1f;
+  --foreground: #1b2a5c;
+  --card: #f7f0e1;
+  --card-foreground: #1b2a5c;
+  --popover: #fbf6ea;
+  --popover-foreground: #1b2a5c;
+  --primary: #1b2a5c;
+  --primary-foreground: #f8f0df;
+  --secondary: #ece3cf;
+  --secondary-foreground: #1b2a5c;
+  --muted: #ece3cf;
+  --muted-foreground: #4d5273;
+  --accent: #ece3cf;
+  --accent-foreground: #1b2a5c;
+  --destructive: #c62812;
+  --destructive-foreground: #fff6e8;
+  --positive: #2c6a2b;
+  --warning: #7a5200;
+  --border: rgb(27 42 92 / 0.17);
+  --input: rgb(36 26 23 / 0.6);
+  --ring: #e2a419;
+  --chart-1: #1b2a5c;
+  --chart-2: #9a2b1f;
+  --chart-3: #c98f0c;
+  --chart-4: #2c6a2b;
+  --chart-5: #5a6fa8;
+  --radius: 0.125rem;
+  --sidebar: #1b2a5c;
+  --sidebar-foreground: #f8f0df;
+  --sidebar-primary: #e2a419;
+  --sidebar-primary-foreground: #241a17;
+  --sidebar-accent: #e2a419;
+  --sidebar-accent-foreground: #241a17;
+  --sidebar-border: #241a17;
+  --sidebar-ring: #e2a419;
+
+  --warning-band: #fbe3a8;
+  --warning-band-foreground: #3a2600;
+  --warning-band-accent: #7a5200;
+
+  --paper: var(--ajr-p-jaal);
+  --engraving: transparent;
+  --glass: #f7f0e1;
+  --glass-strong: #f7f0e1;
+  --glass-border: #241a17;
+  --glass-highlight: transparent;
+
+  --grad-primary: linear-gradient(#1b2a5c, #1b2a5c);
+  --grad-primary-soft: linear-gradient(#ece3cf, #ece3cf);
+  --grad-success: linear-gradient(#2c6a2b, #2c6a2b);
+  --grad-success-soft: linear-gradient(#e3ead0, #e3ead0);
+  --grad-danger: linear-gradient(#c62812, #c62812);
+  --grad-danger-soft: linear-gradient(#f6d9cc, #f6d9cc);
+  --grad-info: linear-gradient(#1b2a5c, #1b2a5c);
+  --grad-warning: linear-gradient(#7a5200, #7a5200);
+  --grad-surface: linear-gradient(#f7f0e1, #f7f0e1);
+  --coin: linear-gradient(#e2a419, #e2a419);
+  --coin-ink: #241a17;
+  --register: #1b2a5c;
+  --thread: linear-gradient(#1b2a5c, #1b2a5c);
+
+  --shadow-tint: 36 26 23;
+  --scrim: rgb(36 26 23 / 0.5);
+  --shadow-card: 2px 2px 0 #e2a419;
+  --shadow-float: 2px 2px 0 #e2a419;
+  --shadow-primary: none;
+  --shadow-danger: none;
+  --shadow-success: none;
+
+  --note-100: linear-gradient(#f7f0e1, #f7f0e1);
+  --note-100-ink: #1b2a5c;
+  --note-500: linear-gradient(#efe3c8, #efe3c8);
+  --note-500-ink: #1b2a5c;
+  --note-2000: linear-gradient(#f5dcd0, #f5dcd0);
+  --note-2000-ink: #7d1e15;
+  --note-200: linear-gradient(#f6e6b4, #f6e6b4);
+  --note-200-ink: #3a2600;
+  --note-10: linear-gradient(#e7e1cf, #e7e1cf);
+  --note-10-ink: #1b2a5c;
+  --note-50: linear-gradient(#dfe3ef, #dfe3ef);
+  --note-50-ink: #1b2a5c;
+  --note-20: linear-gradient(#e3ead3, #e3ead3);
+  --note-20-ink: #1d4a1c;
+}
+
+html.dark[data-visual-theme='ajrakh'] {
+  --ajr-ground: #121a4e;
+  --ajr-on-g: #f1e9d6;
+  --ajr-on-g-mut: #bcc2e2;
+  --ajr-g-line: rgb(241 233 214 / 0.4);
+  --ajr-panel: #1c2868;
+  --ajr-ink: #f1e9d6;
+  --ajr-mut: #b7bddd;
+  --ajr-line: #4354a8;
+  --ajr-line2: rgb(241 233 214 / 0.26);
+  --ajr-mis: #0c1238;
+  --ajr-hair: rgb(241 233 214 / 0.15);
+  --ajr-resist: rgb(241 233 214 / 0.36);
+  --ajr-dye: #b5382a;
+  --ajr-on-dye: #fdf3e0;
+  --ajr-dye-press: #8e2a1f;
+  --ajr-key-press: #2a3990;
+  --ajr-tur: #f0b82e;
+  --ajr-on-tur: #1a1206;
+  --ajr-stamp: #f1e9d6;
+  --ajr-stamp-mis: #e5553e;
+  --ajr-hot: #e5553e;
+  --ajr-hot-mis: #f1e9d6;
+
+  --ajr-p-jaal: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'18'%20height%3D'18'%20viewBox%3D'0%200%2018%2018'%3E%3Cpath%20d%3D'M9%201.5%2016.5%209%209%2016.5%201.5%209Z'%20fill%3D'none'%20stroke%3D'%231f2c76'%20stroke-width%3D'1.3'%2F%3E%3Cpath%20d%3D'M9%206.4%2011.6%209%209%2011.6%206.4%209Z'%20fill%3D'%231f2c76'%2F%3E%3Cg%20fill%3D'rgba(241%2C233%2C214%2C.34)'%3E%3Ccircle%20cx%3D'0'%20cy%3D'0'%20r%3D'1.3'%2F%3E%3Ccircle%20cx%3D'18'%20cy%3D'0'%20r%3D'1.3'%2F%3E%3Ccircle%20cx%3D'0'%20cy%3D'18'%20r%3D'1.3'%2F%3E%3Ccircle%20cx%3D'18'%20cy%3D'18'%20r%3D'1.3'%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
+  --ajr-p-med: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'24'%20height%3D'24'%20viewBox%3D'0%200%2024%2024'%3E%3Ccircle%20cx%3D'12'%20cy%3D'12'%20r%3D'10'%20fill%3D'none'%20stroke%3D'rgba(241%2C233%2C214%2C.8)'%20stroke-width%3D'1.3'%2F%3E%3Cpath%20d%3D'M12.00%204.40L13.99%207.20L17.37%206.63L16.80%2010.01L19.60%2012.00L16.80%2013.99L17.37%2017.37L13.99%2016.80L12.00%2019.60L10.01%2016.80L6.63%2017.37L7.20%2013.99L4.40%2012.00L7.20%2010.01L6.63%206.63L10.01%207.20Z'%20fill%3D'%23121a4e'%2F%3E%3Ccircle%20cx%3D'12'%20cy%3D'12'%20r%3D'1.7'%20fill%3D'%23f0b82e'%2F%3E%3Cg%20fill%3D'rgba(241%2C233%2C214%2C.8)'%3E%3Ccircle%20cx%3D'0'%20cy%3D'0'%20r%3D'1.7'%2F%3E%3Ccircle%20cx%3D'24'%20cy%3D'0'%20r%3D'1.7'%2F%3E%3Ccircle%20cx%3D'0'%20cy%3D'24'%20r%3D'1.7'%2F%3E%3Ccircle%20cx%3D'24'%20cy%3D'24'%20r%3D'1.7'%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
+  --ajr-p-band: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'20'%20height%3D'10'%20viewBox%3D'0%200%2020%2010'%3E%3Crect%20width%3D'20'%20height%3D'10'%20fill%3D'%230c1238'%2F%3E%3Cpath%20d%3D'M0%20.75H20M0%209.25H20'%20stroke%3D'%23f1e9d6'%20stroke-width%3D'1'%2F%3E%3Cpath%20d%3D'M4.5%205%2010%202.6%2015.5%205%2010%207.4Z'%20fill%3D'%23f1e9d6'%2F%3E%3Cg%20fill%3D'%23f0b82e'%3E%3Ccircle%20cx%3D'0'%20cy%3D'5'%20r%3D'1.2'%2F%3E%3Ccircle%20cx%3D'20'%20cy%3D'5'%20r%3D'1.2'%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
+  --ajr-p-vband: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'10'%20height%3D'20'%20viewBox%3D'0%200%2010%2020'%3E%3Crect%20width%3D'10'%20height%3D'20'%20fill%3D'%230c1238'%2F%3E%3Cpath%20d%3D'M.75%200V20M9.25%200V20'%20stroke%3D'%23f1e9d6'%20stroke-width%3D'1'%2F%3E%3Cpath%20d%3D'M5%204.5%207.4%2010%205%2015.5%202.6%2010Z'%20fill%3D'%23f1e9d6'%2F%3E%3Cg%20fill%3D'%23f0b82e'%3E%3Ccircle%20cx%3D'5'%20cy%3D'0'%20r%3D'1.2'%2F%3E%3Ccircle%20cx%3D'5'%20cy%3D'20'%20r%3D'1.2'%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
+
+  --background: #121a4e;
+  --foreground: #f1e9d6;
+  --card: #1c2868;
+  --card-foreground: #f1e9d6;
+  --popover: #222f78;
+  --popover-foreground: #f1e9d6;
+  --primary: #f1e9d6;
+  --primary-foreground: #121a4e;
+  --secondary: #26337a;
+  --secondary-foreground: #f1e9d6;
+  --muted: #26337a;
+  --muted-foreground: #b7bddd;
+  --accent: #2a3990;
+  --accent-foreground: #f1e9d6;
+  --destructive: #ff9279;
+  --destructive-foreground: #1a0d0a;
+  --positive: #93d47c;
+  --warning: #f0b82e;
+  --border: rgb(241 233 214 / 0.15);
+  --input: rgb(241 233 214 / 0.5);
+  --ring: #f0b82e;
+  --chart-1: #f1e9d6;
+  --chart-2: #e5553e;
+  --chart-3: #f0b82e;
+  --chart-4: #93d47c;
+  --chart-5: #8b9be0;
+  --sidebar: #b5382a;
+  --sidebar-foreground: #fdf3e0;
+  --sidebar-primary: #f0b82e;
+  --sidebar-primary-foreground: #1a1206;
+  --sidebar-accent: #f0b82e;
+  --sidebar-accent-foreground: #1a1206;
+  --sidebar-border: #f1e9d6;
+  --sidebar-ring: #f0b82e;
+
+  --warning-band: #3d2f12;
+  --warning-band-foreground: #ffe9b0;
+  --warning-band-accent: #f0b82e;
+
+  --paper: var(--ajr-p-jaal);
+  --glass: #1c2868;
+  --glass-strong: #1c2868;
+  --glass-border: #4354a8;
+
+  --grad-primary: linear-gradient(#b5382a, #b5382a);
+  --grad-primary-soft: linear-gradient(#26337a, #26337a);
+  --grad-success: linear-gradient(#2c6a2b, #2c6a2b);
+  --grad-success-soft: linear-gradient(#1b3a3a, #1b3a3a);
+  --grad-danger: linear-gradient(#b5382a, #b5382a);
+  --grad-danger-soft: linear-gradient(#4a2036, #4a2036);
+  --grad-info: linear-gradient(#b5382a, #b5382a);
+  --grad-warning: linear-gradient(#8a5a00, #8a5a00);
+  --grad-surface: linear-gradient(#1c2868, #1c2868);
+  --coin: linear-gradient(#f0b82e, #f0b82e);
+  --coin-ink: #1a1206;
+  --register: #f1e9d6;
+  --thread: linear-gradient(#f1e9d6, #f1e9d6);
+
+  --shadow-tint: 0 0 0;
+  --scrim: rgb(5 8 30 / 0.65);
+  --shadow-card: 2px 2px 0 #0c1238;
+  --shadow-float: 2px 2px 0 #0c1238;
+
+  --note-100: linear-gradient(#1c2868, #1c2868);
+  --note-100-ink: #f1e9d6;
+  --note-500: linear-gradient(#22307a, #22307a);
+  --note-500-ink: #f1e9d6;
+  --note-2000: linear-gradient(#4a2036, #4a2036);
+  --note-2000-ink: #ffb3a0;
+  --note-200: linear-gradient(#3d3318, #3d3318);
+  --note-200-ink: #ffe9b0;
+  --note-10: linear-gradient(#1f2a63, #1f2a63);
+  --note-10-ink: #f1e9d6;
+  --note-50: linear-gradient(#26337a, #26337a);
+  --note-50-ink: #f1e9d6;
+  --note-20: linear-gradient(#1d3a47, #1d3a47);
+  --note-20-ink: #bfe8b0;
+}
+
+html.dark.amoled[data-visual-theme='ajrakh'] {
+  --ajr-ground: #000;
+  --background: #000;
+  --paper: none;
+}
+
+/* ── Ground and browser surfaces ── */
+html[data-visual-theme='ajrakh'] {
+  caret-color: var(--ajr-hot);
+  accent-color: var(--ajr-dye);
+}
+html[data-visual-theme='ajrakh'] body {
+  background-color: var(--background);
+  background-image: var(--paper);
+  background-size: 18px 18px;
+  background-attachment: scroll;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+html[data-visual-theme='ajrakh'] ::selection {
+  background: var(--ajr-tur);
+  color: var(--ajr-on-tur);
+}
+html[data-visual-theme='ajrakh'] :focus-visible {
+  outline: 2px solid var(--ajr-tur);
+  outline-offset: 2px;
+}
+
+/* ── Type: Rozha One is single-weight, so headings never get a synthetic bold ── */
+html[data-visual-theme='ajrakh'] :is(h1, h2, h3),
+html[data-visual-theme='ajrakh'] .font-money,
+html[data-visual-theme='ajrakh'] [data-slot='dialog-title'],
+html[data-visual-theme='ajrakh'] [data-slot='alert-dialog-title'] {
+  font-weight: 400;
+  letter-spacing: 0.005em;
+}
+html[data-visual-theme='ajrakh'] [data-slot='label'] {
+  font-weight: 600;
+}
+/* Text that sits straight on the printed ground is cream: `main` re-points the text tokens at the
+   ground ink, and every cloth panel points them back at its own ink. */
+html[data-visual-theme='ajrakh'] main {
+  --foreground: var(--ajr-on-g);
+  --muted-foreground: var(--ajr-on-g-mut);
+  color: var(--ajr-on-g);
+}
+html[data-visual-theme='ajrakh']
+  :is(
+    .card-elevated,
+    .note-card-body,
+    .note-tile,
+    .bg-warning-band,
+    [data-slot='dialog-content'],
+    [data-slot='popover-content'],
+    [data-slot='select-content'],
+    [data-slot='input'],
+    [data-slot='textarea'],
+    [data-slot='select-trigger'],
+    .bg-grad-surface,
+    [class*='bg-card'],
+    [class*='glass-strong'],
+    [class*='bg-[var(--glass)]'],
+    [class*='glass-border'],
+    [class*='bg-secondary'],
+    [class*='bg-muted'],
+    [class*='bg-popover'],
+    [class*='bg-accent'],
+    .bg-muted.p-1:has(> button[aria-pressed])
+  ) {
+  --foreground: var(--ajr-ink);
+  --muted-foreground: var(--ajr-mut);
+  color: var(--ajr-ink);
+}
+html[data-visual-theme='ajrakh'] main div:has(> h2.text-base) > button.text-primary {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 600;
+}
+html[data-visual-theme='ajrakh'] main h2.text-base {
+  font-size: 1.125rem;
+}
+
+/* ── Panels: cotton, a printed double line, off-register colour, lozenge band on the top edge ── */
+html[data-visual-theme='ajrakh'] .rounded-full,
+html[data-visual-theme='ajrakh'] .rounded-lg,
+html[data-visual-theme='ajrakh'] .rounded-md,
+html[data-visual-theme='ajrakh'] .rounded-sm,
+html[data-visual-theme='ajrakh'] .rounded-xl {
+  border-radius: 2px;
+}
+html[data-visual-theme='ajrakh'] .card-elevated {
+  position: relative;
+  background-color: var(--ajr-panel);
+  color: var(--ajr-ink);
+  border: 0;
+  border-top: 8px solid transparent;
+  border-image: var(--ajr-p-band) 10 0 0 0 / 8px 0 0 0 round;
+  border-radius: 2px;
+  box-shadow:
+    0 0 0 1px var(--ajr-line),
+    inset 0 0 0 3px var(--ajr-panel),
+    inset 0 0 0 4px var(--ajr-line2),
+    2px 2px 0 1px var(--ajr-mis);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='ajrakh'] .card-elevated .card-elevated,
+html[data-visual-theme='ajrakh'] [data-slot='dialog-content'] .card-elevated,
+html[data-visual-theme='ajrakh'] [data-slot='popover-content'] .card-elevated {
+  border-top: 0;
+  border-image: none;
+  box-shadow: 0 0 0 1px var(--ajr-hair);
+}
+html[data-visual-theme='ajrakh'] .glass-chrome {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='ajrakh'] .shadow-glow-primary,
+html[data-visual-theme='ajrakh'] .shadow-glow-success,
+html[data-visual-theme='ajrakh'] .shadow-glow-danger,
+html[data-visual-theme='ajrakh'] .shadow-sm,
+html[data-visual-theme='ajrakh'] .shadow-md,
+html[data-visual-theme='ajrakh'] .shadow-lg {
+  box-shadow: none;
+}
+html[data-visual-theme='ajrakh'] .bg-coin {
+  color: var(--coin-ink);
+  box-shadow:
+    inset 0 0 0 3px var(--ajr-tur),
+    inset 0 0 0 4px var(--ajr-line),
+    1px 2px 0 var(--ajr-line);
+}
+
+/* Filled actions are dyed solid and press darker */
+html[data-visual-theme='ajrakh'] :is(button, a).bg-grad-primary {
+  border: 1px solid var(--ajr-line);
+  color: var(--ajr-on-dye);
+  box-shadow:
+    inset 0 0 0 2px #1b2a5c,
+    inset 0 0 0 3px rgb(248 240 223 / 0.5),
+    1px 1px 0 var(--ajr-mis);
+  font-family: var(--ff-heading);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+html.dark[data-visual-theme='ajrakh'] :is(button, a).bg-grad-primary {
+  box-shadow:
+    inset 0 0 0 2px #b5382a,
+    inset 0 0 0 3px rgb(248 240 223 / 0.55),
+    1px 1px 0 #0c1238;
+}
+html[data-visual-theme='ajrakh'] :is(button, a).bg-grad-primary:active {
+  filter: brightness(0.82);
+}
+/* Header icon buttons: square printed frames on the ground */
+html[data-visual-theme='ajrakh'] [data-slot='page-header'] [data-slot='button'] {
+  background: transparent;
+  color: var(--ajr-on-g);
+  border-color: var(--ajr-g-line);
+  border-radius: 2px;
+  box-shadow:
+    inset 0 0 0 2px var(--ajr-ground),
+    inset 0 0 0 3px var(--ajr-g-line);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='ajrakh'] [data-slot='page-header'] [data-slot='button']:is(:hover, :active) {
+  background: var(--ajr-on-g);
+  color: var(--ajr-ground);
+}
+
+/* Inputs: a cloth field with a printed line */
+html[data-visual-theme='ajrakh'] :is([data-slot='input'], [data-slot='textarea'], [data-slot='select-trigger']) {
+  background: var(--ajr-panel);
+  border: 1px solid var(--ajr-line);
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 2px var(--ajr-panel), inset 0 0 0 3px var(--ajr-hair);
+}
+html[data-visual-theme='ajrakh'] :is([data-slot='input'], [data-slot='textarea'], [data-slot='select-trigger']):focus-visible {
+  border-color: var(--ajr-tur);
+  outline: 2px solid var(--ajr-tur);
+  outline-offset: 0;
+}
+
+/* Segmented controls: cotton strip, the chosen one dyed */
+html[data-visual-theme='ajrakh'] .bg-muted.p-1:has(> button[aria-pressed]) {
+  background: var(--ajr-panel);
+  border: 1px solid var(--ajr-line);
+  border-radius: 2px;
+  gap: 4px;
+  box-shadow: 1px 1px 0 var(--ajr-mis);
+}
+html[data-visual-theme='ajrakh'] .bg-muted.p-1:has(> button[aria-pressed]) > button {
+  border-radius: 1px;
+  color: var(--muted-foreground);
+  font-weight: 600;
+  box-shadow: none;
+}
+html[data-visual-theme='ajrakh'] .bg-muted.p-1:has(> button[aria-pressed]) > button[aria-pressed='true'] {
+  background: var(--ajr-dye);
+  color: var(--ajr-on-dye);
+  box-shadow:
+    inset 0 0 0 2px var(--ajr-dye),
+    inset 0 0 0 3px rgb(248 240 223 / 0.5);
+}
+html[data-visual-theme='ajrakh'] button[aria-pressed].rounded-full.text-xs {
+  font-weight: 600;
+}
+
+/* ── Progress: stamped blocks. Any fill is printed through the block motif, the track is the
+   resist outline of the same blocks ── */
+html[data-visual-theme='ajrakh'] [role='progressbar'] {
+  position: relative;
+  height: 14px;
+  border-radius: 0;
+  background: transparent;
+  overflow: visible;
+}
+html[data-visual-theme='ajrakh'] [role='progressbar']::before,
+html[data-visual-theme='ajrakh'] .bg-muted.overflow-hidden:has(> .thread-fill)::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--ajr-resist);
+  -webkit-mask: var(--ajr-m-out) 0 0 / 14px 14px repeat-x;
+  mask: var(--ajr-m-out) 0 0 / 14px 14px repeat-x;
+}
+html[data-visual-theme='ajrakh'] [role='progressbar'] > div,
+html[data-visual-theme='ajrakh'] .thread-fill {
+  position: relative;
+  border-radius: 0;
+  -webkit-mask: var(--ajr-m-fill) 0 0 / 14px 14px repeat-x;
+  mask: var(--ajr-m-fill) 0 0 / 14px 14px repeat-x;
+}
+html[data-visual-theme='ajrakh'] .bg-muted.overflow-hidden:has(> .thread-fill) {
+  position: relative;
+  height: 14px;
+  background: transparent;
+  overflow: visible;
+  border-radius: 0;
+}
+
+/* ── Hero: a dyed cloth with medallion print, a cotton panel on it, a lozenge selvedge below ── */
+html[data-visual-theme='ajrakh'] .note-card {
+  background-color: var(--ajr-dye);
+  background-image: var(--ajr-p-band), var(--ajr-p-med);
+  background-position:
+    left bottom,
+    0 0;
+  background-size:
+    20px 10px,
+    16px 16px;
+  background-repeat: repeat-x, round;
+  border: 1px solid var(--ajr-line);
+  border-radius: 2px;
+  box-shadow: 2px 2px 0 var(--ajr-mis);
+  padding: 12px 12px 22px;
+  overflow: visible;
+}
+html[data-visual-theme='ajrakh'] .note-card-body {
+  background: var(--ajr-panel);
+  color: var(--ajr-ink);
+  border: 1px solid var(--ajr-line);
+  box-shadow:
+    inset 0 0 0 3px var(--ajr-panel),
+    inset 0 0 0 4px var(--ajr-line2);
+  padding: 12px 16px;
+  max-width: none;
+}
+html[data-visual-theme='ajrakh'] .hero-fig {
+  font-size: clamp(3.25rem, 17vw, 4.25rem);
+  line-height: 1.02;
+  text-shadow: 1px 1px 0 var(--ajr-stamp-mis);
+}
+html[data-visual-theme='ajrakh'] .note-card-body > p:first-child {
+  font-weight: 600;
+  color: var(--ajr-ink);
+}
+html[data-visual-theme='ajrakh'] .hero-left {
+  font-weight: 500;
+  color: var(--ajr-ink);
+}
+html[data-visual-theme='ajrakh'] .hero-bar {
+  display: none;
+}
+html[data-visual-theme='ajrakh'] .hero-budget {
+  display: none;
+}
+html[data-visual-theme='ajrakh'] .note-card-body > button.text-primary {
+  color: var(--ajr-ink);
+  text-decoration: underline;
+}
+
+/* The stamped row (footer slot) */
+html[data-visual-theme='ajrakh'] .ajr-stamps {
+  margin-top: 0.75rem;
+}
+html[data-visual-theme='ajrakh'] .ajr-row {
+  position: relative;
+  display: flex;
+  gap: 2px;
+}
+html[data-visual-theme='ajrakh'] .ajr-s {
+  position: relative;
+  display: block;
+  flex: 1;
+  min-width: 0;
+  aspect-ratio: 1;
+}
+html[data-visual-theme='ajrakh'] .ajr-s::before,
+html[data-visual-theme='ajrakh'] .ajr-s::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  -webkit-mask: var(--ajr-m-out) center / contain no-repeat;
+  mask: var(--ajr-m-out) center / contain no-repeat;
+  background: var(--ajr-resist);
+}
+html[data-visual-theme='ajrakh'] .ajr-s::after {
+  -webkit-mask-image: var(--ajr-m-fill);
+  mask-image: var(--ajr-m-fill);
+  background: var(--ajr-stamp);
+  opacity: 0;
+}
+html[data-visual-theme='ajrakh'] .ajr-s:is(.on, .pt) {
+  filter: drop-shadow(1px 1px 0 var(--ajr-stamp-mis));
+}
+html[data-visual-theme='ajrakh'] .ajr-s.on::before {
+  display: none;
+}
+html[data-visual-theme='ajrakh'] .ajr-s:is(.on, .pt)::after {
+  opacity: 1;
+  animation: ajrakh-press 0.3s cubic-bezier(0.16, 0.84, 0.3, 1) backwards;
+  animation-delay: calc(var(--i) * 40ms + 250ms);
+}
+html[data-visual-theme='ajrakh'] .ajr-s.pt::after {
+  clip-path: inset(0 calc(100% - var(--f)) 0 0);
+}
+html[data-visual-theme='ajrakh'] .ajr-s.hot::after {
+  background: var(--ajr-hot);
+}
+html[data-visual-theme='ajrakh'] .ajr-s.hot {
+  filter: drop-shadow(1px 1px 0 var(--ajr-hot-mis));
+}
+html[data-visual-theme='ajrakh'] .ajr-today {
+  position: absolute;
+  top: -5px;
+  bottom: -5px;
+  width: 3px;
+  margin-left: -1.5px;
+  background: var(--ajr-tur);
+  outline: 1px solid var(--ajr-line);
+  text-decoration: none;
+}
+html[data-visual-theme='ajrakh'] .ajr-today::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -4px;
+  width: 7px;
+  height: 7px;
+  margin-left: -3.5px;
+  background: var(--ajr-tur);
+  outline: 1px solid var(--ajr-line);
+  transform: rotate(45deg);
+}
+html[data-visual-theme='ajrakh'] .ajr-cap {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--muted-foreground);
+}
+@keyframes ajrakh-press {
+  from {
+    opacity: 0;
+    transform: scale(1.15);
+  }
+}
+@media (min-width: 1024px) {
+  html[data-visual-theme='ajrakh'] .hero-fig {
+    font-size: 5.25rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-visual-theme='ajrakh'] .ajr-s:is(.on, .pt)::after {
+    animation: none;
+  }
+}
+
+/* The breaking strip: cotton with a turmeric tab */
+html[data-visual-theme='ajrakh'] .bg-warning-band {
+  border: 1px solid var(--ajr-line);
+  border-radius: 2px;
+  box-shadow: 1px 1px 0 var(--ajr-mis);
+}
+
+/* Account tiles: cotton panels, double line, tinted by denomination */
+html[data-visual-theme='ajrakh'] .note-tile {
+  border: 1px solid var(--ajr-line);
+  border-radius: 2px;
+  box-shadow:
+    inset 0 0 0 3px transparent,
+    inset 0 0 0 4px var(--ajr-line2),
+    1px 1px 0 var(--ajr-mis);
+}
+html[data-visual-theme='ajrakh'] .note-tile:active {
+  transform: none;
+  filter: brightness(0.94);
+}
+html[data-visual-theme='ajrakh'] .note-tile .font-money {
+  font-family: var(--ff-sans);
+  font-weight: 700;
+}
+html[data-visual-theme='ajrakh'] .note-chip {
+  border-radius: 1px;
+  border: 1px solid currentColor;
+}
+
+/* Category picker */
+html[data-visual-theme='ajrakh'] .grid-cols-4 > button[data-selected] {
+  border-radius: 2px;
+  border: 1px solid var(--ajr-ink);
+  background-color: var(--ajr-panel);
+  box-shadow:
+    inset 0 0 0 2px var(--ajr-panel),
+    inset 0 0 0 3px var(--ajr-resist);
+}
+html[data-visual-theme='ajrakh'] .grid-cols-4 > button[data-selected='true'] {
+  background-color: var(--ajr-dye);
+  color: var(--ajr-on-dye);
+  border-color: var(--ajr-line);
+  box-shadow:
+    inset 0 0 0 2px var(--ajr-dye),
+    inset 0 0 0 3px rgb(248 240 223 / 0.55),
+    1px 1px 0 var(--ajr-stamp-mis);
+}
+html[data-visual-theme='ajrakh'] .grid-cols-4 > button[data-selected='true'] > span {
+  color: var(--ajr-on-dye);
+  font-weight: 600;
+}
+
+/* ── Add transaction: Rozha amount, keypad keys as small cloth panels ── */
+html[data-visual-theme='ajrakh'] .bg-grad-surface.min-h-16 {
+  background: var(--ajr-panel);
+  border: 1px solid var(--ajr-line);
+  border-radius: 2px;
+  box-shadow:
+    inset 0 0 0 3px var(--ajr-panel),
+    inset 0 0 0 4px var(--ajr-line2),
+    1px 1px 0 var(--ajr-mis);
+}
+html[data-visual-theme='ajrakh'] .bg-grad-surface.min-h-16 + .grid {
+  gap: 6px;
+}
+html[data-visual-theme='ajrakh'] .bg-grad-surface.min-h-16 + .grid > button {
+  background: var(--ajr-panel);
+  color: var(--ajr-ink);
+  border: 1px solid var(--ajr-line);
+  border-radius: 2px;
+  font-family: var(--ff-heading);
+  font-weight: 400;
+  box-shadow:
+    inset 0 0 0 2px var(--ajr-panel),
+    inset 0 0 0 3px var(--ajr-line2),
+    1px 1px 0 var(--ajr-mis);
+}
+html[data-visual-theme='ajrakh'] .bg-grad-surface.min-h-16 + .grid > button:active {
+  transform: none;
+  background: var(--ajr-key-press);
+}
+
+/* ── Overlays: square cloth with the printed double line ── */
+html[data-visual-theme='ajrakh'] :is(
+    [data-slot='dialog-content'],
+    [data-slot='alert-dialog-content'],
+    [data-slot='popover-content'],
+    [data-slot='select-content'],
+    [data-slot='dropdown-menu-content']
+  ) {
+  background: var(--popover);
+  color: var(--popover-foreground);
+  border-radius: 2px;
+  border: 1px solid var(--ajr-line);
+  box-shadow:
+    inset 0 0 0 3px var(--popover),
+    inset 0 0 0 4px var(--ajr-line2),
+    3px 3px 0 var(--ajr-mis);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='ajrakh'] [data-slot='dialog-header'] {
+  border-bottom: 1px solid var(--ajr-line);
+  padding-bottom: 0.5rem;
+}
+html[data-visual-theme='ajrakh'] [data-slot='dialog-title'],
+html[data-visual-theme='ajrakh'] [data-slot='alert-dialog-title'] {
+  font-size: 1.375rem;
+  line-height: 1.15;
+}
+
+/* ── Chrome ── */
+/* Page header: plain dyed selvedge (no pattern under the title) with a lozenge band below */
+html[data-visual-theme='ajrakh'] [data-slot='page-header'] {
+  background: var(--ajr-ground);
+  color: var(--ajr-on-g);
+  border-bottom: 0;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='ajrakh'] [data-slot='page-header']::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: 10px;
+  background: var(--ajr-p-band) 0 0 / 20px 10px repeat-x;
+  border-bottom: 1px solid var(--ajr-line);
+  pointer-events: none;
+}
+html[data-visual-theme='ajrakh'] [data-slot='page-header'] h1 {
+  font-size: 1.6875rem;
+  line-height: 1.1;
+  color: var(--ajr-on-g);
+}
+html[data-visual-theme='ajrakh'] [data-slot='page-header'] :is(p, .text-muted-foreground) {
+  color: var(--ajr-on-g-mut);
+}
+html[data-visual-theme='ajrakh'] main {
+  padding-top: 1.125rem;
+}
+
+html[data-visual-theme='ajrakh'] [data-slot='tab-bar'] {
+  background: var(--ajr-panel);
+  border-top: 1px solid var(--ajr-line);
+  box-shadow: none;
+  padding-top: 14px;
+}
+html[data-visual-theme='ajrakh'] [data-slot='tab-bar']::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 10px;
+  background: var(--ajr-p-band) 0 0 / 20px 10px repeat-x;
+  border-bottom: 1px solid var(--ajr-line);
+}
+html[data-visual-theme='ajrakh'] [data-slot='tab'] {
+  color: var(--muted-foreground);
+  border-radius: 2px;
+}
+html[data-visual-theme='ajrakh'] [data-slot='tab'] span {
+  font-weight: 600;
+  font-size: 0.6875rem;
+}
+html[data-visual-theme='ajrakh'] [data-slot='tab'][aria-current='page'] {
+  background: var(--ajr-dye);
+  color: var(--ajr-on-dye);
+  box-shadow:
+    inset 0 0 0 2px var(--ajr-dye),
+    inset 0 0 0 3px rgb(248 240 223 / 0.5),
+    1px 1px 0 var(--ajr-mis);
+}
+html[data-visual-theme='ajrakh'] [data-slot='fab'] {
+  border-radius: 50%;
+  background: var(--ajr-dye);
+  color: var(--ajr-on-dye);
+  border: 1px solid var(--ajr-line);
+  box-shadow:
+    inset 0 0 0 4px var(--ajr-dye),
+    inset 0 0 0 5px rgb(248 240 223 / 0.75),
+    1px 2px 0 var(--ajr-mis);
+}
+html[data-visual-theme='ajrakh'] [data-slot='fab']:active {
+  background: var(--ajr-dye-press);
+}
+
+html[data-visual-theme='ajrakh'] [data-slot='sidebar'] {
+  background: var(--ajr-dye);
+  color: var(--ajr-on-dye);
+  border-right: 0;
+  padding-right: 1.5rem;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='ajrakh'] [data-slot='sidebar']::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 10px;
+  background: var(--ajr-p-vband) 0 0 / 10px 20px repeat-y;
+}
+html[data-visual-theme='ajrakh'] [data-slot='brand-mark'] {
+  border-radius: 0;
+  background: var(--ajr-tur);
+  color: var(--ajr-on-tur);
+  box-shadow: none;
+  border: 1px solid var(--ajr-line);
+}
+html[data-visual-theme='ajrakh'] [data-slot='brand-mark'] + span {
+  font-family: var(--ff-heading);
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: 1;
+}
+html[data-visual-theme='ajrakh'] [data-slot='sidebar'] [data-slot='add-button'] {
+  background: var(--ajr-panel);
+  color: var(--ajr-ink);
+  border-radius: 2px;
+  font-weight: 700;
+  box-shadow:
+    inset 0 0 0 2px var(--ajr-panel),
+    inset 0 0 0 3px var(--ajr-line2),
+    1px 1px 0 var(--ajr-tur);
+}
+html[data-visual-theme='ajrakh'] [data-slot='sidebar'] [data-slot='nav-item'] {
+  border-radius: 2px;
+  color: var(--ajr-on-dye);
+  font-weight: 600;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+html[data-visual-theme='ajrakh'] [data-slot='sidebar'] [data-slot='nav-item']:hover {
+  background: rgb(248 240 223 / 0.14);
+  color: var(--ajr-on-dye);
+}
+html[data-visual-theme='ajrakh'] [data-slot='sidebar'] [data-slot='nav-item'][aria-current='page'] {
+  background: var(--ajr-tur);
+  color: var(--ajr-on-tur);
+  box-shadow:
+    inset 0 0 0 2px var(--ajr-tur),
+    inset 0 0 0 3px rgb(36 26 23 / 0.45);
+}
+html[data-visual-theme='ajrakh'] [data-slot='sidebar'] > p {
+  margin-top: 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgb(248 240 223 / 0.4);
+  color: var(--ajr-on-dye);
+  font-family: var(--ff-heading);
+  font-size: 1rem;
+}
+
+/* Toasts */
+html[data-visual-theme='ajrakh'] [data-sonner-toaster] {
+  --normal-bg: var(--popover);
+  --normal-border: var(--ajr-line);
+  --normal-text: var(--popover-foreground);
+  --border-radius: 2px;
+}
+html[data-visual-theme='ajrakh'] [data-sonner-toaster] [data-sonner-toast] {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: 2px 2px 0 var(--ajr-mis);
+}
+
+/* Loose headings and captions sit on plain dyed cloth, never over the jaal print */
+html[data-visual-theme='ajrakh'] main div.flex:has(> h2.text-base),
+html[data-visual-theme='ajrakh'] main > :is(h2, p),
+html[data-visual-theme='ajrakh'] main section > h2.text-xs,
+html[data-visual-theme='ajrakh'] main > div:has(> p.text-muted-foreground:only-child) {
+  background: var(--ajr-ground);
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+html.dark[data-visual-theme='ajrakh'] [data-slot='sidebar'] [data-slot='add-button'] {
+  background: #f1e9d6;
+  color: #121a4e;
+  box-shadow:
+    inset 0 0 0 2px #f1e9d6,
+    inset 0 0 0 3px rgb(18 26 78 / 0.4),
+    1px 1px 0 #f0b82e;
+}

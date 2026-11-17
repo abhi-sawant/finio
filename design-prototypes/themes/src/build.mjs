@@ -14,7 +14,19 @@ const out = join(here, '..');
 const NEXT = ['parchi', 'mahal', 'ganak', 'akhbaar', 'khel'];
 const next = [];
 for (const slug of NEXT) if (existsSync(join(here, `${slug}.mjs`))) next.push(await import(`./${slug}.mjs`));
-const themes = [khata, gulal, shunya, bagh, ...next];
+// Round three: same rule. `node src/build.mjs <slug>` builds just that page (no index), so
+// themes can be worked on side by side without one broken module blocking the rest.
+const ROUND3 = ['tareekh', 'safar', 'naksha', 'ajrakh', 'kolam', 'maidan', 'sector', 'daak', 'sargam', 'takhti'];
+const only = process.argv[2];
+if (only) {
+  const t = await import(`./${only}.mjs`);
+  writeFileSync(join(out, `${t.meta.slug}.html`), page({ ...t.meta, css: t.css, screens: t.screens }));
+  console.log('built', t.meta.slug);
+  process.exit(0);
+}
+const round3 = [];
+for (const slug of ROUND3) if (existsSync(join(here, `${slug}.mjs`))) round3.push(await import(`./${slug}.mjs`));
+const themes = [khata, gulal, shunya, bagh, ...next, ...round3];
 
 for (const t of themes) {
   const html = page({ ...t.meta, css: t.css, screens: t.screens });
@@ -51,7 +63,7 @@ p{color:#a9a9b6;font-size:14px;line-height:1.55;margin-top:8px}
 h2.rd{font-size:13px;font-weight:600;color:#9a9aa8;margin:44px 0 14px}
 </style></head><body><div class="w">
 <h1>Finio themes</h1>
-<p class="lead">Ten themes, ten personalities — shape, type, density, motion and voice change, not just colour. Mudra stays the default. Open any prototype: each has a light/dark toggle and shows Home, Transactions, Add, Budgets and the desktop layout on identical data.</p>
+<p class="lead">Twenty themes, twenty personalities — shape, type, density, motion and voice change, not just colour. Mudra stays the default. Open any prototype: each has a light/dark toggle and shows Home, Transactions, Add, Budgets and the desktop layout on identical data.</p>
 <div class="grid">
 <a class="card def" href="../../web/public/landing/desktop-light.webp"><img src="../../web/public/landing/desktop-light.webp" alt="Mudra desktop home"><div><div class="cn"><span class="n">1</span><h2>Mudra</h2><em>Default · shipped</em></div><p>Banknote security printing. Frosted glass over lavender-mint-peach note paper, guilloche engraving, a colour-shift thread, denomination-tinted accounts. Luxe, calm and ornamental; one lavender accent.</p></div></a>
 ${card(2, khata.meta.name, 'The accountant’s ledger. Celadon columnar paper, blue-black ink, red margin rule. Compact, ruled, serif; rupees and paise in split columns.', khata.meta.swatch, khata.meta.swatchDark, 'khata.html', 'Shipped')}
@@ -61,7 +73,11 @@ ${card(5, bagh.meta.name, 'A kitchen garden. Leaf-cornered, soft and tactile; go
 </div>
 <h2 class="rd">New · round two</h2>
 <div class="grid">
-${next.map((t) => card(t.meta.num, t.meta.name, t.meta.blurb, t.meta.swatch, t.meta.swatchDark, `${t.meta.slug}.html`, 'Prototype')).join('')}
-</div></div></body></html>`;
+${next.map((t) => card(t.meta.num, t.meta.name, t.meta.blurb, t.meta.swatch, t.meta.swatchDark, `${t.meta.slug}.html`, 'Shipped')).join('')}
+</div>
+${round3.length ? `<h2 class="rd">New · round three</h2>
+<div class="grid">
+${round3.map((t) => card(t.meta.num, t.meta.name, t.meta.blurb, t.meta.swatch, t.meta.swatchDark, `${t.meta.slug}.html`, 'Prototype')).join('')}
+</div>` : ''}</div></body></html>`;
 writeFileSync(join(out, 'index.html'), index);
 console.log('built', themes.map((t) => t.meta.slug).join(', '));

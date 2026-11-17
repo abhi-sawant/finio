@@ -79,6 +79,9 @@ data class DashboardData(
     val daysLeftInPeriod: Int,
     /** 0–1: how far through the budget's period today is (Shunya's month line, Bagh's sun). */
     val periodElapsed: Float,
+    /** Whole days in the budget's period, and which of them today is (1-based) — the themes' day counters. */
+    val periodTotalDays: Int,
+    val periodDay: Int,
     val periodNoun: String,
     val upcomingBillsTotal: Double,
     val safePerDay: Double,
@@ -112,6 +115,8 @@ fun computeDashboardData(s: FinanceState): DashboardData {
     val range = periodRange(budgetPeriod.toPeriodType(), now, monthStartDay)
     val daysLeftInPeriod = max(1, differenceInCalendarDays(range.end, now) + 1)
     val periodSpan = (range.end.toEpochMilli() - range.start.toEpochMilli()).toFloat()
+    val periodTotalDays = max(1, differenceInCalendarDays(range.end, range.start) + 1)
+    val periodDay = (periodTotalDays - daysLeftInPeriod + 1).coerceIn(1, periodTotalDays)
     val periodElapsed = if (periodSpan > 0f) {
         ((now.toEpochMilli() - range.start.toEpochMilli()) / periodSpan).coerceIn(0f, 1f)
     } else 0f
@@ -199,6 +204,8 @@ fun computeDashboardData(s: FinanceState): DashboardData {
         overallBudget = overallBudget,
         daysLeftInPeriod = daysLeftInPeriod,
         periodElapsed = periodElapsed,
+        periodTotalDays = periodTotalDays,
+        periodDay = periodDay,
         periodNoun = budgetPeriod.noun(),
         upcomingBillsTotal = upcomingBillsTotal,
         safePerDay = safePerDay,

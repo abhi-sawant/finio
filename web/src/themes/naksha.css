@@ -1,0 +1,888 @@
+/*
+ * Naksha — the architect's drawing sheet. Cyanotype Prussian blue in the dark, white tracing paper
+ * with blue ink in the light. Nothing is filled and nothing is round: panels are 1px drawn
+ * rectangles with crop marks at the corners, headers are ruled title-block strips, a selection is
+ * a 45° hatch, a warning is red pencil. Azeret Mono letters every figure and label, Sofia Sans
+ * Semi Condensed sets names and notes. The hero's signature is the dimensioned budget bar
+ * (NakshaExtra, ui/extras/naksha.tsx): spans for spent and left, a dash-dot datum at today.
+ */
+html[data-visual-theme='naksha'] {
+  --ff-heading: 'Sofia Sans Semi Condensed Variable', 'Instrument Sans Variable', 'Arial Narrow', sans-serif;
+  --ff-money: 'Azeret Mono Variable', 'Overpass Mono Variable', ui-monospace, Menlo, monospace;
+  --ff-sans: 'Sofia Sans Semi Condensed Variable', 'Instrument Sans Variable', 'Arial Narrow', system-ui, sans-serif;
+  --nk-mono: 'Azeret Mono Variable', 'Overpass Mono Variable', ui-monospace, Menlo, monospace;
+
+  --nk-ln: #1b4aa5;
+  --nk-ln2: rgb(27 74 165 / 0.34);
+  --nk-grid1: rgb(0 130 215 / 0.075);
+  --nk-grid2: rgb(0 130 215 / 0.15);
+  --nk-red: #c4271b;
+  --nk-hi: #fff1a0;
+  --nk-hat: rgb(27 74 165 / 0.3);
+  --nk-selbg: #fff1a0;
+  --nk-hatch: repeating-linear-gradient(45deg, var(--nk-hat) 0 1px, transparent 1px 5px);
+
+  --background: #f6f9fc;
+  --foreground: #0d2c6b;
+  --card: #f6f9fc;
+  --card-foreground: #0d2c6b;
+  --popover: #fbfdff;
+  --popover-foreground: #0d2c6b;
+  --primary: #1647a6;
+  --primary-foreground: #ffffff;
+  --secondary: #e8f0f9;
+  --secondary-foreground: #0d2c6b;
+  --muted: #e8f0f9;
+  --muted-foreground: #4a5565;
+  --accent: #fff1a0;
+  --accent-foreground: #0d2c6b;
+  --destructive: #c4271b;
+  --destructive-foreground: #ffffff;
+  --positive: #0a6e48;
+  --warning: #8a5600;
+  --border: rgb(27 74 165 / 0.34);
+  --input: #1b4aa5;
+  --ring: #1647a6;
+  --chart-1: #1647a6;
+  --chart-2: #c4271b;
+  --chart-3: #0a6e48;
+  --chart-4: #8a5600;
+  --chart-5: #5b6b85;
+  --radius: 0rem;
+  --sidebar: #f6f9fc;
+  --sidebar-foreground: #0d2c6b;
+  --sidebar-primary: #1647a6;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #fff1a0;
+  --sidebar-accent-foreground: #0d2c6b;
+  --sidebar-border: #1b4aa5;
+  --sidebar-ring: #1647a6;
+
+  --warning-band: #fbeceb;
+  --warning-band-foreground: #6b150e;
+  --warning-band-accent: #c4271b;
+
+  --paper: none;
+  --engraving: transparent;
+  --glass: transparent;
+  --glass-strong: #f6f9fc;
+  --glass-border: rgb(27 74 165 / 0.34);
+  --glass-highlight: transparent;
+
+  --grad-primary: linear-gradient(#1647a6, #1647a6);
+  --grad-primary-soft: linear-gradient(#e8f0f9, #e8f0f9);
+  --grad-success: linear-gradient(#0a6e48, #0a6e48);
+  --grad-success-soft: linear-gradient(#e2f3ec, #e2f3ec);
+  --grad-danger: linear-gradient(#c4271b, #c4271b);
+  --grad-danger-soft: linear-gradient(#fbeceb, #fbeceb);
+  --grad-info: linear-gradient(#1647a6, #1647a6);
+  --grad-warning: linear-gradient(#8a5600, #8a5600);
+  --grad-surface: linear-gradient(#f6f9fc, #f6f9fc);
+  --coin: linear-gradient(#1647a6, #1647a6);
+  --coin-ink: #ffffff;
+  --register: #1647a6;
+  --thread: linear-gradient(#1647a6, #1647a6);
+
+  --shadow-tint: 13 44 107;
+  --scrim: rgb(13 44 107 / 0.4);
+  --shadow-card: none;
+  --shadow-float: none;
+  --shadow-primary: none;
+  --shadow-danger: none;
+  --shadow-success: none;
+
+  --note-100: linear-gradient(transparent, transparent);
+  --note-100-ink: #0d2c6b;
+  --note-500: linear-gradient(transparent, transparent);
+  --note-500-ink: #0d2c6b;
+  --note-2000: linear-gradient(transparent, transparent);
+  --note-2000-ink: #c4271b;
+  --note-200: linear-gradient(transparent, transparent);
+  --note-200-ink: #0d2c6b;
+  --note-10: linear-gradient(transparent, transparent);
+  --note-10-ink: #0d2c6b;
+  --note-50: linear-gradient(transparent, transparent);
+  --note-50-ink: #0d2c6b;
+  --note-20: linear-gradient(transparent, transparent);
+  --note-20-ink: #0d2c6b;
+}
+
+html.dark[data-visual-theme='naksha'] {
+  --nk-ln: #dbe8fb;
+  --nk-ln2: rgb(219 232 251 / 0.4);
+  --nk-grid1: rgb(255 255 255 / 0.045);
+  --nk-grid2: rgb(255 255 255 / 0.1);
+  --nk-red: #ffa08f;
+  --nk-hi: #ffe98a;
+  --nk-hat: rgb(255 233 138 / 0.55);
+  --nk-selbg: transparent;
+
+  --background: #12397a;
+  --foreground: #f4f8ff;
+  --card: #12397a;
+  --card-foreground: #f4f8ff;
+  --popover: #0f3270;
+  --popover-foreground: #f4f8ff;
+  --primary: #ffe98a;
+  --primary-foreground: #0d2c6b;
+  --secondary: #194a96;
+  --secondary-foreground: #f4f8ff;
+  --muted: #194a96;
+  --muted-foreground: #c3d7f5;
+  --accent: #194a96;
+  --accent-foreground: #f4f8ff;
+  --destructive: #ffa08f;
+  --destructive-foreground: #0d2c6b;
+  --positive: #a9f2d2;
+  --warning: #ffd36e;
+  --border: rgb(219 232 251 / 0.4);
+  --input: #dbe8fb;
+  --ring: #ffe98a;
+  --chart-1: #f4f8ff;
+  --chart-2: #ffe98a;
+  --chart-3: #a9f2d2;
+  --chart-4: #ffa08f;
+  --chart-5: #9fbbe6;
+  --sidebar: #12397a;
+  --sidebar-foreground: #f4f8ff;
+  --sidebar-primary: #ffe98a;
+  --sidebar-primary-foreground: #0d2c6b;
+  --sidebar-accent: #194a96;
+  --sidebar-accent-foreground: #f4f8ff;
+  --sidebar-border: #dbe8fb;
+  --sidebar-ring: #ffe98a;
+
+  --warning-band: #4a2a5e;
+  --warning-band-foreground: #ffe4de;
+  --warning-band-accent: #ffa08f;
+
+  --glass: transparent;
+  --glass-strong: #12397a;
+  --glass-border: rgb(219 232 251 / 0.4);
+
+  /* The filled action keeps a deep blue so white text reads; the drawn outline lifts it off the sheet. */
+  --grad-primary: linear-gradient(#1a50b8, #1a50b8);
+  --grad-primary-soft: linear-gradient(#194a96, #194a96);
+  --grad-success: linear-gradient(#0d6b4a, #0d6b4a);
+  --grad-success-soft: linear-gradient(#0f4a5c, #0f4a5c);
+  --grad-danger: linear-gradient(#b3281c, #b3281c);
+  --grad-danger-soft: linear-gradient(#4a2a5e, #4a2a5e);
+  --grad-info: linear-gradient(#1a50b8, #1a50b8);
+  --grad-warning: linear-gradient(#8a5600, #8a5600);
+  --grad-surface: linear-gradient(#12397a, #12397a);
+  --coin: linear-gradient(#f4f8ff, #f4f8ff);
+  --coin-ink: #12397a;
+  --register: #ffe98a;
+  --thread: linear-gradient(#ffe98a, #ffe98a);
+
+  --shadow-tint: 0 0 0;
+  --scrim: rgb(5 20 52 / 0.65);
+
+  --note-100-ink: #f4f8ff;
+  --note-500-ink: #f4f8ff;
+  --note-2000-ink: #ffa08f;
+  --note-200-ink: #f4f8ff;
+  --note-10-ink: #f4f8ff;
+  --note-50-ink: #f4f8ff;
+  --note-20-ink: #f4f8ff;
+}
+
+/* ── The sheet: a drafting grid, 8px minor and 40px major, behind every screen ── */
+html[data-visual-theme='naksha'] body {
+  background-image:
+    linear-gradient(var(--nk-grid2) 1px, transparent 1px),
+    linear-gradient(90deg, var(--nk-grid2) 1px, transparent 1px),
+    linear-gradient(var(--nk-grid1) 1px, transparent 1px),
+    linear-gradient(90deg, var(--nk-grid1) 1px, transparent 1px);
+  background-size:
+    40px 40px,
+    40px 40px,
+    8px 8px,
+    8px 8px;
+  background-position: -1px 3px;
+  font-variant-numeric: tabular-nums;
+}
+html.dark.amoled[data-visual-theme='naksha'] {
+  --nk-grid1: rgb(255 255 255 / 0.03);
+  --nk-grid2: rgb(255 255 255 / 0.07);
+  --card: #000;
+  --glass-strong: #000;
+  --sidebar: #000;
+  --grad-surface: linear-gradient(#000, #000);
+  --popover: #031330;
+}
+html[data-visual-theme='naksha'] {
+  caret-color: var(--nk-red);
+  accent-color: var(--primary);
+  scrollbar-color: color-mix(in srgb, var(--foreground) 45%, transparent) transparent;
+}
+html[data-visual-theme='naksha'] ::selection {
+  background: var(--nk-hi);
+  color: #0d2c6b;
+}
+html[data-visual-theme='naksha'] :focus-visible {
+  outline: 2px solid var(--nk-hi);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--nk-ln);
+}
+html[data-visual-theme='naksha'] :focus-visible {
+  box-shadow: none;
+  outline-color: var(--ring);
+}
+
+/* ── Type: mono for figures and lettered labels, Sofia Sans for names ── */
+html[data-visual-theme='naksha'] h1 {
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+html[data-visual-theme='naksha'] .font-money {
+  font-family: var(--nk-mono);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+html[data-visual-theme='naksha'] [data-slot='label'] {
+  font-family: var(--nk-mono);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted-foreground);
+}
+html[data-visual-theme='naksha'] [data-slot='dialog-title'],
+html[data-visual-theme='naksha'] [data-slot='alert-dialog-title'] {
+  font-family: var(--nk-mono);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+/* Section heads: a lettered title-block cell, the rule hatched out to the margin. */
+html[data-visual-theme='naksha'] main h2.text-base {
+  font-family: var(--nk-mono);
+  font-size: 0.71875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+html[data-visual-theme='naksha'] main div.flex:has(> h2.text-base) {
+  align-items: stretch;
+  min-height: 1.75rem;
+  border: 1px solid var(--nk-ln);
+}
+html[data-visual-theme='naksha'] main div.flex:has(> h2.text-base) > h2 {
+  display: flex;
+  align-items: center;
+  padding: 0 0.625rem;
+  margin: 0;
+  background: var(--background);
+  border-right: 1px solid var(--nk-ln);
+  white-space: nowrap;
+}
+html[data-visual-theme='naksha'] main div:has(> h2.text-base) > button.text-primary {
+  margin: 0 0 0 auto;
+  padding: 0 0.625rem;
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  min-height: 0;
+  height: auto;
+  border-left: 1px solid var(--nk-ln);
+  color: var(--foreground);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+html[data-visual-theme='naksha'] main h2.text-base.mb-3 {
+  padding: 0.35rem 0;
+  border-bottom: 1px solid var(--nk-ln);
+}
+/* Day headings in the transaction list: lettered, with a hatched rule out to the margin. */
+html[data-visual-theme='naksha'] main section > h2.text-xs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-inline-start: 0;
+  font-family: var(--nk-mono);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+html[data-visual-theme='naksha'] main section > h2.text-xs::after {
+  content: '';
+  flex: 1;
+  height: 6px;
+  background: var(--nk-hatch);
+  opacity: 0.45;
+  border-top: 1px solid var(--nk-ln2);
+  border-bottom: 1px solid var(--nk-ln2);
+}
+
+/* ── Shape: nothing is round, nothing floats, nothing is frosted ── */
+html[data-visual-theme='naksha'] .rounded-full:not([data-slot='fab']):not([role='switch']):not([role='switch'] *),
+html[data-visual-theme='naksha'] .rounded-lg,
+html[data-visual-theme='naksha'] .rounded-md,
+html[data-visual-theme='naksha'] .rounded-sm,
+html[data-visual-theme='naksha'] .rounded-xl,
+html[data-visual-theme='naksha'] .rounded-2xl {
+  border-radius: 0;
+}
+/* A drawn panel: 1px rectangle on the sheet, crop marks inside each corner. */
+html[data-visual-theme='naksha'] .card-elevated {
+  position: relative;
+  background-color: var(--background);
+  border: 1px solid var(--nk-ln);
+  border-radius: 0;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='naksha'] .card-elevated:not(.note-card)::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  pointer-events: none;
+  z-index: 1;
+  --t: linear-gradient(var(--nk-ln), var(--nk-ln));
+  background:
+    var(--t) left 0 top 0 / 5px 1px,
+    var(--t) left 0 top 0 / 1px 5px,
+    var(--t) right 0 top 0 / 5px 1px,
+    var(--t) right 0 top 0 / 1px 5px,
+    var(--t) left 0 bottom 0 / 5px 1px,
+    var(--t) left 0 bottom 0 / 1px 5px,
+    var(--t) right 0 bottom 0 / 5px 1px,
+    var(--t) right 0 bottom 0 / 1px 5px;
+  background-repeat: no-repeat;
+}
+html[data-visual-theme='naksha'] .glass-chrome {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='naksha'] .shadow-glow-primary,
+html[data-visual-theme='naksha'] .shadow-glow-success,
+html[data-visual-theme='naksha'] .shadow-glow-danger,
+html[data-visual-theme='naksha'] .shadow-sm,
+html[data-visual-theme='naksha'] .shadow-md,
+html[data-visual-theme='naksha'] .shadow-lg {
+  box-shadow: none;
+}
+html[data-visual-theme='naksha'] .bg-coin {
+  color: var(--coin-ink);
+  box-shadow: none;
+}
+
+/* Filled actions are lettered caps in mono, ringed like a drawn stamp. */
+html[data-visual-theme='naksha'] :is(button, a).bg-grad-primary {
+  font-family: var(--nk-mono);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  box-shadow:
+    0 0 0 2px var(--background),
+    0 0 0 3px var(--nk-ln);
+}
+html[data-visual-theme='naksha'] :is(button, a).bg-grad-primary:active {
+  background-image: repeating-linear-gradient(45deg, rgb(255 255 255 / 0.55) 0 1px, transparent 1px 5px);
+}
+html[data-visual-theme='naksha'] [data-slot='button'][class*='glass-border'] {
+  border: 1px solid var(--nk-ln2);
+  background: var(--background);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='naksha'] [data-slot='button'][class*='glass-border']:hover,
+html[data-visual-theme='naksha'] [data-slot='button'][class*='glass-border']:active {
+  background-image: var(--nk-hatch);
+}
+
+/* Inputs: an outlined field on the sheet. */
+html[data-visual-theme='naksha']
+  :is([data-slot='input'], [data-slot='textarea'], [data-slot='select-trigger']) {
+  background: var(--background);
+  border: 1px solid var(--nk-ln);
+  border-radius: 0;
+}
+html[data-visual-theme='naksha']
+  :is([data-slot='input'], [data-slot='textarea'], [data-slot='select-trigger']):focus-visible {
+  border-color: var(--nk-red);
+  outline: 1px solid var(--nk-red);
+  outline-offset: 1px;
+}
+
+/* Segmented controls: ruled cells, the chosen one hatched. */
+html[data-visual-theme='naksha'] .bg-muted.p-1:has(> button[aria-pressed]) {
+  gap: 0;
+  padding: 0;
+  background: var(--background);
+  border: 1px solid var(--nk-ln);
+}
+html[data-visual-theme='naksha'] .bg-muted.p-1:has(> button[aria-pressed]) > button {
+  background: none;
+  box-shadow: none;
+  color: var(--foreground);
+  font-weight: 500;
+}
+html[data-visual-theme='naksha'] .bg-muted.p-1:has(> button[aria-pressed]) > button + button {
+  border-left: 1px solid var(--nk-ln);
+}
+html[data-visual-theme='naksha']
+  .bg-muted.p-1:has(> button[aria-pressed])
+  > button[aria-pressed='true'] {
+  background: var(--nk-hatch), var(--nk-selbg);
+  color: var(--foreground);
+  font-weight: 700;
+}
+html.dark[data-visual-theme='naksha']
+  .bg-muted.p-1:has(> button[aria-pressed])
+  > button[aria-pressed='true'] {
+  color: var(--nk-hi);
+}
+html[data-visual-theme='naksha'] button[aria-pressed].rounded-full.text-xs {
+  font-family: var(--nk-mono);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid var(--nk-ln2);
+}
+html[data-visual-theme='naksha'] button[aria-pressed='true'].rounded-full.text-xs {
+  background: var(--nk-hatch), var(--nk-selbg);
+  color: var(--foreground);
+  border-color: var(--nk-ln);
+}
+html.dark[data-visual-theme='naksha'] button[aria-pressed='true'].rounded-full.text-xs {
+  color: var(--nk-hi);
+}
+
+/* ── Progress: an outlined bar, its fill hatched at 45°. Over and warning fills go red pencil. ── */
+html[data-visual-theme='naksha'] [role='progressbar'] {
+  height: 0.875rem;
+  border-radius: 0;
+  background: transparent;
+  border: 1px solid var(--nk-ln);
+}
+html[data-visual-theme='naksha'] [role='progressbar'] > div,
+html[data-visual-theme='naksha'] .thread-fill {
+  border-radius: 0;
+  background-color: transparent !important;
+  background-image: repeating-linear-gradient(45deg, var(--nk-ln) 0 1px, transparent 1px 5px) !important;
+  border-right: 1px solid var(--nk-ln);
+}
+html[data-visual-theme='naksha'] [role='progressbar'] > div[style*='destructive'],
+html[data-visual-theme='naksha'] [role='progressbar'] > div[class*='destructive'] {
+  background-image: repeating-linear-gradient(45deg, var(--nk-red) 0 1px, transparent 1px 5px) !important;
+  border-right-color: var(--nk-red);
+}
+html[data-visual-theme='naksha'] .bg-muted.overflow-hidden:has(> .thread-fill) {
+  background: transparent;
+  border: 1px solid var(--nk-ln);
+  border-radius: 0;
+}
+
+/* ── Hero: the drawing sheet's main view. Figure in mono, the dimensioned bar beneath. ── */
+html[data-visual-theme='naksha'] .note-card {
+  background-image: none;
+  background-color: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0.25rem 0 0;
+  overflow: visible;
+}
+html[data-visual-theme='naksha'] .note-card-body {
+  display: flex;
+  flex-direction: column;
+  padding-right: 0;
+}
+html[data-visual-theme='naksha'] .note-card-body > * {
+  align-self: stretch;
+}
+html[data-visual-theme='naksha'] .note-card-body > button {
+  align-self: flex-start;
+  margin-left: 0;
+  padding-left: 0;
+  font-weight: 400;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+html[data-visual-theme='naksha'] .note-card-body > p:first-child {
+  font-family: var(--nk-mono);
+  color: var(--muted-foreground);
+  font-size: 0.71875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+html[data-visual-theme='naksha'] .hero-fig {
+  align-self: flex-start;
+  margin: 0.375rem 0 0.25rem -2px;
+  font-size: clamp(2.5rem, 13vw, 3.375rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+html[data-visual-theme='naksha'] .note-card-body > p.text-balance {
+  font-size: 0.9375rem;
+  color: var(--muted-foreground);
+}
+html[data-visual-theme='naksha'] .hero-bar,
+html[data-visual-theme='naksha'] .hero-budget {
+  display: none;
+}
+html[data-visual-theme='naksha'] .nk-draft {
+  margin-top: 0.875rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--nk-ln2);
+}
+html[data-visual-theme='naksha'] .nk-svg {
+  display: block;
+  overflow: visible;
+}
+html[data-visual-theme='naksha'] .nk-t {
+  font: 500 13px var(--nk-mono);
+  fill: var(--foreground);
+  font-variant-numeric: tabular-nums;
+}
+html[data-visual-theme='naksha'] .nk-sc {
+  fill: var(--muted-foreground);
+}
+html[data-visual-theme='naksha'] .nk-t.nk-red,
+html[data-visual-theme='naksha'] .nk-red .nk-t {
+  fill: var(--nk-red);
+}
+html[data-visual-theme='naksha'] .nk-dl {
+  fill: none;
+  stroke: var(--nk-ln);
+  stroke-width: 1;
+  stroke-dasharray: 1;
+  animation: nk-draw 0.55s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0s) both;
+}
+html[data-visual-theme='naksha'] .nk-ah {
+  fill: var(--nk-ln);
+  animation: nk-in 0.2s ease-out calc(var(--d, 0s) + 0.4s) both;
+}
+html[data-visual-theme='naksha'] .nk-red .nk-dl {
+  stroke: var(--nk-red);
+}
+html[data-visual-theme='naksha'] .nk-red .nk-ah {
+  fill: var(--nk-red);
+}
+html[data-visual-theme='naksha'] .nk-ex {
+  fill: none;
+  stroke: var(--nk-ln2);
+  stroke-width: 1;
+}
+html[data-visual-theme='naksha'] .nk-bar {
+  fill: none;
+  stroke: var(--nk-ln);
+  stroke-width: 1.5;
+}
+html[data-visual-theme='naksha'] .nk-bar.nk-red {
+  stroke: var(--nk-red);
+}
+html[data-visual-theme='naksha'] .nk-tk {
+  stroke: var(--nk-ln);
+  stroke-width: 1;
+}
+html[data-visual-theme='naksha'] .nk-hp {
+  stroke: var(--nk-ln);
+  stroke-width: 1.1;
+  opacity: 0.85;
+}
+html[data-visual-theme='naksha'] .nk-hp-red {
+  stroke: var(--nk-red);
+  opacity: 1;
+}
+html[data-visual-theme='naksha'] .nk-cl {
+  fill: none;
+  stroke: var(--nk-red);
+  stroke-width: 1.2;
+  stroke-dasharray: 9 3 2 3;
+}
+html[data-visual-theme='naksha'] .nk-dt {
+  fill: var(--nk-red);
+}
+@keyframes nk-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+@keyframes nk-in {
+  from {
+    fill-opacity: 0;
+  }
+}
+@media (min-width: 1024px) {
+  html[data-visual-theme='naksha'] .hero-fig {
+    font-size: 4.5rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-visual-theme='naksha'] .nk-dl,
+  html[data-visual-theme='naksha'] .nk-ah {
+    animation: none;
+  }
+}
+
+/* The revision note: one alert, boxed in red pencil, its call to action a lettered tag. */
+html[data-visual-theme='naksha'] main > button.bg-warning-band {
+  background: var(--background);
+  border: 1px solid var(--nk-red);
+  border-radius: 0;
+  box-shadow: none;
+}
+html[data-visual-theme='naksha'] main > button.bg-warning-band .text-warning-band-foreground {
+  color: var(--foreground);
+}
+html[data-visual-theme='naksha'] main > button.bg-warning-band > div > span:last-child {
+  color: var(--nk-red);
+  font-family: var(--nk-mono);
+  font-size: 0.71875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+html[data-visual-theme='naksha'] .bg-warning-band {
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* Accounts: drawn tiles, no tint; what is owed runs in red pencil. */
+html[data-visual-theme='naksha'] .note-tile {
+  min-height: 92px;
+  background: var(--background);
+  border: 1px solid var(--nk-ln);
+  border-radius: 0;
+  box-shadow: none;
+}
+html[data-visual-theme='naksha'] .note-tile:active {
+  transform: none;
+  background-image: var(--nk-hatch);
+}
+html[data-visual-theme='naksha'] .note-tile .font-money {
+  font-family: var(--nk-mono);
+  font-size: 1rem;
+  font-weight: 600;
+}
+html[data-visual-theme='naksha'] .note-chip {
+  border-radius: 0;
+  background: var(--nk-hatch);
+  border: 1px solid currentColor;
+}
+
+/* Category picker: a ruled grid, the chosen cell hatched. */
+html[data-visual-theme='naksha'] .grid.grid-cols-4:has(> button[data-selected]) {
+  gap: 0;
+  padding: 0;
+  border: 1px solid var(--nk-ln);
+}
+html[data-visual-theme='naksha'] .grid-cols-4 > button[data-selected] {
+  position: relative;
+  border: 0;
+  border-bottom: 1px solid var(--nk-ln2);
+  background-color: transparent;
+  box-shadow: none;
+  padding: 0.625rem 0.25rem 0.5625rem;
+}
+html[data-visual-theme='naksha'] .grid-cols-4 > button[data-selected]:not(:nth-child(4n + 1)) {
+  border-left: 1px solid var(--nk-ln2);
+}
+html[data-visual-theme='naksha'] .grid-cols-4 > button[data-selected] > span {
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+}
+html[data-visual-theme='naksha'] .grid-cols-4 > button[data-selected='true'] {
+  background: var(--nk-hatch), var(--nk-selbg);
+}
+html[data-visual-theme='naksha'] .grid-cols-4 > button[data-selected='true'] > span {
+  color: var(--foreground);
+  font-weight: 700;
+}
+
+/* ── Add transaction: a mono amount on a dimension rule and a ruled number pad ── */
+html[data-visual-theme='naksha'] .bg-grad-surface.min-h-16 {
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--nk-ln);
+  border-radius: 0;
+  box-shadow: none;
+}
+html[data-visual-theme='naksha'] .bg-grad-surface.min-h-16 > .text-3xl {
+  font-family: var(--nk-mono);
+  font-size: 2.75rem;
+  line-height: 1;
+}
+html[data-visual-theme='naksha'] .bg-grad-surface.min-h-16 > .text-2xl {
+  font-family: var(--nk-mono);
+  font-size: 2rem;
+  line-height: 1;
+}
+html[data-visual-theme='naksha'] .bg-grad-surface.min-h-16 + .grid {
+  gap: 0;
+  border: 1px solid var(--nk-ln);
+}
+html[data-visual-theme='naksha'] .bg-grad-surface.min-h-16 + .grid > button {
+  height: 3.125rem;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--nk-ln2);
+  border-radius: 0;
+  box-shadow: none;
+  font-family: var(--nk-mono);
+  font-size: 1.375rem;
+  font-weight: 500;
+}
+html[data-visual-theme='naksha'] .bg-grad-surface.min-h-16 + .grid > button:nth-child(3n + 2) {
+  border-left: 1px solid var(--nk-ln2);
+  border-right: 1px solid var(--nk-ln2);
+}
+html[data-visual-theme='naksha'] .bg-grad-surface.min-h-16 + .grid > button:nth-last-child(-n + 3) {
+  border-bottom: 0;
+}
+html[data-visual-theme='naksha'] .bg-grad-surface.min-h-16 + .grid > button:active {
+  transform: none;
+  background: var(--nk-hatch), var(--nk-selbg);
+}
+
+/* ── Overlays: square, ruled, flat ── */
+html[data-visual-theme='naksha']
+  :is(
+    [data-slot='dialog-content'],
+    [data-slot='alert-dialog-content'],
+    [data-slot='popover-content'],
+    [data-slot='select-content'],
+    [data-slot='dropdown-menu-content']
+  ) {
+  border-radius: 0;
+  border: 1px solid var(--nk-ln);
+  background-color: var(--popover);
+  box-shadow:
+    0 0 0 3px var(--popover),
+    0 0 0 4px var(--nk-ln2);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='naksha'] [data-slot='dialog-header'] {
+  border-bottom: 1px solid var(--nk-ln);
+  padding-bottom: 0.5rem;
+}
+
+/* ── Chrome ── */
+html[data-visual-theme='naksha'] [data-slot='page-header'] {
+  background: var(--background);
+  border-bottom: 1px solid var(--nk-ln);
+}
+html[data-visual-theme='naksha'] [data-slot='page-header'] h1 {
+  font-size: 1.5rem;
+  line-height: 1.1;
+}
+
+html[data-visual-theme='naksha'] [data-slot='tab-bar'] {
+  background: var(--background);
+  border-top: 1px solid var(--nk-ln);
+  box-shadow: none;
+}
+html[data-visual-theme='naksha'] [data-slot='tab'] {
+  position: relative;
+  color: var(--muted-foreground);
+}
+html[data-visual-theme='naksha'] [data-slot='tab'] + [data-slot='tab'] {
+  border-left: 1px solid var(--nk-ln2);
+}
+html[data-visual-theme='naksha'] [data-slot='tab'] span {
+  font-family: var(--nk-mono);
+  font-size: 0.5625rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+html[data-visual-theme='naksha'] [data-slot='tab'] svg {
+  stroke-width: 1.5;
+}
+html[data-visual-theme='naksha'] [data-slot='tab'][aria-current='page'] {
+  color: var(--foreground);
+  background: var(--nk-hatch), var(--nk-selbg);
+}
+html.dark[data-visual-theme='naksha'] [data-slot='tab'][aria-current='page'] {
+  color: var(--nk-hi);
+}
+/* FAB: a drafted circle ringed like a stamp. */
+html[data-visual-theme='naksha'] [data-slot='fab'] {
+  border-radius: 9999px;
+  box-shadow:
+    0 0 0 3px var(--background),
+    0 0 0 4px var(--nk-ln);
+}
+
+html[data-visual-theme='naksha'] [data-slot='sidebar'] {
+  background: var(--background);
+  border-right: 1px solid var(--nk-ln);
+}
+html[data-visual-theme='naksha'] [data-slot='brand-mark'] {
+  border-radius: 0;
+  background: transparent;
+  color: var(--foreground);
+  border: 1px solid var(--nk-ln);
+  box-shadow: none;
+}
+html[data-visual-theme='naksha'] [data-slot='brand-mark'] + span {
+  font-family: var(--nk-mono);
+  font-size: 1.375rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+html[data-visual-theme='naksha'] [data-slot='sidebar'] [data-slot='add-button'] {
+  border-radius: 0;
+  box-shadow:
+    0 0 0 2px var(--background),
+    0 0 0 3px var(--nk-ln);
+  font-family: var(--nk-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+html[data-visual-theme='naksha'] [data-slot='sidebar'] nav {
+  gap: 0;
+  border: 1px solid var(--nk-ln);
+}
+html[data-visual-theme='naksha'] [data-slot='sidebar'] [data-slot='nav-item'] {
+  background: transparent;
+  border-radius: 0;
+  border-bottom: 1px solid var(--nk-ln2);
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  color: var(--foreground);
+  font-weight: 500;
+}
+html[data-visual-theme='naksha'] [data-slot='sidebar'] [data-slot='nav-item']:last-child {
+  border-bottom: 0;
+}
+html[data-visual-theme='naksha'] [data-slot='sidebar'] [data-slot='nav-item']:hover {
+  background: var(--nk-hatch);
+}
+html[data-visual-theme='naksha'] [data-slot='sidebar'] [data-slot='nav-item'][aria-current='page'] {
+  background: var(--nk-hatch), var(--nk-selbg);
+  color: var(--foreground);
+  font-weight: 700;
+}
+html.dark[data-visual-theme='naksha'] [data-slot='sidebar'] [data-slot='nav-item'][aria-current='page'] {
+  color: var(--nk-hi);
+}
+html[data-visual-theme='naksha'] [data-slot='sidebar'] > p {
+  font-family: var(--nk-mono);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ── Toasts ── */
+html[data-visual-theme='naksha'] [data-sonner-toaster] {
+  --normal-bg: var(--popover);
+  --normal-border: var(--nk-ln);
+  --border-radius: 0;
+}
+html[data-visual-theme='naksha'] [data-sonner-toaster] [data-sonner-toast] {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: none;
+}

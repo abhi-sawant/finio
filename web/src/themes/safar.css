@@ -1,0 +1,877 @@
+/*
+ * Safar — the departures board. Light is the chrome-yellow platform sign over a concrete field,
+ * with a coach-blue shell; dark is the black board with amber, green and red status colours.
+ * Boards have 4px radii and hairline frames, rows are ruled, every amount is Overpass Mono. The
+ * hero's signature is the split-flap figure (SafarExtra, ui/extras/safar.tsx) with a Day n of N
+ * clock and a 20-segment strip with a tick for today; budget and goal bars are segmented too.
+ */
+html[data-visual-theme='safar'] {
+  --ff-heading: 'Overpass Variable', system-ui, sans-serif;
+  --ff-money: 'Overpass Mono Variable', ui-monospace, Menlo, monospace;
+  --ff-sans: 'Overpass Variable', system-ui, sans-serif;
+
+  --sf-board: #efeee8;
+  --sf-board2: #e3e2db;
+  --sf-rule: #bdbcb3;
+  --sf-frame: #111213;
+  --sf-fw: 1.5px;
+  --sf-yel: #f6c400;
+  --sf-on-yel: #111213;
+  --sf-blue: #1c4a8a;
+  --sf-blue-d: #143a70;
+  --sf-on-blue: #eef3fa;
+  --sf-blue-mut: #c4d4ec;
+  --sf-amber: #f2a900;
+  --sf-green: #0b6b3a;
+  --sf-red: #b3261e;
+  --sf-act: #1c4a8a;
+  --sf-band: #f6c400;
+  --sf-band-ink: #111213;
+  --sf-band-rule: #111213;
+  --sf-band-mut: #3b3200;
+  --sf-hero: #f6c400;
+  --sf-hero-ink: #111213;
+  --sf-hero-mut: #3b3200;
+  --sf-hero-fill: #111213;
+  --sf-hero-track: rgb(17 18 19 / 0.2);
+  --sf-rivet: rgb(17 18 19 / 0.55);
+  --sf-t1: #24272c;
+  --sf-t2: #17191d;
+  --sf-flap: #f4efe0;
+  --sf-clock-ink: #f6c400;
+  --sf-sel: #111213;
+  --sf-on-sel: #f6c400;
+  --sf-key: #f4f3ee;
+  --sf-key-b: #111213;
+  --sf-track: rgb(17 18 19 / 0.17);
+  --sf-lamp: #1c4a8a;
+  --sf-on-lamp: #ffffff;
+
+  --background: #d9d8d1;
+  --foreground: #111213;
+  --card: #efeee8;
+  --card-foreground: #111213;
+  --popover: #f6f5f0;
+  --popover-foreground: #111213;
+  --primary: #1c4a8a;
+  --primary-foreground: #ffffff;
+  --secondary: #e3e2db;
+  --secondary-foreground: #111213;
+  --muted: #e3e2db;
+  --muted-foreground: #55554e;
+  --accent: #e3e2db;
+  --accent-foreground: #111213;
+  --destructive: #b3261e;
+  --destructive-foreground: #ffffff;
+  --positive: #0b6b3a;
+  --warning: #8a5a00;
+  --border: #bdbcb3;
+  --input: #8a897f;
+  --ring: #1c4a8a;
+  --chart-1: #1c4a8a;
+  --chart-2: #b87400;
+  --chart-3: #0b6b3a;
+  --chart-4: #b3261e;
+  --chart-5: #6b5a00;
+  --radius: 0.25rem;
+  --sidebar: #1c4a8a;
+  --sidebar-foreground: #eef3fa;
+  --sidebar-primary: #f6c400;
+  --sidebar-primary-foreground: #111213;
+  --sidebar-accent: #143a70;
+  --sidebar-accent-foreground: #eef3fa;
+  --sidebar-border: #143a70;
+  --sidebar-ring: #f6c400;
+
+  --warning-band: #15171a;
+  --warning-band-foreground: #f4efe0;
+  --warning-band-accent: #f2a900;
+
+  --paper: none;
+  --engraving: transparent;
+  --glass: #efeee8;
+  --glass-strong: #d9d8d1;
+  --glass-border: #111213;
+  --glass-highlight: transparent;
+
+  --grad-primary: linear-gradient(#1c4a8a, #1c4a8a);
+  --grad-primary-soft: linear-gradient(#e3e2db, #e3e2db);
+  --grad-success: linear-gradient(#0b6b3a, #0b6b3a);
+  --grad-success-soft: linear-gradient(#d3e6d9, #d3e6d9);
+  --grad-danger: linear-gradient(#b3261e, #b3261e);
+  --grad-danger-soft: linear-gradient(#f0d4d0, #f0d4d0);
+  --grad-info: linear-gradient(#1c4a8a, #1c4a8a);
+  --grad-warning: linear-gradient(#8a5a00, #8a5a00);
+  --grad-surface: linear-gradient(#efeee8, #efeee8);
+  --coin: linear-gradient(#f6c400, #f6c400);
+  --coin-ink: #111213;
+  --register: #0b6b3a;
+  --thread: linear-gradient(#0b6b3a, #0b6b3a);
+
+  --shadow-tint: 17 18 19;
+  --scrim: rgb(17 18 19 / 0.45);
+  --shadow-card: none;
+  --shadow-float: none;
+  --shadow-primary: none;
+  --shadow-danger: none;
+  --shadow-success: none;
+
+  /* Account tiles are plain boards; what is owed is in red. */
+  --note-100: linear-gradient(#efeee8, #efeee8);
+  --note-100-ink: #111213;
+  --note-500: linear-gradient(#efeee8, #efeee8);
+  --note-500-ink: #111213;
+  --note-2000: linear-gradient(#efeee8, #efeee8);
+  --note-2000-ink: #b3261e;
+  --note-200: linear-gradient(#efeee8, #efeee8);
+  --note-200-ink: #111213;
+  --note-10: linear-gradient(#efeee8, #efeee8);
+  --note-10-ink: #111213;
+  --note-50: linear-gradient(#efeee8, #efeee8);
+  --note-50-ink: #111213;
+  --note-20: linear-gradient(#efeee8, #efeee8);
+  --note-20-ink: #111213;
+}
+
+html.dark[data-visual-theme='safar'] {
+  --sf-board: #15181c;
+  --sf-board2: #1b1e23;
+  --sf-rule: #2c3037;
+  --sf-frame: #2c3037;
+  --sf-fw: 1px;
+  --sf-yel: #f8c900;
+  --sf-blue: #17396a;
+  --sf-blue-d: #102b52;
+  --sf-on-blue: #e6eefa;
+  --sf-blue-mut: #b3c6e2;
+  --sf-amber: #ffb224;
+  --sf-green: #5bd08a;
+  --sf-red: #ff6a5c;
+  --sf-act: #f8c900;
+  --sf-band: #0c0e11;
+  --sf-band-ink: #f2ecdc;
+  --sf-band-rule: #f8c900;
+  --sf-band-mut: #a39d8f;
+  --sf-hero: #15181c;
+  --sf-hero-ink: #f2ecdc;
+  --sf-hero-mut: #a39d8f;
+  --sf-hero-fill: #f2ecdc;
+  --sf-hero-track: rgb(242 236 220 / 0.15);
+  --sf-rivet: rgb(242 236 220 / 0.3);
+  --sf-t1: #2b2f36;
+  --sf-t2: #1f2227;
+  --sf-clock-ink: #ffb224;
+  --sf-sel: #f8c900;
+  --sf-on-sel: #111213;
+  --sf-key: #1b1e23;
+  --sf-key-b: #343840;
+  --sf-track: rgb(242 236 220 / 0.14);
+  --sf-lamp: #f8c900;
+  --sf-on-lamp: #111213;
+
+  --background: #0c0e11;
+  --foreground: #f2ecdc;
+  --card: #15181c;
+  --card-foreground: #f2ecdc;
+  --popover: #1b1e23;
+  --popover-foreground: #f2ecdc;
+  --primary: #f8c900;
+  --primary-foreground: #111213;
+  --secondary: #1b1e23;
+  --secondary-foreground: #f2ecdc;
+  --muted: #1b1e23;
+  --muted-foreground: #a39d8f;
+  --accent: #22262c;
+  --accent-foreground: #f2ecdc;
+  --destructive: #ff6a5c;
+  --destructive-foreground: #111213;
+  --positive: #5bd08a;
+  --warning: #ffb224;
+  --border: #2c3037;
+  --input: #4a4f58;
+  --ring: #f8c900;
+  --chart-1: #f8c900;
+  --chart-2: #5bd08a;
+  --chart-3: #ffb224;
+  --chart-4: #ff6a5c;
+  --chart-5: #8fb2e8;
+  --sidebar: #17396a;
+  --sidebar-foreground: #e6eefa;
+  --sidebar-primary: #f8c900;
+  --sidebar-primary-foreground: #111213;
+  --sidebar-accent: #102b52;
+  --sidebar-accent-foreground: #e6eefa;
+  --sidebar-border: #102b52;
+  --sidebar-ring: #f8c900;
+
+  --warning-band: #2a1f09;
+  --warning-band-foreground: #f2ecdc;
+  --warning-band-accent: #ffb224;
+
+  --glass: #15181c;
+  --glass-strong: #0c0e11;
+  --glass-border: #2c3037;
+
+  --grad-primary: linear-gradient(#2457a6, #2457a6);
+  --grad-primary-soft: linear-gradient(#1b1e23, #1b1e23);
+  --grad-success: linear-gradient(#0f6a3b, #0f6a3b);
+  --grad-success-soft: linear-gradient(#12281b, #12281b);
+  --grad-danger: linear-gradient(#b3261e, #b3261e);
+  --grad-danger-soft: linear-gradient(#2e1512, #2e1512);
+  --grad-info: linear-gradient(#2457a6, #2457a6);
+  --grad-warning: linear-gradient(#8a5a00, #8a5a00);
+  --grad-surface: linear-gradient(#15181c, #15181c);
+  --coin: linear-gradient(#f8c900, #f8c900);
+  --register: #5bd08a;
+  --thread: linear-gradient(#5bd08a, #5bd08a);
+
+  --shadow-tint: 0 0 0;
+  --scrim: rgb(0 0 0 / 0.65);
+
+  --note-100: linear-gradient(#15181c, #15181c);
+  --note-100-ink: #f2ecdc;
+  --note-500: linear-gradient(#15181c, #15181c);
+  --note-500-ink: #f2ecdc;
+  --note-2000: linear-gradient(#15181c, #15181c);
+  --note-2000-ink: #ff6a5c;
+  --note-200: linear-gradient(#15181c, #15181c);
+  --note-200-ink: #f2ecdc;
+  --note-10: linear-gradient(#15181c, #15181c);
+  --note-10-ink: #f2ecdc;
+  --note-50: linear-gradient(#15181c, #15181c);
+  --note-50-ink: #f2ecdc;
+  --note-20: linear-gradient(#15181c, #15181c);
+  --note-20-ink: #f2ecdc;
+}
+
+/* AMOLED: a true-black field; boards keep a lifted edge so they still read. */
+html.dark.amoled[data-visual-theme='safar'] {
+  --sf-band: #000;
+  --sf-hero: #07090b;
+  --sf-board: #07090b;
+  --card: #07090b;
+  --glass: #07090b;
+  --glass-strong: #000;
+  --sf-frame: #2c3037;
+}
+
+/* ── Browser surfaces ── */
+html[data-visual-theme='safar'] {
+  caret-color: var(--sf-act);
+  accent-color: var(--sf-act);
+  scrollbar-color: color-mix(in srgb, var(--foreground) 40%, transparent) transparent;
+}
+html[data-visual-theme='safar'] body {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+html[data-visual-theme='safar'] ::selection {
+  background: var(--sf-sel);
+  color: var(--sf-on-sel);
+}
+html[data-visual-theme='safar'] :focus-visible {
+  outline: 2px solid var(--sf-act);
+  outline-offset: 2px;
+}
+
+/* ── Type: heavy Overpass names, Overpass Mono for every figure ── */
+html[data-visual-theme='safar'] h1 {
+  font-weight: 900;
+  letter-spacing: -0.01em;
+}
+html[data-visual-theme='safar'] main h2.text-base,
+html[data-visual-theme='safar'] [data-slot='dialog-title'],
+html[data-visual-theme='safar'] [data-slot='alert-dialog-title'] {
+  font-weight: 800;
+}
+html[data-visual-theme='safar'] .font-money {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+html[data-visual-theme='safar'] [data-slot='label'] {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--muted-foreground);
+}
+/* Day headings in the transaction list: a board row of caps. */
+html[data-visual-theme='safar'] main section > h2.text-xs {
+  font-family: var(--ff-money);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--foreground);
+}
+
+/* ── Shape: 4px boards, hairline frames, nothing soft ── */
+html[data-visual-theme='safar'] .rounded-lg,
+html[data-visual-theme='safar'] .rounded-md,
+html[data-visual-theme='safar'] .rounded-sm,
+html[data-visual-theme='safar'] .rounded-xl,
+html[data-visual-theme='safar'] .rounded-2xl {
+  border-radius: 4px;
+}
+html[data-visual-theme='safar'] button[aria-pressed].rounded-full,
+html[data-visual-theme='safar'] .rounded-full.bg-muted:not([role]):not([data-slot]) {
+  border-radius: 3px;
+}
+html[data-visual-theme='safar'] .card-elevated {
+  background-color: var(--sf-board);
+  border: var(--sf-fw) solid var(--sf-frame);
+  border-radius: 4px;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='safar'] .glass-chrome {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='safar'] .shadow-glow-primary,
+html[data-visual-theme='safar'] .shadow-glow-success,
+html[data-visual-theme='safar'] .shadow-glow-danger,
+html[data-visual-theme='safar'] .shadow-sm,
+html[data-visual-theme='safar'] .shadow-md,
+html[data-visual-theme='safar'] .shadow-lg {
+  box-shadow: none;
+}
+html[data-visual-theme='safar'] .bg-coin {
+  color: var(--coin-ink);
+  box-shadow: none;
+}
+html[data-visual-theme='safar'] .bg-warning-band {
+  border-radius: 4px;
+  box-shadow: none;
+}
+
+/* Filled actions: heavy lettering, a pressed lip. The dark board's lit key is yellow with black ink. */
+html[data-visual-theme='safar'] :is(button, a).bg-grad-primary {
+  font-weight: 800;
+  box-shadow: inset 0 -3px 0 rgb(0 0 0 / 0.22);
+}
+html[data-visual-theme='safar'] :is(button, a).bg-grad-primary:active {
+  box-shadow: none;
+  transform: translateY(1px);
+}
+html.dark[data-visual-theme='safar'] :is(button, a).bg-grad-primary {
+  background-image: none;
+  background-color: var(--sf-yel);
+  color: #111213;
+}
+html[data-visual-theme='safar'] [data-slot='button'][class*='glass-border'] {
+  border: 1.5px solid currentColor;
+  background: transparent;
+  border-radius: 3px;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html.dark[data-visual-theme='safar'] [data-slot='button'][class*='glass-border'] {
+  border-color: var(--sf-rule);
+  background: var(--sf-board);
+}
+
+/* Inputs: boxed fields with a hairline frame. */
+html[data-visual-theme='safar']
+  :is([data-slot='input'], [data-slot='textarea'], [data-slot='select-trigger']) {
+  background: var(--sf-board);
+  border: var(--sf-fw) solid var(--sf-frame);
+  border-radius: 4px;
+}
+html.dark[data-visual-theme='safar']
+  :is([data-slot='input'], [data-slot='textarea'], [data-slot='select-trigger']) {
+  border-color: var(--input);
+}
+
+/* Segmented controls: the chosen segment is a lit tile. */
+html[data-visual-theme='safar'] .bg-muted.p-1:has(> button[aria-pressed]) {
+  background: var(--sf-board);
+  border: var(--sf-fw) solid var(--sf-frame);
+  border-radius: 4px;
+  gap: 3px;
+  padding: 3px;
+}
+html.dark[data-visual-theme='safar'] .bg-muted.p-1:has(> button[aria-pressed]) {
+  border-color: var(--sf-rule);
+}
+html[data-visual-theme='safar'] .bg-muted.p-1:has(> button[aria-pressed]) > button {
+  border-radius: 3px;
+  box-shadow: none;
+  font-weight: 700;
+  color: var(--muted-foreground);
+}
+html[data-visual-theme='safar']
+  .bg-muted.p-1:has(> button[aria-pressed])
+  > button[aria-pressed='true'] {
+  background: var(--sf-sel);
+  color: var(--sf-on-sel);
+}
+html[data-visual-theme='safar'] button[aria-pressed].rounded-full.text-xs {
+  font-weight: 700;
+}
+
+/* ── Progress: 20-segment strips. The mask cuts track and fill into the same cells. ── */
+html[data-visual-theme='safar'] [role='progressbar'],
+html[data-visual-theme='safar'] .bg-muted.overflow-hidden:has(> .thread-fill) {
+  height: 0.75rem;
+  border-radius: 0;
+  background: var(--sf-track);
+  overflow: hidden;
+  -webkit-mask: repeating-linear-gradient(
+    90deg,
+    #000 0 calc(5% - 2px),
+    transparent calc(5% - 2px) 5%
+  );
+  mask: repeating-linear-gradient(90deg, #000 0 calc(5% - 2px), transparent calc(5% - 2px) 5%);
+}
+html[data-visual-theme='safar'] [role='progressbar'] > div,
+html[data-visual-theme='safar'] .thread-fill {
+  border-radius: 0;
+}
+
+/* ── Hero: the departures board, rivets in the corners ── */
+html[data-visual-theme='safar'] .note-card {
+  background-color: var(--sf-hero);
+  background-image:
+    radial-gradient(circle at 7px 7px, var(--sf-rivet) 1.5px, transparent 2px),
+    radial-gradient(circle at calc(100% - 7px) 7px, var(--sf-rivet) 1.5px, transparent 2px),
+    radial-gradient(circle at 7px calc(100% - 7px), var(--sf-rivet) 1.5px, transparent 2px),
+    radial-gradient(
+      circle at calc(100% - 7px) calc(100% - 7px),
+      var(--sf-rivet) 1.5px,
+      transparent 2px
+    );
+  color: var(--sf-hero-ink);
+  border: var(--sf-fw) solid var(--sf-frame);
+  border-radius: 4px;
+  box-shadow: none;
+  padding: 16px 18px 16px;
+  overflow: hidden;
+}
+html[data-visual-theme='safar'] .note-card-body {
+  padding-right: 0;
+}
+html[data-visual-theme='safar'] .note-card .text-muted-foreground {
+  color: var(--sf-hero-mut);
+}
+html[data-visual-theme='safar'] .note-card .text-primary {
+  color: var(--sf-hero-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+html[data-visual-theme='safar'] .note-card-body > p:first-child {
+  color: var(--sf-hero-ink);
+  font-size: 1rem;
+  font-weight: 800;
+}
+/* The tiles stand in for the figure; the real one stays for screen readers. */
+html[data-visual-theme='safar'] .hero-fig,
+html[data-visual-theme='safar'] .hero-bar {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+html[data-visual-theme='safar'] .hero-left {
+  color: var(--sf-hero-ink);
+  font-weight: 700;
+}
+html[data-visual-theme='safar'] .hero-budget {
+  color: var(--sf-hero-mut);
+  font-weight: 600;
+}
+
+html[data-visual-theme='safar'] .sf-board {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  margin: 6px 0 4px;
+}
+html[data-visual-theme='safar'] .sf-clock {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 26px;
+  padding: 1px 9px 0;
+  border-radius: 3px;
+  background: var(--sf-t2);
+  color: var(--sf-clock-ink);
+  font-family: var(--ff-money);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+/* Tile size is the container width shared by the characters, capped at 48px: long or masked
+   figures shrink, never overflow. */
+html[data-visual-theme='safar'] .sf-wrap {
+  container-type: inline-size;
+  width: 100%;
+}
+html[data-visual-theme='safar'] .sf-flap {
+  --tw: min(3rem, calc((100cqw - (var(--n, 6) - 1) * 4px) / var(--n, 6)));
+  display: flex;
+  gap: 4px;
+}
+html[data-visual-theme='safar'] .sf-tile {
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: var(--tw);
+  height: calc(var(--tw) * 1.42);
+  border-radius: 3px;
+  background: linear-gradient(180deg, var(--sf-t1) 0 50%, var(--sf-t2) 50% 100%);
+  color: var(--sf-flap);
+  font-family: var(--ff-money);
+  font-size: calc(var(--tw) * 0.98);
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.08);
+}
+html[data-visual-theme='safar'] .sf-tile.sf-p {
+  width: calc(var(--tw) * 0.5);
+}
+html[data-visual-theme='safar'] .sf-tile.sf-r b {
+  font-size: 0.8em;
+}
+html[data-visual-theme='safar'] .sf-tile b {
+  font-weight: 700;
+  padding-top: 0.08em;
+}
+html[data-visual-theme='safar'] .sf-tile i {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  margin-top: -0.5px;
+  background: rgb(0 0 0 / 0.6);
+}
+html[data-visual-theme='safar'] .sf-tile::before,
+html[data-visual-theme='safar'] .sf-tile::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  backface-visibility: hidden;
+}
+html[data-visual-theme='safar'] .sf-tile::before {
+  top: 0;
+  bottom: 50%;
+  background: var(--sf-t1);
+  border-radius: 3px 3px 0 0;
+  transform-origin: bottom;
+  animation: safar-flap-top 0.34s cubic-bezier(0.3, 0.55, 0.35, 1) calc(var(--i) * 0.09s + 0.15s)
+    backwards;
+}
+html[data-visual-theme='safar'] .sf-tile::after {
+  top: 50%;
+  bottom: 0;
+  background: var(--sf-t2);
+  border-radius: 0 0 3px 3px;
+  transform-origin: top;
+  animation: safar-flap-bottom 0.3s cubic-bezier(0.2, 0.7, 0.3, 1) calc(var(--i) * 0.09s + 0.47s)
+    backwards;
+}
+@keyframes safar-flap-top {
+  from {
+    opacity: 1;
+    transform: rotateX(0);
+  }
+  to {
+    opacity: 1;
+    transform: rotateX(-90deg);
+  }
+}
+@keyframes safar-flap-bottom {
+  from {
+    opacity: 1;
+    transform: rotateX(0);
+  }
+  to {
+    opacity: 1;
+    transform: rotateX(90deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-visual-theme='safar'] .sf-tile::before,
+  html[data-visual-theme='safar'] .sf-tile::after {
+    animation: none;
+  }
+}
+
+/* The period strip: spent so far, a tick where today is. */
+html[data-visual-theme='safar'] .sf-strip {
+  position: relative;
+  display: flex;
+  gap: 2px;
+  height: 12px;
+  margin-top: 4px;
+}
+html[data-visual-theme='safar'] .sf-strip span {
+  flex: 1;
+  background: var(--sf-hero-track);
+}
+html[data-visual-theme='safar'] .sf-strip span.sf-on {
+  background: var(--sf-hero-fill);
+}
+html[data-visual-theme='safar'] .sf-strip.sf-near span.sf-on {
+  background: var(--sf-amber);
+}
+html[data-visual-theme='safar'] .sf-strip.sf-over span.sf-on {
+  background: var(--sf-red);
+}
+html[data-visual-theme='safar'] .sf-strip u {
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  left: var(--today);
+  width: 2px;
+  margin-left: -1px;
+  background: var(--sf-hero-ink);
+}
+
+/* The alert row: dark status line, the call to action a lit amber slug. */
+html[data-visual-theme='safar'] main > button.bg-warning-band {
+  background: var(--warning-band);
+  border: 1px solid var(--sf-amber);
+  border-radius: 4px;
+  padding: 0 0 0 0.6rem;
+  overflow: hidden;
+}
+html[data-visual-theme='safar'] main > button.bg-warning-band > div {
+  min-height: 2.75rem;
+  align-items: stretch;
+}
+html[data-visual-theme='safar'] main > button.bg-warning-band > div > :is(svg, div) {
+  align-self: center;
+}
+html[data-visual-theme='safar'] main > button.bg-warning-band > div > span:last-child {
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  padding: 0 0.75rem;
+  background: var(--sf-amber);
+  color: #111213;
+  font-family: var(--ff-money);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* Accounts: boards with a hairline frame. */
+html[data-visual-theme='safar'] .note-tile {
+  border: var(--sf-fw) solid var(--sf-frame);
+  border-radius: 4px;
+  box-shadow: none;
+}
+html.dark[data-visual-theme='safar'] .note-tile {
+  border-color: var(--sf-rule);
+}
+html[data-visual-theme='safar'] .note-tile:active {
+  transform: none;
+  background-color: var(--muted);
+}
+html[data-visual-theme='safar'] .note-tile .font-money {
+  font-weight: 600;
+}
+html[data-visual-theme='safar'] .note-chip {
+  border-radius: 3px;
+}
+
+/* Category picker: the chosen tile lit. */
+html[data-visual-theme='safar'] .grid-cols-4 > button[data-selected] {
+  border: 1px solid var(--sf-rule);
+  background-color: var(--sf-board);
+  border-radius: 3px;
+  box-shadow: none;
+}
+html[data-visual-theme='safar'] .grid-cols-4 > button[data-selected='true'] {
+  background-color: var(--sf-sel);
+  border-color: var(--sf-sel);
+}
+html[data-visual-theme='safar'] .grid-cols-4 > button[data-selected='true'] > span,
+html[data-visual-theme='safar'] .grid-cols-4 > button[data-selected='true'] svg {
+  color: var(--sf-on-sel);
+  font-weight: 800;
+}
+
+/* ── Add transaction: board amount, keys with a lip ── */
+html[data-visual-theme='safar'] .bg-grad-surface.min-h-16 {
+  background: var(--sf-board);
+  border: var(--sf-fw) solid var(--sf-frame);
+  border-radius: 4px;
+  box-shadow: none;
+}
+html[data-visual-theme='safar'] .bg-grad-surface.min-h-16 > :is(.text-3xl, .text-2xl) {
+  font-family: var(--ff-money);
+  font-weight: 700;
+  letter-spacing: 0;
+}
+html[data-visual-theme='safar'] .bg-grad-surface.min-h-16 + .grid > button {
+  background: var(--sf-key);
+  border: var(--sf-fw) solid var(--sf-key-b);
+  border-radius: 3px;
+  box-shadow: inset 0 -2px 0 rgb(0 0 0 / 0.14);
+  font-family: var(--ff-money);
+  font-weight: 600;
+}
+html[data-visual-theme='safar'] .bg-grad-surface.min-h-16 + .grid > button:active {
+  transform: translateY(1px);
+  background: var(--sf-sel);
+  color: var(--sf-on-sel);
+  box-shadow: none;
+}
+
+/* ── Overlays ── */
+html[data-visual-theme='safar']
+  :is(
+    [data-slot='dialog-content'],
+    [data-slot='alert-dialog-content'],
+    [data-slot='popover-content'],
+    [data-slot='select-content'],
+    [data-slot='dropdown-menu-content']
+  ) {
+  border-radius: 4px;
+  border: var(--sf-fw) solid var(--sf-frame);
+  box-shadow: 4px 4px 0 color-mix(in srgb, var(--foreground) 20%, transparent);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html.dark[data-visual-theme='safar']
+  :is(
+    [data-slot='dialog-content'],
+    [data-slot='alert-dialog-content'],
+    [data-slot='popover-content'],
+    [data-slot='select-content'],
+    [data-slot='dropdown-menu-content']
+  ) {
+  border-color: var(--input);
+}
+html[data-visual-theme='safar'] [data-slot='dialog-header'] {
+  border-bottom: 3px solid var(--sf-yel);
+  padding-bottom: 0.5rem;
+}
+
+/* ── Chrome ── */
+/* Page header: the name board — a yellow plate by day, black with a yellow rule at night. */
+html[data-visual-theme='safar'] [data-slot='page-header'] {
+  background: var(--sf-band);
+  color: var(--sf-band-ink);
+  border-bottom: 3px solid var(--sf-band-rule);
+}
+html[data-visual-theme='safar'] [data-slot='page-header'] .text-muted-foreground {
+  color: var(--sf-band-mut);
+}
+html[data-visual-theme='safar'] [data-slot='page-header'] h1 {
+  font-size: 1.5rem;
+  line-height: 1.1;
+}
+
+html[data-visual-theme='safar'] [data-slot='tab-bar'] {
+  background: var(--sf-blue);
+  border-top: 2px solid var(--sf-blue-d);
+  box-shadow: none;
+}
+html[data-visual-theme='safar'] [data-slot='tab'] {
+  border-radius: 3px;
+  color: var(--sf-blue-mut);
+}
+html[data-visual-theme='safar'] [data-slot='tab'] span {
+  font-weight: 700;
+}
+html[data-visual-theme='safar'] [data-slot='tab'][aria-current='page'] {
+  background: var(--sf-yel);
+  color: var(--sf-on-yel);
+  box-shadow: inset 0 -2px 0 rgb(0 0 0 / 0.25);
+}
+html[data-visual-theme='safar'] [data-slot='fab'] {
+  background-image: none;
+  background-color: var(--sf-lamp);
+  color: var(--sf-on-lamp);
+  box-shadow:
+    0 0 0 3px var(--background),
+    0 0 0 5px var(--sf-frame);
+}
+html.dark[data-visual-theme='safar'] [data-slot='fab'] {
+  box-shadow:
+    0 0 0 3px var(--background),
+    0 0 0 4.5px #3a3f47,
+    0 6px 22px -2px rgb(248 201 0 / 0.35);
+}
+
+html[data-visual-theme='safar'] [data-slot='sidebar'] {
+  background: var(--sf-blue);
+  color: var(--sf-on-blue);
+  border-right: 2px solid var(--sf-blue-d);
+}
+html[data-visual-theme='safar'] [data-slot='sidebar'] > div:first-child {
+  margin-bottom: 1rem;
+}
+html[data-visual-theme='safar'] [data-slot='brand-mark'] {
+  display: none;
+}
+/* The name plate: "Finio" in black on a yellow board with a double frame. */
+html[data-visual-theme='safar'] [data-slot='brand-mark'] + span {
+  display: inline-block;
+  padding: 0.5rem 0.875rem 0.3rem;
+  border: 2px solid var(--sf-yel);
+  border-radius: 3px;
+  background: var(--sf-yel);
+  color: #111213;
+  box-shadow: inset 0 0 0 2px #111213;
+  font-size: 1.625rem;
+  font-weight: 900;
+  line-height: 1;
+}
+html[data-visual-theme='safar'] [data-slot='sidebar'] [data-slot='add-button'] {
+  background-image: none;
+  background-color: var(--sf-yel);
+  color: #111213;
+  border-radius: 4px;
+  box-shadow: inset 0 -3px 0 rgb(0 0 0 / 0.2);
+  font-weight: 800;
+}
+html[data-visual-theme='safar'] [data-slot='sidebar'] [data-slot='nav-item'] {
+  border-radius: 3px;
+  background: transparent;
+  color: var(--sf-on-blue);
+  font-weight: 700;
+}
+html[data-visual-theme='safar'] [data-slot='sidebar'] [data-slot='nav-item']:hover {
+  background: var(--sf-blue-d);
+}
+html[data-visual-theme='safar'] [data-slot='sidebar'] [data-slot='nav-item'][aria-current='page'] {
+  background: var(--sf-yel);
+  color: #111213;
+}
+html[data-visual-theme='safar'] [data-slot='sidebar'] > p {
+  color: var(--sf-blue-mut);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border-top: 1px solid rgb(255 255 255 / 0.2);
+  padding-top: 0.75rem;
+}
+
+/* ── Toasts ── */
+html[data-visual-theme='safar'] [data-sonner-toaster] {
+  --normal-bg: var(--popover);
+  --normal-border: var(--sf-frame);
+  --border-radius: 4px;
+}
+html[data-visual-theme='safar'] [data-sonner-toaster] [data-sonner-toast] {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: none;
+}

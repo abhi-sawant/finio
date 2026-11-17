@@ -1,0 +1,709 @@
+/*
+ * Sector — Chandigarh modernism. Raw concrete ground, flush zero-radius enamel colour blocks
+ * (yellow hero, cobalt for accounts / selection / actions, green for income and on-track, red for
+ * owed and near-limit), fixed joints between blocks, no shadows, no outlines. Darker Grotesque 800-900
+ * at poster scale for titles and the hero figure; Hanken Grotesk for rows, labels and every row
+ * figure. Signature: the month as a row of fins under the hero (SectorExtra, ui/extras/sector.tsx),
+ * louvres opening once, staggered. Dark is a hand-tuned night concrete, not an inversion.
+ */
+html[data-visual-theme='sector'] {
+  --ff-heading: 'Darker Grotesque Variable', 'Public Sans Variable', 'Arial Narrow', sans-serif;
+  --ff-money: 'Darker Grotesque Variable', 'Public Sans Variable', 'Arial Narrow', sans-serif;
+  --ff-sans: 'Hanken Grotesk Variable', 'Public Sans Variable', system-ui, sans-serif;
+
+  --sct-yellow: #f5c400;
+  --sct-on-yellow: #141413;
+  --sct-yellow-mut: #3b2f00;
+  --sct-yellow-link: #12358a;
+  --sct-yellow-neg: #8f0f0b;
+  --sct-red: #c01c18;
+  --sct-cobalt: #1846b0;
+  --sct-cobalt-2: #8fb0ea;
+  --sct-green: #166b34;
+  --sct-panel: #e5e2da;
+  --sct-panel-2: #d5d1c7;
+  --sct-joint: 6px;
+  --sct-form: rgb(20 20 19 / 0.045);
+
+  --background: #c8c4ba;
+  --foreground: #141413;
+  --card: #e5e2da;
+  --card-foreground: #141413;
+  --popover: #e5e2da;
+  --popover-foreground: #141413;
+  --primary: #153d9c;
+  --primary-foreground: #ffffff;
+  --secondary: #d5d1c7;
+  --secondary-foreground: #141413;
+  --muted: #d5d1c7;
+  --muted-foreground: #48453e;
+  --accent: #d5d1c7;
+  --accent-foreground: #141413;
+  --destructive: #9a110d;
+  --destructive-foreground: #ffffff;
+  --positive: #14632f;
+  --warning: #a5330a;
+  --border: #b3afa4;
+  --input: #8a867b;
+  --ring: #1846b0;
+  --chart-1: #1846b0;
+  --chart-2: #c01c18;
+  --chart-3: #166b34;
+  --chart-4: #f5c400;
+  --chart-5: #48453e;
+  --radius: 0rem;
+  --sidebar: #c8c4ba;
+  --sidebar-foreground: #141413;
+  --sidebar-primary: #1846b0;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #e5e2da;
+  --sidebar-accent-foreground: #141413;
+  --sidebar-border: #b3afa4;
+  --sidebar-ring: #1846b0;
+
+  --warning-band: #c01c18;
+  --warning-band-foreground: #ffffff;
+  --warning-band-accent: #ffffff;
+
+  --paper: none;
+  --engraving: transparent;
+  --glass: transparent;
+  --glass-strong: #c8c4ba;
+  --glass-border: transparent;
+  --glass-highlight: transparent;
+
+  --grad-primary: linear-gradient(#1846b0, #1846b0);
+  --grad-primary-soft: linear-gradient(#d5d1c7, #d5d1c7);
+  --grad-success: linear-gradient(#166b34, #166b34);
+  --grad-success-soft: linear-gradient(#cfdcc9, #cfdcc9);
+  --grad-danger: linear-gradient(#a8120e, #a8120e);
+  --grad-danger-soft: linear-gradient(#e6c4bd, #e6c4bd);
+  --grad-info: linear-gradient(#1846b0, #1846b0);
+  --grad-warning: linear-gradient(#a5330a, #a5330a);
+  --grad-surface: linear-gradient(#e5e2da, #e5e2da);
+  --coin: linear-gradient(#141413, #141413);
+  --coin-ink: #f5c400;
+  --register: #141413;
+  --thread: linear-gradient(#141413, #141413);
+
+  --shadow-tint: 20 20 19;
+  --scrim: rgb(20 20 19 / 0.5);
+  --shadow-card: none;
+  --shadow-float: none;
+  --shadow-primary: none;
+  --shadow-danger: none;
+  --shadow-success: none;
+
+  /* Account bays: savings cobalt, card red, deposits green, cash graphite, anything else pale cobalt. */
+  --note-100: linear-gradient(#8fb0ea, #8fb0ea);
+  --note-100-ink: #0a1a40;
+  --note-500: linear-gradient(#1846b0, #1846b0);
+  --note-500-ink: #ffffff;
+  --note-2000: linear-gradient(#c01c18, #c01c18);
+  --note-2000-ink: #ffffff;
+  --note-200: linear-gradient(#166b34, #166b34);
+  --note-200-ink: #ffffff;
+  --note-10: linear-gradient(#141413, #141413);
+  --note-10-ink: #f1eee7;
+  --note-50: linear-gradient(#8fb0ea, #8fb0ea);
+  --note-50-ink: #0a1a40;
+  --note-20: linear-gradient(#8fb0ea, #8fb0ea);
+  --note-20-ink: #0a1a40;
+}
+
+html.dark[data-visual-theme='sector'] {
+  --sct-yellow: #eab700;
+  --sct-red: #c42a24;
+  --sct-cobalt: #2450c0;
+  --sct-cobalt-2: #7c9fe0;
+  --sct-green: #1f7d42;
+  --sct-panel: #27272a;
+  --sct-panel-2: #333337;
+  --sct-form: rgb(255 255 255 / 0.022);
+
+  --background: #161617;
+  --foreground: #f1eee7;
+  --card: #27272a;
+  --card-foreground: #f1eee7;
+  --popover: #2d2d31;
+  --popover-foreground: #f1eee7;
+  --primary: #8aa9e6;
+  --primary-foreground: #0a1a40;
+  --secondary: #333337;
+  --secondary-foreground: #f1eee7;
+  --muted: #333337;
+  --muted-foreground: #b7b3aa;
+  --accent: #333337;
+  --accent-foreground: #f1eee7;
+  --destructive: #ff7b70;
+  --destructive-foreground: #1a0604;
+  --positive: #62d08a;
+  --warning: #f0a35a;
+  --border: #3e3e43;
+  --input: #6a6a70;
+  --ring: #8aa9e6;
+  --chart-1: #7c9fe0;
+  --chart-2: #ff7b70;
+  --chart-3: #62d08a;
+  --chart-4: #eab700;
+  --chart-5: #b7b3aa;
+  --sidebar: #161617;
+  --sidebar-foreground: #f1eee7;
+  --sidebar-primary: #2450c0;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #27272a;
+  --sidebar-accent-foreground: #f1eee7;
+  --sidebar-border: #3e3e43;
+  --sidebar-ring: #8aa9e6;
+
+  --warning-band: #c42a24;
+  --warning-band-foreground: #ffffff;
+  --warning-band-accent: #ffffff;
+
+  --glass-strong: #161617;
+
+  --grad-primary: linear-gradient(#2450c0, #2450c0);
+  --grad-primary-soft: linear-gradient(#333337, #333337);
+  --grad-success: linear-gradient(#1f7d42, #1f7d42);
+  --grad-success-soft: linear-gradient(#1c3326, #1c3326);
+  --grad-danger: linear-gradient(#b3241e, #b3241e);
+  --grad-danger-soft: linear-gradient(#3b1b19, #3b1b19);
+  --grad-info: linear-gradient(#2450c0, #2450c0);
+  --grad-warning: linear-gradient(#a5330a, #a5330a);
+  --grad-surface: linear-gradient(#27272a, #27272a);
+  --coin: linear-gradient(#eab700, #eab700);
+  --coin-ink: #141413;
+  --register: #f1eee7;
+  --thread: linear-gradient(#f1eee7, #f1eee7);
+
+  --scrim: rgb(0 0 0 / 0.65);
+
+  --note-100: linear-gradient(#7c9fe0, #7c9fe0);
+  --note-100-ink: #0a1a40;
+  --note-500: linear-gradient(#2450c0, #2450c0);
+  --note-500-ink: #ffffff;
+  --note-2000: linear-gradient(#c42a24, #c42a24);
+  --note-2000-ink: #ffffff;
+  --note-200: linear-gradient(#1f7d42, #1f7d42);
+  --note-200-ink: #ffffff;
+  --note-10: linear-gradient(#f1eee7, #f1eee7);
+  --note-10-ink: #141413;
+  --note-50: linear-gradient(#7c9fe0, #7c9fe0);
+  --note-50-ink: #0a1a40;
+  --note-20: linear-gradient(#7c9fe0, #7c9fe0);
+  --note-20-ink: #0a1a40;
+}
+html.dark.amoled[data-visual-theme='sector'] {
+  --background: #000;
+  --glass-strong: #000;
+  --sidebar: #000;
+}
+
+/* ── Ground: concrete with the faint planning grid ── */
+html[data-visual-theme='sector'] body {
+  background: var(--background)
+    repeating-linear-gradient(0deg, transparent 0 25px, var(--sct-form) 25px 26px);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+html[data-visual-theme='sector'] {
+  caret-color: var(--sct-cobalt);
+  accent-color: var(--sct-cobalt);
+}
+html[data-visual-theme='sector'] ::selection {
+  background: var(--sct-cobalt);
+  color: #fff;
+}
+html[data-visual-theme='sector'] :focus-visible {
+  outline: 3px solid var(--sct-cobalt);
+  outline-offset: 0;
+}
+html.dark[data-visual-theme='sector'] :focus-visible {
+  outline-color: var(--sct-cobalt-2);
+}
+
+/* ── Type ── */
+html[data-visual-theme='sector'] h1 {
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  line-height: 0.85;
+}
+html[data-visual-theme='sector'] .font-money {
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+html[data-visual-theme='sector'] [data-slot='dialog-title'],
+html[data-visual-theme='sector'] [data-slot='alert-dialog-title'] {
+  font-size: 1.75rem;
+  font-weight: 900;
+  line-height: 0.9;
+}
+html[data-visual-theme='sector'] main h2.text-base {
+  font-family: var(--ff-heading);
+  font-size: 1.875rem;
+  font-weight: 800;
+  line-height: 0.85;
+  letter-spacing: -0.005em;
+}
+html[data-visual-theme='sector'] main div:has(> h2.text-base) > button.text-primary {
+  color: var(--foreground);
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+html[data-visual-theme='sector'] main section > h2.text-xs {
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+/* ── Shape: flush, square, unlit ── */
+html[data-visual-theme='sector'] .rounded-full,
+html[data-visual-theme='sector'] .rounded-lg,
+html[data-visual-theme='sector'] .rounded-md,
+html[data-visual-theme='sector'] .rounded-sm,
+html[data-visual-theme='sector'] .rounded-xl,
+html[data-visual-theme='sector'] .rounded-2xl {
+  border-radius: 0;
+}
+html[data-visual-theme='sector'] .card-elevated {
+  background-color: var(--sct-panel);
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='sector'] .card-elevated.divide-y > * + * {
+  border-top: 2px solid var(--background);
+}
+html[data-visual-theme='sector'] .glass-chrome {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='sector'] .shadow-glow-primary,
+html[data-visual-theme='sector'] .shadow-glow-success,
+html[data-visual-theme='sector'] .shadow-glow-danger,
+html[data-visual-theme='sector'] .shadow-sm,
+html[data-visual-theme='sector'] .shadow-md,
+html[data-visual-theme='sector'] .shadow-lg,
+html[data-visual-theme='sector'] .shadow-xs {
+  box-shadow: none;
+}
+html[data-visual-theme='sector'] .bg-coin {
+  color: var(--coin-ink);
+  box-shadow: none;
+}
+html[data-visual-theme='sector'] :is(button, a).bg-grad-primary {
+  font-weight: 800;
+}
+html[data-visual-theme='sector'] :is(button, a).bg-grad-primary:active {
+  background-image: linear-gradient(#141413, #141413);
+}
+html[data-visual-theme='sector'] [data-slot='button'][class*='glass-border'] {
+  border-color: transparent;
+  background: var(--sct-panel);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='sector'] [data-slot='button'][class*='glass-border']:active {
+  background: var(--sct-cobalt);
+  color: #fff;
+}
+
+/* Inputs: a panel block, cobalt bar when focused. */
+html[data-visual-theme='sector']
+  :is([data-slot='input'], [data-slot='textarea'], [data-slot='select-trigger']) {
+  background: var(--sct-panel);
+  border-color: transparent;
+  border-bottom: 3px solid var(--input);
+  border-radius: 0;
+  box-shadow: none;
+}
+html[data-visual-theme='sector']
+  :is([data-slot='input'], [data-slot='textarea'], [data-slot='select-trigger']):focus-visible {
+  border-bottom-color: var(--sct-cobalt);
+  outline: none;
+}
+html.dark[data-visual-theme='sector']
+  :is([data-slot='input'], [data-slot='textarea'], [data-slot='select-trigger']):focus-visible {
+  border-bottom-color: var(--sct-cobalt-2);
+}
+
+/* Segmented controls: flush enamel keys, the chosen one cobalt. */
+html[data-visual-theme='sector'] .bg-muted.p-1:has(> button[aria-pressed]) {
+  gap: var(--sct-joint);
+  padding: 0;
+  background: transparent;
+}
+html[data-visual-theme='sector'] .bg-muted.p-1:has(> button[aria-pressed]) > button {
+  background: var(--sct-panel);
+  box-shadow: none;
+  color: var(--muted-foreground);
+  font-weight: 700;
+}
+html[data-visual-theme='sector']
+  .bg-muted.p-1:has(> button[aria-pressed])
+  > button[aria-pressed='true'] {
+  background: var(--sct-cobalt);
+  color: #fff;
+}
+html[data-visual-theme='sector'] button[aria-pressed].rounded-full.text-xs {
+  font-weight: 700;
+}
+
+/* ── Progress: a hollow bay, filled solid ── */
+html[data-visual-theme='sector'] [role='progressbar'] {
+  height: 0.625rem;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--foreground);
+}
+html[data-visual-theme='sector'] [role='progressbar'] > div,
+html[data-visual-theme='sector'] .thread-fill {
+  border-radius: 0;
+  transform-origin: left;
+  animation: sector-louvre 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.15s backwards;
+}
+html[data-visual-theme='sector'] .bg-muted.overflow-hidden:has(> .thread-fill) {
+  border-radius: 0;
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--foreground);
+}
+@keyframes sector-louvre {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+/* ── Hero: the big yellow block. Ink on yellow; every token is re-pointed for it. ── */
+html[data-visual-theme='sector'] .note-card {
+  --foreground: var(--sct-on-yellow);
+  --muted-foreground: var(--sct-yellow-mut);
+  --primary: var(--sct-yellow-link);
+  --destructive: var(--sct-yellow-neg);
+  --warning: #7a2a05;
+  --register: var(--sct-on-yellow);
+  --border: var(--sct-on-yellow);
+  background-image: none;
+  background-color: var(--sct-yellow);
+  color: var(--sct-on-yellow);
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0.75rem 0.875rem 0.875rem;
+  overflow: hidden;
+}
+html[data-visual-theme='sector'] .note-card-body {
+  padding-right: 0;
+}
+html[data-visual-theme='sector'] .note-card-body > p:first-child {
+  font-family: var(--ff-heading);
+  font-size: 1.75rem;
+  font-weight: 800;
+  line-height: 0.9;
+  color: var(--sct-on-yellow);
+}
+html[data-visual-theme='sector'] .hero-fig {
+  display: block;
+  margin: 0.375rem 0 0.24em -0.3125rem;
+  font-size: clamp(4rem, 28vw, 6.5rem);
+  font-weight: 900;
+  line-height: 0.78;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  animation: sector-louvre 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.1s backwards;
+  transform-origin: left;
+}
+html[data-visual-theme='sector'] .hero-left {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--sct-on-yellow);
+}
+html[data-visual-theme='sector'] .note-card .text-muted-foreground {
+  color: var(--sct-yellow-mut);
+}
+html[data-visual-theme='sector'] .note-card-body > button.text-primary {
+  color: var(--sct-yellow-link);
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+html[data-visual-theme='sector'] .hero-bar {
+  margin-top: 0.5rem;
+}
+html[data-visual-theme='sector'] .note-card [role='progressbar'] {
+  height: 0.5rem;
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--sct-on-yellow);
+}
+html[data-visual-theme='sector'] .hero-budget {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--sct-yellow-mut);
+}
+html[data-visual-theme='sector'] .note-card .text-destructive {
+  color: var(--sct-yellow-neg);
+}
+
+/* The fins. */
+html[data-visual-theme='sector'] .sct-month {
+  margin-top: 0.75rem;
+}
+html[data-visual-theme='sector'] .sct-fins {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 2.625rem;
+}
+html[data-visual-theme='sector'] .sct-fins i {
+  flex: 1;
+  min-width: 0;
+  height: 64%;
+  background: var(--sct-on-yellow);
+  transform-origin: left;
+  animation: sector-louvre 0.55s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--i, 0) * 28ms + 150ms)
+    backwards;
+}
+html[data-visual-theme='sector'] .sct-fins i.o {
+  background: none;
+  box-shadow: inset 0 0 0 1.5px var(--sct-on-yellow);
+}
+html[data-visual-theme='sector'] .sct-fins i.t {
+  height: 100%;
+}
+html[data-visual-theme='sector'] .sct-run {
+  height: 1.5rem;
+  box-shadow: inset 0 0 0 1.5px var(--sct-on-yellow);
+}
+html[data-visual-theme='sector'] .sct-run i {
+  display: block;
+  height: 100%;
+  background: var(--sct-on-yellow);
+  transform-origin: left;
+  animation: sector-louvre 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.15s backwards;
+}
+html[data-visual-theme='sector'] .sct-cap {
+  margin-top: 0.1875rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--sct-on-yellow);
+  white-space: nowrap;
+}
+@media (min-width: 1024px) {
+  html[data-visual-theme='sector'] .note-card {
+    padding: 1.25rem 1.5rem 1.5rem;
+  }
+  html[data-visual-theme='sector'] .hero-fig {
+    font-size: 11rem;
+  }
+  html[data-visual-theme='sector'] .sct-fins {
+    height: 3.75rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-visual-theme='sector'] .hero-fig,
+  html[data-visual-theme='sector'] .sct-fins i,
+  html[data-visual-theme='sector'] .sct-run i,
+  html[data-visual-theme='sector'] [role='progressbar'] > div,
+  html[data-visual-theme='sector'] .thread-fill {
+    animation: none;
+  }
+}
+
+/* Alert strip: a red block. */
+html[data-visual-theme='sector'] .bg-warning-band {
+  border-radius: 0;
+  box-shadow: none;
+  border: 0;
+}
+
+/* ── Account bays ── */
+html[data-visual-theme='sector'] .note-tile {
+  min-height: 108px;
+  padding: 0.5rem 0.625rem 0.5rem;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+html[data-visual-theme='sector'] .note-tile:active {
+  transform: none;
+  background-image: linear-gradient(#141413, #141413) !important;
+  color: #fff !important;
+}
+html[data-visual-theme='sector'] .note-tile .font-money {
+  font-size: 2rem;
+  font-weight: 900;
+  line-height: 0.8;
+  letter-spacing: -0.01em;
+}
+html[data-visual-theme='sector'] .note-tile > span:first-of-type {
+  font-weight: 700;
+}
+html[data-visual-theme='sector'] .note-chip {
+  border-radius: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 0;
+}
+
+/* Category picker + number pad: enamel keys, cobalt when chosen or pressed. */
+html[data-visual-theme='sector'] .grid-cols-4 > button[data-selected] {
+  border: 0;
+  border-radius: 0;
+  background-color: var(--sct-panel);
+  box-shadow: none;
+}
+html[data-visual-theme='sector'] .grid-cols-4 > button[data-selected='true'] {
+  background-color: var(--sct-cobalt);
+  color: #fff;
+}
+html[data-visual-theme='sector'] .grid-cols-4 > button[data-selected='true'] > span {
+  color: #fff;
+}
+html[data-visual-theme='sector'] .bg-grad-surface.min-h-16 {
+  background: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+html[data-visual-theme='sector'] .bg-grad-surface.min-h-16 > .text-3xl {
+  font-size: 4.25rem;
+  line-height: 0.9;
+  font-weight: 900;
+}
+html[data-visual-theme='sector'] .bg-grad-surface.min-h-16 + .grid {
+  gap: var(--sct-joint);
+}
+html[data-visual-theme='sector'] .bg-grad-surface.min-h-16 + .grid > button {
+  background: var(--sct-panel);
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  font-family: var(--ff-heading);
+  font-size: 1.75rem;
+  font-weight: 800;
+}
+html[data-visual-theme='sector'] .bg-grad-surface.min-h-16 + .grid > button:active {
+  transform: none;
+  background: var(--sct-cobalt);
+  color: #fff;
+}
+html[data-visual-theme='sector'] .bg-grad-surface.min-h-16 + .grid > button:active svg,
+html[data-visual-theme='sector'] .bg-grad-surface.min-h-16 + .grid > button:active span {
+  color: inherit;
+}
+
+/* ── Overlays ── */
+html[data-visual-theme='sector']
+  :is(
+    [data-slot='dialog-content'],
+    [data-slot='alert-dialog-content'],
+    [data-slot='popover-content'],
+    [data-slot='select-content'],
+    [data-slot='dropdown-menu-content']
+  ) {
+  border-radius: 0;
+  border: 0;
+  border-top: 8px solid var(--sct-yellow);
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-visual-theme='sector'] [data-slot='dialog-header'] {
+  padding-bottom: 0.25rem;
+}
+
+/* ── Chrome ── */
+html[data-visual-theme='sector'] [data-slot='page-header'] {
+  background: var(--background);
+}
+html[data-visual-theme='sector'] [data-slot='page-header'] h1 {
+  font-size: 2.5rem;
+  line-height: 0.85;
+}
+html[data-visual-theme='sector'] [data-slot='tab-bar'] {
+  background: var(--background);
+  border-top: 0;
+  box-shadow: none;
+}
+html[data-visual-theme='sector'] [data-slot='tab'] {
+  position: relative;
+  background: var(--sct-panel);
+  color: var(--muted-foreground);
+  margin: 0 3px;
+}
+html[data-visual-theme='sector'] [data-slot='tab'] span {
+  font-size: 0.625rem;
+  font-weight: 700;
+}
+html[data-visual-theme='sector'] [data-slot='tab'][aria-current='page'] {
+  background: var(--foreground);
+  color: var(--background);
+}
+html[data-visual-theme='sector'] [data-slot='tab']:active {
+  background: var(--sct-cobalt);
+  color: #fff;
+}
+html[data-visual-theme='sector'] [data-slot='fab'] {
+  border-radius: 0;
+  width: 3.5rem;
+  height: 3.5rem;
+  background: var(--sct-yellow);
+  background-image: none;
+  color: var(--sct-on-yellow);
+  box-shadow: none;
+}
+html[data-visual-theme='sector'] [data-slot='fab']:active {
+  background: var(--foreground);
+  color: var(--sct-yellow);
+}
+
+html[data-visual-theme='sector'] [data-slot='sidebar'] {
+  background: var(--background);
+  border-right: 0;
+}
+html[data-visual-theme='sector'] [data-slot='brand-mark'] {
+  border-radius: 0;
+  background: conic-gradient(from 0deg, var(--sct-cobalt) 0 0%, var(--sct-cobalt) 0 100%);
+  box-shadow: none;
+}
+html[data-visual-theme='sector'] [data-slot='brand-mark'] + span {
+  font-family: var(--ff-heading);
+  font-size: 2rem;
+  font-weight: 900;
+  line-height: 0.8;
+}
+html[data-visual-theme='sector'] [data-slot='sidebar'] [data-slot='add-button'] {
+  background: var(--sct-yellow);
+  color: var(--sct-on-yellow);
+  border-radius: 0;
+  box-shadow: none;
+  font-weight: 800;
+}
+html[data-visual-theme='sector'] [data-slot='sidebar'] [data-slot='nav-item'] {
+  background: var(--sct-panel);
+  border-radius: 0;
+  color: var(--muted-foreground);
+  font-weight: 700;
+}
+html[data-visual-theme='sector'] [data-slot='sidebar'] nav {
+  gap: 2px;
+}
+html[data-visual-theme='sector'] [data-slot='sidebar'] [data-slot='nav-item'][aria-current='page'] {
+  background: var(--sct-cobalt);
+  color: #fff;
+}
+
+/* ── Toasts ── */
+html[data-visual-theme='sector'] [data-sonner-toaster] {
+  --normal-bg: var(--popover);
+  --normal-border: transparent;
+  --border-radius: 0;
+}
+html[data-visual-theme='sector'] [data-sonner-toaster] [data-sonner-toast] {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: none;
+  border-left: 8px solid var(--sct-yellow);
+}
