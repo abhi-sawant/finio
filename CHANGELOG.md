@@ -3,6 +3,19 @@
 Finio follows [Semantic Versioning](https://semver.org). The repo-root `VERSION` file is the single
 source of truth for both clients; see "Releasing" in [CLAUDE.md](CLAUDE.md).
 
+## 3.3.2 — 2026-11-23
+
+### Fixed
+
+- **Merchant and Note suggestions are visible while you type on a phone.** Focusing either field
+  only scrolls it to just above the keyboard, so the list of earlier entries opened below it,
+  behind the keyboard. The list now opens *above* the field, over the fields already on screen,
+  and nothing on the page moves while you type. On the web it replaces the browser's built-in
+  suggestion dropdown, so it looks and behaves the same as on Android: up to five earlier
+  entries containing what you've typed, tap one to use it, Escape to close.
+- **Picking a suggestion on Android puts the cursor at the end.** It used to stay where it was,
+  so choosing "Swati" after typing "Sw" left the cursor at "Sw|ati".
+
 ## 3.3.1 — 2026-11-17
 
 ### Removed
