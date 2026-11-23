@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, useCallback } from 'react';
+import { useState, useMemo, useRef, useCallback, useId } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router';
 import { ArrowLeft, Trash2, Split, Plus, X } from 'lucide-react';
 import { CategoryIcon } from '@/components/categories/CategoryIcon';
@@ -28,7 +28,7 @@ import Main from '@/components/ui/main';
 import Header from '@/components/ui/header';
 import { HeaderIconButton, HeaderIconSpacer } from '@/components/ui/header-icon-button';
 
-/** Distinct, trimmed, non-empty values of one transaction field — feeds a field's datalist. */
+/** Distinct, trimmed, non-empty values of one transaction field — feeds a field's suggestions. */
 function distinctValues(
   transactions: Transaction[],
   pick: (t: Transaction) => string | undefined,
@@ -545,39 +545,25 @@ export default function AddTransaction() {
         {/* Merchant */}
         <div>
           <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">Merchant</Label>
-          <Input
-            type="text"
+          <SuggestingInput
             placeholder="Who was it with..."
             value={merchant}
             maxLength={MAX_NAME_LENGTH}
-            onChange={(e) => setMerchant(e.target.value)}
-            list="merchant-suggestions"
-            className="[&::-webkit-calendar-picker-indicator]:hidden! [&::-webkit-list-button]:hidden!"
+            onChange={setMerchant}
+            suggestions={merchantSuggestions}
           />
-          <datalist id="merchant-suggestions">
-            {merchantSuggestions.map((n) => (
-              <option key={n} value={n} />
-            ))}
-          </datalist>
         </div>
 
         {/* Note */}
         <div>
           <Label className="text-muted-foreground mb-1.5 block text-xs font-medium">Note</Label>
-          <Input
-            type="text"
+          <SuggestingInput
             placeholder="Add a note..."
             value={note}
             maxLength={MAX_NOTE_LENGTH}
-            onChange={(e) => setNote(e.target.value)}
-            list="note-suggestions"
-            className="[&::-webkit-calendar-picker-indicator]:hidden! [&::-webkit-list-button]:hidden!"
+            onChange={setNote}
+            suggestions={notesSuggestions}
           />
-          <datalist id="note-suggestions">
-            {notesSuggestions.map((n) => (
-              <option key={n} value={n} />
-            ))}
-          </datalist>
         </div>
 
         {/* Labels */}
@@ -636,6 +622,82 @@ export default function AddTransaction() {
 }
 
 /** An account in a picker: its name plus its human type name ("Credit card"), muted. */
+/**
+ * A text field with the `<datalist>` behaviour — up to five earlier entries containing what has
+ * been typed — drawn *above* the field. On a phone, focusing a field only scrolls it to just above
+ * the keyboard and the Add button, so a native datalist (always below) opened off-screen. The list
+ * floats over the fields above and takes no layout space, so nothing moves while the user types.
+ * Mirrors Android's `WithSuggestionsAbove`.
+ */
+function SuggestingInput({
+  value,
+  onChange,
+  suggestions,
+  ...props
+}: Omit<React.ComponentProps<typeof Input>, 'value' | 'onChange'> & {
+  value: string;
+  onChange: (value: string) => void;
+  suggestions: string[];
+}) {
+  const [focused, setFocused] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
+  const listId = useId();
+  const query = value.trim().toLowerCase();
+  const matches =
+    focused && !dismissed && query
+      ? suggestions.filter((s) => s !== value && s.toLowerCase().includes(query)).slice(0, 5)
+      : [];
+
+  return (
+    <div className="relative">
+      <Input
+        type="text"
+        {...props}
+        value={value}
+        onChange={(e) => {
+          setDismissed(false);
+          onChange(e.target.value);
+        }}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        onKeyDown={(e) => {
+          if (e.key === 'Escape' && matches.length) {
+            e.preventDefault();
+            setDismissed(true);
+          }
+        }}
+        role="combobox"
+        aria-autocomplete="list"
+        aria-expanded={matches.length > 0}
+        aria-controls={listId}
+      />
+      {matches.length > 0 && (
+        <ul
+          id={listId}
+          role="listbox"
+          className="bg-popover text-popover-foreground absolute right-0 bottom-full left-0 z-10 mb-1 rounded-md border p-1 shadow-md"
+        >
+          {matches.map((m) => (
+            <li
+              key={m}
+              role="option"
+              aria-selected={false}
+              // mousedown, not click: keeps focus (and the phone keyboard) on the field.
+              onMouseDown={(e) => {
+                e.preventDefault();
+                onChange(m);
+              }}
+              className="hover:bg-accent cursor-pointer truncate rounded-sm px-2 py-2 text-sm"
+            >
+              {m}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
 function accountOption(account: Account | undefined) {
   if (!account) return null;
   return (

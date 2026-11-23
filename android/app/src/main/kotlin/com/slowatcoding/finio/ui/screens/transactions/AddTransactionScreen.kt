@@ -15,7 +15,9 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.zIndex
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.foundation.layout.navigationBars
@@ -461,12 +463,6 @@ fun AddTransactionScreen(nav: FinioNavigator, transactionId: String?, draft: Sha
                 FieldLabel("Note")
                 val noteInteraction = remember { MutableInteractionSource() }
                 val noteFocused by noteInteraction.collectIsFocusedAsState()
-                FinioTextField(
-                    value = note,
-                    onValueChange = { v -> if (withinLength(v, MAX_NOTE_LENGTH)) handleNoteChange(v) },
-                    placeholder = "Add a note...",
-                    interactionSource = noteInteraction,
-                )
                 // The web's <datalist>: earlier notes that contain what has been typed.
                 val query = note.trim().lowercase()
                 val matches = if (noteFocused && query.isNotEmpty()) {
@@ -474,8 +470,13 @@ fun AddTransactionScreen(nav: FinioNavigator, transactionId: String?, draft: Sha
                 } else {
                     emptyList()
                 }
-                if (matches.isNotEmpty()) {
-                    NoteSuggestions(matches, onPick = handleNoteChange)
+                WithSuggestionsAbove(matches, onPick = handleNoteChange) {
+                    FinioTextField(
+                        value = note,
+                        onValueChange = { v -> if (withinLength(v, MAX_NOTE_LENGTH)) handleNoteChange(v) },
+                        placeholder = "Add a note...",
+                        interactionSource = noteInteraction,
+                    )
                 }
             }
 
@@ -559,29 +560,59 @@ private fun SuggestingField(
         FieldLabel(label)
         val interaction = remember { MutableInteractionSource() }
         val focused by interaction.collectIsFocusedAsState()
-        FinioTextField(
-            value = value,
-            onValueChange = { v -> if (withinLength(v, MAX_NAME_LENGTH)) onChange(v) },
-            placeholder = placeholder,
-            interactionSource = interaction,
-        )
         val query = value.trim().lowercase()
         val matches = if (focused && query.isNotEmpty()) {
             suggestions.filter { it.lowercase().contains(query) && it != value }.take(5)
         } else {
             emptyList()
         }
-        if (matches.isNotEmpty()) NoteSuggestions(matches, onPick = onChange)
+        WithSuggestionsAbove(matches, onPick = onChange) {
+            FinioTextField(
+                value = value,
+                onValueChange = { v -> if (withinLength(v, MAX_NAME_LENGTH)) onChange(v) },
+                placeholder = placeholder,
+                interactionSource = interaction,
+            )
+        }
     }
 }
 
-/** The `<datalist>` stand-in: up to five earlier notes under the field, tap to use one. */
+/**
+ * The `<datalist>` stand-in: up to five earlier entries floating *above* [field], tap to use one.
+ *
+ * Focusing a field only scrolls it to just above the keyboard and the Add button, so a list
+ * below it would open off-screen. Above, it lands over the fields already on screen. It takes
+ * no layout space, so nothing below it moves while the user types.
+ */
 @Composable
-private fun NoteSuggestions(matches: List<String>, onPick: (String) -> Unit) {
+private fun WithSuggestionsAbove(
+    matches: List<String>,
+    onPick: (String) -> Unit,
+    field: @Composable () -> Unit,
+) {
+    Box {
+        field()
+        if (matches.isNotEmpty()) {
+            NoteSuggestions(
+                matches,
+                onPick,
+                Modifier
+                    .zIndex(1f)
+                    .layout { measurable, constraints ->
+                        val p = measurable.measure(constraints)
+                        layout(p.width, 0) { p.place(0, -p.height) }
+                    },
+            )
+        }
+    }
+}
+
+@Composable
+private fun NoteSuggestions(matches: List<String>, onPick: (String) -> Unit, modifier: Modifier = Modifier) {
     val colors = FinioTheme.colors
     Column(
-        Modifier
-            .padding(top = 4.dp)
+        modifier
+            .padding(bottom = 4.dp)
             .fillMaxWidth()
             .clip(FinioShapes.md)
             .background(colors.popover)

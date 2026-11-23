@@ -27,6 +27,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,6 +42,8 @@ import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.semantics.toggleableState
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.foundation.selection.toggleable
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.slowatcoding.finio.ui.icons.LucideIcons
@@ -109,9 +112,17 @@ fun FinioTextField(
     val source = interactionSource ?: remember { MutableInteractionSource() }
     val focused by source.collectIsFocusedAsState()
     val multiline = !singleLine || minLines > 1
+    // Track the selection ourselves: the String overload keeps the old cursor when [value] is
+    // replaced from outside (picking "Swati" after typing "Sw" left it at "Sw|ati"). Any text
+    // that didn't come from typing here puts the cursor at the end, as a browser input does.
+    val edited = remember { mutableStateOf(TextFieldValue(value, TextRange(value.length))) }
+    val shown = edited.value.let { if (it.text == value) it else TextFieldValue(value, TextRange(value.length)) }
     BasicTextField(
-        value = value,
-        onValueChange = onValueChange,
+        value = shown,
+        onValueChange = {
+            edited.value = it
+            if (it.text != value) onValueChange(it.text)
+        },
         modifier = modifier
             .fillMaxWidth()
             .defaultMinSize(minHeight = if (multiline) 64.dp else 40.dp)
