@@ -58,19 +58,26 @@ together.
 1. Bump the repo-root `VERSION` file and the `version` in `web/package.json` (a vitest test fails if
    they differ). Android derives `versionName` from `VERSION` and `versionCode` as
    `major·10000 + minor·100 + patch`, so the code only ever grows.
-2. Add the release's section to [CHANGELOG.md](CHANGELOG.md).
-3. Build:
-   - web: `cd web && npm run build`, then zip `web/dist/`;
-   - Android: `cd android && ./gradlew :app:assembleRelease`, which writes
-     `app/build/outputs/apk/release/app-release.apk`.
+2. Add a `## X.Y.Z — YYYY-MM-DD` section to [CHANGELOG.md](CHANGELOG.md). Keep that heading
+   shape: CI finds the section by it, and the section becomes the release notes the Android app
+   shows in its update dialog.
+3. Push to `main`. [`.github/workflows/release.yml`](.github/workflows/release.yml) runs on any
+   push that changes `VERSION` and, if tag `X.Y.Z` doesn't exist yet (tags are the bare version, no
+   `v`), runs the web and `:core` tests, builds the web zip and the signed APK, and creates the
+   GitHub Release `Finio X.Y.Z` with `finio-X.Y.Z.apk`, `finio-web-X.Y.Z.zip` and
+   `SHA256SUMS.txt` attached. It can also be run by hand from the Actions tab (main only); an
+   existing tag makes it a no-op, so it never releases a version twice.
 
-   The APK is signed only when `android/keystore.properties` (gitignored) points at the release
-   keystore in `android/keystore/` (also gitignored). **Every future update must be signed with
-   that same key**, or Android refuses to install it over an existing copy, so keep the keystore
-   and its properties file backed up outside the repo.
-4. Put the artifacts in `releases/vX.Y.Z/` (gitignored) along with `SHA256SUMS.txt`. Merge to
-   `main`, tag `vX.Y.Z`, and attach the artifacts to a GitHub Release whose notes are the CHANGELOG
-   section.
+The `release` skill (`.claude/skills/release/`) does steps 1–2 and the local checks.
+
+**Signing.** Locally the APK is signed only when `android/keystore.properties` (gitignored) points
+at the release keystore in `android/keystore/` (also gitignored). CI rebuilds both from the
+`ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS` and
+`ANDROID_KEY_PASSWORD` repo secrets, and fails the release if the APK's certificate isn't the one
+pinned in `EXPECTED_CERT_SHA256` in the workflow. **Every future update must be signed with that
+same key**, or Android refuses to install it over an existing copy, so keep the keystore and its
+properties file backed up outside the repo. Optional repo variables `VITE_API_URL` and
+`FINIO_API_URL` override each client's built-in API URL.
 
 The release build runs R8. `android/app/proguard-rules.pro` keeps the two things the app reads by
 reflection: enum `@SerialName` fields (`wireName`) and the navigation routes. Any new reflection
