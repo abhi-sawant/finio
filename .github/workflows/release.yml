@@ -188,9 +188,11 @@ jobs:
         run: |
           apk=app/build/outputs/apk/release/app-release.apk
           apksigner="$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)/apksigner"
-          digest="$("$apksigner" verify --print-certs "$apk" \
-            | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | head -1 \
-            | sed 's/../&:/g; s/:$//')"
+          out="$("$apksigner" verify --print-certs "$apk" 2>&1)" || { echo "$out"; echo "::error::apksigner could not verify the APK"; exit 1; }
+          echo "$out" | grep -v '^WARNING:'
+          # Newer build-tools print "Signer (minSdkVersion=…) certificate…" rather than "Signer #1 certificate…"
+          digest="$(echo "$out" | sed -n 's/^Signer .*certificate SHA-256 digest: //p' | head -1 \
+            | tr 'A-F' 'a-f' | sed 's/../&:/g; s/:$//')"
           echo "APK certificate: $digest"
           if [[ "$digest" != "$EXPECTED_CERT_SHA256" ]]; then
             echo "::error::APK is signed by $digest, expected $EXPECTED_CERT_SHA256. Android would refuse it as an update."
