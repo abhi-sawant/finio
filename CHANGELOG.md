@@ -3,6 +3,15 @@
 Finio follows [Semantic Versioning](https://semver.org). The repo-root `VERSION` file is the single
 source of truth for both clients; see "Releasing" in [CLAUDE.md](CLAUDE.md).
 
+## 3.4.0 — 2026-11-24
+
+### Changed
+
+- **Releases are now built and published automatically.** The web bundle and the signed Android
+  APK are produced by GitHub Actions whenever a new version lands on `main`, and the release notes
+  come from this changelog. Nothing changes in the app itself, and the backup format is unchanged
+  ([spec/backup-format.md](spec/backup-format.md)).
+
 ## 3.3.2 — 2026-11-23
 
 ### Fixed
